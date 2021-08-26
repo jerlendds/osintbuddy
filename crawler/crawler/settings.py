@@ -26,20 +26,20 @@ ROBOTSTXT_OBEY = False
 SPLASH_URL = 'http://0.0.0.0:8050'
 
 DOWNLOADER_MIDDLEWARES = {
-    'scrapyjs.SplashMiddleware': 725,
-    'scrapy_splash.SplashCookiesMiddleware': 723,
+    # 'scrapyjs.SplashMiddleware': 725,
+    # 'scrapy_splash.SplashCookiesMiddleware': 723,
     'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
 }
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 # 'crawler.middlewares.CrawlerSpiderMiddleware': 543,
-SPIDER_MIDDLEWARES = {
-    'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
-}
+# SPIDER_MIDDLEWARES = {
+#     'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
+# }
 
 
-DUPEFILTER_CLASS = 'scrapyjs.SplashAwareDupeFilter'
+# DUPEFILTER_CLASS = 'scrapyjs.SplashAwareDupeFilter'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -47,13 +47,13 @@ DUPEFILTER_CLASS = 'scrapyjs.SplashAwareDupeFilter'
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 2
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
+COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
@@ -103,4 +103,4 @@ DUPEFILTER_CLASS = 'scrapyjs.SplashAwareDupeFilter'
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
+# HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'

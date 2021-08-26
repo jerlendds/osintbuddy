@@ -7,7 +7,7 @@
           <router-link class="text-black-400" to="/">About</router-link>
         </li>
         <li class="py-1">
-          <router-link class="text-black-400" to="/">Pricing</router-link>
+          <router-link class="text-black-400" to="/">Support</router-link>
         </li>
         <li class="py-1">
           <router-link class="text-black-400" to="/">Features</router-link>
