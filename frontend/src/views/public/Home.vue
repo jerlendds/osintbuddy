@@ -9,7 +9,7 @@
         </h2>
         <p class="max-w-md pt-2 pb-3 text-lg font-body text-black-300 ">
           <!-- Make connections and find your online footprint. OSINT Buddy is a... -->
-          OSINT Buddy is a multi-purpose search engine that allows you to track down your data on the internet and monitor your online presence.
+           Make connections to people and public-facing assets from fragments of information
         </p>
         <div class="pb-44">
           <btn size="md" text="Watch a Video" />

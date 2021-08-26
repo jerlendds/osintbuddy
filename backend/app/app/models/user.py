@@ -22,3 +22,4 @@ class User(Base):
     last_updated = Column(DateTime(), default=datetime.datetime.now)
     created = Column(DateTime(), default=datetime.datetime.utcnow)
     items = relationship("Item", back_populates="owner")
+    projects = relationship("Project", back_populates="owner")
