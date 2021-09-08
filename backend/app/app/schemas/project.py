@@ -8,12 +8,14 @@ from pydantic import BaseModel
 class ProjectBase(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
+    created: datetime.datetime
+    owner_id: int
 
 
 # Properties to receive on Project creation
 class ProjectCreate(ProjectBase):
     title: str
-    description: str
+    description: Optional[str] = ""
 
 
 # Properties to receive on Project update
@@ -25,7 +27,6 @@ class ProjectUpdate(ProjectBase):
 # Properties shared by models stored in DB
 class ProjectInDBBase(ProjectBase):
     id: int
-    title: str
     owner_id: int
 
     class Config:
@@ -42,3 +43,4 @@ class Project(ProjectInDBBase):
 # Properties properties stored in DB
 class ProjectInDB(ProjectInDBBase):
     created: datetime.datetime
+    owner_id: int

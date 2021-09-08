@@ -1,8 +1,8 @@
-"""Updated projects table
+"""Modified search_category and user
 
-Revision ID: 779e95ccddba
-Revises: c92f1b6721c3
-Create Date: 2021-08-26 18:45:42.237338
+Revision ID: 87768a5b0d31
+Revises: 22b7eeb42a31
+Create Date: 2021-08-28 17:54:12.526401
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '779e95ccddba'
-down_revision = 'c92f1b6721c3'
+revision = '87768a5b0d31'
+down_revision = '22b7eeb42a31'
 branch_labels = None
 depends_on = None
 

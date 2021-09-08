@@ -40,102 +40,16 @@
             <a
               class=" font-head  flex "
               :href="url"
-              @mouseover="showUrl = true"
-              @mouseleave="showUrl = false"
             >
               <p
-                v-if="domain_value"
                 class=" text-sm hover:underline text-primary-400  overflow-ellipsis whitespace-wrap max-w-lg leading-6 font-body "
               >
-                {{ domainValue }}
+                {{ domain_value }}
               </p>
             </a>
           </section>
         </section>
       </div>
-      <section
-          class="flex lg:flex-row flex-col pb-1 lg:justify-between items-center font-head  border-t-2 border-black-100 border-opacity-10 bg-white-100"
-      >
-        <h3 class="text-gray-400 px-3 mr-1">Actions</h3>
-
-        <div class="flex items-center justify-center w-full lg:my-0 my-2 lg:px-1">
-          <btn
-              size="xs"
-              color="bg-white-500"
-              colortext="text-gray-100 hover:text-black-400"
-              text="Copy URL"
-          />
-        </div>
-
-        <div class="flex items-center justify-center w-full lg:my-0 my-2 lg:px-1">
-          <btn
-              size="xs"
-              color="bg-white-500"
-              colortext="text-gray-100 hover:text-black-400"
-              text="Screenshot"
-          />
-        </div>
-        <div class="flex items-center justify-center w-full lg:my-0 my-2 lg:px-1">
-          <btn
-              size="xs"
-              color="bg-white-500"
-              colortext="text-gray-100 hover:text-black-400"
-              text="Archive Result"
-          />
-        </div>
-
-
-      </section>
-      <section
-        class="flex lg:flex-row flex-col lg:justify-between items-center font-head pt-1 border-white border-opacity-10 bg-white-100"
-      >
-        <h3 class="text-gray-400 px-3">Analyse</h3>
-        <div class="flex  items-center justify-center w-full lg:my-0 my-2 lg:px-1">
-          <btn
-            text="All tweets"
-            size="xs"
-            color="bg-white-500"
-            colortext="text-gray-100 hover:text-black-400"
-          />
-        </div>
-        <div class="flex items-center justify-center w-full lg:my-0 my-2 lg:px-1">
-          <btn
-            size="xs"
-            color="bg-white-500"
-            colortext="text-gray-100 hover:text-black-400"
-            text="Keyword tweets"
-          />
-        </div>
-
-        <div class="flex items-center justify-center w-full lg:my-0 my-2 lg:px-1">
-          <btn
-            size="xs"
-            color="bg-white-500"
-            colortext="text-gray-100 hover:text-black-400"
-            text="Followers"
-          />
-        </div>
-
-        <div class="flex items-center justify-center w-full py-1 lg:py-0 lg:px-1">
-          <btn
-            size="xs"
-            color="bg-white-500"
-            colortext="text-gray-100 hover:text-black-400 "
-            text="Following"
-          />
-        </div>
-        <button
-          @click="toggleSave"
-          :class="isSaved ? 'px-2 ' : '  w-full'"
-          class="mt-3 px-0 transition-all duration-150 lg:mt-0 py-1 ml-1 lg:py-0 flex items-center bg-primary-300 shadow-primary-6 hover:bg-primary-200 h-full  justify-center rounded-br "
-        >
-          <span class="text-white-200 font-head">{{
-            isSaved ? '' : '&nbsp;&nbsp;Save&nbsp;'
-          }}</span>
-          <component class="text-white icon-2x" :is="setSaveIcon" />
-        </button>
-      </section>
-
     </section>
   </section>
 </template>
@@ -206,23 +120,12 @@ export default {
         return this.bookmarkIcon;
       }
     },
-
     solidBookmarkIcon() {
       return Bookmark;
     },
-
     bookmarkIcon() {
       return BookmarkOutline;
     },
-
-    domainValue() {
-      if (!this.showUrl) {
-        return this.domain_value;
-      } else {
-        return this.url;
-      }
-    },
-
     rightIcon() {
       return ChevronRight;
     },

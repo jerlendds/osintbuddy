@@ -86,7 +86,7 @@ export default {
       links: [
         {
           path: "/pricing",
-          text: "About",
+          text: "Pricing",
           testData: "topnavbarDocsLink",
         },
         {
@@ -101,7 +101,7 @@ export default {
         },
         {
           path: "/dashboard",
-          text: " g",
+          text: " ",
           testData: "topnavbarExamplesLink",
         },
       ],
