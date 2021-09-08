@@ -1,8 +1,8 @@
-"""Updated tables
+"""Modified search_category relationships
 
-Revision ID: 6c70106c9290
-Revises: ac907f23a402
-Create Date: 2021-08-26 21:49:39.885127
+Revision ID: f268e5f77979
+Revises: 0c2bc3667e16
+Create Date: 2021-08-28 18:35:10.332686
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6c70106c9290'
-down_revision = 'ac907f23a402'
+revision = 'f268e5f77979'
+down_revision = '0c2bc3667e16'
 branch_labels = None
 depends_on = None
 
