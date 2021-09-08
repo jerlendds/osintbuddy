@@ -41,12 +41,12 @@ class UserInDBBase(UserBase):
 class User(UserInDBBase):
     company: Optional[str] = "Private individual"
     country: str
-    last_updated: datetime.datetime
+    modified: datetime.datetime
     created: datetime.datetime
 
 
 # Additional properties stored in DB
 class UserInDB(UserInDBBase):
     hashed_password: str
-    last_updated: datetime.datetime
+    modified: datetime.datetime
     created: datetime.datetime

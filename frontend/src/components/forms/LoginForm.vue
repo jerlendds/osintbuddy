@@ -20,13 +20,9 @@
               v-slot="{errors}"
             >
               <!-- Email error message -->
-
               <span
-               
-                
                 :class="errorClass">{{ errors[0] }}</span
               >
-
                 <!-- Email input field -->
                 <input
                   id="email"
@@ -52,7 +48,6 @@
               :class="errorClass">{{
                 errors[0]
               }}</span>
-
                   <!-- Password input field -->
                   <input
                     ref="passwordref"
@@ -62,11 +57,7 @@
                     class="mt-0.5"
                     placeholder="Your password"
                   />
-              
             </ValidationProvider>
-
-
-
             <div class="flex flex-col w-full pt-2 mt-3">
                 <btn text="Login" size="md"  v-on:click="handleSubmit(login())" />
   
@@ -126,7 +117,7 @@ export default {
           return;
         }
         // Resetting Values
-        this.email = this.password = '';
+        // this.email = this.password = '';
 
         // Wait until the models are updated in the UI
         this.$nextTick(() => {
@@ -134,25 +125,68 @@ export default {
         });
 
         if (success) {
-          console.log('Login method form valid');
           const user = {
             email: this.email,
             password: this.password,
           };
 
           this.$store
-            .dispatch('login', user)
-            .then(() => this.$router.push('/dashboard'))
-            .catch(err => {
-              this.submitError =
-                'Oh no, our servers went on strike! Please try again in a few minutes ';
-        
-              this.submitError = err.response.data.detail;
-              console.log(this.submitError);
-            });
+              .dispatch('login', user)
+              .then(() => this.$router.push('/dashboard'))
+              .catch(err => {
+                this.submitError = 'submit error...'
+                this.submitError = err.response.data.detail;
+              });
         }
       });
     },
+    // onEmailSubmit() {
+    //   /* eslint-disable no-unused-vars */
+    //   this.$refs.form.validate().then(success => {
+    //     if (this.$refs.form.fields.Email.passed) {
+    //       this.$nextTick(() => {
+    //         this.$refs.passwordref.focus();
+    //       });
+    //     }
+    //   });
+    // },
+    //
+    // login() {
+    //   console.log('login called');
+    //   this.$refs.form.validate().then(success => {
+    //     if (!success) {
+    //       console.log(this.$refs.form);
+    //       console.log('login failed');
+    //       return;
+    //     }
+    //     // Resetting Values
+    //     this.email = this.password = '';
+    //
+    //     // Wait until the models are updated in the UI
+    //     this.$nextTick(() => {
+    //       this.$refs.form.reset();
+    //     });
+    //
+    //     if (success) {
+    //       console.log('Login method form valid');
+    //       const user = {
+    //         email: this.email,
+    //         password: this.password,
+    //       };
+    //
+    //       this.$store
+    //         .dispatch('login', user)
+    //         .then(() => this.$router.push('/dashboard'))
+    //         .catch(err => {
+    //           this.submitError =
+    //             'Oh no, our servers went on strike! Please try again in a few minutes ';
+    //
+    //           this.submitError = err.response.data.detail;
+    //           console.log(this.submitError);
+    //         });
+    //     }
+    //   });
+    // },
   },
 }
 </script>

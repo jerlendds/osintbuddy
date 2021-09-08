@@ -37,7 +37,7 @@ const publicRoutes = [
         },
     },
     {
-        path: '/Pricing',
+        path: '/pricing',
         name: 'Pricing',
         components: {
             default: Pricing,
