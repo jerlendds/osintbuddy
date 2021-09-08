@@ -21,6 +21,10 @@ docker-compose up -d
 
 **Note**: The first time you start your stack, it might take a minute for it to be ready. While the backend waits for the database to be ready and configures everything. You can check the logs to monitor it.
 
+#### Latest Database Implementation
+
+<img alt="OsintBuddy" src="./docs/OB-database.gif" />
+
 
 #### Account Pages
 
