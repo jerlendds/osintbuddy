@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func
 from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
@@ -14,12 +14,6 @@ class Search_Result(Base):  # noqa
     title = Column(String)
     description = Column(String)
     url = Column(String)
-    modified = Column(DateTime)
-    created = Column(DateTime)
-    thumbnail_url = Column(String)
-    thumbnail_width = Column(String)
-    thumbnail_height = Column(String)
-    breadcrumb_url = Column(String)
-    file_format = Column(String)
+    modified = Column(DateTime(timezone=True), server_default=func.now())
     search_id = Column(Integer, ForeignKey("search.id"))
-    search = relationship("Search")
+    search = relationship("Search", back_populates="search_results")

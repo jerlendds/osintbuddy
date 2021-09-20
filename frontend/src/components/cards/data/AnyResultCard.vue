@@ -10,41 +10,48 @@
     >
       <div class="flex flex-col">
         <section class="flex justify-between items-start mt-2">
-          <section class="flex flex-col mt-2 pl-3 pr-1 w-full">
-            <div class="flex items-center pb-2 w-full">
-              <component :is="cloudIcon" class="text-primary-300 pr-2" />
-              <h2 class="font-semibold font-body text-black-500">CSE Result</h2>
-            </div>
-            <h2
-                class="text-black-500 leading-6 font-body underline font-medium"
-            >
-              {{ title }}
-            </h2>
-            <section class="flex flex-col mt-1">
+          <section class="flex flex-col  pl-3 pr-1 w-full">
+            <section class="flex justify-between ">
               <h2
-                  class="text-black-300 leading-6 font-medium font-body text-sm"
+                  class="text-black-500 leading-6 font-body underline font-medium"
               >
-                {{ description }}
+                {{ title }}
               </h2>
+              <component :is="cloudIcon" class="text-primary-300 pr-2 opacity-40" />
+              <!--              <h2 class="font-semibold font-body text-black-500"></h2>-->
+            </section>
+
+            <section class="flex flex-col mt-1">
+              <div class="flex items-center w-full">
+
+
+                <h2
+                    class="text-black-300 leading-6 font-medium font-body text-sm"
+                >
+                  {{ description }}
+                </h2>
+
+              </div>
+
             </section>
           </section>
           <section class="lg:visible lg:relative hidden invisible">
             <div class="h-20 w-20 ">
-              <img alt="" class="w-full h-full" :src="img_url" />
+              <img alt="" class="w-full h-full" :src="imgUrl" />
             </div>
           </section>
         </section>
 
-        <section class="flex justify-between items-end pb-3 mt-2 px-3">
+        <section class="flex justify-between items-end pb-2 mt-2 px-3">
           <section>
             <a
-                class=" font-head  flex "
+                class="font-head flex"
                 :href="url"
             >
               <p
-                  class=" text-sm hover:underline text-primary-400  overflow-ellipsis whitespace-wrap max-w-lg leading-6 font-body "
+                  class="text-sm hover:underline text-primary-400  overflow-ellipsis whitespace-wrap max-w-lg leading-6 font-body "
               >
-                {{ domain_value }}
+                {{ domain }}
               </p>
             </a>
           </section>
@@ -71,15 +78,8 @@ export default {
   },
 
   props: {
-    status: {
-      default: null,
-      value: String,
-    },
-    domain_type: {
-      default: null,
-      value: String,
-    },
-    domain_value: {
+
+    domain: {
       default: null,
       value: String,
     },
@@ -95,7 +95,7 @@ export default {
       default: null,
       value: String,
     },
-    img_url: {
+    imgUrl: {
       default: null,
       value: String,
     },
@@ -105,7 +105,7 @@ export default {
     return {
       isSaved: false,
       showUrl: false,
-    };
+    }
   },
 
   methods: {

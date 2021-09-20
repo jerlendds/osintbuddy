@@ -4,10 +4,10 @@ from sqlalchemy import Boolean, Column, Integer, String, DateTime, func, Foreign
 from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
-from .user_search import User_Search
 
 if TYPE_CHECKING:
     from .item import Item  # noqa: F401
+    from .user_search import User_Search
 
 
 class User(Base):
