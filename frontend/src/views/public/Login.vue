@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col items-center justify-center my-36">
-    <h1 class="px-12 pt-20 pb-1 mx-2 font-semibold border-b-2 font-head text-black-400 border-opacity-40 border-black-300">To continue, log in to OSINT Buddy</h1>
+  <div class="account-container">
+    <h1 class="account-header">To continue, log in to OSINT Buddy</h1>
     <div class="flex items-center justify-center w-3/5 ">
       <login-form />
     </div>
@@ -18,3 +18,13 @@ export default {
   },
 };
 </script>
+
+<style>
+.account-container {
+  @apply flex flex-col items-center justify-center my-36
+}
+
+.account-header {
+  @apply px-12 pt-20 pb-1 mx-2 font-semibold border-b-2 font-head text-black-400 border-opacity-40 border-black-300
+}
+</style>
