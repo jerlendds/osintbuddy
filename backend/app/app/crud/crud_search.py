@@ -10,7 +10,6 @@ from app.schemas.search import SearchCreate, SearchUpdate
 
 class CRUDSearch(CRUDBase[Search, SearchCreate, SearchUpdate]):
     def create_with_owner(self, db: Session, *, obj_in: SearchCreate) -> Search:
-        print("HELLO SEARCH!: ", obj_in)
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)

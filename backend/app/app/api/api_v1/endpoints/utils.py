@@ -9,6 +9,7 @@ from app.api import deps
 from app.core.celery_app import celery_app
 from app.utils import send_test_email
 from app import crud
+from app.worker import start_cse_crawl
 
 router = APIRouter()
 
@@ -47,6 +48,8 @@ def create_search(
     """
     Create new search.
     """
-    print("HELLO", search_in)
     search = crud.search.create_with_owner(db=db, obj_in=search_in)
+    search_result = start_cse_crawl.delay(search_in.query)
+    print("search_result task var:", search_result.ready())
+
     return search

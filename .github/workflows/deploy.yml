@@ -21,7 +21,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Deploy Foodoo
+      - name: Deploy Osint Buddy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -31,15 +31,15 @@ jobs:
           port: 22
           
           script: |
-            cd foodoo/
+            cd osintbuddy/
             git config pull.rebase false
             git pull -q
             export TAG=prod
             export FRONTEND_ENV=production
             bash ./scripts/build-push.sh
-            export DOMAIN=foodoo.dev
-            export TRAEFIK_TAG=foodoo
-            export STACK_NAME=foodoo-dev
+            export DOMAIN=osintbuddy.dev
+            export TRAEFIK_TAG=osintbuddy
+            export STACK_NAME=osintbuddy-dev
             export TAG=prod
             sh ./scripts/deploy.sh
-            echo "[SUCCESS] Deployed Foodoo to Digital Ocean!"
+            echo "[SUCCESS] Deployed osintbuddy to Digital Ocean!"
