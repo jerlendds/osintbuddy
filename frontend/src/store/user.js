@@ -26,7 +26,7 @@ const user = {
     },
     actions: {
         login({commit}, user) {
-            var userData = new FormData();
+            let userData = new FormData();
             userData.append('username', user.email);
             userData.append('password', user.password);
 
@@ -37,7 +37,7 @@ const user = {
                     method: 'POST',
                 })
                     .then(resp => {
-                        const token = resp.data.token;
+                        const token = resp.data.access_token;
                         const user = resp.data.user;
                         localStorage.setItem('token', token);
                         // Add the following line:
@@ -86,7 +86,7 @@ const user = {
         },
     },
     getters: {
-        isLoggedIn: state => !!state.token,
+        isLoggedIn: state => state.token,
         authStatus: state => state.status,
     },
 }

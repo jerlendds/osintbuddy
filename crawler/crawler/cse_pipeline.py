@@ -8,7 +8,7 @@ from scrapy.exceptions import DropItem
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
-test = {
+search_data = {
     "results": [
         {
           "clicktrackUrl": "https://www.google.com/url?client=internal-element-cse&cx=009049714591083331396:i7cetsiiqru&q=https://ecfsapi.fcc.gov/file/60001027529.pdf&sa=U&ved=2ahUKEwiXocDH9OnyAhUT7J4KHbAcDVUQFnoECAAQAQ&usg=AOvVaw3ywN5k2RxhilM2FbN8pM_b",
@@ -62,27 +62,26 @@ class CsePipeline:
         results = item.get('results')
         if results and len(results) > 0:
             for result in results:
-                if not result.get('title'):
-                    raise DropItem
-                if not result.get('content'):
-                    raise DropItem
-                if not result.get('url'):
-                    raise DropItem
                 serp = {
-                    'title': result.get('title'),
-                    'description': result.get('content'),
-                    'url': result.get('url')
+                    'title': result.get('titleNoFormatting'),
+                    'description': result.get('contentNoFormatting'),
+                    'url': result.get('url'),
+                    'domain': result['breadcrumbUrl'].get('host')
                 }
-                print(json.dumps({
-                    'title': result.get('title'),
-                    'description': result.get('content'),
-                    'url': result.get('url')
-                }, indent=5))
+
+                try:
+                    serp['imgUrl'] = result.get('richSnippet')['cseImage']['src']
+                except KeyError:
+                    continue
+
+                # print(json.dumps(result, indent=5))
+                print(json.dumps(serp, indent=5))
+
                 serps.append(serp)
-                self.file.write(json.dumps({
-                    'title': result.get('title'),
-                    'description': result.get('content'),
-                    'url': result.get('url')
-                }, indent=5))
+                # self.file.write(json.dumps({
+                #     'title': result.get('title'),
+                #     'description': result.get('content'),
+                #     'url': result.get('url')
+                # }, indent=5))
 
             return serps

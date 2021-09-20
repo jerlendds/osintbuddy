@@ -109,7 +109,6 @@ export default {
     },
 
     login() {
-      console.log('login called');
       this.$refs.form.validate().then(success => {
         if (!success) {
           console.log(this.$refs.form);
@@ -140,53 +139,7 @@ export default {
         }
       });
     },
-    // onEmailSubmit() {
-    //   /* eslint-disable no-unused-vars */
-    //   this.$refs.form.validate().then(success => {
-    //     if (this.$refs.form.fields.Email.passed) {
-    //       this.$nextTick(() => {
-    //         this.$refs.passwordref.focus();
-    //       });
-    //     }
-    //   });
-    // },
-    //
-    // login() {
-    //   console.log('login called');
-    //   this.$refs.form.validate().then(success => {
-    //     if (!success) {
-    //       console.log(this.$refs.form);
-    //       console.log('login failed');
-    //       return;
-    //     }
-    //     // Resetting Values
-    //     this.email = this.password = '';
-    //
-    //     // Wait until the models are updated in the UI
-    //     this.$nextTick(() => {
-    //       this.$refs.form.reset();
-    //     });
-    //
-    //     if (success) {
-    //       console.log('Login method form valid');
-    //       const user = {
-    //         email: this.email,
-    //         password: this.password,
-    //       };
-    //
-    //       this.$store
-    //         .dispatch('login', user)
-    //         .then(() => this.$router.push('/dashboard'))
-    //         .catch(err => {
-    //           this.submitError =
-    //             'Oh no, our servers went on strike! Please try again in a few minutes ';
-    //
-    //           this.submitError = err.response.data.detail;
-    //           console.log(this.submitError);
-    //         });
-    //     }
-    //   });
-    // },
+
   },
 }
 </script>
