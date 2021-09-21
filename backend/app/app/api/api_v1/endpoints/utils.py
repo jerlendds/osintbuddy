@@ -43,13 +43,17 @@ def create_search(
     *,
     db: Session = Depends(deps.get_db),
     search_in: schemas.search.SearchCreate,
-    current_user: models.User = Depends(deps.get_current_active_user),
+    current_user: models.User = Depends(deps.get_current_active_user)
 ) -> Any:
     """
     Create new search.
     """
     search = crud.search.create_with_owner(db=db, obj_in=search_in)
-    search_result = start_cse_crawl.delay(search_in.query)
-    print("search_result task var:", search_result.ready())
 
+    user_search_data = {"user_id": current_user.id, "search_id": search.id}
+    user_search_in = schemas.UserSearchCreate(**user_search_data)
+    crud.user_search.create(db=db, obj_in=user_search_in)
+
+    search_request = start_cse_crawl.delay(search.query)
+    print("search_result task var:", search_request.ready())
     return search
