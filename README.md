@@ -1,8 +1,10 @@
-<img src="./docs/osintbuddy.svg" height="80px" />
+<img src="./docs/assets/osintbuddy.svg" height="80px" />
 
 ---
 
 ## Overview
+
+*this project is a work-in-progress however feel free to extract out the crawler directory that's for the Google CSE scraper, it's very fast :)*
 
 osintbuddy is an OSINT tool for Google CSEs. Directly query the Google CSE API, store results, analyse, and more all through a deployable and scaleable webapp.
 
@@ -33,12 +35,11 @@ docker-compose up -d
 
 
 
-## urls
+## URLs
 
  - Frontend: http://localhost
  - Backend: http://localhost/api/
- - Documentation: http://localhost/docs
- - Documentation: http://localhost/redoc
+ - Documentation: http://localhost/docs -- http://localhost/redoc
  - PGAdmin: http://localhost:5050
  - Flower: http://localhost:5555
  - Traefik UI: http://localhost:8090
@@ -47,49 +48,57 @@ docker-compose up -d
 
 
 
-# Progress Pictures
+### Progress Notes
+
+- Dockerized the Scrapy crawler and added to stack, made plans to add CSE link updating at regular intervals - [Sept 21, 2021]
+
+
+
+# Progress Screenshots
 
 
 #### Mobile Results
 
-<img alt="OsintBuddy" src="./docs/cse_mobile_demo.gif" />
+<img alt="OsintBuddy" src="./docs/assets/OB_CSE-mobile-results.gif" align="center" />
 
 
 #### Latest Database Implementation
 
-<img alt="OsintBuddy" src="./docs/OB-database.gif" />
+<img alt="OsintBuddy" src="./docs/assets/OB-database.gif" />
+
+<img alt="OSINT Buddy ERD" src="./docs/assets/database-erd.png" />
 
 
 #### Account Pages
 
-<img src="./docs/OB-login_pages.gif" />
+<img src="./docs/assets/OB-login_pages.gif" />
 
 
 #### Total CSE URLs
 
-<img alt="OsintBuddy" src="./docs/OB-cse-count.png" />
+<img alt="OsintBuddy" src="./docs/assets/OB-cse-count.png" />
 
 
 #### CSE Crawler Demo
 
-<img alt="OsintBuddy" src="./docs/OB-cse-crawler.gif" />
+<img alt="OsintBuddy" src="./docs/assets/OB-cse-crawler.gif" />
 
 
 #### Docs overview
 
-<img alt="OsintBuddy" src="./docs/OB-docs-overview.gif" />
+<img alt="OsintBuddy" src="./docs/assets/OB-docs-overview.gif" />
 
 
 #### Flower
 
-<img alt="OsintBuddy" src="./docs/OB-flower.gif" />
+<img alt="OsintBuddy" src="./docs/assets/OB-flower.gif" />
 
 
 #### PGAdmin
 
-<img alt="OsintBuddy" src="./docs/OB-pgadmin.gif" />
+<img alt="OsintBuddy" src="./docs/assets/OB-pgadmin.gif" />
 
 
 #### Traefik
 
-<img alt="OsintBuddy" src="./docs/OB-traefik.gif" />
+<img alt="OsintBuddy" src="./docs/assets/OB-traefik.gif" />
