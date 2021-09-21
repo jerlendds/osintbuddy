@@ -1,8 +1,8 @@
-"""changed last_queried on search table
+"""initial revision
 
-Revision ID: f7c4067ff5b3
-Revises: af812b041e08
-Create Date: 2021-09-19 16:38:23.293089
+Revision ID: 562c7c76009c
+Revises: d2a32f973195
+Create Date: 2021-09-20 20:44:30.053418
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f7c4067ff5b3'
-down_revision = 'af812b041e08'
+revision = '562c7c76009c'
+down_revision = 'd2a32f973195'
 branch_labels = None
 depends_on = None
 
