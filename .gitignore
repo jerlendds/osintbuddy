@@ -3,3 +3,4 @@
 docker-stack.yml
 .idea
 .venv
+.env
