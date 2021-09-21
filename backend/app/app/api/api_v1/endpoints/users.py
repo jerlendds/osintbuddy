@@ -83,7 +83,6 @@ def read_user_me(
     """
     Get current user.
     """
-    print("Shit", current_user.modified, type(current_user.created))
     return current_user
 
 

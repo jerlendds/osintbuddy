@@ -1,8 +1,8 @@
 """initial revision
 
-Revision ID: 233ea95fb6d2
+Revision ID: d2a32f973195
 Revises: 
-Create Date: 2021-08-28 05:02:56.174626
+Create Date: 2021-09-20 20:43:26.250514
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '233ea95fb6d2'
+revision = 'd2a32f973195'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -37,7 +37,10 @@ def upgrade():
     op.create_table('search',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('query', sa.String(), nullable=False),
-    sa.Column('last_queried', sa.DateTime(), nullable=False),
+    sa.Column('created', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
+    sa.Column('last_updated', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
+    sa.Column('completed', sa.Boolean(), nullable=False),
+    sa.Column('result_count', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_search_id'), 'search', ['id'], unique=False)
@@ -58,28 +61,17 @@ def upgrade():
     op.create_index(op.f('ix_user_full_name'), 'user', ['full_name'], unique=False)
     op.create_index(op.f('ix_user_id'), 'user', ['id'], unique=False)
     op.create_table('search_category',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(), nullable=True),
-    sa.Column('search', sa.Integer(), nullable=True),
+    sa.Column('search_id', sa.Integer(), nullable=True),
     sa.Column('cse_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['cse_id'], ['cse.id'], ),
-    sa.ForeignKeyConstraint(['search'], ['search.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.ForeignKeyConstraint(['search_id'], ['search.id'], )
     )
-    op.create_index(op.f('ix_search_category_id'), 'search_category', ['id'], unique=False)
-    op.create_index(op.f('ix_search_category_name'), 'search_category', ['name'], unique=False)
     op.create_table('search_result',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(), nullable=True),
     sa.Column('description', sa.String(), nullable=True),
     sa.Column('url', sa.String(), nullable=True),
-    sa.Column('modified', sa.DateTime(), nullable=True),
-    sa.Column('created', sa.DateTime(), nullable=True),
-    sa.Column('thumbnail_url', sa.String(), nullable=True),
-    sa.Column('thumbnail_width', sa.String(), nullable=True),
-    sa.Column('thumbnail_height', sa.String(), nullable=True),
-    sa.Column('breadcrumb_url', sa.String(), nullable=True),
-    sa.Column('file_format', sa.String(), nullable=True),
+    sa.Column('modified', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.Column('search_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['search_id'], ['search.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -103,8 +95,6 @@ def downgrade():
     op.drop_table('user_search')
     op.drop_index(op.f('ix_search_result_id'), table_name='search_result')
     op.drop_table('search_result')
-    op.drop_index(op.f('ix_search_category_name'), table_name='search_category')
-    op.drop_index(op.f('ix_search_category_id'), table_name='search_category')
     op.drop_table('search_category')
     op.drop_index(op.f('ix_user_id'), table_name='user')
     op.drop_index(op.f('ix_user_full_name'), table_name='user')
