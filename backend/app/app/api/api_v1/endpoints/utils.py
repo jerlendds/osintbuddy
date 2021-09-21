@@ -49,11 +49,11 @@ def create_search(
     Create new search.
     """
     search = crud.search.create_with_owner(db=db, obj_in=search_in)
+    start_cse_crawl.delay(search.query)
 
     user_search_data = {"user_id": current_user.id, "search_id": search.id}
     user_search_in = schemas.UserSearchCreate(**user_search_data)
+
     crud.user_search.create(db=db, obj_in=user_search_in)
 
-    search_request = start_cse_crawl.delay(search.query)
-    print("search_result task var:", search_request.ready())
     return search
