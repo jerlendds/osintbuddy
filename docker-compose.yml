@@ -184,6 +184,8 @@ services:
   crawler:
     stdin_open: true # docker run -i
     tty: true        # docker run -t
+    env_file:
+      - .env
     build:
       context: ./crawler
       dockerfile: crawler.Dockerfile

@@ -4,13 +4,13 @@ FROM python:3.9.6-buster
 WORKDIR /
 
 
-COPY /requirements.txt /app/
+COPY /requirements.txt /spiderman/
 
 
-RUN pip install -r /app/requirements.txt
+RUN pip install -r /spiderman/requirements.txt
 
 
-COPY . /app
+COPY . /spiderman
 
 
 ENV PYTHONPATH=/app
