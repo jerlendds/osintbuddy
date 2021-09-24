@@ -3,7 +3,8 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 import json
-
+import os
+import psycopg2
 from scrapy.exceptions import DropItem
 
 # useful for handling different item types with a single interface
@@ -51,11 +52,22 @@ search_data = {
 
 
 class CsePipeline:
+    db_name = os.getenv('POSTGRES_DB')
+    db_user = os.getenv('POSTGRES_USER')
+    db_server = os.getenv('POSTGRES_SERVER')
+    db_password = os.getenv('POSTGRES_PASSWORD')
+
+    def __init__(self):
+        self.conn = psycopg2.connect(dbname=self.db_name, user=self.db_user,
+                                     password=self.db_password, host=self.db_server)
+        self.cur = self.conn.cursor()
+
     def open_spider(self, spider):
-        self.file = open('items.json', 'w')
+        pass
 
     def close_spider(self, spider):
-        self.file.close()
+        self.cur.close()
+        self.conn.close()
 
     def process_item(self, item, spider):
         serps = []
@@ -68,20 +80,13 @@ class CsePipeline:
                     'url': result.get('url'),
                     'domain': result['breadcrumbUrl'].get('host')
                 }
-
-                try:
-                    serp['imgUrl'] = result.get('richSnippet')['cseImage']['src']
-                except KeyError:
-                    continue
-
-                # print(json.dumps(result, indent=5))
-                print(json.dumps(serp, indent=5))
-
+                # TODO: Store other potentially useful values
+                # try:
+                #     serp['imgUrl'] = result.get('richSnippet')['cseImage']['src']
+                # except KeyError:
+                #     continue
+                self.cur.execute("INSERT INTO search_result (title, description, url)"
+                                 " VALUES (%s, %s, %s)",
+                                 (serp['title'], serp['description'], serp['url']))
                 serps.append(serp)
-                # self.file.write(json.dumps({
-                #     'title': result.get('title'),
-                #     'description': result.get('content'),
-                #     'url': result.get('url')
-                # }, indent=5))
-
-            return serps
+                self.conn.commit()

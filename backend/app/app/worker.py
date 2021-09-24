@@ -13,4 +13,5 @@ def test_celery(word: str) -> str:
 
 @celery_app.task(acks_late=True)
 def start_cse_crawl(query: str) -> str:
+    # TODO:
     return f"Searching for {query}"
