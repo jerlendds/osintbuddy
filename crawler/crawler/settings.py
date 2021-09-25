@@ -7,22 +7,24 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'crawler'
+BOT_NAME = 'buddy'
 
 SPIDER_MODULES = ['crawler.spiders']
 NEWSPIDER_MODULE = 'crawler.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36'
+USER_AGENT = 'jerlends@tuta.io -- https://github.com/jerlendds/osintbuddy'
 
 # Obey robots.txt rules
-# CSEs by default have no robots.txt
+# CSEs by default have no robots.txt || Last checked September 16, 2021
 ROBOTSTXT_OBEY = False
 
 # TODO: setup .env vars for this file
 # Splash Docker container
 # https://splash.readthedocs.io/en/latest/install.html
+# SPLASH has been refactored out although if I add some other features I may use it
+# so keeping this here for the time being
 SPLASH_URL = 'http://0.0.0.0:8050'
 
 DOWNLOADER_MIDDLEWARES = {

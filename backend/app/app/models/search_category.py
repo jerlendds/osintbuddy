@@ -9,13 +9,13 @@ if TYPE_CHECKING:
     from .search import Search  # noqa: F401
 
 
-Search_Category = Table("search_category", Base.metadata,
-                        Column("search_id", Integer, ForeignKey('search.id')),
-                        Column("cse_id", Integer, ForeignKey('cse.id')))
+# Search_Category = Table("search_category", Base.metadata,
+#                         Column("search_id", Integer, ForeignKey('search.id')),
+#                         Column("cse_id", Integer, ForeignKey('cse.id')))
 
-# class Search_Category(Base):  # noqa
-#     id = Column(Integer, primary_key=True, index=True)
-#     name = Column(String, index=True)
-#
-#     search = relationship("Search", back_populates="search_categories")
-#     cses = relationship("Cse", backref="search_category")
+class Search_Category(Base):  # noqa
+    id = Column(Integer, primary_key=True, index=True)
+    category = Column(String, index=True)
+
+    search_id = Column(Integer, ForeignKey('search.id'))
+    cses = relationship("Cse")

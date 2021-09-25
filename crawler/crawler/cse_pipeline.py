@@ -2,13 +2,37 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-import json
-
+from .database import db
 from scrapy.exceptions import DropItem
 
-# useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
-search_data = {
+
+class CsePipeline:
+    def open_spider(self, spider):
+        pass
+
+    def close_spider(self, spider):
+        db.close()
+
+    def process_item(self, item, spider):
+        results = item.get('results')
+        if results and len(results) > 0:
+            for result in results:
+                serp = {
+                    'title': result.get('titleNoFormatting'),
+                    'description': result.get('contentNoFormatting'),
+                    'url': result.get('url'),
+                    'domain': result['breadcrumbUrl'].get('host')
+                }
+                # TODO: Store other potentially useful values
+                # try:
+                #     serp['imgUrl'] = result.get('richSnippet')['cseImage']['src']
+                # except KeyError:
+                #     continue
+                sql = "INSERT INTO search_result (title, description, url) VALUES (%s, %s, %s)"
+                db.cur.execute(sql, (serp['title'], serp['description'], serp['url']))
+                db.conn.commit()
+
+search_data_example = {
     "results": [
         {
           "clicktrackUrl": "https://www.google.com/url?client=internal-element-cse&cx=009049714591083331396:i7cetsiiqru&q=https://ecfsapi.fcc.gov/file/60001027529.pdf&sa=U&ved=2ahUKEwiXocDH9OnyAhUT7J4KHbAcDVUQFnoECAAQAQ&usg=AOvVaw3ywN5k2RxhilM2FbN8pM_b",
@@ -48,40 +72,3 @@ search_data = {
         }
     ]
 }
-
-
-class CsePipeline:
-    def open_spider(self, spider):
-        self.file = open('items.json', 'w')
-
-    def close_spider(self, spider):
-        self.file.close()
-
-    def process_item(self, item, spider):
-        serps = []
-        results = item.get('results')
-        if results and len(results) > 0:
-            for result in results:
-                serp = {
-                    'title': result.get('titleNoFormatting'),
-                    'description': result.get('contentNoFormatting'),
-                    'url': result.get('url'),
-                    'domain': result['breadcrumbUrl'].get('host')
-                }
-
-                try:
-                    serp['imgUrl'] = result.get('richSnippet')['cseImage']['src']
-                except KeyError:
-                    continue
-
-                # print(json.dumps(result, indent=5))
-                print(json.dumps(serp, indent=5))
-
-                serps.append(serp)
-                # self.file.write(json.dumps({
-                #     'title': result.get('title'),
-                #     'description': result.get('content'),
-                #     'url': result.get('url')
-                # }, indent=5))
-
-            return serps
