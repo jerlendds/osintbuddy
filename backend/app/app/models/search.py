@@ -21,7 +21,7 @@ class Search(Base):
     completed = Column(Boolean, default=0, nullable=False)
     result_count = Column(Integer(), default=0, nullable=False)
     #
-    search_categories = relationship("Cse", secondary=Search_Category, back_populates="cse")
+    search_categories = relationship("Search_Category")
     #
     search_results = relationship("Search_Result", back_populates="search")
     #
