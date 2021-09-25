@@ -2,8 +2,10 @@ version: "3.8"
 services:
   proxy:
     image: traefik:v2.2
+    env_file:
+      - .env
     command:
-      - "--log.level=DEBUG"
+      - --log.level=DEBUG
       - --providers.docker
       - --providers.docker.constraints=Label(`traefik.constraint-label-stack`, `${TRAEFIK_TAG?Variable not set}`)
       - --providers.docker.exposedbydefault=false
@@ -75,17 +77,17 @@ services:
       - .env
     deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.docker.network=${TRAEFIK_PUBLIC_NETWORK?Variable not set}"
-        - "traefik.constraint-label=${TRAEFIK_PUBLIC_TAG?Variable not set}"
-        - "traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-http.rule=Host(`pgadmin.${DOMAIN?Variable not set}`)"
-        - "traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-http.entrypoints=http"
-        - "traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-http.middlewares=${STACK_NAME?Variable not set}-https-redirect"
-        - "traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-https.rule=Host(`pgadmin.${DOMAIN?Variable not set}`)"
-        - "traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-https.entrypoints=https"
-        - "traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-https.tls=true"
-        - "traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-https.tls.certresolver=le"
-        - "traefik.http.services.${STACK_NAME?Variable not set}-pgadmin.loadbalancer.server.port=5050"
+        - traefik.enable=true
+        - traefik.docker.network=${TRAEFIK_PUBLIC_NETWORK?Variable not set}
+        - traefik.constraint-label=${TRAEFIK_PUBLIC_TAG?Variable not set}
+        - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-http.rule=Host(`pgadmin.${DOMAIN?Variable not set}`)
+        - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-http.entrypoints=http
+        - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-http.middlewares=${STACK_NAME?Variable not set}-https-redirect
+        - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-https.rule=Host(`pgadmin.${DOMAIN?Variable not set}`)
+        - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-https.entrypoints=https
+        - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-https.tls=true
+        - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-https.tls.certresolver=le
+        - traefik.http.services.${STACK_NAME?Variable not set}-pgadmin.loadbalancer.server.port=5050
 
   queue:
     image: rabbitmq:3.8
@@ -171,11 +173,7 @@ services:
     env_file:
       - .env
     entrypoint:
-      - "/bin/bash"
-      - "-l"
-      - "-c"
-    command:
-      - "bash -c /spiderman/start-crawler-ssh.sh"
+      - "/start-crawler-ssh.sh"
     build:
       context: ./crawler
       dockerfile: crawler.Dockerfile
