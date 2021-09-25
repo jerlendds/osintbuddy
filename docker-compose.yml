@@ -128,6 +128,8 @@ services:
       dockerfile: backend.Dockerfile
       args:
         INSTALL_DEV: ${INSTALL_DEV-false}
+    links:
+      - "crawler:spider"
     deploy:
       labels:
         - traefik.enable=true
@@ -169,11 +171,11 @@ services:
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     ports:
-      - 7001
+      - 7242
     env_file:
       - .env
     entrypoint:
-      - "/start-crawler-ssh.sh"
+      - "/start-crawler-service.sh"
     build:
       context: ./crawler
       dockerfile: crawler.Dockerfile
