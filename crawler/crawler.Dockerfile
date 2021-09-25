@@ -1,4 +1,4 @@
-FROM python:latest
+FROM python:3.9.6-buster
 
 
 WORKDIR /
@@ -13,14 +13,16 @@ RUN pip install -r /spiderman/requirements.txt
 COPY . /spiderman
 
 
+
+
+
+COPY start-crawler-service.sh /start-crawler-service.sh
+
+
+
+RUN chmod +x /start-crawler-service.sh
+
+
 ENV PYTHONPATH=/spiderman
 
-
-# Apt update & apt install required packages
-RUN apt-get update && apt -y install openssh-server ufw
-
-
-COPY start-crawler-ssh.sh /start-crawler-ssh.sh
-
-
-RUN chmod +x /start-crawler-ssh.sh
+EXPOSE 7242
