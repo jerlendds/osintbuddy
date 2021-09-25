@@ -4,20 +4,12 @@ services:
     image: traefik:v2.2
     command:
       - "--log.level=DEBUG"
-      # Enable Docker in Traefik, so that it reads labels from Docker services
       - --providers.docker
-      # Add a constraint to only use services with the label for this stack
-      # from the env var TRAEFIK_TAG
       - --providers.docker.constraints=Label(`traefik.constraint-label-stack`, `${TRAEFIK_TAG?Variable not set}`)
-      # Do not expose all Docker services, only the ones explicitly exposed
       - --providers.docker.exposedbydefault=false
-      # Enable Docker Swarm mode
       - --providers.docker.swarmmode=true
-      # Enable the access log, with HTTP requests
       - --accesslog
-      # Enable the Traefik log, for configurations and errors
       - --log
-      # Enable the Dashboard and API
       - --api
     networks:
       - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
@@ -30,20 +22,15 @@ services:
         constraints:
           - node.role == manager
       labels:
-        # Enable Traefik for this service, to make it available in the public network
         - traefik.enable=true
         # Use the traefik-public network (declared below)
         - traefik.docker.network=${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-        # Use the custom label "traefik.constraint-label=traefik-public"
-        # This public Traefik will only use services with this label
         - traefik.constraint-label=${TRAEFIK_PUBLIC_TAG?Variable not set}
         # traefik-http set up only to use the middleware to redirect to https
         - traefik.http.middlewares.${STACK_NAME?Variable not set}-https-redirect.redirectscheme.scheme=https
         - traefik.http.middlewares.${STACK_NAME?Variable not set}-https-redirect.redirectscheme.permanent=true
         # Handle host with and without "www" to redirect to only one of them
         # Uses environment variable DOMAIN
-        # To disable www redirection remove the Host() you want to discard, here and
-        # below for HTTPS
         - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-http.rule=Host(`${DOMAIN?Variable not set}`) || Host(`www.${DOMAIN?Variable not set}`)
         - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-http.entrypoints=http
         # traefik-https the actual router using HTTPS
@@ -55,14 +42,9 @@ services:
         # Define the port inside of the Docker service to use
         - traefik.http.services.${STACK_NAME?Variable not set}-proxy.loadbalancer.server.port=80
         # Handle domain with and without "www" to redirect to only one
-        # To disable www redirection remove the next line
         - traefik.http.middlewares.${STACK_NAME?Variable not set}-www-redirect.redirectregex.regex=^https?://(www.)?(${DOMAIN?Variable not set})/(.*)
         # Redirect a domain with www to non-www
-        # To disable it remove the next line
         - traefik.http.middlewares.${STACK_NAME?Variable not set}-www-redirect.redirectregex.replacement=https://${DOMAIN?Variable not set}/$${3}
-        # Redirect a domain without www to www
-        # To enable it remove the previous line and uncomment the next
-        # - traefik.http.middlewares.${STACK_NAME}-www-redirect.redirectregex.replacement=https://www.${DOMAIN}/$${3}
         # Middleware to redirect www, to disable it remove the next line
         - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-https.middlewares=${STACK_NAME?Variable not set}-www-redirect
         # Middleware to redirect www, and redirect HTTP to HTTPS
@@ -184,13 +166,25 @@ services:
   crawler:
     stdin_open: true # docker run -i
     tty: true        # docker run -t
+    ports:
+      - 7001
+    env_file:
+      - .env
+    entrypoint:
+      - "/bin/bash"
+      - "-l"
+      - "-c"
+    command:
+      - "bash -c /spiderman/start-crawler-ssh.sh"
     build:
       context: ./crawler
       dockerfile: crawler.Dockerfile
-
+#    deploy:
+#      labels:
+#        - traefik.http.middlewares.crawler-add-prefix.addprefix.prefix=/crawler
+#        - traefik.http.routers.router1.middlewares=crawler-add-prefix@backend
 volumes:
   app-db-data:
 networks:
   traefik-public:
-    # TODO: Allow setting it to false for testing
     external: true

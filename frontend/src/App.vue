@@ -5,7 +5,9 @@
   >
     <router-view key="nav" name="header" class="z-30" v-if="isPublicRoute" />
     <router-view key="main" class="z-10" />
-    <router-view key="footer" name="footer"  />
+    <router-view key="footer" name="footer"
+     :class="{'mt-64':isPublicRoute}"
+    />
   </div>
 </template>
 
