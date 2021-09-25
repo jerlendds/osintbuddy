@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+systemctl enable ssh
+ufw allow ssh
+ufw enable
+
 # create /var/log/auth.log if not exist
 if [[ ! -f /var/log/auth.log ]]
 then
@@ -10,7 +14,7 @@ fi
 service ssh start
 
 # sleep forever
-#sleep infinity
+sleep infinity
 
 # link auth.log to container log
 tail -f /var/log/auth.log
