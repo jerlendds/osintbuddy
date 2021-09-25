@@ -13,4 +13,4 @@ RUN pip install -r /spiderman/requirements.txt
 COPY . /spiderman
 
 
-ENV PYTHONPATH=/app
+ENV PYTHONPATH=/spiderman
