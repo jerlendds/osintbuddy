@@ -8,8 +8,13 @@ class SearchBase(BaseModel):
     query: str
 
 
+class SearchUserSearchCreate(SearchBase):
+    user_id: int
+    search_id: int
+
+
 class SearchCreate(SearchBase):
-    completed: Optional[bool] = False
+    pass
 
 
 class SearchUpdate(SearchBase):
