@@ -1,5 +1,5 @@
 <template>
-  <footer class="fixed bottom-0 z-50 flex items-center justify-around w-full h-40 shadow-4 bg-white-200 bg-opacity-90">
+  <footer class="z-50 flex items-center justify-around w-full h-40 shadow-4 bg-white-200 bg-opacity-90">
     <section class="flex flex-col px-12">
       <h1 class="pt-1 text-lg font-semibold text-black-800">General</h1>
       <ul class="text-black-500" >
