@@ -122,7 +122,7 @@ def read_user_by_id(
     """
     Get a specific user by id.
     """
-    user = crud.user.get(db, id=user_id)
+    user = crud.user.count(db, id=user_id)
     if user == current_user:
         return user
     if not crud.user.is_superuser(current_user):
@@ -143,7 +143,7 @@ def update_user(
     """
     Update a user.
     """
-    user = crud.user.get(db, id=user_id)
+    user = crud.user.count(db, id=user_id)
     if not user:
         raise HTTPException(
             status_code=404,
