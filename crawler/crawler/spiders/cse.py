@@ -23,14 +23,12 @@ class CseSpider(scrapy.Spider):
         }
     }
 
-    search_query = "Albert"
+    search_query = "Alexandra Slugoski"
 
     # TODO: take url categories from request and
     #  revise url scraping algorithms in the pipeline
-    # start_urls = links
-    start_urls = [
-       "https://cse.google.com/cse?cx=005797772976587943970:i7q6z1kjm1w"
-    ]
+    start_urls = links
+    #start_urls = ["https://cse.google.com/cse?cx=005797772976587943970:i7q6z1kjm1w"]
 
     def start_requests(self):
         for url in self.start_urls:

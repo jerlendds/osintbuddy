@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from raven import Client
 import requests
 
@@ -13,7 +15,9 @@ def test_celery(word: str) -> str:
 
 
 @celery_app.task(acks_late=True)
-def start_cse_crawl(query: str) -> str:
-    # TODO: Implement me, currently working on the crawler service then will implement this
-    # requests.post("http://")
-    return f"Searching for {query}"
+def start_cse_crawl(query: str, current_user_id: int, user_search_id: int) -> dict:
+    data = {"query": query, 'user_id': current_user_id, 'user_search_id': user_search_id}
+    spider_response = requests.post("http://spider:7242/start", json=data)
+    crawl_status = spider_response.text
+    return {"search_meta": crawl_status}
+

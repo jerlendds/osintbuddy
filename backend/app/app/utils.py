@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import logging
 from datetime import datetime, timedelta
 from pathlib import Path
