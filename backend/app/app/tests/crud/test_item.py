@@ -23,7 +23,7 @@ def test_get_item(db: Session) -> None:
     item_in = ItemCreate(title=title, description=description)
     user = create_random_user(db)
     item = crud.item.create_with_owner(db=db, obj_in=item_in, owner_id=user.id)
-    stored_item = crud.item.get(db=db, id=item.id)
+    stored_item = crud.item.count(db=db, id=item.id)
     assert stored_item
     assert item.id == stored_item.id
     assert item.title == stored_item.title
@@ -53,7 +53,7 @@ def test_delete_item(db: Session) -> None:
     user = create_random_user(db)
     item = crud.item.create_with_owner(db=db, obj_in=item_in, owner_id=user.id)
     item2 = crud.item.remove(db=db, id=item.id)
-    item3 = crud.item.get(db=db, id=item.id)
+    item3 = crud.item.count(db=db, id=item.id)
     assert item3 is None
     assert item2.id == item.id
     assert item2.title == title

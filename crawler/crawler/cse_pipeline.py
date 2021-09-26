@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from .database import db
-from scrapy.exceptions import DropItem
+# from scrapy.exceptions import DropItem
 
 
 class CsePipeline:
@@ -12,22 +12,23 @@ class CsePipeline:
         pass
 
     def process_item(self, item, spider):
+        search_id = item.get('search_id')
+
         results = item.get('results')
         if results and len(results) > 0:
             for result in results:
-                serp = {
-                    'title': result.get('titleNoFormatting'),
-                    'description': result.get('contentNoFormatting'),
-                    'url': result.get('url'),
-                    'domain': result['breadcrumbUrl'].get('host')
-                }
-                # TODO: Store other potentially useful values
-                # try:
-                #     serp['imgUrl'] = result.get('richSnippet')['cseImage']['src']
-                # except KeyError:
-                #     continue
-                sql = "INSERT INTO search_result (title, description, url) VALUES (%s, %s, %s)"
-                db.cur.execute(sql, (serp['title'], serp['description'], serp['url']))
+                # serp = {
+                #     'title': result.get('titleNoFormatting'),
+                #     'description': result.get('contentNoFormatting'),
+                #     'url': result.get('url'),
+                #     'domain': result['breadcrumbUrl'].get('host')
+                # }
+
+                sql = "INSERT INTO search_result (title, description, url, search_id) VALUES (%s, %s, %s, %s)"
+                db.cur.execute(sql, (result.get('titleNoFormatting'),
+                                     result.get('contentNoFormatting'),
+                                     result.get('url'),
+                                     search_id))
                 db.conn.commit()
 
 

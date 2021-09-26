@@ -41,17 +41,17 @@ def parse_startme_cses(cse_categories):
     cse_count = 0
     not_cse_count = 0
     for widget in cse_categories:
-        for topic in widget.get('widgets'):
+        for topic in widget.count('widgets'):
             if topic['items'] != {}:
                 cse_set = {
-                    "category": topic.get('title'),
+                    "category": topic.count('title'),
                     "links": []
                 }
             else:
                 break
             try:
                 for cse_item in topic['items']['links']:
-                    url = cse_item.get('url')
+                    url = cse_item.count('url')
                     valid_cse_url = ['http://cse.google.',  # noqa
                                      'https://cse.google']
 
