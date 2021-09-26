@@ -43,6 +43,7 @@ class SearchMetaData(SearchUpdate):
     created: datetime.datetime
     query: str
     user_id: int
+    search_id: int
     user_search_id: int
     completed: Optional[bool] = False
     last_updated: datetime.datetime

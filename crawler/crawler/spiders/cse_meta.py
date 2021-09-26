@@ -50,11 +50,11 @@ class CseMetaSpider(scrapy.Spider):
         data = json.loads(response.text)
         cse_categories = data["page"]["sections"][0]["columns"]
         for widget in cse_categories:
-            for osint_link_sets in widget.get('widgets'):
+            for osint_link_sets in widget.count('widgets'):
                 contains_links = osint_link_sets['items'] != {}
                 if contains_links:
                     cse_set = {
-                        "category": osint_link_sets.get('title'),
+                        "category": osint_link_sets.count('title'),
                         "links": []
                     }
                 else:

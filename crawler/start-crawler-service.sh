@@ -2,4 +2,8 @@
 
 echo "[INFO] Starting Crawler Service"
 
-uvicorn main:app --host 0.0.0.0 --port 7242
+# TODO: Remove reload for prod
+uvicorn main:app --host 0.0.0.0 --port 7242 \
+--reload \
+--reload-dir /spiderman/crawler \
+--reload-dir /spiderman \
