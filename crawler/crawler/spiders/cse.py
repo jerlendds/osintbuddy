@@ -23,11 +23,13 @@ class CseSpider(scrapy.Spider):
         }
     }
 
-    search_query = "Alexandra Slugoski"
-
-    # TODO: take url categories from request and
-    #  revise url scraping algorithms in the pipeline
     start_urls = links
+
+    def __init__(self, query: str, search_id: int, user_id: int, *args, **kwargs):
+        self.search_query = query
+        self.search_id = search_id
+        self.user_id = user_id
+
     #start_urls = ["https://cse.google.com/cse?cx=005797772976587943970:i7q6z1kjm1w"]
 
     def start_requests(self):
@@ -57,6 +59,7 @@ class CseSpider(scrapy.Spider):
         callback_len = len(str(response.meta.get('callback_value')))
         item = response.body.decode('utf-8')[30 + callback_len:-2]
         values = json.loads(item)
+        values['search_id'] = self.search_id
         yield values
 
 
