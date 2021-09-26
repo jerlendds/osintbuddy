@@ -1,8 +1,8 @@
 import datetime
 import json
-from typing import Any, List
+from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
@@ -31,8 +31,8 @@ def create_search(
     user_search_in = schemas.user_search.UserSearchCreate(**user_search_data)
     user_search = crud.user_search.create(db=db, obj_in=user_search_in)
 
-    crawler_response = start_cse_crawl(search.query, current_user.id, user_search.id)
+    crawler_response = start_cse_crawl(search.query, current_user.id, user_search.id, search.id)
     crawler_data = json.loads(crawler_response.get('search_meta'))
     crawler_data['last_updated'] = datetime.datetime.now()
-
+    crawler_data['search_id'] = search.id
     return schemas.SearchMetaData(**crawler_data)
