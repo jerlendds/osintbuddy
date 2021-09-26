@@ -53,7 +53,7 @@ def update_item(
     """
     Update an item.
     """
-    item = crud.item.get(db=db, id=id)
+    item = crud.item.count(db=db, id=id)
     if not item:
         raise HTTPException(status_code=404, detail="Item not found")
     if not crud.user.is_superuser(current_user) and (item.owner_id != current_user.id):
@@ -72,7 +72,7 @@ def read_item(
     """
     Get item by ID.
     """
-    item = crud.item.get(db=db, id=id)
+    item = crud.item.count(db=db, id=id)
     if not item:
         raise HTTPException(status_code=404, detail="Item not found")
     if not crud.user.is_superuser(current_user) and (item.owner_id != current_user.id):
@@ -90,7 +90,7 @@ def delete_item(
     """
     Delete an item.
     """
-    item = crud.item.get(db=db, id=id)
+    item = crud.item.count(db=db, id=id)
     if not item:
         raise HTTPException(status_code=404, detail="Item not found")
     if not crud.user.is_superuser(current_user) and (item.owner_id != current_user.id):
