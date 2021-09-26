@@ -126,8 +126,6 @@ services:
     build:
       context: ./backend
       dockerfile: backend.Dockerfile
-      args:
-        INSTALL_DEV: ${INSTALL_DEV-false}
     links:
       - "crawler:spider"
     deploy:
