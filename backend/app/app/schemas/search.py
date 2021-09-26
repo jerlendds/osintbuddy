@@ -37,3 +37,13 @@ class SearchInDBBase(SearchBase):
 
 class Search(SearchInDBBase):
     pass
+
+
+class SearchMetaData(SearchUpdate):
+    created: datetime.datetime
+    query: str
+    user_id: int
+    user_search_id: int
+    completed: Optional[bool] = False
+    last_updated: datetime.datetime
+    result_count: Optional[int] = 0

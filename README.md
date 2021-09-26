@@ -50,13 +50,19 @@ docker-compose up -d
 
 
 
-### Progress Notes
+
+
+## Progress Notes
 
 - Dockerized the Scrapy crawler and added to stack, made plans to add CSE link updating at regular intervals - [Sept 21, 2021]
+- 
+
+### Progress Screenshots
+
+<img alt="" src="./docs/assets/osint_buddy_demo.gif" />
 
 
 
-# Progress Screenshots
 
 
 #### Mobile Results
