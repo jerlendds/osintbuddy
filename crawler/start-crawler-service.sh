@@ -1,1 +1,5 @@
-echo "[INFO] Work in progress... Starting crawler service"
+#!/usr/bin/env bash
+
+echo "[INFO] Starting Crawler Service"
+
+uvicorn main:app --host 0.0.0.0 --port 7242
