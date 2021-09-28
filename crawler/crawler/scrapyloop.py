@@ -1,6 +1,6 @@
 # GNU GPL v3 -- https://gitlab.com/granitosaurus/scrapy-loop/-/tree/master
 # I fucking love this guy who wrote the above, I spent 3 days struggling with my own
-# solution until I came across this genius
+# solution until I came across this genius (NOT MY CODE) :)
 import logging
 import signal
 from datetime import datetime, timedelta
