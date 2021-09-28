@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# All of this file needs some work, could be more intelligent and throw away less urls
 import os
 import re
 import json
@@ -28,7 +27,7 @@ class CseSpider(scrapy.Spider):
 
     custom_settings = dict()
     custom_settings['ITEM_PIPELINES'] = {'crawler.cse_pipeline.CsePipeline':  400}
-    custom_settings['DOWNLOADER_MIDDLEWARES']= {'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810}  # noqa
+    custom_settings['DOWNLOADER_MIDDLEWARES'] = {'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810}  # noqa
     custom_settings['BOT_NAME'] = 'CSE-Buddy'
     # CSEs by default have no robots.txt || Last checked September 16, 2021
     custom_settings['ROBOTSTXT_OBEY'] = False

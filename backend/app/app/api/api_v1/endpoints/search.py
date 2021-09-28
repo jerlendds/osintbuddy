@@ -44,12 +44,13 @@ def get_search(
         db: Session = Depends(deps.get_db),
         # current_user: models.User = Depends(deps.get_current_active_user),
         searchId: int,  # noqa
-        min: int,
-        max: int
+        limit: int,
+        offset: int
 ) -> Any:
     """
-    TODO:
+    TODO: Create Model for results response, create max result return limit
+     how much filtering should be done client side?
     """
-    data = crud.search_result.get_by_limit_offset(db, searchId, min, max)
-    print('data', data)
-    return {"hello": data}
+    data = crud.search_result.get_by_limit_offset(db, searchId, limit, offset)
+    total_results_count = crud.search_result.get_count(db, searchId)
+    return {"total_results": total_results_count, "results_count": len(data), "results": data}

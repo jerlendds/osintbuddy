@@ -10,20 +10,13 @@ from app.schemas.search_result import SearchResultCreate, SearchResultUpdate, Se
 
 
 class CRUDSearchResult(CRUDBase[SearchResult, SearchResultCreate, SearchResultUpdate]):
-
-    def get_by_limit_offset(self, db: Session, search_id: int, min: int = 0, max: int = 100) -> Optional[SearchResult]:  # noqa
-        query = db.query(self.model).filter(self.model.search_id == id)
-        listen(query, 'before_compile', self._apply_limit(db, min, max), retval=True)
+    def get_by_limit_offset(self, db: Session, search_id: int, limit: int = 0, offset: int = 100) -> Optional[SearchResult]:  # noqa
+        query = db.query(self.model).with_entities(self.model.id, self.model.title, self.model.description, self.model.url).filter(self.model.search_id == search_id).limit(limit).offset(offset).all()
         return query
 
-    def _apply_limit(self, db: Session, min: int, max: int):  # noqa
-        def wrapped(query: db.query):
-            if max:
-                query = query.limit(max)
-                if min:
-                    query = query.offset(min * max)
-            return query
-        return wrapped
+    def get_count(self, db: Session, search_id: int):
+        query = db.query(self.model).filter(self.model.search_id == search_id).count()
+        return query
 
 
 search_result = CRUDSearchResult(Search_Result)

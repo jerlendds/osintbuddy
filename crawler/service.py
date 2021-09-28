@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#TODO: Implement this -> https://docs.scrapy.org/en/latest/topics/stats.html
 import datetime
 from queue import Queue
 
@@ -37,7 +38,7 @@ def start_crawl(search_in: CrawlRequestSchema):
     try:
         crawl_scheduler.loop_crawl(CseSpider, crawl_queue.qsize, **data)
     except Exception as e:
-        print("TODO...:", e)
+        print("TODO, more research needed: ", e)
     finally:
         data['created'] = datetime.datetime.now()
         return CrawlResponseSchema(**data)

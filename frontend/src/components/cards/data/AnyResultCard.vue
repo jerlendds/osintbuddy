@@ -1,5 +1,5 @@
 <template>
-  <section class="flex shadow-9 bg-white-100 relative">
+  <section class="flex shadow-9 bg-white-100 relative my-4">
     <section
         :class="
         isSaved
@@ -15,7 +15,7 @@
               <h2
                   class="text-black-500 leading-6 font-body underline font-medium"
               >
-                {{ title }}
+                {{ source.title }}
               </h2>
               <component :is="cloudIcon" class="text-primary-300 pr-2 opacity-40" />
               <!--              <h2 class="font-semibold font-body text-black-500"></h2>-->
@@ -28,7 +28,7 @@
                 <h2
                     class="text-black-300 leading-6 font-medium font-body text-sm"
                 >
-                  {{ description }}
+                  {{ source.description }}
                 </h2>
 
               </div>
@@ -36,9 +36,9 @@
             </section>
           </section>
           <section class="lg:visible lg:relative hidden invisible">
-            <div class="h-20 w-20 ">
-              <img alt="" class="w-full h-full" :src="imgUrl" />
-            </div>
+<!--            <div class="h-20 w-20 ">-->
+<!--              <img alt="" class="w-full h-full" :src="imgUrl" />-->
+<!--            </div>-->
           </section>
         </section>
 
@@ -46,12 +46,12 @@
           <section>
             <a
                 class="font-head flex"
-                :href="url"
+                :href="source.url"
             >
               <p
                   class="text-sm hover:underline text-primary-400  overflow-ellipsis whitespace-wrap max-w-lg leading-6 font-body "
               >
-                {{ domain }}
+                {{ source.url }}
               </p>
             </a>
           </section>
@@ -76,30 +76,15 @@ export default {
   components: {
     btn: SimpleBtn,
   },
-
   props: {
-
-    domain: {
-      default: null,
-      value: String,
-    },
-    url: {
-      default: null,
-      value: String,
-    },
-    title: {
-      default: null,
-      value: String,
-    },
-    description: {
-      default: null,
-      value: String,
-    },
-    imgUrl: {
-      default: null,
-      value: String,
+    source: {
+      type: Object,
+      default () {
+        return {}
+      }
     },
   },
+
 
   data() {
     return {

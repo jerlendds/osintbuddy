@@ -1,3 +1,7 @@
+
+
+
+
 <img src="./docs/assets/osintbuddy.svg" height="80px" />
 
 ---
@@ -54,23 +58,33 @@ docker-compose up -d
 
 ## Progress Notes
 
-- Dockerized the Scrapy crawler and added to stack, made plans to add CSE link updating at regular intervals - [Sept 21, 2021]
-- 
+- [Sept 21, 2021]
+  - Dockerized the Scrapy crawler and added to stack, made plans to add CSE link updating at regular intervals
+- [Sept 28, 2021]
+  - Fixed bug in parsing the 'cse.js' response and massively increased crawler success rate (HTTP 200) when scraping CSE urls
+  -  Implemented proxy support that will rotate through a list of proxies
+  - Added support for a brightdata.com proxy list
+  - Added infinite scrolling to CSE results on the frontend
+  - Started adding endpoints for querying search results
 
 ### Progress Screenshots
 
+Added infinite scrolling to results
+
+<img alt="" src="./docs/assets/OB-infinite_scroll.gif" />
+
+#### Crawler Demo
+
+Frontend POSTs to backend, backend POSTs to crawler which spawns a Scrapy Spider for saving CSE results to the database (Much faster than pictured below, this gif is from before a bug was fixed)
+
 <img alt="" src="./docs/assets/osint_buddy_demo.gif" />
-
-
-
-
 
 #### Mobile Results
 
 <img alt="OsintBuddy" src="./docs/assets/OB_CSE-mobile-results.gif" align="center" />
 
 
-#### Latest Database Implementation
+#### Old Database Implementation
 
 <img alt="OsintBuddy" src="./docs/assets/OB-database.gif" />
 
@@ -91,22 +105,3 @@ docker-compose up -d
 
 <img alt="OsintBuddy" src="./docs/assets/OB-cse-crawler.gif" />
 
-
-#### Docs overview
-
-<img alt="OsintBuddy" src="./docs/assets/OB-docs-overview.gif" />
-
-
-#### Flower
-
-<img alt="OsintBuddy" src="./docs/assets/OB-flower.gif" />
-
-
-#### PGAdmin
-
-<img alt="OsintBuddy" src="./docs/assets/OB-pgadmin.gif" />
-
-
-#### Traefik
-
-<img alt="OsintBuddy" src="./docs/assets/OB-traefik.gif" />
