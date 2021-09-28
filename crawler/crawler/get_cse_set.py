@@ -26,6 +26,7 @@ class CseSourceLinks:
         for cse_id in self.src_ids:
             yield cse_id
 
+
 def get_startme_links(page_ids: List[str] = None) -> List[Dict[str, Union[list, Any]]]:
     if page_ids is None:
         raise ValueError(f"expected list of start.me ids, received: {page_ids}")
@@ -84,9 +85,10 @@ def save_links_to_file(cse_set):
         for cse in item['links']:
             links.append((cse['url']))
 
-    with open('crawler/spiders/test.py', 'w+') as f:
+    with open('spiders/cse_links_dump.py', 'w+') as f:
         for link in links:
             print("\t\t" + link)
+            f.write(link + '\n')
 
     # db.cur.execute("INSERT INTO cse (url, cse) VALUES (%s, %s)",
     #                (link))
@@ -107,9 +109,10 @@ known_cse_sources = [
     "6rAJbo",
     "ZeDvrP"
 ]
-# save_links_to_file(get_startme_links(page_ids=known_cse_sources))
 
-# get_startme_links(page_ids=known_cse_sources)
+if __name__ == "__main__":
+    save_links_to_file(get_startme_links(page_ids=known_cse_sources))
+    get_startme_links(page_ids=known_cse_sources)
 
 
 

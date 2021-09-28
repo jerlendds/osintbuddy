@@ -17,12 +17,12 @@ class CsePipeline:
         results = item.get('results')
         if results and len(results) > 0:
             for result in results:
-                # serp = {
-                #     'title': result.get('titleNoFormatting'),
-                #     'description': result.get('contentNoFormatting'),
-                #     'url': result.get('url'),
-                #     'domain': result['breadcrumbUrl'].get('host')
-                # }
+                serp = {
+                    'title': result.get('titleNoFormatting'),
+                    'description': result.get('contentNoFormatting'),
+                    'url': result.get('url'),
+                    'domain': result['breadcrumbUrl'].get('host')
+                }
 
                 sql = "INSERT INTO search_result (title, description, url, search_id) VALUES (%s, %s, %s, %s)"
                 db.cur.execute(sql, (result.get('titleNoFormatting'),
@@ -30,5 +30,4 @@ class CsePipeline:
                                      result.get('url'),
                                      search_id))
                 db.conn.commit()
-
 
