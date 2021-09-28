@@ -35,7 +35,12 @@ export default {
 
   methods: {
     submitSearch() {
+
       api.createSearch(this.$store.getters.isLoggedIn, {query: this.searchInput})
+          .then(resp => {
+            // TODO: Update Store to store response
+            console.log(resp.data)
+          })
     }
   },
 
