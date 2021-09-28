@@ -16,8 +16,6 @@
           />
         </li>
       </ul>
-
-
     </section>
   </main>
 </template>
