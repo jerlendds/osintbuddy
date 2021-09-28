@@ -39,7 +39,7 @@ def parse_proxies(proxy_file: str, is_brightdata_provider: bool = CUSTOMER_ID):
 
 
 class ProxyGenerator(object):
-    def __init__(self, is_brightdata_provider: Optional[bool] = False, proxy_file: str = '/spiderman/crawler/ips-cse_zone.txt'):
+    def __init__(self, is_brightdata_provider: Optional[bool] = CUSTOMER_ID, proxy_file: str = '/spiderman/crawler/ips-cse_zone.txt'):
         self.proxies = parse_proxies(proxy_file=proxy_file, is_brightdata_provider=True)
         self.is_brightdata_provider = is_brightdata_provider
 
@@ -57,7 +57,7 @@ class ProxyGenerator(object):
 
 def get_proxies():
     proxy_list = []
-    for p in ProxyGenerator(is_brightdata_provider=True):
+    for p in ProxyGenerator():
         proxy_list.append(p)
     return proxy_list
 
