@@ -36,10 +36,12 @@ PyYAML==5.4.1
 queuelib==1.6.2
 requests==2.26.0
 Scrapy==2.5.0
+scrapy-rotating-proxies==0.6.2
 service-identity==21.1.0
 six==1.16.0
 starlette==0.14.2
 Twisted==21.7.0
+typing==3.7.4.3
 typing-extensions==3.10.0.2
 urllib3==1.26.7
 uvicorn==0.15.0

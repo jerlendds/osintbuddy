@@ -7,18 +7,24 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 import os
+# from .brightdata_proxies import get_proxies
+
+
+# https://github.com/TeamHG-Memex/scrapy-rotating-proxies
+# ROTATING_PROXY_LIST = get_proxies()
+# ROTATING_PROXY_LIST_PATH = './ips-cse_zone.txt'
+
 BOT_NAME = 'buddy'
 
 SPIDER_MODULES = ['crawler.spiders']
 NEWSPIDER_MODULE = 'crawler.spiders'
 
-user_agent_setting = os.environ.get('CRAWLER_USER_AGENT', 'unidentified osintbuddy user')
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = f'{user_agent_setting} -- https://github.com/jerlendds/osintbuddy'
+USER_AGENT = f'OSINTBuddy -- https://github.com/jerlendds/osintbuddy'
 
 # Obey robots.txt rules
 # CSEs by default have no robots.txt || Last checked September 16, 2021
-ROBOTSTXT_OBEY = False
+ROBOTSTXT_OBEY = True
 
 # TODO: setup .env vars for this file
 # Splash Docker container
@@ -30,6 +36,8 @@ SPLASH_URL = 'http://0.0.0.0:8050'
 DOWNLOADER_MIDDLEWARES = {
     # 'scrapyjs.SplashMiddleware': 725,
     # 'scrapy_splash.SplashCookiesMiddleware': 723,
+    'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+    'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
     'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
 }
 
