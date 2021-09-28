@@ -6,7 +6,7 @@ from queue import Queue
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from scrapyloop import ScrapyLoop
+from crawler.scrapyloop import ScrapyLoop
 from crawler.spiders.cse import CseSpider
 
 
