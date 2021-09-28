@@ -41,6 +41,7 @@
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7",
+    "vue-infinite-loading": "^2.4.5",
     "vue-template-compiler": "^2.6.11"
   }
 }
