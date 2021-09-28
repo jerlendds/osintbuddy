@@ -16,6 +16,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         CRUD object with default methods to Create, Read, Update, Delete (CRUD).
 
+
         **Parameters**
 
         * `model`: A SQLAlchemy model class
