@@ -177,13 +177,13 @@ Project Link: [https://github.com/jerlendds/osintbuddy](https://github.com/jerle
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/jerlendds/repo.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/jerlendds/osintbuddy.svg?style=for-the-badge
 [contributors-url]: https://github.com/jerlendds/osintbuddy/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/jerlendds/repo.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/jerlendds/osintbuddy.svg?style=for-the-badge
 [forks-url]: https://github.com/jerlendds/osintbuddy/network/members
-[stars-shield]: https://img.shields.io/github/stars/jerlendds/repo.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/jerlendds/osintbuddy.svg?style=for-the-badge
 [stars-url]: https://github.com/jerlendds/osintbuddy/stargazers
-[issues-shield]: https://img.shields.io/github/issues/jerlendds/repo.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/jerlendds/osintbuddy.svg?style=for-the-badge
 [issues-url]: https://github.com/jerlendds/osintbuddy/issues
 
 
