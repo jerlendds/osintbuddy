@@ -6,18 +6,18 @@
     class="flex flex-col"
   >
     <form
-      @submit.prevent="handleSubmit(login())"
       class="flex justify-between w-full"
+      @submit.prevent="handleSubmit(login)"
     >
       <!-- Submission error -->
       <section class="flex flex-col">
         <ValidationProvider
+          v-slot="{errors}"
           class="flex flex-col"
           slim
           mode="eager"
           name="Full name"
           rules="required|min:3"
-          v-slot="{errors}"
         >
           <!-- Email error message -->
           <span :class="errorClass">{{
@@ -31,6 +31,7 @@
             ref="fullname"
             v-model="fullname"
             type="text"
+            class="bg-white-100"
             :class="errors[0] ? inputClassAlt : inputClass"
             placeholder="Full name"
           />
@@ -38,12 +39,12 @@
 
         <!-- E-mail validation -->
         <ValidationProvider
+          v-slot="{errors}"
           class="flex flex-col"
           slim
           mode="eager"
           name="Email"
           rules="required|email"
-          v-slot="{errors}"
         >
           <!-- Email error message -->
 
@@ -56,21 +57,22 @@
           <input
             id="email"
             ref="emailref"
-            @keydown.enter="onEmailSubmit"
             v-model="email"
+            class="bg-white-100"
             type="email"
             :class="errors[0] ? inputClassAlt : inputClass"
             placeholder="Email"
+            @keydown.enter="onEmailSubmit"
           />
         </ValidationProvider>
 
         <ValidationProvider
+          v-slot="{errors}"
           class="flex flex-col"
           slim
           mode="eager"
           name="Password"
           rules="required|min:8"
-          v-slot="{errors}"
         >
           <!-- Password error message -->
           <span :class="errorClass">{{
@@ -82,18 +84,19 @@
             ref="passwordref"
             v-model="password"
             type="password"
+            class="bg-white-100"
             :class="errors[0] ? inputClassAlt : inputClass"
             placeholder="Your password"
           />
         </ValidationProvider>
 
         <ValidationProvider
+          v-slot="{errors}"
           class="flex flex-col"
           slim
           mode="eager"
           name="Confirm password"
           rules="required|confirmed:Password"
-          v-slot="{errors}"
         >
           <!-- Password error message -->
           <span :class="errorClass">{{
@@ -105,6 +108,7 @@
             ref="passwordconfirmref"
             v-model="passwordconfirm"
             type="password"
+            class="bg-white-100"
             :class="errors[0] ? inputClassAlt : inputClass"
             placeholder="Confirm password"
           />
@@ -113,12 +117,12 @@
 
       <section class="flex flex-col items-center pl-10">
         <ValidationProvider
+          v-slot="{errors}"
           class="flex flex-col"
           slim
           mode="eager"
           name="Company"
           rules=""
-          v-slot="{errors}"
         >
           <!-- Company error message -->
           <span :class="errorClass">{{
@@ -127,8 +131,9 @@
 
           <!-- Company input field -->
           <input
-            ref="company"
+                  ref="company"
             v-model="company"
+            class="bg-white-100"
             type="text"
             :class="errors[0] ? inputClassAlt : inputClass"
             placeholder="Company"
@@ -136,12 +141,12 @@
         </ValidationProvider>
 
         <ValidationProvider
+          v-slot="{errors}"
           class="flex flex-col"
           slim
           mode="eager"
           name="Country"
           rules="required"
-          v-slot="{errors}"
         >
           <!-- Country error message -->
           <span :class="errorClass">{{
@@ -153,38 +158,39 @@
             ref="country"
             v-model="country"
             type="text"
+            class="bg-white-100"
             :class="errors[0] ? inputClassAlt : inputClass"
             placeholder="Country"
           />
         </ValidationProvider>
 
         <ValidationProvider
+          v-slot="{errors}"
           class="flex mt-4 w-72"
           slim
           mode="eager"
           name="Agreement"
           rules="required"
-          v-slot="{errors}"
         >
                <input
               ref="agreed"
               v-model="agreed"
               type="checkbox"
               :class="errors[0] ? checkInputClassAlt : checkInputClass"
-              class="mr-2"
+              class="mr-2 bg-white-100"
             />
           <section class="flex flex-col">
-     
-            <p class="text-sm text-black-500">
+
+            <p class="text-sm text-white-500">
               <span v-if="errors[0]" :class="errorClass">{{ errors[0]  }}<br /></span>
-              
+
               By signing up you agree to our
-              <span class="text-info-600"
-                ><router-link to="/">Terms & Conditions</router-link></span
+              <span class="text-submarine-400"
+                ><router-link class="hover:underline" to="/">Terms & Conditions</router-link></span
               >
               and
-              <span class="text-info-600"
-                ><router-link to="/">Privacy Policy</router-link></span
+              <span class="text-submarine-400"
+                ><router-link class="hover:underline" to="/">Privacy Policy</router-link></span
               >
             </p>
           </section>
@@ -192,38 +198,41 @@
           <!-- Password input field -->
         </ValidationProvider>
         <div class="flex flex-col w-full pt-3 mx-4 mt-1">
-          <btn text="Sign up" size="md" v-on:click="handleSubmit(login())" />
+            <button class="font-medium  hover:bg-submarine-600 text-white transition-all shadow-2 duration-200 font-head h-2 text-sm h-10
+                            bg-submarine text-semibold font-head"
+                    @click="handleSubmit(login)">
+                   Sign Up
+            </button>
+
         </div>
       </section>
     </form>
-    <span class="h-2 text-sm text-danger text-semibold font-head">{{
+    <span class="">{{
       submitError
     }}</span>
   </ValidationObserver>
 </template>
 
 <script>
-import Button from '@/components/buttons/Btn';
 
 export default {
   name: 'RegistrationForm',
 
   components: {
-    btn: Button,
   },
 
   data() {
     return {
       isModalOpen: false,
       inputClass:
-        'placeholder-black-100 mt-0.5 mb-1.5 border-2 border-opacity-60 border-primary-300  px-2.5 py-1 lg:w-72',
+        'placeholder-black-100 mt-0.5 mb-1.5 border-2 border-opacity-60 border-black-100  px-2.5 py-1 lg:w-72',
       inputClassAlt:
         'placeholder-black-100 mt-0.5 mb-1.5 border-2 border-opacity-60 border-danger-500 px-2.5 py-1 lg:w-72',
       checkInputClass:
-        'mt-0.5 mb-1.5 border-2 border-opacity-30 border-primary-300  px-3 py-1 mt-0.5 h-4',
+        'mt-0.5 mb-1.5 border-2 border-opacity-30 border-black-100  px-3 py-1 mt-0.5 h-4',
       checkInputClassAlt:
         'mt-0.5 mb-1.5 border-2 border-opacity-60 border-danger-500 bg-primary-300 px-3 py-1  h-4',
-      errorClass: 'h-3 mb-0.5 text-xs text-black-200',
+      errorClass: 'h-3 mb-0.5 text-xs text-bluegreen-100',
 
       submitError: '',
       errors: [],

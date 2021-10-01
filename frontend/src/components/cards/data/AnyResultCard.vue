@@ -1,64 +1,43 @@
 <template>
-  <section class="flex shadow-9 bg-white-100 relative my-4">
+  <section class="flex shadow-7 bg-navy-700 relative my-4">
     <section
-        :class="
+      :class="
         isSaved
-          ? 'border-l-4 border-primary-100'
-          : 'border-l-2 border-primary-200'
+          ? 'border-l-4 border-submarine-100'
+          : 'border-l-2 border-submarine-200'
       "
-        class="flex flex-col w-full rounded-r border-l-2 border-primary-200 shadow-6 transition-all duration-75"
+      class="flex flex-col w-full rounded-r border-l-2 transition-all duration-150 border-submarine-400 hover:border-submarine-300 shadow-6 transition-all duration-75"
     >
       <div class="flex flex-col">
         <section class="flex justify-between items-start mt-2">
           <section class="flex flex-col  pl-3 pr-1 w-full">
             <section class="flex justify-between ">
               <h2
-                  class="text-black-500 leading-6 font-body underline font-medium"
+                class="text-blue-100 leading-6 font-body underline font-medium"
               >
                 {{ source.title }}
               </h2>
-              <component :is="cloudIcon" class="text-primary-300 pr-2 opacity-40" />
-              <!--              <h2 class="font-semibold font-body text-black-500"></h2>-->
             </section>
-
             <section class="flex flex-col mt-1">
               <div class="flex items-center w-full">
-
-
                 <h2
-                    class="text-black-300 leading-6 font-medium font-body text-sm"
+                  class="text-white-900 break-all leading-6 font-medium font-body text-sm"
                 >
                   {{ source.description }}
                 </h2>
-
               </div>
-
             </section>
           </section>
-          <section class="lg:visible lg:relative hidden invisible">
-<!--            <div class="h-20 w-20 ">-->
-<!--              <img alt="" class="w-full h-full" :src="imgUrl" />-->
-<!--            </div>-->
-          </section>
         </section>
-
         <section class="flex justify-between items-end pb-2 mt-2 px-3">
-          <section>
-            <a
-                class="font-head flex"
-                :href="source.url"
-            >
-              <p
-                  class="text-sm hover:underline text-primary-400  overflow-ellipsis whitespace-wrap max-w-lg leading-6 font-body "
-              >
-                {{ source.url }}
-              </p>
-            </a>
-          </section>
+          <a
+            class="font-head break-all flex text-sm hover:underline text-submarine-400  overflow-ellipsis whitespace-wrap leading-5 font-body "
+            :href="source.url"
+          >
+            {{ source.url }}
+          </a>
         </section>
       </div>
-
-
     </section>
   </section>
 </template>
@@ -68,35 +47,26 @@ import Bookmark from 'vue-material-design-icons/Bookmark';
 import BookmarkOutline from 'vue-material-design-icons/BookmarkOutline';
 import ChevronRight from 'vue-material-design-icons/ChevronRight';
 import Cloud from 'vue-material-design-icons/Cloud';
-import SimpleBtn from '@/components/buttons/SimpleBtn.vue';
 
 export default {
   name: 'AnyResultCard',
 
   components: {
-    btn: SimpleBtn,
   },
   props: {
     source: {
       type: Object,
-      default () {
-        return {}
-      }
+      default() {
+        return {};
+      },
     },
   },
-
 
   data() {
     return {
       isSaved: false,
       showUrl: false,
-    }
-  },
-
-  methods: {
-    toggleSave() {
-      this.isSaved = !this.isSaved;
-    },
+    };
   },
 
   computed: {
@@ -119,12 +89,17 @@ export default {
     cloudIcon() {
       return Cloud;
     },
-  }
+  },
+
+  methods: {
+    toggleSave() {
+      this.isSaved = !this.isSaved;
+    },
+  },
 };
 </script>
 
 <style>
-
 .material-design-icon.icon-2x {
   height: 1.4rem;
   width: 1.4rem;

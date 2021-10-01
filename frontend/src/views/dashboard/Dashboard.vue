@@ -1,98 +1,93 @@
 <template>
-  <main class="flex flex-col w-full">
+  <main class="flex flex-col w-full h-screen">
+    <!-- Main Content -->
+    <section class="flex h-20 items-center justify-center">
+      <!-- Overview Cards -->
+        <section class="section">
+            <SimpleDataStat card-class="bg-blue-600 whitespace-nowrap"
+                            text="All entities"
+                            :value="allEntities" />
+        </section>
+        <section class="section">
+            <SimpleDataStat card-class="bg-green-600 whitespace-nowrap"
+                            text="Keyword Matches"
+                            :value="keywordMatches" />
+        </section>
+        <section class="section">
+            <SimpleDataStat card-class="bg-alert-700 whitespace-nowrap"
+                            text="Active Searches"
+                            :value="activeSearches" />
+        </section>
 
-    <section class="section py-2 ">
-      <SearchBarAlternative />
+
+
     </section>
-    <section class="section" ref="scroll" >
-        <div class="my-2"  v-for="result in results" :key="result.id">
-          <AnyResultCard :source="result"
-          />
-        </div>
-        <infinite-loading @infinite="infiniteHandler">
 
-        </infinite-loading>
+      <!-- -->
+      <section class="w-full pr-4 mt-4">
+          <SearchBarAlternative class="z-50" />
+      </section>
 
-    </section>
+      <section class="w-full pr-4 h-full overflow-y-scroll noscroll">
+          <InfiniteResults class="mr-7" @totalResultsCount="getResultsData" />
+      </section>
   </main>
 </template>
 
-<style >
-.section {
-  @apply  mx-4 sm:mx-6 md:mx-8 lg:mx-20 py-3
-}
-
-</style>
-
 <script>
-import {api} from '@/api'
+import {api} from '@/api';
 
-import AnyResultCard from "@/components/cards/data/AnyResultCard";
-import TwitterCard from '@/components/cards/data/TwitterCard';
 import SearchBarAlternative from "../../components/forms/SearchBarAlternative";
-import InfiniteLoading from 'vue-infinite-loading';
+import InfiniteResults from "../../components/data/InfiniteResults";
+import SimpleDataStat from "../../components/cards/SimpleDataStat";
 
 export default {
   name: 'Dashboard',
 
   components: {
-    SearchBarAlternative,
-    InfiniteLoading,
-    AnyResultCard
+      SimpleDataStat,
+      InfiniteResults,
+      SearchBarAlternative
   },
 
   data() {
     return {
-      page: 1,
-
-
-      searchId: 5,
-      results: [],
-      limit: 10,
-      offset: 0,
-      totalResultsCount: 0,
-      resultsCount: 0
-    }
-  },
-
-  computed: {
-    twitterCard() {
-      return TwitterCard
-    },
-
-  },
-
-  methods: {
-    infiniteHandler($state) {
-
-      api.getSearchResults(this.$store.getters.isLoggedIn, this.searchId, this.limit, this.offset)
-          .then(resp => {
-            this.totalResultsCount = resp.data.total_results
-            this.resultsCount = resp.data.results_count
-            let results = this.results;
-            if (resp.data.results.length) {
-              this.page +=1
-              this.offset = this.offset + 10
-              results.push(...resp.data.results)
-              $state.loaded()
-            } else {
-              $state.complete()
-            }
-
-          })
-    },
-
-    getUsers() {
-      let results;
-
-
-      this.offset = this.offset + 10
-      return results
-    },
+      searchHistory: [],
+      totalResults: 0,
+        allEntities: "0",
+        keywordMatches: "0",
+        activeSearches: "0"
+    };
   },
 
   mounted() {
+    this.getSearchHistory();
+  },
 
+  methods: {
+      getResultsData(data) {
+          this.allEntities = data
+      },
+
+    getSearchHistory() {
+      api.getSearchHisory(this.$store.getters.isLoggedIn).then(resp => {
+        this.searchHistory = resp.data.searchHistory;
+      });
+    },
   },
 };
 </script>
+
+<style>
+
+.filter-btn {
+  @apply right-4 w-9 h-9 bg-white-300 shadow-2  py-1.5 px-2 flex justify-center items-center;
+}
+.visible-filter {
+  @apply transition-all ease-in-out opacity-0 fixed;
+}
+
+.invisible-filter {
+  @apply fixed w-4/5 z-50 border-t-2 border-primary-300 top-12 transition-all duration-150 h-full opacity-100;
+}
+</style>
