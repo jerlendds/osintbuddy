@@ -1,8 +1,8 @@
 <template>
-    <form @submit.prevent="submitSearch" class="search-bar">
+    <form class="search-bar" @submit.prevent="submitSearch">
       <input v-model="searchInput" type="text" class="search-query" placeholder="Search...">
       <button class="search-btn">
-        <component :is="searchIcon" class="text-white-50"/>
+        <component :is="searchIcon" class="text-white-50" />
       </button>
     </form>
 </template>
@@ -14,6 +14,10 @@ import Magnify from "vue-material-design-icons/Magnify";
 
 export default {
   name: "SearchBarAlternative",
+
+  components: {
+
+  },
 
   props: {
     placeholder: {
@@ -29,8 +33,13 @@ export default {
     }
   },
 
-  components: {
+  computed: {
+    searchIcon() {
+      return Magnify
+    },
+  },
 
+  mounted() {
   },
 
   methods: {
@@ -42,29 +51,18 @@ export default {
             console.log(resp.data)
           })
     }
-  },
-
-  computed: {
-    searchIcon() {
-      return Magnify
-    },
-  },
-
-
-
-  mounted() {
-
   }
 }
 </script>
 
 <style>
 .search-bar {
-  @apply bg-white-100 flex max-h-9 justify-between w-full shadow-2 rounded;
+  @apply bg-blue-200 flex max-h-9 justify-between w-full shadow-2 rounded-sm;
 }
 .search-query {
-  @apply px-2.5 w-full outline-none focus:outline-none focus:border-primary-200 border-b-2 border-white transition-all duration-75 }
+  @apply px-2.5 w-full outline-none focus:outline-none focus:border-submarine-500 border-b-2 border-white transition-all duration-75 rounded-l-sm
+}
 .search-btn {
-  @apply bg-primary-300 px-2 rounded-r py-2
+  @apply bg-submarine-500 px-2 rounded-r-sm py-2
  }
 </style>

@@ -1,41 +1,59 @@
 <template>
-  <nav class="">
-<!--      <li v-for="action in actions" :key="action.text">-->
-<!--        {{action.text}}-->
-<!--      </li>-->
+  <nav class="bg-navy-900   pr-2.5 mr-4">
+    <!-- Navigation Logo -->
+    <section class="py-4">
+      <img src="@/assets/imgs/logo-lg.svg"
+           alt="OSINT Buddy Logo"
+           class="h-10 px-5 "
+      />
+    </section>
+    <ul class="mt-5 min-w-min">
+      <li v-for="nav in navItems" :key="nav.id" class="hover:bg-black-500 transition-all duration-200 bg-black-600 pr-7 pl-5 my-3 py-2 rounded-r-sm shadow-6">
+        <router-link :to="nav.path">
+            <h3 class="text-white ">{{ nav.text }}</h3>
+
+        </router-link>
+      </li>
+    </ul>
   </nav>
 </template>
 
 <script>
 export default {
-  name: 'SideNavbar',
+  name: "SideNavbar",
 
   data() {
     return {
-      actions: [
+      navItems: [
+          {
+              id: 0,
+              text: "Overview",
+              path: "/"
+          },
         {
-          text: "1A",
+          id: 1,
+            text: "Cases",
+            path: "/dashboard"
         },
         {
-          text: "2A",
+          id: 2,
+            text: "Search",
+            path: "/"
         },
         {
-          text: "3A",
+          id: 3,
+            text: "Analysis",
+            path: "/"
         },
+
         {
-          text: "4A",
-        },
-        {
-          text: "5A",
-        },
-      ],
-      buttons: [
-        {
-          text: '',
-          action: () => {},
-        },
-      ],
-    };
-  },
-};
+          id: 4,
+            text: "Settings",
+            path: "/"
+        }
+      ]
+    }
+  }
+
+}
 </script>
