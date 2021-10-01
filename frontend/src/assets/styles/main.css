@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@layer utilities {
+  .noscroll {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .noscroll::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
+
 @layer utilities {
   .scroll {
     border: 1px solid #DBDBDB;

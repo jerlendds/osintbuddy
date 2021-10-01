@@ -10,7 +10,7 @@ from app.schemas.search_result import SearchResultCreate, SearchResultUpdate, Se
 
 
 class CRUDSearchResult(CRUDBase[SearchResult, SearchResultCreate, SearchResultUpdate]):
-    def get_by_limit_offset(self, db: Session, search_id: int, limit: int = 0, offset: int = 100) -> Optional[SearchResult]:  # noqa
+    def get_by_limit_offset(self, db: Session, search_id: int, limit: int = 0, offset: int = 100) -> SearchResult:
         query = db.query(self.model).with_entities(self.model.id, self.model.title, self.model.description, self.model.url).filter(self.model.search_id == search_id).limit(limit).offset(offset).all()
         return query
 

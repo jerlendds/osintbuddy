@@ -1,18 +1,65 @@
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+
+<br />
+
+<p align="center">
+  <a href="https://github.com/jerlendds/osintbuddy">
+    <img src="./docs/assets/logo-watermark.svg" height="200px" alt="OSINT Buddy Logo">
+  </a>
 
 
 
 
-<img src="./docs/assets/osintbuddy.svg" height="80px" />
+  <h3 align="center">OSINT Buddy</h3>
 
----
+  <p align="center">
+    osintbuddy is a work-in-progress OSINT tool for Google CSEs (Custom Search Engines).
+What CSEs are is a targeted search engine for a specific site(s) URL. You can create your own CSEs and these CSEs will return any results that google finds for the given URLs. So far I've collected 1175+ CSE URLs from sources on the internet targeting different platforms and Im slowly working on creating an open-source project that you can deploy as a webapp for OSINT purposes. The crawler directly queries Googles CSE API which is super fast and can return up to 100 results per request
+    <br />
+    <a href="https://github.com/jerlendds/osintbuddy"><strong>Explore the docs »</strong></a>
+    ·    <a href="https://github.com/jerlendds/osintbuddy/issues">Report Bug</a>
+    ·    <a href="https://github.com/jerlendds/osintbuddy/issues">Request Feature</a>
 
-## Overview
+
+  </p>
+
+</p>
+
+
+
+<!-- TABLE OF CONTENTS -->
+
+<details open="open">
+  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
+
+
+
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
 *this project is a work-in-progress however feel free to extract out the crawler directory that's for the Google CSE scraper, it's very fast :)*
 
-Google provides something called Custom Search Engines (CSEs) and what CSEs are is a targeted search engine for a specific site(s) URL. You can create your own CSEs and these CSEs will return any results that google finds for the given URLs.
-
-osintbuddy is an OSINT tool for Google CSEs. Directly query the Google CSE API, store results, analyse, and more all through a deployable and scaleable webapp.
+Query the Google CSE API, store results, analyse, and more all through a deployable and scaleable webapp.
 
 
 
@@ -26,11 +73,27 @@ osintbuddy is an OSINT tool for Google CSEs. Directly query the Google CSE API, 
 
 
 
-## Running OSINT Buddy
+<!-- GETTING STARTED -->
+
+## Getting Started
+
+To get a local copy up and running follow these simple steps.
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/jerlendds/osintbuddy.git
+   ```
+   
+2. Install docker-compose
+
+   
+
+<!-- USAGE EXAMPLES -->
+## Usage
 
 This section is a stub. Updates to this section will come once this project reaches a later stage...
-
-
 
 
 * Start the stack with Docker Compose:
@@ -41,7 +104,7 @@ docker-compose up -d
 
 
 
-## URLs
+### URLs
 
  - Frontend: http://localhost
  - Backend: http://localhost/api/
@@ -50,9 +113,13 @@ docker-compose up -d
  - Flower: http://localhost:5555
  - Traefik UI: http://localhost:8090
 
-**Note**: The first time you start your stack, it might take a minute for it to be ready. While the backend waits for the database to be ready and configures everything. You can check the logs to monitor it.
 
 
+<!-- ROADMAP -->
+
+## Roadmap
+
+See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list of proposed features (and known issues).
 
 
 
@@ -62,46 +129,66 @@ docker-compose up -d
   - Dockerized the Scrapy crawler and added to stack, made plans to add CSE link updating at regular intervals
 - [Sept 28, 2021]
   - Fixed bug in parsing the 'cse.js' response and massively increased crawler success rate (HTTP 200) when scraping CSE urls
-  -  Implemented proxy support that will rotate through a list of proxies
+  - Implemented proxy support that will rotate through a list of proxies
   - Added support for a brightdata.com proxy list
   - Added infinite scrolling to CSE results on the frontend
   - Started adding endpoints for querying search results
-
-### Progress Screenshots
-
-Added infinite scrolling to results
-
-<img alt="" src="./docs/assets/OB-infinite_scroll.gif" />
-
-#### Crawler Demo
-
-Frontend POSTs to backend, backend POSTs to crawler which spawns a Scrapy Spider for saving CSE results to the database (Much faster than pictured below, this gif is from before a bug was fixed)
-
-<img alt="" src="./docs/assets/osint_buddy_demo.gif" />
-
-#### Mobile Results
-
-<img alt="OsintBuddy" src="./docs/assets/OB_CSE-mobile-results.gif" align="center" />
-
-
-#### Old Database Implementation
-
-<img alt="OsintBuddy" src="./docs/assets/OB-database.gif" />
-
-<img alt="OSINT Buddy ERD" src="./docs/assets/database-erd.png" />
-
-
-#### Account Pages
-
-<img src="./docs/assets/OB-login_pages.gif" />
-
-
-#### Total CSE URLs
+  
+  ### Progress Screenshots
+  
+  Added infinite scrolling to results. Frontend POSTs to backend, backend POSTs to crawler which spawns a Scrapy Spider on the crawler server for saving CSE results to the database
+  
+  <img alt="" src="./docs/assets/ob-flow.gif" />
+  
+  
+  #### Old Database Implementation	<img alt="OSINT Buddy ERD" src="./docs/assets/database-erd.png" />
+  
+  
+  #### Total CSE URLs
 
 <img alt="OsintBuddy" src="./docs/assets/OB-cse-count.png" />
 
 
-#### CSE Crawler Demo
+#### 	CSE Crawler Demo	<img alt="OsintBuddy" src="./docs/assets/OB-cse-crawler.gif" />
 
-<img alt="OsintBuddy" src="./docs/assets/OB-cse-crawler.gif" />
+
+
+<!-- CONTRIBUTING -->
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+
+
+<!-- CONTACT -->
+## Contact
+
+jerlendds - jerlends@tuta.io
+
+Project Link: [https://github.com/jerlendds/osintbuddy](https://github.com/jerlendds/osintbuddy)
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/jerlendds/repo.svg?style=for-the-badge
+[contributors-url]: https://github.com/jerlendds/osintbuddy/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/jerlendds/repo.svg?style=for-the-badge
+[forks-url]: https://github.com/jerlendds/osintbuddy/network/members
+[stars-shield]: https://img.shields.io/github/stars/jerlendds/repo.svg?style=for-the-badge
+[stars-url]: https://github.com/jerlendds/osintbuddy/stargazers
+[issues-shield]: https://img.shields.io/github/issues/jerlendds/repo.svg?style=for-the-badge
+[issues-url]: https://github.com/jerlendds/osintbuddy/issues
+
+
+
+
+
+
 
