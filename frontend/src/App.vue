@@ -1,12 +1,12 @@
 <template>
   <div
     id="app"
-    :class="isPublicRoute ? 'flex-col justify-between' : 'flex relative h-screen'"
+    :class="isPublicRoute ? 'flex-col justify-between' : 'flex justify-between h-screen '"
   >
-    <router-view key="nav" name="header" class="z-30" v-if="isPublicRoute" />
+    <router-view v-if="isPublicRoute" key="nav" name="header" class="z-30" />
     <router-view key="main" class="z-10" />
     <router-view key="footer" name="footer"
-     :class="{'mt-64':isPublicRoute}"
+     :class="isPublicRoute ? 'mt-64' : 'order-first'"
     />
   </div>
 </template>
@@ -21,15 +21,6 @@ export default {
     return {};
   },
 
-  mounted() {
-    console.log(this.isPublicRoute);
-    console.log(publicRoutes);
-  },
-
-  methods: {
-
-  },
-
   computed: {
     isPublicRoute() {
       let routes = publicRoutes;
@@ -39,10 +30,22 @@ export default {
       return false;
     },
   },
+
+  mounted() {
+    console.log(this.isPublicRoute);
+    console.log(publicRoutes);
+  },
+
+  methods: {
+
+  },
 };
 </script>
 
 <style>
+#app {
+    @apply bg-navy-800
+}
 html {
   @apply font-body;
 }

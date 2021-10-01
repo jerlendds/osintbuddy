@@ -1,8 +1,12 @@
+from typing import List
 from pydantic import BaseModel
+
+from .search import Search
 
 
 class UserSearchBase(BaseModel):
-    pass
+    user_id: int
+    search_id: int
 
 
 class UserSearchCreate(UserSearchBase):
@@ -23,3 +27,7 @@ class UserSearchInDBBase(UserSearchBase):
 
 class UserSearch(UserSearchInDBBase):
     pass
+
+
+class UserSearchHistory(BaseModel):
+    searchHistory: List[Search]

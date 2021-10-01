@@ -1,78 +1,42 @@
 <template>
-  <main :style="gradient">
+  <main class="bg-navy-800">
     <section class="z-50 flex">
       <section class="z-50 flex flex-col h-full px-10 py-44 blur-3xl ">
         <h2
-          class="max-w-md text-5xl font-semibold leading-11 font-head text-black-400"
+          class="max-w-md text-5xl font-semibold leading-11 font-head text-white-600"
         >
           OSINT Gathering and Analysis
         </h2>
-        <p class="max-w-md pt-2 pb-3 text-lg font-body text-black-300 ">
+        <p class="max-w-md pt-2 pb-4 text-lg font-body text-white-700 ">
           <!-- Make connections and find your online footprint. OSINT Buddy is a... -->
-           Make connections to people and public-facing assets from fragments of information
+          Make connections to people and public-facing assets from fragments of
+          information
         </p>
-        <div class="pb-44">
-          <btn size="md" text="Watch a Video" />
+        <div class="pb-52">
+          <a class="lg:ml-auto text-white-300 lg:visible py-1 font-semibold">
+            <router-link
+              data-test="topnavbarRegisterLink"
+              class="py-2 px-6 mr-2 bg-green shadow-2"
+              to="/register"
+            >
+              Watch a Video
+            </router-link>
+          </a>
         </div>
       </section>
-      <canvas id="background" class="fixed w-full h-full" :style="gradient">
-      </canvas>
     </section>
   </main>
 </template>
 
 <script>
-import Button from "@/components/buttons/Btn";
-import Particles from "particlesjs";
-
 export default {
-  name: "Home",
-  components: {
-    btn: Button,
-  },
+  name: 'Home',
+  components: {},
 
-  computed: {
-    gradient() {
-      return "linear-gradient(45deg, rgba(240,240,240,1) 0%, rgba(249,249,249,1) 100%);";
-    },
-  },
+  computed: {},
 
-  mounted() {
-    Particles.init({
-      selector: "#background",
-      maxParticles: 86,
-      connectParticles: true,
-      speed: 0.22,
-      sizeVariations: 7,
-      color: "#dee0e3",
-
-      responsive: [
-        {
-          breakpoint: 768,
-          options: {
-            maxParticles: 200,
-            connectParticles: true,
-          },
-        },
-        {
-          breakpoint: 425,
-          options: {
-            maxParticles: 100,
-            connectParticles: false,
-          },
-        },
-        {
-          breakpoint: 320,
-          options: {
-            maxParticles: 0,
-          },
-        },
-      ],
-    });
-  },
+  mounted() {},
 };
 </script>
 
-
-<style scoped>
-</style>
+<style scoped></style>

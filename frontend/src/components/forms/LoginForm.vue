@@ -1,8 +1,8 @@
 <template>
     <ValidationObserver v-slot="{handleSubmit}" ref="form" slim>
           <form
-            @submit.prevent="handleSubmit(login())"
             class="flex flex-col items-center justify-center px-4 "
+            @submit.prevent="handleSubmit(login())"
           >
                 <!-- Submission error -->
 
@@ -12,12 +12,12 @@
             >
             <!-- E-mail validation -->
             <ValidationProvider
-            class="flex flex-col"
+            v-slot="{errors}"
+              class="flex flex-col"
               slim
               mode="eager"
               name="Email"
               rules="required|email"
-              v-slot="{errors}"
             >
               <!-- Email error message -->
               <span
@@ -27,21 +27,21 @@
                 <input
                   id="email"
                   ref="emailref"
-                  @keydown.enter="onEmailSubmit"
                   v-model="email"
                   type="email"
                   :class="errors[0] ? inputClassAlt : inputClass"
                   placeholder="Your email"
+                  @keydown.enter="onEmailSubmit"
                 />
             </ValidationProvider>
 
             <ValidationProvider
-            class="flex flex-col"
+            v-slot="{errors}"
+              class="flex flex-col"
               slim
               mode="eager"
               name="Password"
               rules="min:8"
-              v-slot="{errors}"
             >
               <!-- Password error message -->
               <span 
@@ -58,13 +58,15 @@
                     placeholder="Your password"
                   />
             </ValidationProvider>
-            <div class="flex flex-col w-full pt-2 mt-3">
-                <btn text="Login" size="md"  v-on:click="handleSubmit(login())" />
-  
-           </div>
+
+              <button class="font-medium w-full mt-5 hover:bg-submarine-600 text-white transition-all shadow-2 duration-200 font-head h-2 text-sm h-10
+                            bg-green-500 text-semibold font-head"
+                      @click="handleSubmit(login)">
+                  Login
+              </button>
             <div class="mt-4 flex flex-col items-center">
-              <router-link class="text-sm text-black-200 my-2 font-semibold" to="/">Forgot password?</router-link>
-              <p class="text-sm text-black-500">New to OSINT Buddy? <router-link class="text-info-600" to="/">Join now</router-link></p>
+              <router-link class="text-sm text-white-200 my-2 font-semibold" to="/">Forgot password?</router-link>
+              <p class="text-sm text-white-500">New to OSINT Buddy?  <router-link class="text-submarine-400" to="/">Join now</router-link></p>
 
             </div>
           </form>
@@ -72,13 +74,11 @@
 </template>
 
 <script>
-import Button from '@/components/buttons/Btn'
 
 export default {
   name: "LoginForm",
 
   components: {
-    btn: Button
   },
 
    data() {
