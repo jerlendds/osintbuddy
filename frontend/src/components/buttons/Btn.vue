@@ -5,7 +5,6 @@
   >
      <span>
     {{ text }}
-
     </span>
     <component v-if="icon" :is="setIcon"  />
   </button>
