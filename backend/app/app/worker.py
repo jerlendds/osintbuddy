@@ -31,7 +31,7 @@ def start_cse_crawl(query: str, current_user_id: int, user_search_id: int, searc
 
     # TODO: Add pagination
     """
-    data = {"query": query, 'user_id': current_user_id, 'user_search_id': user_search_id, 'search_id': search_id}
+    data = {"query": query, "user_id": current_user_id, "user_search_id": user_search_id, "search_id": search_id}
     spider_response = requests.post("http://spider:7242/start", json=data)  # this is the crawler service
     # was having occasional JSON decoding error below? ...
     # for now json.dumps where this is used will suffice
