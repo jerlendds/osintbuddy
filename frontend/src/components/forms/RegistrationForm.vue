@@ -6,7 +6,7 @@
     class="flex flex-col"
   >
     <form
-      class="flex justify-between w-full"
+      class="flex justify-between w-full mb-16 pb-1.5"
       @submit.prevent="handleSubmit(login)"
     >
       <!-- Submission error -->
@@ -185,11 +185,11 @@
               <span v-if="errors[0]" :class="errorClass">{{ errors[0]  }}<br /></span>
 
               By signing up you agree to our
-              <span class="text-submarine-400"
+              <span class="text-boston-blue-500"
                 ><router-link class="hover:underline" to="/">Terms & Conditions</router-link></span
               >
               and
-              <span class="text-submarine-400"
+              <span class="text-boston-blue-500"
                 ><router-link class="hover:underline" to="/">Privacy Policy</router-link></span
               >
             </p>
@@ -198,8 +198,8 @@
           <!-- Password input field -->
         </ValidationProvider>
         <div class="flex flex-col w-full pt-3 mx-4 mt-1">
-            <button class="font-medium  hover:bg-submarine-600 text-white transition-all shadow-2 duration-200 font-head h-2 text-sm h-10
-                            bg-submarine text-semibold font-head"
+            <button class="font-medium  hover:bg-persian-500 text-white transition-all shadow-2 duration-200 font-head h-2 text-sm h-10
+                            bg-persian-400 text-semibold font-head"
                     @click="handleSubmit(login)">
                    Sign Up
             </button>
@@ -225,9 +225,9 @@ export default {
     return {
       isModalOpen: false,
       inputClass:
-        'placeholder-black-100 mt-0.5 mb-1.5 border-2 border-opacity-60 border-black-100  px-2.5 py-1 lg:w-72',
+        'placeholder-black-100 mt-0.5 mb-1.5 border-2 border-opacity-0 border-black-100  px-2.5 py-1 lg:w-72',
       inputClassAlt:
-        'placeholder-black-100 mt-0.5 mb-1.5 border-2 border-opacity-60 border-danger-500 px-2.5 py-1 lg:w-72',
+        'placeholder-black-100 mt-0.5 mb-1.5 border-2  border-danger-500 px-2.5 py-1 lg:w-72',
       checkInputClass:
         'mt-0.5 mb-1.5 border-2 border-opacity-30 border-black-100  px-3 py-1 mt-0.5 h-4',
       checkInputClassAlt:
