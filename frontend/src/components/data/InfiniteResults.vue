@@ -28,7 +28,7 @@ export default {
       searchSubmitted: false,
       filterIcon: FilterVariant,
       page: 6,
-      searchId: 51,
+      searchId: 1,
       results: [], // Object { id, title, description, url }
       limit: 10, // SQLAlchemy .limit()
       offset: 0, // SQLAlchemy .offset()

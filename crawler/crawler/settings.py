@@ -12,8 +12,8 @@ import os
 
 # https://github.com/TeamHG-Memex/scrapy-rotating-proxies
 # ROTATING_PROXY_LIST = get_proxies()
-# ROTATING_PROXY_LIST_PATH = './ips-cse_zone.txt'
-
+# ROTATING_PROXY_LIST_PATH = './ips-cse_zone.txt.OLD'
+ROTATING_PROXY_LOGSTATS_INTERVAL = 1
 BOT_NAME = 'buddy'
 
 SPIDER_MODULES = ['crawler.spiders']
@@ -52,15 +52,15 @@ DOWNLOADER_MIDDLEWARES = {
 # DUPEFILTER_CLASS = 'scrapyjs.SplashAwareDupeFilter'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 24
+CONCURRENT_REQUESTS = 46
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 10
+DOWNLOAD_DELAY = 5
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
-CONCURRENT_REQUESTS_PER_IP = 10
+CONCURRENT_REQUESTS_PER_IP = 46
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
