@@ -1,0 +1,15 @@
+# This is a basic workflow to help you get started with Actions
+
+on: issues
+name: Create Default Labels
+jobs:
+  labels:
+    name: DefaultLabelsActions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@1.0.0
+      - uses: lannonbr/issue-label-manager-action@3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          delete: true # will delete any labels that aren't in the .github/labels.json (this is set to false by default)
