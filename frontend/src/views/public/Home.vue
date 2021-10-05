@@ -7,7 +7,7 @@
         <section class="self-start mx-44 px-80 py-2 pt-10">
           <section class="flex flex-col">
             <h3 class="text-gray-50 text-sm font-head leading-4 pb-1">
-              We collect CSE result data
+              We collect CSE results data
             </h3>
             <h3 class="text-white-600 text-4xl font-head font-semibold">
               How does OSINT Buddy work?
