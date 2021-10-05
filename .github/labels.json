@@ -1,0 +1,15 @@
+[
+  { "name":  "Priority: Critical", "color":  "#ad2929", "description":  ""},
+  { "name":  "Priority: High", "color":  "#B37736", "description":  ""},
+  { "name":  "Priority: Low", "color":  "#287515", "description":  ""},
+  { "name":  "Priority: Medium", "color":  "#FDFD13", "description":  ""},
+  { "name":  "Status: Backlog", "color":  "#00A9A5", "description":  ""},
+  { "name":  "Status: In Progress", "color":  "#CC9900", "description":  ""},
+  { "name":  "Status: Done", "color":  "#287515", "description":  ""},
+  { "name":  "Status: Needs Review", "color":  "#4081C4", "description":  ""},
+  { "name":  "Status: Reviewed", "color":  "#5757E4", "description":  ""},
+  { "name":  "Type: Bug", "color":  "#ad2929", "description":  ""},
+  { "name":  "Type: Question", "color":  "#58ac9c", "description":  ""},
+  { "name":  "Type: Reference", "color":  "#60849a", "description":  ""},
+  { "name":  "Type: Suggestion", "color":  "#208e80", "description":  ""}
+]
