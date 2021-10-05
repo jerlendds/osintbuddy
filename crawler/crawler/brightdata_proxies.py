@@ -8,7 +8,7 @@ COUNTRY_CODE = "ca"
 CUSTOMER_ID = os.environ.get("BRIGHTDATA_CUSTOMER_ID", False)
 PROXY_ZONE = "cse_zone"
 
-proxy_params = f"lum-customer-{CUSTOMER_ID}-zone-{PROXY_ZONE}-country-{COUNTRY_CODE}"
+proxy_params = f"lum-customer-{CUSTOMER_ID}-zone-{PROXY_ZONE}"
 
 PROXY_STRING = "zproxy.lum-superproxy.io:22225:" + proxy_params
 
@@ -29,7 +29,7 @@ def parse_proxies(proxy_file: str, is_brightdata_provider: bool = CUSTOMER_ID):
             proxy_auth = proxy.split(':')
             proxy = {
                         "proxy": proxy_auth[0] + ':' + proxy_auth[1],
-                        "user": proxy_params + ':' + proxy_auth[-1][:-1]
+                        "user": proxy_auth[2] + ':' + proxy_auth[-1][:-1]
                     }
             proxies.append(proxy)
     else:
@@ -59,11 +59,10 @@ def get_proxies():
     proxy_list = []
     for p in ProxyGenerator():
         proxy_list.append(p)
+    print(proxy_list)
     return proxy_list
 
 
 if __name__ == "__main__":
-    for p in ProxyGenerator():
-        print(p)
-
+    print(get_proxies())
 
