@@ -59,7 +59,7 @@
       <li class="lg:ml-auto text-white-300 lg:visible py-2">
         <router-link
           data-test="topnavbarRegisterLink"
-          class="font-medium w-full  hover:bg-submarine-600 text-white transition-all shadow-2 duration-200 font-head text-sm py-1.5 px-5 bg-green-500  font-head"
+          class="font-medium w-full  hover:bg-persian-500 text-white transition-all shadow-2 duration-200 font-head text-sm py-1.5 px-5 bg-persian-400  font-head"
           to="/register"
         >
             Register

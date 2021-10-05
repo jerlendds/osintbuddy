@@ -15,7 +15,7 @@
         </section>
         <section class="section">
             <SimpleDataStat card-class="bg-alert-700 whitespace-nowrap"
-                            text="Active Searches"
+q                            text="Active Searches"
                             :value="activeSearches" />
         </section>
 

@@ -1,11 +1,10 @@
 <template>
     <ValidationObserver v-slot="{handleSubmit}" ref="form" slim>
           <form
-            class="flex flex-col items-center justify-center px-4 "
+            class="flex flex-col items-center justify-center px-4 mb-16"
             @submit.prevent="handleSubmit(login())"
           >
                 <!-- Submission error -->
-
               <span
               :class="errorClass"
               >{{ submitError }}</span
@@ -59,16 +58,11 @@
                   />
             </ValidationProvider>
 
-              <button class="font-medium w-full mt-5 hover:bg-submarine-600 text-white transition-all shadow-2 duration-200 font-head h-2 text-sm h-10
-                            bg-green-500 text-semibold font-head"
+              <button class="font-medium w-full mt-5 hover:bg-persian-500 text-white transition-all shadow-2 duration-200 font-head h-2 text-sm h-10 bg-persian-400 text-semibold font-head"
                       @click="handleSubmit(login)">
                   Login
               </button>
-            <div class="mt-4 flex flex-col items-center">
-              <router-link class="text-sm text-white-200 my-2 font-semibold" to="/">Forgot password?</router-link>
-              <p class="text-sm text-white-500">New to OSINT Buddy?  <router-link class="text-submarine-400" to="/">Join now</router-link></p>
 
-            </div>
           </form>
         </ValidationObserver>
 </template>
@@ -83,7 +77,7 @@ export default {
 
    data() {
     return {
-      inputClass: "placeholder-black-100 mt-2 border-2 border-opacity-60 border-primary-300  px-2.5 py-1 lg:w-72",
+      inputClass: "placeholder-black-100 mt-2 border-2 border-opacity-0 border-primary-300  px-2.5 py-1 lg:w-72",
       inputClassAlt: "placeholder-black-100 mt-2 border-2 border-opacity-60 border-danger-500 px-2.5 py-1 lg:w-72",
       errorClass: "h-3 mb-0.5 text-xs text-black-200",
       

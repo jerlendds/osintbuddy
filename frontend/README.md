@@ -1,4 +1,4 @@
-# foodoo-design-system
+# OSINT Buddy
 
 ## Project setup
 ```

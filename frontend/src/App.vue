@@ -6,7 +6,7 @@
     <router-view v-if="isPublicRoute" key="nav" name="header" class="z-30" />
     <router-view key="main" class="z-10" />
     <router-view key="footer" name="footer"
-     :class="isPublicRoute ? 'mt-64' : 'order-first'"
+     :class="isPublicRoute ? 'mt-40' : 'order-first'"
     />
   </div>
 </template>
