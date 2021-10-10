@@ -126,3 +126,14 @@
   text-transform: none;
   color: inherit;
 }
+
+/* Login / Signup Pages */
+.account-container {
+  @apply flex flex-col items-center justify-center my-32
+}
+.account-form-container {
+  @apply flex flex-col items-center justify-center w-3/5
+}
+.account-header {
+  @apply px-12 pb-1 mx-2 font-semibold border-b-2 font-head text-white-400 border-opacity-40 border-white-100
+}
