@@ -60,9 +60,9 @@ export default {
   @apply bg-blue-200 flex max-h-9 justify-between w-full shadow-2 rounded-sm;
 }
 .search-query {
-  @apply px-2.5 w-full outline-none focus:outline-none focus:border-submarine-500 border-b-2 border-white transition-all duration-75 rounded-l-sm
+  @apply px-2.5 w-full outline-none focus:outline-none focus:border-persian-400 border-b-2 border-white transition-all duration-75 rounded-l-sm
 }
 .search-btn {
-  @apply bg-submarine-500 px-2 rounded-r-sm py-2
+  @apply bg-persian-400 px-2 rounded-r-sm py-2
  }
 </style>
