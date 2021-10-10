@@ -3,7 +3,7 @@ import PublicNavbar from "@/components/navs/PublicNavbar";
 import PublicFooter from "@/components/navs/PublicFooter";
 import Guides from "@/views/public/Guides";
 import Support from "@/views/public/Support";
-import Pricing from "@/views/public/Pricing";
+import Docs from "@/views/public/Docs";
 import Register from "@/views/public/Register";
 import Login from "@/views/public/Login";
 
@@ -37,10 +37,10 @@ const publicRoutes = [
         },
     },
     {
-        path: '/pricing',
-        name: 'Pricing',
+        path: '/docs',
+        name: 'Docs',
         components: {
-            default: Pricing,
+            default: Docs,
             header: PublicNavbar,
             footer: PublicFooter,
         },
