@@ -42,15 +42,13 @@
         </li>
       </ul>
     </section>
-    <!-- <section class="flex flex-col px-12">
-      
-    </section> -->
+
   </footer>
 </template>
 
 <style scoped>
 .footer {
-    @apply z-50 flex items-center justify-around w-full h-40 shadow-6 bg-steel block bottom-0;
+    @apply z-50 flex items-center justify-around w-full h-40 shadow-6 bg-steel block bottom-0 mt-20;
 }
 </style>
 

@@ -87,12 +87,12 @@ export default {
       isMobileOpen: false,
       links: [
         {
-          path: '/pricing',
+          path: '/docs',
           text: 'Documentation',
           testData: 'topnavbarDocsLink',
         },
         {
-          path: '/Guides',
+          path: '/guides',
           text: 'Guides',
           testData: 'topnavbarExamplesLink',
         },
