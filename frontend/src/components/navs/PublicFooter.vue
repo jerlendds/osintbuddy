@@ -1,5 +1,5 @@
 <template>
-  <footer class="z-50 flex items-center justify-around w-full h-40 shadow-6 bg-navy-900 ">
+  <footer class="footer">
     <section class="flex flex-col px-12">
       <h1 class="pt-1 text-lg font-semibold text-white-600">General</h1>
       <ul class="text-white-200" >
@@ -47,6 +47,12 @@
     </section> -->
   </footer>
 </template>
+
+<style scoped>
+.footer {
+    @apply z-50 flex items-center justify-around w-full h-40 shadow-6 bg-steel block bottom-0;
+}
+</style>
 
 <script>
 export default {

@@ -1,12 +1,13 @@
 <template>
   <div
     id="app"
-    :class="isPublicRoute ? 'flex-col justify-between' : 'flex justify-between h-screen '"
+    class="flex justify-between"
+    :class="{'flex-col':isPublicRoute}"
   >
     <router-view v-if="isPublicRoute" key="nav" name="header" class="z-30" />
     <router-view key="main" class="z-10" />
     <router-view key="footer" name="footer"
-     :class="isPublicRoute ? 'mt-40' : 'order-first'"
+     :class="{'order-first':!isPublicRoute}"
     />
   </div>
 </template>
@@ -44,9 +45,10 @@ export default {
 
 <style>
 #app {
-    @apply bg-navy-800
+    @apply min-h-screen bg-dark
 }
 html {
   @apply font-body;
 }
+
 </style>
