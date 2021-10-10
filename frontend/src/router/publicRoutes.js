@@ -1,6 +1,6 @@
 import Home from "@/views/public/Home";
 import PublicNavbar from "@/components/navs/PublicNavbar";
-import PublicFooter from "@/components/PublicFooter";
+import PublicFooter from "@/components/navs/PublicFooter";
 import Guides from "@/views/public/Guides";
 import Support from "@/views/public/Support";
 import Pricing from "@/views/public/Pricing";

@@ -1,5 +1,5 @@
 <template>
-  <main class="bg-navy-800">
+  <main class="h-full w-full">
     <section class="z-50 flex flex-col items-center">
       <section
         class="z-50 flex flex-col h-full w-full justify-center items-center"
