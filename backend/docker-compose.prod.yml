@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  backend:
+    image: "openinfolabs/osintbuddy-backend:latest"
+    command: [ "/bin/sh", "-c", "./start.sh" ]
+    build:
+      context: "./backend"
+      dockerfile: "backend.Dockerfile"
+    volumes:
+      - ./backend/app:/app/
+    environment:
+      PYTHONDONTWRITEBYTECODE: 1
+    ports:
+      - "${DOCKER_WEB_PORT_FORWARD:-0.0.0.0:8000}:80"
+  redis:
+    image: redis:latest
+    command: "redis-server"
+    volumes:
+      - "redis:/data"
+  worker:
+    command: "/worker-start.sh"
+    image: openinfolabs/osintbuddy-worker:latest
+    build:
+      context: ./backend
+      dockerfile: worker.Dockerfile
+  flower:
+    image: mher/flower:0.9.7
+    ports:
+      - "${DOCKER_FLOWER_PORT_FORWARD:-127.0.0.1:6565}:5555"
+volumes:
+  redis:

@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Hind:wght@300;400;500;600;700&display=swap');
+
+*,
+:after,
+:before {
+  @apply box-border font-sans;
+  z-index: 1;
+}
+button {
+  cursor: pointer;
+}
+:disabled {
+  cursor: default;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3c3c40 #00000063;
+}
+
+/* https://gradienta.io/editor */
+body {
+  @apply relative;
+}
+#root {
+  @apply flex flex-col min-h-screen relative  bg-dark-500 ;
+}
+
+svg.icon {
+  @apply flex items-center justify-center;
+}
+
+p,
+span {
+  @apply text-light-200;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button,
+a,
+figcaption {
+  @apply text-light-200 font-display;
+}
+
+/* 
+* Custom Scrollbar Style 
+*/
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: #00000063;
+  width: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #00000063;
+  border-radius: 0px;
+  border-right: 4px solid #3c3c40;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3c3c40 #00000063;
+}
+/* end Custom Scrollbar Style */
+
+/* start Animated CSS Hamburger Menu */
+
+.hamburger.is-active {
+  @apply transition-transform -rotate-45 duration-75;
+}
+
+.hamburger {
+  @apply relative hover:cursor-pointer rotate-0;
+  -webkit-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.hamburger .line {
+  border-radius: 50px;
+  height: 2px;
+  background-color: #ecf0f1;
+  display: block;
+  margin: 8px auto;
+  -webkit-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.hamburger.is-active .line:nth-child(1),
+.hamburger.is-active .line:nth-child(2),
+.hamburger.is-active .line:nth-child(3) {
+  width: 26px;
+}
+
+.hamburger .line:nth-child(1) {
+  width: 30px;
+  margin-right: 100%;
+}
+.hamburger .line:nth-child(2) {
+  width: 30px;
+  margin-right: 100%;
+}
+.hamburger .line:nth-child(3) {
+  width: 30px;
+  margin-right: 100%;
+}
+.hamburger.is-active .line:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.is-active .line:nth-child(1) {
+  -webkit-transform: translateY(10px);
+  -ms-transform: translateY(10px);
+  -o-transform: translateY(10px);
+  transform: translateY(10px);
+}
+
+.hamburger.is-active .line:nth-child(3) {
+  -webkit-transform: translateY(-10px) rotate(90deg);
+  -ms-transform: translateY(-10px) rotate(90deg);
+  -o-transform: translateY(-10px) rotate(90deg);
+  transform: translateY(-10px) rotate(90deg);
+}
+/* end Animated CSS Hamburger Menu */
