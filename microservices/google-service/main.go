@@ -17,7 +17,7 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// Routes
-	e.GET("/", hello)
+	e.GET("/", googleSearch)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
@@ -28,7 +28,7 @@ type Response struct {
 }
 
 // Handler
-func hello(c echo.Context) error {
+func googleSearch(c echo.Context) error {
 	var crawlResults = google.GoogleService(c.QueryParam("query"), c.QueryParam("pages"))
 	return c.JSON(http.StatusOK, crawlResults)
 }
