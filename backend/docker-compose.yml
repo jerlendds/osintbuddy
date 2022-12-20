@@ -70,7 +70,7 @@ services:
     ports:
       - ${MAIL_CLIENT_PORT}:1080
       - ${MAIL_PORT}:1025
-
+  
 volumes:
   osintbuddy-db-data:
   osintbuddy-graph-data:
