@@ -12,10 +12,6 @@ import (
 	"github.com/gocolly/colly/queue"
 )
 
-var (
-	jsonResults []interface{}
-)
-
 func setHeaders(r *colly.Request) {
 	r.Headers.Set("Host", "www.google.com")
 	r.Headers.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0")
@@ -61,7 +57,7 @@ type SerpResults struct {
 
 var serpResults = new(SerpResults)
 
-func CrawlGoogle(searchQuery string, pages string) {
+func crawlGoogle(searchQuery string, pages string) {
 
 	var paginationIndex = 0
 	totalPages, err := strconv.Atoi(pages)
@@ -210,8 +206,6 @@ func CrawlGoogle(searchQuery string, pages string) {
 }
 
 func GoogleService(query string, pages string) SerpResults {
-	CrawlGoogle(query, pages)
-	jsonArrVal, _ := json.Marshal(jsonResults)
-	fmt.Println(string(jsonArrVal))
+	crawlGoogle(query, pages)
 	return *serpResults
 }
