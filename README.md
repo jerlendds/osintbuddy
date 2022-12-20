@@ -49,9 +49,9 @@ What CSEs are is a targeted search engine for a specific site(s) URL. You can cr
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-*this project is a work-in-progress however feel free to extract out the crawler directory that's for the Google CSE scraper, it's very fast :)*
+*this project is a work-in-progress however feel free to extract out the serp directory that's for the Google scraper, it's very fast :)*
 
-Query the Google CSE API, store results, analyse, and more all through a deployable webapp.
+Query the Google CSE API, store results, analyze, and more all through a deployable webapp.
 
 
 
