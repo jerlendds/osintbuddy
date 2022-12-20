@@ -1,0 +1,77 @@
+version: '3.9'
+services:
+  backend:
+    image: 'openinfolabs/osintbuddy-backend:latest'
+    command: ['/bin/sh', '-c', './start-reload.sh']
+    build:
+      context: './backend'
+      dockerfile: 'backend.Dockerfile'
+    volumes:
+      - ./backend/app:/app/
+    environment:
+      PYTHONDONTWRITEBYTECODE: 1
+    ports:
+      - '${DOCKER_WEB_PORT_FORWARD:-0.0.0.0:8000}:80'
+    env_file:
+      - '.env'
+  db:
+    image: postgres:14.2
+    volumes:
+      - osintbuddy-db-data:/var/lib/postgresql/data/pgdata
+    environment:
+      PGDATA: '/var/lib/postgresql/data/pgdata'
+    env_file:
+      - '.env'
+    ports:
+      - 5455:5432
+  redis:
+    image: redis:latest
+    deploy:
+      resources:
+        limits:
+          cpus: '${DOCKER_REDIS_CPUS:-0}'
+          memory: '${DOCKER_REDIS_MEMORY:-0}'
+    command: 'redis-server'
+    volumes:
+      - 'redis:/data'
+  worker:
+    command: '/worker-start.sh'
+    image: openinfolabs/osintbuddy-worker:latest
+    build:
+      context: ./backend
+      dockerfile: worker.Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '${DOCKER_WORKER_CPUS:-0}'
+          memory: '${DOCKER_WORKER_MEMORY:-0}'
+    env_file:
+      - '.env'
+  flower:
+    image: mher/flower:0.9.7
+    ports:
+      - '${DOCKER_FLOWER_PORT_FORWARD:-127.0.0.1:6565}:5555'
+    env_file:
+      - '.env'
+
+  graphdb:
+    image: neo4j:5.3.0-community
+    environment:
+      NEO4J_AUTH: neo4j/password
+    ports:
+      - '7474:7474'
+      - '7687:7687'
+    volumes:
+      - osintbuddy-graph-data:/var/lib/postgresql/data/pgdata
+  maildev:
+    build:
+      context: .
+      dockerfile: ./backend/maildev.Dockerfile
+    ports:
+      - ${MAIL_CLIENT_PORT}:1080
+      - ${MAIL_PORT}:1025
+
+volumes:
+  osintbuddy-db-data:
+  osintbuddy-graph-data:
+  redis:

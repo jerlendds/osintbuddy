@@ -1,0 +1,42 @@
+x-app: &default-dev
+  tty: true
+  restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+  stop_grace_period: "3s"
+
+services:
+  db:
+    <<: *default-dev
+    volumes:
+      - osintbuddy-db-data:/var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+  backend:
+    <<: *default-dev
+
+    ports:
+      - "${DOCKER_WEB_PORT_FORWARD:-0.0.0.0:8000}:80"
+    deploy:
+      resources:
+        limits:
+          cpus: "${DOCKER_WEB_CPUS:-0}"
+          memory: "${DOCKER_WEB_MEMORY:-0}"
+    volumes:
+      - ./backend/app:/app
+
+  redis:
+    <<: *default-dev
+    deploy:
+      resources:
+        limits:
+          cpus: "${DOCKER_REDIS_CPUS:-0}"
+          memory: "${DOCKER_REDIS_MEMORY:-0}"
+  flower:
+    <<: *default-dev
+
+  worker:
+    <<: *default-dev
+    deploy:
+      resources:
+        limits:
+          cpus: "${DOCKER_WORKER_CPUS:-0}"
+          memory: "${DOCKER_WORKER_MEMORY:-0}"

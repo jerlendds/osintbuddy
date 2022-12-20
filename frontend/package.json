@@ -1,55 +1,61 @@
 {
-  "name": "OSINTbuddy",
+  "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
-  },
   "dependencies": {
-    "@mdi/js": "^5.9.55",
-    "axios": "^0.21.1",
-    "chart.js": "^3.5.1",
-    "core-js": "^3.6.5",
-    "letterizejs": "^2.0.1",
-    "register-service-worker": "^1.7.1",
-    "three": "^0.131.3",
-    "vee-validate": "^3.4.11",
-    "vue": "^2.6.11",
-    "vue-chartjs": "^3.5.1",
-    "vue-material-design-icons": "^4.12.1",
-    "vue-router": "^3.2.0",
-    "vuex": "^3.4.0"
+    "@craco/craco": "^7.0.0",
+    "@headlessui/react": "^1.7.7",
+    "@heroicons/react": "^2.0.13",
+    "@reduxjs/toolkit": "^1.9.1",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^17.0.45",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "axios": "^1.2.1",
+    "classnames": "^2.3.2",
+    "formik": "^2.2.9",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.5",
+    "react-router-dom": "^6.4.5",
+    "react-scripts": "5.0.1",
+    "react-table": "^7.8.0",
+    "react-toastify": "^9.1.1",
+    "typescript": "^4.9.4",
+    "web-vitals": "^2.1.4",
+    "yup": "^0.32.11"
+  },
+  "scripts": {
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-e2e-cypress": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-pwa": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-unit-jest": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "@vue/test-utils": "^1.0.3",
-    "animejs": "^3.2.1",
-    "autoprefixer": "^9.8.6",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-vue": "^6.2.2",
-    "postcss": "^7.0.36",
-    "prettier": "^2.4.1",
-    "sass": "^1.26.5",
-    "sass-loader": "^8.0.2",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7",
-    "vue-infinite-loading": "^2.4.5",
-    "vue-template-compiler": "^2.6.11"
-  },
-  "extends": [
-    "plugin:prettier/recommended"
-  ]
+    "@types/react-table": "^7.7.12",
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.20",
+    "tailwindcss": "^3.2.4"
+  }
 }
