@@ -24,6 +24,7 @@ class GoogleDorksUpdate(GoogleDorksBase):
 
 class GoogleDorksInDBBase(GoogleDorksBase):
     id: Optional[int] = None
+    created: datetime.datetime
 
     class Config:
         orm_mode = True
@@ -36,8 +37,7 @@ class GoogleDorks(GoogleDorksInDBBase):
 
 # Additional properties stored in DB
 class GoogleDorksInDB(GoogleDorksInDBBase):
-    created: datetime.datetime
-
+    pass
 
 # Dork Authors
 

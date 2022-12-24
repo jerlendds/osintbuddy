@@ -200,10 +200,8 @@ export default function AppLayout() {
               </div>
             </div>
           </div>
-          <main className='flex-1'>
-            <div className='py-4 px-5'>
+          <main className='flex-1 h-full overflow-scroll'>
               <Outlet />
-            </div>
           </main>
         </div>
       </div>

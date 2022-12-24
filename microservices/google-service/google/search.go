@@ -57,7 +57,7 @@ type SerpResults struct {
 
 var serpResults = new(SerpResults)
 
-func crawlGoogle(searchQuery string, pages string) {
+func CrawlGoogle(searchQuery string, pages string) {
 
 	var paginationIndex = 0
 	totalPages, err := strconv.Atoi(pages)
@@ -103,8 +103,10 @@ func crawlGoogle(searchQuery string, pages string) {
 	// Set HTML callback for pagination
 	c.OnHTML("#pnnext", func(e *colly.HTMLElement) {
 		link := e.Attr("href")
-		if paginationIndex < totalPages {
+		if paginationIndex <= totalPages {
 			q.AddURL(fmt.Sprintf("https://google.com/%sclient=firefox-b-e", link))
+		} else {
+			serpResults = new(SerpResults)
 		}
 	})
 
@@ -206,6 +208,7 @@ func crawlGoogle(searchQuery string, pages string) {
 }
 
 func GoogleService(query string, pages string) SerpResults {
-	crawlGoogle(query, pages)
+	CrawlGoogle(query, pages)
+
 	return *serpResults
 }

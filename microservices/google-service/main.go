@@ -23,10 +23,6 @@ func main() {
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
-type Response struct {
-	Data []byte
-}
-
 // Handler
 func googleSearch(c echo.Context) error {
 	var crawlResults = google.GoogleService(c.QueryParam("query"), c.QueryParam("pages"))
