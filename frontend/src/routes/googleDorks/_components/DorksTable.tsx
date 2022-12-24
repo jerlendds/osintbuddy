@@ -1,6 +1,15 @@
 import React from 'react';
 import { useTable, usePagination, type Column, type CellProps, CellValue } from 'react-table';
 import dorksService from '@/services/dorks.service';
+import classNames from 'classnames';
+import { VirusSearchIcon } from '@/components/Icons';
+import RoundLoader from '@/components/Loaders';
+import {
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from '@heroicons/react/24/outline';
 
 interface TableProps {
   columns: Array<Column>;
@@ -8,9 +17,11 @@ interface TableProps {
   fetchData: Function;
   loading: boolean;
   pageCount: number;
+  setShowCreate: Function;
+  setDork: Function
 }
 
-function Table({ columns, data, fetchData, loading, pageCount: controlledPageCount }: TableProps) {
+function Table({ columns, data, fetchData, loading, pageCount: controlledPageCount, setShowCreate, setDork }: TableProps) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -38,7 +49,33 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
       // pageCount.
       pageCount: controlledPageCount,
     },
-    usePagination
+    usePagination,
+    (hooks) => {
+      hooks.allColumns.push((columns) => [
+        ...columns,
+        {
+          accessor: 'edit',
+          id: 'edit',
+          Header: 'Actions',
+          Cell: ({ row, setEditableRowIndex, editableRowIndex }: CellProps<any>) => (
+            <div className='flex items-center relative z-40'>
+              <button
+                className={classNames(
+                  'text-primary-600 flex bg-primary items-center font-light text-sm font-display hover:text-light-200 border-primary border-2 py-2 px-4 rounded-full hover:border-primary-400 transition-colors duration-75 ease-in'
+                )}
+                onClick={() => {
+                  setDork(row.original.dork)
+                  setShowCreate(true);
+                }}
+              >
+                <span className='text-light-200 mx-2 mr-4 font-sans font-medium'>Dork Search</span>{' '}
+                <VirusSearchIcon className='w-6 h-6 text-light-400' />
+              </button>
+            </div>
+          ),
+        },
+      ]);
+    }
   );
 
   // Listen for changes in pagination and use the state to fetch our new data
@@ -50,7 +87,7 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
   return (
     <>
       <table className='min-w-full divide-y divide-dark-300' {...getTableProps()}>
-        <thead className='bg-dark-700'>
+        <thead className='bg-dark-800'>
           {headerGroups.map((headerGroup: any) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column: any) => (
@@ -64,7 +101,7 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
             </tr>
           ))}
         </thead>
-        <tbody className='bg-dark-600' {...getTableBodyProps()}>
+        <tbody className='bg-dark-700' {...getTableBodyProps()}>
           {page.map((row: any, i: number) => {
             prepareRow(row);
             return (
@@ -72,7 +109,7 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
                 {row.cells.map((cell: any) => {
                   return (
                     <td
-                      className='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-50 sm:pl-6'
+                      className='whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-50 sm:pl-6'
                       {...cell.getCellProps()}
                     >
                       {cell.render('Cell')}
@@ -85,9 +122,11 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
           <tr>
             {loading ? (
               // Use our custom loading state to show a loading indicator
-              <td colSpan={10000}>Loading...</td>
+              <td className='text-light-900 px-4 py-1' colSpan={10000}>
+                <RoundLoader />
+              </td>
             ) : (
-              <td colSpan={10000}>
+              <td className='text-light-900 px-4' colSpan={10000}>
                 Showing {page.length} of ~{controlledPageCount * pageSize} results
               </td>
             )}
@@ -99,17 +138,33 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
         This is just a very basic UI implementation:
       */}
       <div className='pagination'>
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
+        <button
+          className='border-2 border-primary hover:border-primary-400 bg-primary mr-1.5 my-2 rounded-lg px-5 py-1.5'
+          onClick={() => gotoPage(0)}
+          disabled={!canPreviousPage}
+        >
+          <ChevronDoubleLeftIcon className='text-light-900 w-6 h-6' />
         </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
+        <button
+          className='border-2 border-primary hover:border-primary-400 bg-primary mx-1.5 my-2 rounded-lg px-5 py-1.5'
+          onClick={() => previousPage()}
+          disabled={!canPreviousPage}
+        >
+          <ChevronLeftIcon className='text-light-900 w-6 h-6' />
         </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
+        <button
+          className='border-2 border-primary hover:border-primary-400 bg-primary mx-1.5 my-2 rounded-lg px-5 py-1.5'
+          onClick={() => nextPage()}
+          disabled={!canNextPage}
+        >
+          <ChevronRightIcon className='text-light-900 w-6 h-6' />
         </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
+        <button
+          className='border-2 border-primary hover:border-primary-400 bg-primary mx-1.5 my-2 rounded-lg px-5 py-1.5'
+          onClick={() => gotoPage(pageCount - 1)}
+          disabled={!canNextPage}
+        >
+          <ChevronDoubleRightIcon className='text-light-900 w-6 h-6' />
         </button>{' '}
         <span>
           Page{' '}
@@ -158,7 +213,7 @@ export const formatDork = (dorkTag: string) => {
   return Array.from(matches)[0][0];
 };
 
-export default function DorksTable() {
+export default function DorksTable({ setShowCreate, setDork }: { setShowCreate: Function, setDork: Function }) {
   const columns = React.useMemo<Column[]>(
     () => [
       {
@@ -221,11 +276,20 @@ export default function DorksTable() {
   }, []);
 
   return (
-    <div className='mt-8 flex flex-col'>
+    <div className='mt-8 flex flex-col '>
       <div className='-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8'>
         <div className='inline-block min-w-full py-2 align-middle md:px-6 lg:px-8'>
-          <Table columns={columns} data={data} fetchData={fetchData} loading={loading} pageCount={pageCount} />;
-          <div className='overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg'></div>
+          <div className='overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg'>
+            <Table
+            setDork={setDork}
+              setShowCreate={setShowCreate}
+              columns={columns}
+              data={data}
+              fetchData={fetchData}
+              loading={loading}
+              pageCount={pageCount}
+            />
+          </div>
         </div>
       </div>
     </div>
