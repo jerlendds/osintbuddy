@@ -105,8 +105,6 @@ func CrawlGoogle(searchQuery string, pages string) {
 		link := e.Attr("href")
 		if paginationIndex <= totalPages {
 			q.AddURL(fmt.Sprintf("https://google.com/%sclient=firefox-b-e", link))
-		} else {
-			serpResults = new(SerpResults)
 		}
 	})
 
@@ -183,7 +181,6 @@ func CrawlGoogle(searchQuery string, pages string) {
 				return
 			}
 
-			// parse classic search result
 			if len(urlString) > 0 {
 				searchResult := &SearchResult{
 					Title:       heading,
@@ -208,7 +205,7 @@ func CrawlGoogle(searchQuery string, pages string) {
 }
 
 func GoogleService(query string, pages string) SerpResults {
+	serpResults = new(SerpResults)
 	CrawlGoogle(query, pages)
-
 	return *serpResults
 }

@@ -22,7 +22,7 @@ body {
   @apply relative min-h-screen;
 }
 #root {
-  @apply flex flex-col min-h-screen relative  bg-dark-600 ;
+  @apply flex flex-col min-h-screen relative  bg-light-400 ;
 }
 
 svg.icon {
@@ -84,7 +84,7 @@ figcaption {
 .hamburger .line {
   border-radius: 50px;
   height: 2px;
-  background-color: #ecf0f1;
+  background-color: #f2f2f2;
   display: block;
   margin: 8px auto;
   -webkit-transition: all 0.3s ease-in-out;
