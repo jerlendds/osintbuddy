@@ -29,7 +29,6 @@ export default function AppLayout() {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
-
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -124,7 +123,7 @@ export default function AppLayout() {
         {/* Static sidebar for desktop */}
         <div
           className={classNames(
-            'hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col transition-transform',
+            'hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col transition-transform duration-200',
             sidebarOpen ? 'translate-x-0' : '-translate-x-52'
           )}
         >
@@ -136,7 +135,8 @@ export default function AppLayout() {
                 sidebarOpen ? 'px-3' : 'px-1'
               )}
             >
-              <img className='h-8 w-auto' src={OSINTBuddyLogo} alt='Your Company' />
+              <img className='h-7 w-auto' src={OSINTBuddyLogo} alt='Your Company' />
+              <p className='text-light-200 text-2xl -ml-8 my-auto font-display'>SINTBuddy</p>
               <HamburgerMenu isOpen={sidebarOpen} onClick={toggleSidebar} />
             </div>
 
@@ -148,7 +148,9 @@ export default function AppLayout() {
                     to={item.to}
                     className={({ isActive }) =>
                       classNames(
-                        isActive ? 'bg-dark-500 text-light-400' : 'text-dark-200 duration-100 hover:bg-dark-700 hover:text-light-400',
+                        isActive
+                          ? 'bg-dark-500 text-light-400'
+                          : 'text-dark-200 duration-200 hover:bg-dark-700 hover:text-light-400',
                         'group flex items-center px-2 py-2 text-base font-sans font-medium rounded-r-sm'
                       )
                     }
@@ -156,7 +158,7 @@ export default function AppLayout() {
                     <item.icon
                       className={classNames(
                         location.pathname === item.to ? 'text-primary' : 'text-gray-400 group-hover:text-gray-300',
-                        'mr-3 flex-shrink-0 h-6 w-6 transition-transform duration-150',
+                        'mr-3 flex-shrink-0 h-6 w-6 transition-transform duration-200',
                         sidebarOpen ? 'translate-x-0' : 'translate-x-[12.7rem]'
                       )}
                       aria-hidden='true'

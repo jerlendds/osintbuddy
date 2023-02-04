@@ -70,12 +70,7 @@ export default function PublicNavbar(): React.ReactElement {
             leaveFrom='transform translate-x-0 absolute opacity-100'
             leaveTo='transform scale-95 -translate-x-40 absolute '
           >
-            <Disclosure.Panel
-              className={classNames(
-                'sm:hidden z-50 ',
-                open ? '-translate-x-0' : '-translate-x-96'
-              )}
-            >
+            <Disclosure.Panel className={classNames('sm:hidden z-50 ', open ? '-translate-x-0' : '-translate-x-96')}>
               <div className='flex flex-col items-start  space-y-4 px-2 pt-2 pb-3 '>
                 {navigation.map((item) => (
                   <Disclosure.Button key={item.name} as='button'>
