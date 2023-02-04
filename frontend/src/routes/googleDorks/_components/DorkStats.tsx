@@ -19,20 +19,18 @@ interface StatsCardProps {
 
 export default function StatsCard({ title, name, stat, className, Icon }: StatsCardProps) {
   return (
-    <dl className='relative flex w-ful mr-6 mx-auto '>
+    <dl className='relative flex mr-4 last:mr-0 w-1/3'>
       {/* Gradient background of same width & height  as Blog post card  */}
-      <div className=' rounded-lg w-full bg-gradient-to-r flex p-[2px] from-[#4082EE] to-[#1462E2] '>
-        <div className='flex  justify-between items-center h-full bg-primary rounded-lg py-3.5 px-6 '>
-          <div className='flex flex-col justify-center text-white'>
+      <div className=' rounded-lg w-full flex p-[2px] '>
+        <div className={classNames('flex  justify-between items-center h-full w-full rounded-lg py-3.5 px-6 ', className)}>
+          <div className='flex flex-col justify-center text-light w-full'>
             {/* PostImage */}
 
             {/* Post title */}
             <div className='w-full flex items-center'>
-              <div className={classNames('min-w-[1.5rem] min-h-[1.5rem] -mt-5 mr-2 mb-2 text-light-200', className)}>
-                <Icon className='w-6 h-6 text-light-200' />
-              </div>{' '}
-              <h3 className='text-lg font-bold font-sans mb-auto leading-6 py-1 w-52 text-light-200'>{title}</h3>
-              <div className='flex flex-col'>
+              
+              <h3 className='text-lg font-bold font-sans mb-auto leading-6 py-1 w-full text-light-200'>{title}</h3>
+              <div className='flex flex-col !ml-auto relative'>
                 <dd className='mt-1 ml-auto text-5xl font-semibold leading-8 tracking-tight text-light-200'>{stat}</dd>
                 <h3 className='text-sm font-medium font-sans mb-auto leading-6 ml-auto text-light-200'>{name}</h3>
               </div>
@@ -88,23 +86,23 @@ export function DorkStats() {
       {isLoading ? (
         <span>Loading...</span>
       ) : (
-        <div className='flex'>
+        <div className='flex w-full'>
           <StatsCard
-            className='bg-primary flex items-center justify-center p-3 rounded-full'
+            className=' flex bg-gradient-to-br  items-center justify-center p-3 rounded-full from-[#3B9649] to-[#287515]'
             Icon={DocumentMagnifyingGlassIcon}
             title='All Google Dorks'
             name='Dorks'
             stat={`${dorksCount}`}
           />
           <StatsCard
-            className='bg-primary flex items-center justify-center p-3 rounded-full'
+            className=' bg-gradient-to-br   flex items-center justify-center p-3 rounded-full to-[#208e80] from-[#2daaa4] '
             Icon={PencilSquareIcon}
             title='Google Dork Authors'
             name='Authors'
             stat={`${authorsCount}`}
           />
           <StatsCard
-            className='bg-primary flex items-center justify-center p-3 rounded-full'
+            className='bg-gradient-to-br  flex items-center justify-center p-3 rounded-full to-[#16168C] from-[#1D1DB8]'
             Icon={TagIcon}
             title='Dork Categories'
             name='Categories'

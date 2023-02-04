@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useTable, usePagination, type Column, type CellProps, CellValue } from 'react-table';
 import dorksService from '@/services/dorks.service';
 import classNames from 'classnames';
@@ -10,6 +10,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
+import { DorkStats } from './DorkStats';
 
 interface TableProps {
   columns: Array<Column>;
@@ -18,10 +19,20 @@ interface TableProps {
   loading: boolean;
   pageCount: number;
   setShowCreate: Function;
-  setDork: Function
+  setDork: Function;
+  updateGhdb: Function;
 }
 
-function Table({ columns, data, fetchData, loading, pageCount: controlledPageCount, setShowCreate, setDork }: TableProps) {
+function Table({
+  columns,
+  data,
+  fetchData,
+  loading,
+  pageCount: controlledPageCount,
+  setShowCreate,
+  setDork,
+  updateGhdb,
+}: TableProps) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -42,11 +53,8 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
     {
       columns,
       data,
-      initialState: { pageIndex: 0 }, // Pass our hoisted table state
-      manualPagination: true, // Tell the usePagination
-      // hook that we'll handle our own data fetching
-      // This means we'll also have to provide our own
-      // pageCount.
+      initialState: { pageIndex: 0 },
+      manualPagination: true, 
       pageCount: controlledPageCount,
     },
     usePagination,
@@ -61,15 +69,14 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
             <div className='flex items-center relative z-40'>
               <button
                 className={classNames(
-                  'text-primary-600 flex bg-primary items-center font-light text-sm font-display hover:text-light-200 border-primary border-2 py-2 px-4 rounded-full hover:border-primary-400 transition-colors duration-75 ease-in'
+                  'text-primary-600 flex bg-lime-700 items-center font-light text-sm font-display hover:text-light-200 border-lime-700 border-2 py-2 px-4 rounded-full hover:border-primary-400 transition-colors duration-75 ease-in'
                 )}
                 onClick={() => {
-                  setDork(row.original.dork)
+                  setDork(row.original.dork);
                   setShowCreate(true);
                 }}
               >
-                <span className='text-light-200 mx-2 mr-4 font-sans font-medium'>Dork Search</span>{' '}
-                <VirusSearchIcon className='w-6 h-6 text-light-400' />
+                <span className='text-light-200 mx-2 mr-4 font-sans font-medium'>Start crawl</span>{' '}
               </button>
             </div>
           ),
@@ -122,12 +129,17 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
           <tr>
             {loading ? (
               // Use our custom loading state to show a loading indicator
-              <td className='text-light-900 px-4 py-1' colSpan={10000}>
+              <td className='text-light-900 px-6 py-2' colSpan={10000}>
                 <RoundLoader />
               </td>
             ) : (
-              <td className='text-light-900 px-4' colSpan={10000}>
-                Showing {page.length} of ~{controlledPageCount * pageSize} results
+              <td className='text-light-900 px-6 py-1' colSpan={10000}>
+                   <span>
+          Page{' '}
+          <strong>
+            {pageIndex + 1} of {pageOptions.length}
+          </strong>{' '}
+        </span>
               </td>
             )}
           </tr>
@@ -137,43 +149,45 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
         Pagination can be built however you'd like. 
         This is just a very basic UI implementation:
       */}
-      <div className='pagination'>
+      <div className='flex'>
+            <button
+            className='flex max-w-xs items-center border border-transparent bg-lime-700 px-4 py-1 h-10 my-auto mr-4 text-sm font-medium text-white shadow-sm hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-lime-600 focus:ring-offset-2'
+            onClick={() => updateGhdb()}
+          >
+            Update dorks
+          </button> 
         <button
-          className='border-2 border-primary hover:border-primary-400 bg-primary mr-1.5 my-2 rounded-lg px-5 py-1.5'
+          className='border-2 border-lime-700 hover:border-lime-600 bg-lime-700 mr-1.5 my-2 rounded-lg px-5 py-1.5'
           onClick={() => gotoPage(0)}
           disabled={!canPreviousPage}
         >
-          <ChevronDoubleLeftIcon className='text-light-900 w-6 h-6' />
+          <ChevronDoubleLeftIcon className='text-white w-6 h-6' />
         </button>{' '}
         <button
-          className='border-2 border-primary hover:border-primary-400 bg-primary mx-1.5 my-2 rounded-lg px-5 py-1.5'
+          className='border-2 border-lime-700 hover:border-lime-600 bg-lime-700 mx-1.5 my-2 rounded-lg px-5 py-1.5'
           onClick={() => previousPage()}
           disabled={!canPreviousPage}
         >
-          <ChevronLeftIcon className='text-light-900 w-6 h-6' />
+          <ChevronLeftIcon className='text-white w-6 h-6' />
         </button>{' '}
         <button
-          className='border-2 border-primary hover:border-primary-400 bg-primary mx-1.5 my-2 rounded-lg px-5 py-1.5'
+          className='border-2 border-lime-700 hover:border-lime-600 bg-lime-700 mx-1.5 my-2 rounded-lg px-5 py-1.5'
           onClick={() => nextPage()}
           disabled={!canNextPage}
         >
-          <ChevronRightIcon className='text-light-900 w-6 h-6' />
+          <ChevronRightIcon className='text-white w-6 h-6' />
         </button>{' '}
         <button
-          className='border-2 border-primary hover:border-primary-400 bg-primary mx-1.5 my-2 rounded-lg px-5 py-1.5'
+          className='border-2 border-lime-700 hover:border-lime-600 bg-lime-700 mx-1.5 my-2 rounded-lg px-5 py-1.5'
           onClick={() => gotoPage(pageCount - 1)}
           disabled={!canNextPage}
         >
-          <ChevronDoubleRightIcon className='text-light-900 w-6 h-6' />
+          <ChevronDoubleRightIcon className='text-white w-6 h-6' />
         </button>{' '}
+
+        
         <span>
-          Page{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
-        </span>
-        <span>
-          | Go to page:{' '}
+         Go to page:{' '}
           <input
             type='number'
             defaultValue={pageIndex + 1}
@@ -196,12 +210,12 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
             </option>
           ))}
         </select>
+        
       </div>
     </>
   );
 }
 
-// Let's simulate a large dataset on the server (outside of our component)
 
 interface FetchProps {
   pageSize: number;
@@ -213,42 +227,27 @@ export const formatDork = (dorkTag: string) => {
   return Array.from(matches)[0][0];
 };
 
-export default function DorksTable({ setShowCreate, setDork }: { setShowCreate: Function, setDork: Function }) {
-  const columns = React.useMemo<Column[]>(
-    () => [
-      {
-        Header: 'Google dorks',
-        accessor: 'dork',
-        Cell: (props): CellValue => formatDork(props.value),
-      },
-      {
-        Header: 'Created',
-        accessor: 'date',
-      },
-    ],
-    []
-  );
+export default function DorksTable({
+  setShowCreate,
+  setDork,
+  columns,
+  updateGhdb
+}: {
+  setShowCreate: Function;
+  setDork: Function;
+  columns: Column[];
+  updateGhdb: Function;
+}) {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [pageCount, setPageCount] = useState(0);
+  const fetchIdRef = useRef(0);
 
-  // We'll start our table without any data
-  const [data, setData] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
-  const [pageCount, setPageCount] = React.useState(0);
-  const fetchIdRef = React.useRef(0);
-
-  const fetchData = React.useCallback(({ pageSize, pageIndex }: FetchProps) => {
-    // This will get called when the table needs new data
-    // You could fetch your data from literally anywhere,
-    // even a server. But for this example, we'll just fake it.
-
-    // Give this fetch an ID
+  // fetch the dorks data
+  const fetchData = useCallback(({ pageSize, pageIndex }: FetchProps) => {
     const fetchId = ++fetchIdRef.current;
-
-    // Set the loading state
     setLoading(true);
-
-    // We'll even set a delay to simulate a server here
     setTimeout(() => {
-      // Only update the data if this is the latest fetch
       if (fetchId === fetchIdRef.current) {
         const startRow = pageSize * pageIndex;
         const endRow = startRow + pageSize;
@@ -276,12 +275,16 @@ export default function DorksTable({ setShowCreate, setDork }: { setShowCreate: 
   }, []);
 
   return (
-    <div className='mt-8 flex flex-col '>
-      <div className='-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8'>
-        <div className='inline-block min-w-full py-2 align-middle md:px-6 lg:px-8'>
+    <div className=' flex flex-col '>
+      <div className=''>
+            <DorkStats />
+        <div className='inline-block min-w-full py-2 align-middle '>
+
           <div className='overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg'>
+
             <Table
-            setDork={setDork}
+            updateGhdb={updateGhdb}
+              setDork={setDork}
               setShowCreate={setShowCreate}
               columns={columns}
               data={data}
@@ -290,7 +293,9 @@ export default function DorksTable({ setShowCreate, setDork }: { setShowCreate: 
               pageCount={pageCount}
             />
           </div>
+
         </div>
+
       </div>
     </div>
   );

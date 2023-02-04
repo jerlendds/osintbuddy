@@ -8,7 +8,7 @@ import dorksService from '@/services/dorks.service';
 import classNames from 'classnames';
 import { VirusSearchIcon } from '@/components/Icons';
 
-import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from 'formik';
+import { Formik, Form, Field } from 'formik';
 
 interface MyFormValues {
   name: string;
@@ -21,7 +21,6 @@ export const MyForm: React.FC<{}> = () => {
   return (
     <div>
       <h1 className='text-2xl'>Start a new OSINT case</h1>
-
       <Formik
         initialValues={initialValues}
         onSubmit={(values, actions) => {
@@ -134,8 +133,7 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
                 )}
                 onClick={() => {}}
               >
-                <span className='text-light-200 mx-2 mr-4 font-sans font-medium'>Dork Search</span>{' '}
-                <VirusSearchIcon className='w-6 h-6 text-light-400' />
+                <span className='text-light-200 mx-2 mr-4 font-sans font-medium'>View case</span>{' '}
               </button>
             </div>
           ),
@@ -249,8 +247,6 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
   );
 }
 
-// Let's simulate a large dataset on the server (outside of our component)
-
 interface FetchProps {
   pageSize: number;
   pageIndex: number;
@@ -287,17 +283,14 @@ export function CasesTable({ columns }: { columns: any }) {
     setTimeout(() => {
       // Only update the data if this is the latest fetch
       if (fetchId === fetchIdRef.current) {
-        const startRow = pageSize * pageIndex;
-        const endRow = startRow + pageSize;
-        console.log('fetching, pageSize, pageIndex', pageSize, pageIndex);
         casesService
           .getCases(pageIndex, pageSize)
           .then((resp) => {
             if (resp.data) {
               console.log(resp.data);
-              if (resp.data.dorks) {
+              if (resp.data) {
                 setPageCount(Math.ceil(resp.data.dorksCount / pageSize));
-                setData(resp.data.dorks);
+                setData(resp.data);
               }
               setLoading(false);
             } else {
@@ -346,7 +339,7 @@ const CasesCard = ({ toggleShowCreate }: { toggleShowCreate: Function }): React.
 
   useEffect(() => {
     if (isFirstLoad) {
-      updateCases(0, 20);
+      updateCases(10, 0);
     }
     setFirstLoad(false);
   }, [isFirstLoad]);
@@ -355,11 +348,14 @@ const CasesCard = ({ toggleShowCreate }: { toggleShowCreate: Function }): React.
       {
         Header: 'Cases',
         accessor: 'name',
-        Cell: (props): CellValue => formatDork(props.value),
+      },
+      {
+        Header: 'Description',
+        accessor: 'description',
       },
       {
         Header: 'Created',
-        accessor: 'date',
+        accessor: 'created',
       },
     ],
     []

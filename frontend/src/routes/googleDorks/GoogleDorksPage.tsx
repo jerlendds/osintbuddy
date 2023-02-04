@@ -1,52 +1,52 @@
 import dorksService from '@/services/dorks.service';
 import classNames from 'classnames';
-import { ReactEventHandler, useState } from 'react';
+import { ReactEventHandler, useMemo, useState } from 'react';
 import DorksTable from './_components/DorksTable';
 import { DorkStats } from './_components/DorkStats';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from 'formik';
 import casesService from '@/services/cases.service';
 import { formatDork } from '../dashboard/DashboardPage';
+import { CellValue, Column } from 'react-table';
 
 interface DorkInputValues {
-  pages: string
-  query: string
+  pages: string;
+  query: string;
 }
 
-export const DorkSearchForm: React.FC<{ query: any }> = ({ query }) => {
-  const [queryField, setQueryField] = useState(query)
+export const DorkSearchForm: React.FC<{ dorkQuery: any }> = ({ dorkQuery }) => {
+  const [queryField, setQueryField] = useState(dorkQuery);
   const [errorMessage, setErrorMessage] = useState('');
-  const initialValues = { query, pages: '' };
-  console.log(initialValues)
+  const initialValues = { query: dorkQuery, pages: '' };
+  console.log(initialValues);
   const isValid = (values: DorkInputValues) => {
     if (values.query === '') {
-      return false
+      return false;
     }
     if (values.pages === '') {
-      return false
+      return false;
     }
-    return true
-  }
+    return true;
+  };
 
   return (
     <div>
-     {!errorMessage ?  <h1 className='text-2xl'>Start a new dork</h1> : <span>{errorMessage}</span>}
+      {!errorMessage ? <h1 className='text-2xl'>Start a new dork</h1> : <span>{errorMessage}</span>}
 
       <Formik
         initialValues={initialValues}
         onSubmit={(values, actions) => {
           console.log({ values, actions });
           if (isValid(values)) {
- casesService
-            .createCase(values.query, values.pages)
-            .then((resp: any) => {
-              console.log(resp.data);
-            })
-            .catch((error: any) => console.warn(error));
-          alert(JSON.stringify(values, null, 2));
-          actions.setSubmitting(false);
+            casesService
+              .createCase(values.query, values.pages)
+              .then((resp: any) => {
+                console.log(resp.data);
+              })
+              .catch((error: any) => console.warn(error));
+            alert(JSON.stringify(values, null, 2));
+            actions.setSubmitting(false);
           }
-         
         }}
       >
         <Form className='flex flex-col my-5'>
@@ -63,7 +63,7 @@ export const DorkSearchForm: React.FC<{ query: any }> = ({ query }) => {
               placeholder='Your dork'
             />
           </div>
-           <div className='py-2'>
+          <div className='py-2'>
             <label className='block text-lg font-medium text-light-700' htmlFor='pages'>
               Pages
             </label>
@@ -76,7 +76,7 @@ export const DorkSearchForm: React.FC<{ query: any }> = ({ query }) => {
           </div>
           <button
             type='submit'
-            className='text-light-600 font-medium flex bg-primary items-center font-display text-sm my-3 hover:text-light-200 border-primary border-2 py-2 px-4 rounded-full hover:border-primary-400 transition-colors duration-75 ease-in'
+            className='text-white font-medium flex bg-lime-700 items-center font-display text-sm my-3 hover:text-light-200 border-lime-700 border-2 py-2 px-4 hover:border-primary-400 transition-colors duration-75 ease-in'
           >
             Search
           </button>
@@ -90,6 +90,21 @@ export default function GoogleDorksPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [dork, setDork] = useState(null);
 
+  const columns = useMemo<Column[]>(
+    () => [
+      {
+        Header: 'Google dorks',
+        accessor: 'dork',
+        Cell: (props): CellValue => formatDork(props.value),
+      },
+      {
+        Header: 'Created',
+        accessor: 'date',
+      },
+    ],
+    []
+  );
+
   const updateGhdb = () => {
     dorksService
       .updateDorks()
@@ -102,19 +117,10 @@ export default function GoogleDorksPage() {
   return (
     <>
       <div className='w-full flex px-4 '>
-        <div className='flex w-full mt-4'>
-          <button
-            className='absolute top-20 right-5 flex items-center rounded-sm border border-transparent bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2'
-            onClick={updateGhdb}
-          >
-            Update dorks
-          </button>
-
+        <div className='flex w-full mt-4 flex-col'>
           <div className='w-full  overflow-hidden'>
-            <div className='flex'>
-              <DorkStats />
-            </div>{' '}
-            <DorksTable setDork={setDork} setShowCreate={setShowCreate} />
+            <div className='flex'></div>{' '}
+            <DorksTable updateGhdb={updateGhdb} columns={columns} setDork={setDork} setShowCreate={setShowCreate} />
           </div>
         </div>
       </div>
@@ -131,7 +137,7 @@ export default function GoogleDorksPage() {
           <button onClick={() => setShowCreate(false)}>
             <XMarkIcon className='text-light-50 h-5 w-5' />
           </button>
-          <DorkSearchForm key={dork} query={formatDork(dork || '')} />
+          <DorkSearchForm key={dork} dorkQuery={formatDork(dork || '')} />
         </div>
       </div>
     </>

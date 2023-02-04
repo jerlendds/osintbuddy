@@ -6,6 +6,7 @@ import authService from '@/services/auth.service';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { login } from '@/features/auth/authSlice';
 import { useAppDispatch } from '@/app/hooks';
+import OSINTBuddyLogo from '@images/logo.svg'
 
 export interface LoginFormValues {
   email: string;
@@ -94,7 +95,7 @@ const LoginForm = ({ initialEmail, remembered }: FormProps) => {
           <button
             disabled={isSubmitting}
             type='submit'
-            className='flex relative w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+            className='flex relative w-full justify-center rounded-md border border-transparent bg-primary-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
           >
             Sign in {isSubmitting && <RoundLoader className='absolute right-5' />}
           </button>
@@ -114,13 +115,13 @@ export default function SigninPage(): React.ReactElement {
             <div>
               <img
                 className='h-12 w-auto'
-                src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600'
+                src={OSINTBuddyLogo}
                 alt='Your Company'
               />
-              <h2 className='mt-6 text-3xl font-bold tracking-tight text-gray-900'>Sign in to OSINTBuddy</h2>
-              <p className='mt-2 text-sm text-gray-600'>
+              <h2 className='mt-6 text-3xl font-bold tracking-tight text-light-900'>Sign in to OSINTBuddy</h2>
+              <p className='mt-2 text-sm text-light-600'>
                 Or{' '}
-                <NavLink to='/sign-up' replace className='font-medium text-indigo-600 hover:text-indigo-500'>
+                <NavLink to='/sign-up' replace className='font-medium text-primary-400 hover:text-primary-500'>
                   create an account
                 </NavLink>
               </p>
@@ -130,10 +131,10 @@ export default function SigninPage(): React.ReactElement {
               <div>
                 <div className='relative mt-6'>
                   <div className='absolute inset-0 flex items-center' aria-hidden='true'>
-                    <div className='w-full border-t border-gray-300' />
+                    <div className='w-full border-t border-dark' />
                   </div>
                   <div className='relative flex justify-center text-sm'>
-                    <span className='bg-white px-2 text-gray-500'>Or continue with</span>
+                    <span className='bg-dark px-2 text-light-500'>Or continue with</span>
                   </div>
                 </div>
               </div>
