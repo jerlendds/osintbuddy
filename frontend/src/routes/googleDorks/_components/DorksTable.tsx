@@ -54,7 +54,7 @@ function Table({
       columns,
       data,
       initialState: { pageIndex: 0 },
-      manualPagination: true, 
+      manualPagination: true,
       pageCount: controlledPageCount,
     },
     usePagination,
@@ -93,13 +93,13 @@ function Table({
   // Render the UI for your table
   return (
     <>
-      <table className='min-w-full divide-y divide-dark-300' {...getTableProps()}>
-        <thead className='bg-dark-800'>
+      <table className='min-w-full divide-y divide-gray-300' {...getTableProps()}>
+        <thead className='bg-light-50'>
           {headerGroups.map((headerGroup: any) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column: any) => (
                 <th
-                  className='first:py-3.5 first:pl-4 px-3 py-3.5 pr-3 text-left text-sm font-semibold text-light-900 first:sm:pl-6 '
+                  className='first:py-3.5 first:pl-4 px-3 py-3.5 pr-3 text-left text-md font-semibold text-dark-500 first:sm:pl-6 '
                   {...column.getHeaderProps()}
                 >
                   {column.render('Header')}
@@ -108,7 +108,7 @@ function Table({
             </tr>
           ))}
         </thead>
-        <tbody className='bg-dark-700' {...getTableBodyProps()}>
+        <tbody className='bg-light-200' {...getTableBodyProps()}>
           {page.map((row: any, i: number) => {
             prepareRow(row);
             return (
@@ -116,7 +116,7 @@ function Table({
                 {row.cells.map((cell: any) => {
                   return (
                     <td
-                      className='whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-50 sm:pl-6'
+                      className='whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-dark-500 sm:pl-6 first:pl-8'
                       {...cell.getCellProps()}
                     >
                       {cell.render('Cell')}
@@ -126,78 +126,55 @@ function Table({
               </tr>
             );
           })}
-          <tr>
-            {loading ? (
-              // Use our custom loading state to show a loading indicator
-              <td className='text-light-900 px-6 py-2' colSpan={10000}>
-                <RoundLoader />
-              </td>
-            ) : (
-              <td className='text-light-900 px-6 py-1' colSpan={10000}>
-                   <span>
-          Page{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
-        </span>
-              </td>
-            )}
-          </tr>
         </tbody>
       </table>
       {/* 
         Pagination can be built however you'd like. 
         This is just a very basic UI implementation:
       */}
-      <div className='flex'>
-            <button
+      <nav
+        className='flex items-center bg-light-200 justify-between border-t border-gray-200 px-4 py-3 sm:px-6'
+        aria-label='Pagination'
+      >
+        <div className='hidden sm:block'>
+          <p className='text-sm text-gray-700'>
+            {loading ? (
+              // Use our custom loading state to show a loading indicator
+              <td className='text-dark-900 px-6 py-2' colSpan={10000}>
+                <RoundLoader />
+              </td>
+            ) : (
+              <>
+                Showing page <span className='font-medium'>{pageIndex + 1}</span> of{' '}
+                <span className='font-medium'>{pageOptions.length}</span>
+              </>
+            )}
+          </p>
+        </div>
+        <div className='flex flex-1 justify-between sm:justify-end'>
+          <button
             className='flex max-w-xs items-center border border-transparent bg-lime-700 px-4 py-1 h-10 my-auto mr-4 text-sm font-medium text-white shadow-sm hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-lime-600 focus:ring-offset-2'
             onClick={() => updateGhdb()}
           >
             Update dorks
-          </button> 
-        <button
-          className='border-2 border-lime-700 hover:border-lime-600 bg-lime-700 mr-1.5 my-2 rounded-lg px-5 py-1.5'
-          onClick={() => gotoPage(0)}
-          disabled={!canPreviousPage}
-        >
-          <ChevronDoubleLeftIcon className='text-white w-6 h-6' />
-        </button>{' '}
-        <button
-          className='border-2 border-lime-700 hover:border-lime-600 bg-lime-700 mx-1.5 my-2 rounded-lg px-5 py-1.5'
-          onClick={() => previousPage()}
-          disabled={!canPreviousPage}
-        >
-          <ChevronLeftIcon className='text-white w-6 h-6' />
-        </button>{' '}
-        <button
-          className='border-2 border-lime-700 hover:border-lime-600 bg-lime-700 mx-1.5 my-2 rounded-lg px-5 py-1.5'
-          onClick={() => nextPage()}
-          disabled={!canNextPage}
-        >
-          <ChevronRightIcon className='text-white w-6 h-6' />
-        </button>{' '}
-        <button
-          className='border-2 border-lime-700 hover:border-lime-600 bg-lime-700 mx-1.5 my-2 rounded-lg px-5 py-1.5'
-          onClick={() => gotoPage(pageCount - 1)}
-          disabled={!canNextPage}
-        >
-          <ChevronDoubleRightIcon className='text-white w-6 h-6' />
-        </button>{' '}
-
-        
-        <span>
-         Go to page:{' '}
-          <input
-            type='number'
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{ width: '100px' }}
-          />
-        </span>{' '}
+          </button>
+          <button
+            onClick={() => previousPage()}
+            disabled={!canPreviousPage}
+            type='button'
+            className='relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
+          >
+            Previous
+          </button>
+          <button
+            onClick={() => nextPage()}
+            disabled={!canNextPage}
+            type='button'
+            className='relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
+          >
+            Next
+          </button>
+        </div>
         <select
           value={pageSize}
           onChange={(e) => {
@@ -210,12 +187,10 @@ function Table({
             </option>
           ))}
         </select>
-        
-      </div>
+      </nav>
     </>
   );
 }
-
 
 interface FetchProps {
   pageSize: number;
@@ -231,7 +206,7 @@ export default function DorksTable({
   setShowCreate,
   setDork,
   columns,
-  updateGhdb
+  updateGhdb,
 }: {
   setShowCreate: Function;
   setDork: Function;
@@ -277,13 +252,11 @@ export default function DorksTable({
   return (
     <div className=' flex flex-col '>
       <div className=''>
-            <DorkStats />
+        <DorkStats />
         <div className='inline-block min-w-full py-2 align-middle '>
-
           <div className='overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg'>
-
             <Table
-            updateGhdb={updateGhdb}
+              updateGhdb={updateGhdb}
               setDork={setDork}
               setShowCreate={setShowCreate}
               columns={columns}
@@ -293,9 +266,7 @@ export default function DorksTable({
               pageCount={pageCount}
             />
           </div>
-
         </div>
-
       </div>
     </div>
   );
