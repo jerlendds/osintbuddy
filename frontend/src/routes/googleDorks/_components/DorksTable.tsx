@@ -79,7 +79,7 @@ function Table({
             <div className='flex items-center relative z-40'>
               <button
                 className={classNames(
-                  'text-primary-600 flex bg-lime-700 items-center font-light text-sm font-display hover:text-light-200 border-lime-700 border-2 py-2 px-4 rounded-full hover:border-primary-400 transition-colors duration-75 ease-in'
+                  'text-primary-600 flex bg-primary items-center font-light text-sm font-display hover:text-light-200  py-2 px-4 rounded-md transition-colors duration-75 ease-in'
                 )}
                 onClick={() => {
                   setDork(row.original.dork);
@@ -126,7 +126,7 @@ function Table({
                 {row.cells.map((cell: any) => {
                   return (
                     <td
-                      className='whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-dark-500 sm:pl-6 first:pl-8'
+                      className='whitespace-nowrap py-2 pl-4 max-w-sm pr-3 truncate text-sm font-medium text-dark-500 sm:pl-6 first:pl-8'
                       {...cell.getCellProps()}
                     >
                       {cell.render('Cell')}
@@ -163,7 +163,7 @@ function Table({
         </div>
         <div className='flex flex-1 justify-between sm:justify-end'>
           <button
-            className='flex max-w-xs items-center border border-transparent bg-lime-700 px-4 py-1 h-10 my-auto mr-4 text-sm font-medium text-white shadow-sm hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-lime-600 focus:ring-offset-2'
+            className='flex max-w-xs items-center border border-transparent bg-primary px-4 py-1 h-10 my-auto mr-4 text-sm font-medium text-white shadow-sm hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2'
             onClick={() => updateGhdb()}
           >
             Update dorks
@@ -172,7 +172,7 @@ function Table({
             onClick={() => previousPage()}
             disabled={!canPreviousPage}
             type='button'
-            className='relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
+            className='relative inline-flex items-center rounded-md border border-gray-300 bg-light px-4 py-2 text-sm font-medium text-gray-700 hover:bg-light-200'
           >
             Previous
           </button>
@@ -180,7 +180,7 @@ function Table({
             onClick={() => nextPage()}
             disabled={!canNextPage}
             type='button'
-            className='relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
+            className='relative ml-3 mr-3 inline-flex items-center rounded-md border border-gray-300 bg-light px-4 py-2 text-sm font-medium text-gray-700 hover:bg-light-200'
           >
             Next
           </button>
@@ -266,8 +266,11 @@ export default function DorksTable({
         const startRow = pageSize * pageIndex;
         const endRow = startRow + pageSize;
 
+        let dorkFilter = selectedFilter.id
+
+
         dorksService
-          .getDorks(pageSize, pageIndex)
+          .getDorks(pageSize, pageIndex, dorkFilter)
           .then((resp) => {
             if (resp.data) {
               if (resp.data.dorks) {
@@ -286,19 +289,23 @@ export default function DorksTable({
         setLoading(false);
       }
     }, 1000);
-  }, []);
+  }, [selectedFilter]);
 
   return (
     <div className=' flex flex-col '>
       <div className=''>
-        <DorkStats />{' '}
-        <SelectBoxApi
-          setSelected={setSelectedFilter}
-          selected={selectedFilter}
-          loading={isLoadingFilter}
-          label='Filter Categories'
-          options={filterOptions}
-        />
+        <div className='flex items-end'>
+          <div className='flex flex-col min-w-[20rem] pb-1 mr-4'>
+            <SelectBoxApi
+              setSelected={setSelectedFilter}
+              selected={selectedFilter}
+              loading={isLoadingFilter}
+              label='Filter Categories'
+              options={filterOptions}
+            />
+          </div>
+          <DorkStats />
+        </div>
         <div className='inline-block min-w-full py-2 align-middle '>
           <div className='overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg'>
             <Table

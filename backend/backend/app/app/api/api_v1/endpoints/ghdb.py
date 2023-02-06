@@ -43,12 +43,21 @@ def get_authors(
 def get_categories(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
-    skip: int = 0,
-    limit: int = 0
+
 ):
-    if (limit > 100):
-        limit = 100
-    return crud.dork_categories.get_multi(db=db, skip=skip, limit=limit)
+    return crud.dork_categories.get_multi(db=db, skip=0, limit=50)
+
+
+@router.get('/dorks/count')
+def get_dorks_count(
+    current_user: models.User = Depends(deps.get_current_active_user),
+    db: Session = Depends(deps.get_db),
+):
+    return {
+        "dorksCount":  crud.google_dorks.count_all(db=db)[0][0],
+        "authorsCount":  crud.dork_authors.count_all(db=db)[0][0],
+        "categoriesCount":  crud.dork_categories.count_all(db=db)[0][0]
+    }
 
 
 @router.get('/dorks')
@@ -56,15 +65,31 @@ def get_dorks(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
     skip: int = 0,
-    limit: int = 0
+    limit: int = 0,
+    filter: int = None
 ):
     if (limit > 100):
         limit = 100
+
+    # the 'all' filter is set as a negative client side
+    if filter > 0:
+        dork_data = crud.google_dorks.get_multi_by_category(
+            db=db,
+            skip=skip,
+            limit=limit,
+            category_id=filter
+        )
+        count = crud.google_dorks.count_all_by_category(
+            db=db,
+            category_id=filter
+        )[0][0]
+    else:
+        dork_data = crud.google_dorks.get_multi(db=db, skip=skip, limit=limit)
+        count = crud.google_dorks.count_all(db=db)[0][0]
+
     return {
-        "dorks":  crud.google_dorks.get_multi(db=db, skip=skip, limit=limit),
-        "dorksCount":  crud.google_dorks.count_all(db=db)[0][0],
-        "authorsCount":  crud.dork_authors.count_all(db=db)[0][0],
-        "categoriesCount":  crud.dork_categories.count_all(db=db)[0][0]
+        "dorks":  dork_data,
+        "dorksCount": count,
     }
 
 
