@@ -53,6 +53,12 @@ services:
       - '${DOCKER_FLOWER_PORT_FORWARD:-127.0.0.1:6565}:5555'
     env_file:
       - '.env'
+  hackbox:
+    image: openinfolabs/osintbuddy-hackbox:latest
+    build:
+      context: ./backend
+      dockerfile: hackbox.Dockerfile
+    command: bash -c "while true; do sleep 2; done"
 
   graphdb:
     image: neo4j:5.3.0-community
@@ -61,8 +67,6 @@ services:
     ports:
       - '7474:7474'
       - '7687:7687'
-    volumes:
-      - osintbuddy-graph-data:/var/lib/postgresql/data/pgdata
   maildev:
     build:
       context: .
@@ -73,5 +77,4 @@ services:
   
 volumes:
   osintbuddy-db-data:
-  osintbuddy-graph-data:
   redis:

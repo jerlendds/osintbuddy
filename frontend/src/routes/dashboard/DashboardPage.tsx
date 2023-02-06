@@ -1,26 +1,26 @@
 import casesService from '@/services/cases.service';
 import { FolderPlusIcon, PlusIcon } from '@heroicons/react/24/outline';
-import { useEffect, useState } from 'react';
-
-import React from 'react';
+import { useEffect } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+import React, { Fragment, useState } from 'react';
 import { useTable, usePagination, type Column, type CellProps, CellValue } from 'react-table';
 import dorksService from '@/services/dorks.service';
 import classNames from 'classnames';
-import { VirusSearchIcon } from '@/components/Icons';
+import { format as formatDate } from 'date-fns';
 
 import { Formik, Form, Field } from 'formik';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface MyFormValues {
   name: string;
   description: string;
 }
 
-export const MyForm: React.FC<{}> = () => {
+export const CreateCasesForm: React.FC<{ closeModal: Function }> = ({ closeModal }) => {
   const initialValues: MyFormValues = { name: '', description: '' };
 
   return (
     <div>
-      <h1 className='text-2xl'>Start a new OSINT case</h1>
       <Formik
         initialValues={initialValues}
         onSubmit={(values, actions) => {
@@ -31,24 +31,24 @@ export const MyForm: React.FC<{}> = () => {
               console.log(resp.data);
             })
             .catch((error) => console.warn(error));
-          alert(JSON.stringify(values, null, 2));
           actions.setSubmitting(false);
+          closeModal();
         }}
       >
-        <Form className='flex flex-col my-5'>
+        <Form className='flex flex-col '>
           <div className='py-2'>
-            <label className='block text-lg font-medium text-light-700' htmlFor='name'>
+            <label className='block text-dark-700' htmlFor='name'>
               Case name
             </label>
             <Field
-              className='block w-full py-2 px-3 rounded-sm bg-dark-500 text-light-50 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 '
+              className='block w-full py-2 px-3 rounded-md bg-light-100 text-dark-500 border-2 border-dark-100 shadow-sm text-sm focus:border-dark-500 focus:ring-indigo-500'
               id='name'
               name='name'
               placeholder='Your name'
             />
           </div>
           <div className='py-2'>
-            <label className='block text-lg font-medium text-light-700' htmlFor='description'>
+            <label className='block text-dark-700' htmlFor='description'>
               Case description
             </label>
 
@@ -61,20 +61,29 @@ export const MyForm: React.FC<{}> = () => {
                     onChange={field.onChange}
                     name='description'
                     id='description'
-                    className='block w-full py-2 px-3 text-lg rounded-sm bg-dark-500 text-light-50 border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 '
+                    className='block w-full py-2 px-3 text-sm rounded-md bg-light-100 text-dark-500 border-2 border-dark-100 shadow-sm  '
                     defaultValue={''}
+                    placeholder='Your description'
                   />
                 );
               }}
             </Field>
           </div>
-
-          <button
-            type='submit'
-            className='text-light-600 font-medium flex bg-primary items-center font-display text-sm my-3 hover:text-light-200 border-primary border-2 py-2 px-4 rounded-full hover:border-primary-400 transition-colors duration-75 ease-in'
-          >
-            Create case
-          </button>
+          <div className='flex items-center w-full justify-between'>
+            <button
+              type='button'
+              onClick={() => closeModal()}
+              className='text-white font-semibold flex bg-danger items-center font-display my-3 hover:text-light-200  py-2 px-4 rounded-md hover:bg-danger-600 transition-colors duration-75 ease-in'
+            >
+              Cancel
+            </button>
+            <button
+              type='submit'
+              className='text-white font-semibold flex bg-primary items-center font-display my-3 hover:bg-primary-600  py-2 px-4 rounded-md hover:border-primary-400 transition-colors duration-75 ease-in'
+            >
+              Create case
+            </button>
+          </div>
         </Form>
       </Formik>
     </div>
@@ -90,6 +99,7 @@ interface TableProps {
 }
 
 function Table({ columns, data, fetchData, loading, pageCount: controlledPageCount }: TableProps) {
+  const navigate = useNavigate();
   const {
     getTableProps,
     getTableBodyProps,
@@ -104,17 +114,13 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
     nextPage,
     previousPage,
     setPageSize,
-    // Get the state from the instance
     state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
       data,
-      initialState: { pageIndex: 0 }, // Pass our hoisted table state
-      manualPagination: true, // Tell the usePagination
-      // hook that we'll handle our own data fetching
-      // This means we'll also have to provide our own
-      // pageCount.
+      initialState: { pageIndex: 0 },
+      manualPagination: true,
       pageCount: controlledPageCount,
     },
     usePagination,
@@ -127,14 +133,17 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
           Header: 'Actions',
           Cell: ({ row, setEditableRowIndex, editableRowIndex }) => (
             <div className='flex items-center relative z-40'>
-              <button
+              <Link
+                // @ts-ignore
+                to={`/app/osint/${row.original.id}`}
+                state={{ activeCase: row.original }}
                 className={classNames(
-                  'text-primary-600 flex bg-primary items-center font-light text-sm font-display hover:text-light-200 border-primary border-2 py-2 px-4 rounded-full hover:border-primary-400 transition-colors duration-75 ease-in'
+                  'text-primary-600 flex bg-primary items-center  text-sm font-display hover:text-light-200 border-primary border-2 py-2 px-4 rounded-md hover:border-primary-400 transition-colors duration-75 ease-in'
                 )}
-                onClick={() => {}}
+                replace
               >
-                <span className='text-light-200 mx-2 mr-4 font-sans font-medium'>View case</span>{' '}
-              </button>
+                <span className='text-light-200 mx-2 mr-4 font-display font-medium'>View case</span>{' '}
+              </Link>
             </div>
           ),
         },
@@ -150,13 +159,13 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
   // Render the UI for your table
   return (
     <>
-      <table className='min-w-full divide-y divide-dark-300' {...getTableProps()}>
-        <thead className='bg-dark-800'>
+      <table className='min-w-full divide-y divide-light-300' {...getTableProps()}>
+        <thead className='bg-light-300'>
           {headerGroups.map((headerGroup: any) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column: any) => (
                 <th
-                  className='first:py-3.5 first:pl-4 px-3 py-3.5 pr-3 text-left text-sm font-semibold text-light-900 first:sm:pl-6 '
+                  className='first:py-3.5 first:pl-4 px-3 py-3.5 pr-3 text-left text-sm font-semibold text-dark-900 first:sm:pl-6'
                   {...column.getHeaderProps()}
                 >
                   {column.render('Header')}
@@ -165,7 +174,7 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
             </tr>
           ))}
         </thead>
-        <tbody className='bg-dark-700' {...getTableBodyProps()}>
+        <tbody className='bg-light-300' {...getTableBodyProps()}>
           {page.map((row: any, i: number) => {
             prepareRow(row);
             return (
@@ -173,7 +182,7 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
                 {row.cells.map((cell: any) => {
                   return (
                     <td
-                      className='whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-50 sm:pl-6'
+                      className='whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-dark-400 sm:pl-6'
                       {...cell.getCellProps()}
                     >
                       {cell.render('Cell')}
@@ -184,13 +193,9 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
             );
           })}
           <tr>
-            {loading ? (
+            {loading && (
               // Use our custom loading state to show a loading indicator
               <td colSpan={10000}>Loading...</td>
-            ) : (
-              <td colSpan={10000}>
-                Showing {page.length} of ~{controlledPageCount * pageSize} results
-              </td>
             )}
           </tr>
         </tbody>
@@ -199,7 +204,7 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
         Pagination can be built however you'd like. 
         This is just a very basic UI implementation:
       */}
-      <div className='pagination'>
+      <div className='pagination bg-light-300 py-3'>
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {'<<'}
         </button>{' '}
@@ -215,7 +220,7 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
         <span>
           Page{' '}
           <strong>
-            {pageIndex + 1} of {pageOptions.length}
+            {pageIndex + 1} of {pageOptions.length + 1}
           </strong>{' '}
         </span>
         <span>
@@ -307,11 +312,11 @@ export function CasesTable({ columns }: { columns: any }) {
   }, []);
 
   return (
-    <div className='mt-8 flex flex-col '>
+    <div className='flex flex-col px-8  py-4'>
       <div className='-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8'>
-        <div className='inline-block min-w-full py-2 align-middle md:px-6 lg:px-8'>
+        <div className='inline-block min-w-full py-2 align-middle md:px-6'>
           <div className='overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg'>
-            <Table columns={columns} data={data} fetchData={fetchData} loading={loading} pageCount={pageCount} />;
+            <Table columns={columns} data={data} fetchData={fetchData} loading={loading} pageCount={pageCount} />
           </div>
         </div>
       </div>
@@ -319,9 +324,17 @@ export function CasesTable({ columns }: { columns: any }) {
   );
 }
 
-const CasesCard = ({ toggleShowCreate }: { toggleShowCreate: Function }): React.ReactElement => {
+const CasesCards = ({
+  closeModal,
+  openModal,
+  isModalOpen,
+}: {
+  isModalOpen: boolean;
+  closeModal: Function;
+  openModal: Function;
+}): React.ReactElement => {
   const [isFirstLoad, setFirstLoad] = useState<boolean>(true);
-  const [casesData, setCasesData] = useState([]);
+  const [casesData, setCasesData] = useState<Array<any>>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const updateCases = (skip: number, limit: number) => {
@@ -346,6 +359,10 @@ const CasesCard = ({ toggleShowCreate }: { toggleShowCreate: Function }): React.
   const columns = React.useMemo<Column[]>(
     () => [
       {
+        Header: 'Case id',
+        accessor: 'id',
+      },
+      {
         Header: 'Cases',
         accessor: 'name',
       },
@@ -356,60 +373,97 @@ const CasesCard = ({ toggleShowCreate }: { toggleShowCreate: Function }): React.
       {
         Header: 'Created',
         accessor: 'created',
+        Cell: (props): CellValue => formatDate(new Date(props.value), 'yyyy MMM Lo k:m'),
       },
+      //     {
+      //   Header: 'Updated',
+      //   accessor: 'updated',
+      // },
     ],
     []
   );
   return (
-    <div className='w-full flex items-center justify-center h-full px-4 pb-20'>
-      {casesData.length === 0 && (
-        <div className='text-center'>
-          <div className='mt-6 flex flex-col items-center'>
-            <FolderPlusIcon className='h-8 w-8 text-light flex' />
-            <h3 className='mt-2 text-2xl font-medium text-light-900'>No projects</h3>
-            <p className='mt-1 text-lg  text-light-900'>Get started by creating a new project.</p>
-            <button
-              onClick={() => toggleShowCreate()}
-              type='button'
-              className='mt-5 inline-flex items-center rounded-md border border-transparent bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary-600 transition-colors duration-75 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2'
-            >
-              <PlusIcon className='-ml-1 mr-2 h-5 w-5' aria-hidden='true' />
-              New Project
-            </button>
-          </div>
-        </div>
-      )}
-      {casesData.length > 0 && (
-        <>
-          <CasesTable columns={columns} />
-        </>
-      )}
-    </div>
+    <>
+      <div className='w-full flex items-center justify-center h-full pb-20'>
+        {casesData.length === 0 && (
+          <>
+            <div className='mt-6 flex flex-col items-center shadow-2xl px-48 bg-light-500 border-primary border-2 rounded-2xl py-20'>
+              <FolderPlusIcon className='h-8 w-8 text-light flex' />
+              <h3 className='mt-2 text-2xl font-medium '>No investigations</h3>
+              <p className='mt-1 text-lg'>Get started by creating a new case</p>
+              <button
+                onClick={() => openModal()}
+                type='button'
+                className='mt-5 inline-flex items-center rounded-md border border-transparent bg-primary px-4 py-2 text-lg font-medium text-white shadow-sm hover:bg-primary-600 transition-colors duration-75 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2'
+              >
+                Start case
+              </button>
+            </div>
+            <Transition appear show={isModalOpen} as={Fragment}>
+              <Dialog as='div' className='relative z-10' onClose={() => closeModal()}>
+                <Transition.Child
+                  as={Fragment}
+                  enter='ease-out duration-300'
+                  enterFrom='opacity-0'
+                  enterTo='opacity-100'
+                  leave='ease-in duration-200'
+                  leaveFrom='opacity-100'
+                  leaveTo='opacity-0'
+                >
+                  <div className='fixed inset-0 bg-black bg-opacity-25' />
+                </Transition.Child>
+
+                <div className='fixed inset-0 overflow-y-auto'>
+                  <div className='flex min-h-full items-center justify-center p-4 text-center'>
+                    <Transition.Child
+                      as={Fragment}
+                      enter='ease-out duration-300'
+                      enterFrom='opacity-0 scale-95'
+                      enterTo='opacity-100 scale-100'
+                      leave='ease-in duration-200'
+                      leaveFrom='opacity-100 scale-100'
+                      leaveTo='opacity-0 scale-95'
+                    >
+                      <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
+                        <Dialog.Title as='h3' className='text-lg font-medium leading-6 text-gray-900'>
+                          Start a new investigation
+                        </Dialog.Title>
+                        <div className='mt-2'>
+                          <p className='text-sm text-gray-500'>
+                            An investigation can be composed of many connections between search results
+                          </p>
+                        </div>
+                        <CreateCasesForm closeModal={closeModal} />
+                      </Dialog.Panel>
+                    </Transition.Child>
+                  </div>
+                </div>
+              </Dialog>
+            </Transition>
+          </>
+        )}
+      </div>
+      <div className='flex flex-col space-y-2'>
+        <CasesTable columns={columns} />
+      </div>
+    </>
   );
 };
 
 export default function DashboardPage() {
-  const [showCreate, setShowCreate] = useState(false);
+  let [isOpen, setIsOpen] = useState(false);
 
-  const toggleShowCreate = () => {
-    setShowCreate(!showCreate);
-  };
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  function openModal() {
+    setIsOpen(true);
+  }
 
   return (
     <>
-      <CasesCard toggleShowCreate={toggleShowCreate} />
-      <div
-        className={classNames(
-          'h-full flex flex-col absolute right-0 w-1/3 bg-dark-700 top-0 transition-transform  py-16',
-          {
-            'translate-x-[50rem]': !showCreate,
-          }
-        )}
-      >
-        <div className='py-4 px-5'>
-          <MyForm />
-        </div>
-      </div>
+      <CasesCards isModalOpen={isOpen} closeModal={closeModal} openModal={openModal} />
     </>
   );
 }
