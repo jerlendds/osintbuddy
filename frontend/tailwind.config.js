@@ -5,7 +5,7 @@ module.exports = {
   theme: {
     fontFamily: {
       sans: ['Hind', 'Helvetica', 'Arial', 'sans-serif'],
-      display: ['Archivo', 'Helvetica', 'Arial', 'sans-serif'],
+      display: ['Montserrat', 'Helvetica', 'Arial', 'sans-serif'],
     },
     extend: {
       colors: {
@@ -24,17 +24,17 @@ module.exports = {
         },
 
         light: {
-          DEFAULT: '#DEDEDE',
-          50: '#F5F5F5',
-          100: '#F2F2F2',
-          200: '#EDEDED',
-          300: '#E8E8E8',
-          400: '#E3E3E3',
-          500: '#DEDEDE',
-          600: '#CDCBCB',
-          700: '#BBB9B9',
-          800: '#A9A7A7',
-          900: '#979595',
+          DEFAULT: '#EEEEEE',
+          50: '#FCFCFC',
+          100: '#FAFAFA',
+          200: '#F7F7F7',
+          300: '#F3F3F3',
+          400: '#F1F1F1',
+          500: '#EEEEEE',
+          600: '#E4E4E4',
+          700: '#DADADA',
+          800: '#CFCFCF',
+          900: '#C5C5C5',
         },
         gray: {
           DEFAULT: '#393D3F',

@@ -13,14 +13,14 @@ import {
   UsersIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { MagnifyingGlassIcon, ViewfinderCircleIcon } from '@heroicons/react/20/solid';
 import classNames from 'classnames';
 import OSINTBuddyLogo from '@images/logo-dark.svg';
 import HamburgerMenu from '@/components/HamburgerMenu';
 import { GoogleIcon, ShellIcon } from '@/components/Icons';
 
 const navigation = [
-  { name: 'Dashboard', to: '/app/dashboard', icon: HomeIcon },
+  { name: 'Dashboard', to: '/app/dashboard', icon: ViewfinderCircleIcon },
   { name: 'Dorking', to: '/app/dorking', icon: GoogleIcon },
   { name: 'Live shell', to: '/app/shell', icon: ShellIcon },
 ];
@@ -136,7 +136,7 @@ export default function AppLayout() {
               )}
             >
               <img className='h-7 w-auto' src={OSINTBuddyLogo} alt='Your Company' />
-              <p className='text-light-200 text-2xl -ml-8 my-auto font-display'>SINTBuddy</p>
+              <p className='text-light-200 text-2xl -ml-6 my-auto font-display'>SINTBuddy</p>
               <HamburgerMenu isOpen={sidebarOpen} onClick={toggleSidebar} />
             </div>
 
@@ -170,7 +170,7 @@ export default function AppLayout() {
             </div>
           </div>
         </div>
-        <div className={classNames('flex flex-col', sidebarOpen ? 'md:pl-64' : 'md:pl-11')}>
+        <div className={classNames('flex flex-col transition-transform duration-200', sidebarOpen ? 'md:translate-x-64 pr-64' : 'md:translate-x-12 pr-12')}>
           <button
             type='button'
             className='border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden'
@@ -180,7 +180,7 @@ export default function AppLayout() {
             <Bars3BottomLeftIcon className='h-6 w-6' aria-hidden='true' />
           </button>
 
-          <main className='flex-1 block h-full overflow-y-scroll'>
+          <main className='flex-1 block h-screen overflow-y-scroll'>
             <Outlet />
           </main>
         </div>

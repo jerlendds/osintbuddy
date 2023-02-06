@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Hind:wght@300;400;500;600;700&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Hind:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
 *,
 :after,
 :before {
@@ -31,7 +31,7 @@ svg.icon {
 
 p,
 span {
-  @apply text-light-200;
+  @apply text-dark-400;
 }
 
 h1,
@@ -43,7 +43,7 @@ h6,
 button,
 a,
 figcaption {
-  @apply text-light-200 font-display;
+  @apply text-dark-400 font-display;
 }
 
 /* 
@@ -128,3 +128,4 @@ figcaption {
   transform: translateY(-10px) rotate(90deg);
 }
 /* end Animated CSS Hamburger Menu */
+

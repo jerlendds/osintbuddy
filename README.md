@@ -109,6 +109,9 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 
 ## Progress Notes
 
+- [Jan 14, 2023]
+  - 
+
 - [Dec 20, 2022]
   - Rewriting the frontend in React
   - Cleaning up the backend
@@ -182,8 +185,6 @@ Project Link: [https://github.com/jerlendds/osintbuddy](https://github.com/jerle
 [issues-url]: https://github.com/jerlendds/osintbuddy/issues
 
 
+# Search through any canadian business registry
 
-
-
-
-
+https://beta.canadasbusinessregistries.ca/search/results?search=%7B001%7D&status=All&page=1
