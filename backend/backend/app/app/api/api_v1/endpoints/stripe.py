@@ -13,7 +13,7 @@ from app.api import deps
 from app.core.config import settings
 from app.utils import send_new_account_email
 
-router = APIRouter()
+router = APIRouter(prefix="/stripe")
 
 stripe_keys = {
     "secret_key": os.environ["STRIPE_SECRET_KEY"],

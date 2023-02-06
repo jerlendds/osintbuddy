@@ -169,7 +169,7 @@ const DnDFlow = () => {
   );
 
   return (
-    <div className="dndflow" style={{width: '100%', height: 800}} >
+    <div className="dndflow" style={{width: '100%', height: '100%'}} >
       <ReactFlowProvider>
         <div style={{width: '100%', height: '100%'}} ref={reactFlowWrapper}>
           <ReactFlow

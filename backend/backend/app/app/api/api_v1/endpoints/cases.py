@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app import crud, schemas, models
 from app.api import deps
 
-router = APIRouter()
+router = APIRouter(prefix='/cases')
 
 
 @router.get('')
