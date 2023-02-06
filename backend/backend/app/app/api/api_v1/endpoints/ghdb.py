@@ -1,6 +1,8 @@
 from typing import Any, List
 from datetime import datetime
-from fastapi import APIRouter, Depends
+import urllib.parse
+import requests
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.crud.base import get_or_create
 from app import crud, schemas, models
@@ -59,6 +61,20 @@ def get_dorks_count(
         "categoriesCount":  crud.dork_categories.count_all(db=db)[0][0]
     }
 
+
+@router.post('/dorks/crawl', response_model=Any)
+def get_dork_results(
+    current_user: models.User = Depends(deps.get_current_active_user),
+    db: Session = Depends(deps.get_db),
+    pages: int = 1,
+    query: str = None
+):
+    if not query:
+        raise HTTPException(status_code=422, detail="Query is required")
+    encoded_query = urllib.parse.quote(query.encode('utf8'))
+    google_results = requests.get(f'http://microservice:1323/google?query={encoded_query}&pages={pages}')
+    print(google_results)
+    return google_results.json()
 
 @router.get('/dorks')
 def get_dorks(
