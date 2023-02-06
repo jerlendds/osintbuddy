@@ -73,7 +73,6 @@ def get_dork_results(
         raise HTTPException(status_code=422, detail="Query is required")
     encoded_query = urllib.parse.quote(query.encode('utf8'))
     google_results = requests.get(f'http://microservice:1323/google?query={encoded_query}&pages={pages}')
-    print(google_results)
     return google_results.json()
 
 @router.get('/dorks')

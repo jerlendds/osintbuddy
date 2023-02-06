@@ -66,9 +66,7 @@ function CustomNode({ id, data }: any) {
         This is a <strong>custom node</strong>
       </div>
       <div className="custom-node__body">
-        {Object.keys(data.selects).map((handleId) => (
-          <Select key={handleId} nodeId={id} value={data.selects[handleId]} handleId={handleId} />
-        ))}
+        {data}
       </div>
     </>
   );

@@ -1,60 +1,25 @@
 // @ts-nocheck
-import React, { useCallback, useState } from 'react';
-import ReactFlow, { addEdge, MiniMap, Controls, Background, useNodesState, useEdgesState } from 'reactflow';
+import React, { useCallback, useState, useRef } from 'react';
+import ReactFlow, { addEdge, MiniMap, Controls, Background, useNodesState, ReactFlowProvider, useEdgesState } from 'reactflow';
 import { EllipsisVerticalIcon, HomeIcon } from '@heroicons/react/20/solid';
 import { HotKeys } from 'react-hotkeys';
 import { Link, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import 'reactflow/dist/style.css';
-import { nodes as initialNodes, edges as initialEdges } from './initial-elements.js';
 import CommandPallet from '@/routes/osint/CommandPallet';
 import CustomNode from './CustomNode';
 import classNames from 'classnames';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/24/outline';
 import NodeOptionsSlideOver from './_components/NodeOptionsSlideOver';
+import { GoogleNode, CseNode, WebsiteNode } from './_components/Nodes';
+
+
+let id = 0;
+const getId = () => `dndnode_${id++}`;
 
 const nodeTypes = {
-  custom: CustomNode,
-};
-
-const minimapStyle = {
-  height: 120,
-};
-
-const onInit = (reactFlowInstance) => console.log('flow loaded:', reactFlowInstance);
-
-const OverviewFlow = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const onConnect = React.useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
-
-  // we are using a bit of a shortcut here to adjust the edge type
-  // this could also be done with a custom edge for example
-  const edgesWithUpdatedTypes = edges.map((edge) => {
-    if (edge.sourceHandle) {
-      const edgeType = nodes.find((node) => node.type === 'custom').data.selects[edge.sourceHandle];
-      edge.type = edgeType;
-    }
-
-    return edge;
-  });
-
-  return (
-    <ReactFlow
-      nodes={nodes}
-      edges={edgesWithUpdatedTypes}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      onInit={onInit}
-      fitView
-      attributionPosition='top-right'
-      nodeTypes={nodeTypes}
-    >
-      <MiniMap style={minimapStyle} zoomable pannable />
-      <Controls />
-      <Background color='#aaa' gap={16} />
-    </ReactFlow>
-  );
+  website: () => <WebsiteNode  id={getId()} data={'TODO: Add website node'} />,
+  google: () => <GoogleNode id={getId()} data={'TODO: Add google search node'} />,
+  cse: () => <CseNode id={getId()} data={'TODO: Add cse node'} />,
 };
 
 const keyMap = {
@@ -111,7 +76,7 @@ function BreadcrumbHeader({
     { name: activeProject, href: '#', current: true },
   ];
   return (
-    <nav className='flex justify-between border-b border-gray-200 bg-dark-800 w-full' aria-label='Breadcrumb'>
+    <nav className='flex justify-between fixed top-0 z-40 border-b border-gray-200 bg-dark-800 w-full' aria-label='Breadcrumb'>
       <ol role='list' className='flex w-full max-w-screen-xl space-x-4 px-4 sm:px-6 lg:px-8'>
         <li className='flex'>
           <div className='flex items-center'>
@@ -143,14 +108,15 @@ function BreadcrumbHeader({
             </div>
           </li>
         ))}
-      </ol>
-      <button
+          <button
         type='button'
         onClick={() => toggleShowOptions()}
-        className='leading-3 inline-flex items-center rounded border border-gray-300 bg-white px-2.5  text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+        className='leading-3 ml-auto relative inline-flex items-center rounded border border-gray-300 bg-white px-2.5  text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
       >
         Add nodes
       </button>
+      </ol>
+    
     </nav>
   );
 }
@@ -159,6 +125,73 @@ const tabs = [
   { name: 'CSE Search', href: 'cses', current: false },
   { name: 'Nodes', href: 'nodes', current: false },
 ];
+
+
+const DnDFlow = () => {
+  const reactFlowWrapper = useRef(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
+
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
+
+      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+      const type = event.dataTransfer.getData('application/reactflow');
+
+      // check if the dropped element is valid
+      if (typeof type === 'undefined' || !type) {
+        return;
+      }
+
+      const position = reactFlowInstance.project({
+        x: event.clientX - reactFlowBounds.left,
+        y: event.clientY - reactFlowBounds.top,
+      });
+      const newNode = {
+        id: getId(),
+        type,
+        position,
+        data: { label: `${type} node` },
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [reactFlowInstance]
+  );
+
+  return (
+    <div className="dndflow" style={{width: '100%', height: 800}} >
+      <ReactFlowProvider>
+        <div style={{width: '100%', height: '100%'}} ref={reactFlowWrapper}>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onInit={setReactFlowInstance}
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+            fitView
+            nodeTypes={nodeTypes}
+          >
+            <Controls />
+          </ReactFlow>
+        </div>
+      </ReactFlowProvider>
+    </div>
+  );
+};
+
 
 export default function OsintPage() {
   const params = useParams();
@@ -182,10 +215,10 @@ export default function OsintPage() {
 
   return (
     <HotKeys keyMap={keyMap} handlers={handlers}>
-      <div className='h-screen flex flex-col'>
+      <div className='h-screen flex flex-col w-full'>
         <BreadcrumbHeader toggleShowOptions={toggleShowNodeOptions} activeProject={activeCase.name} />
         <div className='flex h-full'>
-          <OverviewFlow />
+          <DnDFlow />
         </div>
 
         <CommandPallet

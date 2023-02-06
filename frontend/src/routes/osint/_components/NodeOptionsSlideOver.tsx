@@ -1,19 +1,19 @@
 import { Fragment, useState } from 'react';
 import { Dialog, Menu, Transition, Disclosure } from '@headlessui/react';
-import { PlusIcon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, XMarkIcon, ChevronDownIcon, HandRaisedIcon } from '@heroicons/react/24/outline';
 import { EllipsisVerticalIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import classNames from 'classnames';
 
 const GoogleInput = () => {
   return (
     <div className='flex flex-col'>
-      <div className='mt-1 flex bg-light-50 rounded-md shadow-sm border border-gray-50'>
+      <div className='flex bg-light-50 rounded-md shadow-sm border border-gray-50'>
         <MagnifyingGlassIcon className='h-6 w-6 my-auto ml-3 text-gray-200' />
         <input
           type='text'
           name='query'
           id='query'
-          className='block w-full  px-2 outline-none py-2 bg-light-50 rounded-r-md sm:text-sm'
+          className='block w-full  px-2 outline-none py-1.5 bg-light-50 rounded-r-md sm:text-sm'
           placeholder='Search Google...'
         />
       </div>
@@ -23,8 +23,9 @@ const GoogleInput = () => {
 
 const tabs = [
   { name: 'Search', href: '#', current: true },
-  { name: 'Analysis', href: '#', current: false },
-  { name: 'Saved', href: '#', current: false },
+  { name: 'Personal', href: '#', current: true },
+  { name: 'Groups', href: '#', current: false },
+  { name: 'Infrastructure', href: '#', current: false },
 ];
 const searchOptions = [
   {
@@ -32,12 +33,21 @@ const searchOptions = [
     description: "Search Google using the advanced operators you're used to",
     href: '#',
     status: 'online',
+    event: 'google'
   },
   {
     name: 'Categorized CSE Search',
     description: 'Search by category through Google CSEs',
     href: '#',
     status: 'online',
+    event: 'cse'
+  },
+  {
+    name: 'Website',
+    description: 'Find subdomains and IPs for a target site',
+    href: '#',
+    status: 'online',
+    event: 'website'
   },
 ];
 
@@ -49,7 +59,10 @@ export default function NodeOptionsSlideOver({
   setShowOptions: Function;
 }) {
   const [activePanelTab, setActivePanelTab] = useState<string>(tabs[0].name);
-
+  const onDragStart = (event: any, nodeType: any) => {
+    event.dataTransfer.setData('application/reactflow', nodeType);
+    event.dataTransfer.effectAllowed = 'move';
+  };
   return (
     <Transition.Root show={showOptions} as={Fragment}>
       <Dialog as='div' className='relative z-10' onClose={() => null}>
@@ -69,7 +82,7 @@ export default function NodeOptionsSlideOver({
                   <div className='flex h-full flex-col overflow-y-scroll bg-light-50 shadow-xl'>
                     <div className='p-6'>
                       <div className='flex items-start justify-between'>
-                        <Dialog.Title className='text-lg font-medium text-gray-900'>Options</Dialog.Title>
+                        <Dialog.Title className='text-lg font-medium text-gray-900'>Entity Palette</Dialog.Title>
                         <div className='ml-3 flex h-7 items-center'>
                           <button
                             type='button'
@@ -107,59 +120,27 @@ export default function NodeOptionsSlideOver({
                       {activePanelTab === 'Search' && (
                         <>
                           {searchOptions.map((searchOption) => (
-                            <li className='flex flex-col' key={searchOption.description}>
-                              <Disclosure>
-                                {({ open }) => (
-                                  <>
-                                    <Disclosure.Button
-                                      onClick={() => null}
-                                      className=' w-full relative  justify-start flex  rounded-full focus:outline-none '
-                                    >
-                                      <div className='group justify-between group-hover:bg-light-200 w-full relative flex items-center py-6 px-5'>
-                                        <div className='-m-1 block flex-1 p-1'>
-                                          <div
-                                            className='absolute inset-0  duration-100 transition-colors'
-                                            aria-hidden='true'
-                                          />
-                                          <div className='relative flex min-w-0 flex-1 items-center'>
-                                            <div className='ml-4 truncate items-start flex flex-col'>
-                                              <p className='truncate text-sm font-medium text-gray-900'>
-                                                {searchOption.name}
-                                              </p>
-                                              <p className='truncate text-sm text-gray-500'>{searchOption.description}</p>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <button className={classNames('flex relative transition-transform duration-150 ease-in', {'rotate-180 origin-center': open})}>
-                                        <ChevronDownIcon
-                                          className='h-5 w-5 text-gray-400 group-hover:text-gray-500'
-                                          aria-hidden='true'
-                                        />
-                                      </button>
-                                      </div>
-
-                                      
-                                    </Disclosure.Button>
-
-                                    <Transition
-                                      show={open}
-                                      enter='transition duration-100 ease-out'
-                                      enterFrom='transform scale-95 opacity-0'
-                                      enterTo='transform scale-100 opacity-100'
-                                      leave='transition duration-75 ease-out'
-                                      leaveFrom='transform scale-100 opacity-100'
-                                      leaveTo='transform scale-95 opacity-0'
-                                    >
- 
-                                      <Disclosure.Panel static>
-                                       <div className='pb-6 px-5'>
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid cupiditate dolore ad ipsa ut dolorum deleniti optio architecto sequi qui!
-                                       </div>
-                                      </Disclosure.Panel>
-                                    </Transition>
-                                  </>
-                                )}
-                              </Disclosure>
+                            <li draggable onDragStart={(event) => onDragStart(event, searchOption.event)} className='flex flex-col'  key={searchOption.description}>
+                              <div className='group justify-between group-hover:bg-light-200 w-full relative flex items-center py-6 px-5'>
+                                <div className='-m-1 block flex-1 p-1'>
+                                  <div
+                                    className='absolute inset-0  duration-100 transition-colors'
+                                    aria-hidden='true'
+                                  />
+                                  <div className='relative flex min-w-0 flex-1 items-center'>
+                                    <div className='ml-4 truncate items-start flex flex-col'>
+                                      <p className='truncate text-sm font-medium text-gray-900'>{searchOption.name}</p>
+                                      <p className='truncate text-sm text-gray-500'>{searchOption.description}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <button  className='flex relative transition-transform duration-150 ease-in'>
+                                  <HandRaisedIcon
+                                    className='h-5 w-5 text-gray-400 group-hover:text-gray-500'
+                                    aria-hidden='true'
+                                  />
+                                </button>
+                              </div>
                             </li>
                           ))}
                         </>
