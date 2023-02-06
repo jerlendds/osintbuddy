@@ -120,7 +120,7 @@ export default function GoogleDorksPage() {
     <>
       <div className='w-full flex px-4 '>
         <div className='flex w-full mt-4 flex-col'>
-          <div className='w-full  overflow-hidden'>
+          <div className='w-full  '>
             <div className='flex'></div>{' '}
             <DorksTable updateGhdb={updateGhdb} columns={columns} setDork={setDork} setShowCreate={setShowCreate} />
           </div>

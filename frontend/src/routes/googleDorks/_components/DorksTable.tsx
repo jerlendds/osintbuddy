@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState, Fragment, useEffect } from 'react';
 import { useTable, usePagination, type Column, type CellProps, CellValue } from 'react-table';
 import dorksService from '@/services/dorks.service';
 import classNames from 'classnames';
@@ -11,6 +11,10 @@ import {
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import { DorkStats } from './DorkStats';
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { Listbox, Transition } from '@headlessui/react';
+import SelectBoxApi, { SelectBoxOption } from '@/components/SelectBoxApi';
+import api from '@/services/api.service';
 
 interface TableProps {
   columns: Array<Column>;
@@ -21,6 +25,12 @@ interface TableProps {
   setShowCreate: Function;
   setDork: Function;
   updateGhdb: Function;
+}
+
+interface FilterOptions {
+  id: number;
+  name: string;
+  description: string;
 }
 
 function Table({
@@ -99,7 +109,7 @@ function Table({
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column: any) => (
                 <th
-                  className='first:py-3.5 first:pl-4 px-3 py-3.5 pr-3 text-left text-md font-semibold text-dark-500 first:sm:pl-6 '
+                  className='first:py-3.5 font-display first:pl-4 px-3 py-3.5 pr-3 text-left text-sm font-semibold text-dark-500 first:sm:pl-6 '
                   {...column.getHeaderProps()}
                 >
                   {column.render('Header')}
@@ -213,6 +223,35 @@ export default function DorksTable({
   columns: Column[];
   updateGhdb: Function;
 }) {
+  const [isLoadingFilter, setIsLoadingFilter] = useState<boolean>(false);
+  const [filterOptions, setFilterOptions] = useState<FilterOptions[] | []>([]);
+  const [selectedFilter, setSelectedFilter] = useState<SelectBoxOption>({
+    id: -1,
+    name: 'Select a category...',
+  });
+
+  useEffect(() => {
+    setIsLoadingFilter(true);
+    api
+      .get('/ghdb/categories/')
+      .then((resp) => {
+        if (resp.data) {
+          setFilterOptions([
+            {
+              id: -1,
+              name: 'All',
+            },
+            ...resp.data,
+          ]);
+        }
+        setIsLoadingFilter(false);
+      })
+      .catch((error) => {
+        console.warn(error);
+        setIsLoadingFilter(false);
+      });
+  }, []);
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pageCount, setPageCount] = useState(0);
@@ -252,7 +291,14 @@ export default function DorksTable({
   return (
     <div className=' flex flex-col '>
       <div className=''>
-        <DorkStats />
+        <DorkStats />{' '}
+        <SelectBoxApi
+          setSelected={setSelectedFilter}
+          selected={selectedFilter}
+          loading={isLoadingFilter}
+          label='Filter Categories'
+          options={filterOptions}
+        />
         <div className='inline-block min-w-full py-2 align-middle '>
           <div className='overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg'>
             <Table
