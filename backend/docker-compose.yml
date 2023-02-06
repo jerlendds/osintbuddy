@@ -14,6 +14,14 @@ services:
       - '${DOCKER_WEB_PORT_FORWARD:-0.0.0.0:8000}:80'
     env_file:
       - '.env'
+  microservice:
+      build:
+        context: './microservice'
+        dockerfile: 'Dockerfile'
+      ports:
+        - '${DOCKER_WEB_PORT_FORWARD:-0.0.0.0:1323}:1323'
+      env_file:
+        - '.env'
   db:
     image: postgres:14.2
     volumes:
