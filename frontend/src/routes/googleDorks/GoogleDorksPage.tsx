@@ -8,6 +8,7 @@ import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from 'for
 import casesService from '@/services/cases.service';
 import { formatDork } from '../dashboard/DashboardPage';
 import { CellValue, Column } from 'react-table';
+import { format as formatDate } from 'date-fns';
 
 interface DorkInputValues {
   pages: string;
@@ -100,6 +101,7 @@ export default function GoogleDorksPage() {
       {
         Header: 'Created',
         accessor: 'date',
+        Cell: (props): CellValue => formatDate(new Date(props.value), 'yyyy MMM Lo'),
       },
     ],
     []
