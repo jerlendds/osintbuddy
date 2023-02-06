@@ -1,8 +1,8 @@
 import api from './api.service';
 
 class DorksService {
-  async getDorks(limit: number, skip: number) {
-    return await api.get(`/ghdb/dorks?limit=${limit}&skip=${skip}`);
+  async getDorks(limit: number, skip: number, filter: number) {
+    return await api.get(`/ghdb/dorks?limit=${limit}&skip=${skip}&filter=${filter}`);
   }
 
   async getAuthor(id: number) {

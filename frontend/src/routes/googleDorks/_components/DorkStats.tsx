@@ -2,6 +2,7 @@ import dorksService from '@/services/dorks.service';
 import { useEffect, useState } from 'react';
 import { DocumentMagnifyingGlassIcon, PencilSquareIcon, TagIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
+import api from '@/services/api.service';
 
 const stats = [
   { name: 'Total Subscribers', stat: '71,897' },
@@ -47,7 +48,6 @@ export function DorkStats() {
   const [isFirstLoad, setFirstLoad] = useState<boolean>(true);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isError, setError] = useState<boolean>(false);
-  const [dorksData, setDorksData] = useState([]);
   const [dorksCount, setDorksCount] = useState(0);
   const [authorsCount, setAuthorsCount] = useState(0);
   const [categoriesCount, setCategoriesCount] = useState(0);
@@ -55,13 +55,11 @@ export function DorkStats() {
   useEffect(() => {
     if (isFirstLoad) {
       setLoading(true);
-      dorksService
-        .getDorks(1, 0)
+      api.get('/ghdb/dorks/count')
         .then((resp) => {
           console.log(resp);
           if (resp.data) {
             console.log(resp.data.dorksCount);
-            if (resp.data.dorks) setDorksData(resp.data.dorks);
             if (resp.data.dorksCount) setDorksCount(resp.data.dorksCount);
             if (resp.data.authorsCount) setAuthorsCount(resp.data.authorsCount);
             if (resp.data.categoriesCount) setCategoriesCount(resp.data.categoriesCount);
