@@ -1,15 +1,17 @@
 import { GoogleIcon } from '@/components/Icons';
+import { Handle, Position, addEdge } from 'reactflow';
 import api from '@/services/api.service';
 import { Combobox } from '@headlessui/react';
 import { ChevronUpDownIcon, DocumentIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
+let id = 0;
+const getId = () => `${id++}`;
 
-export function GoogleNode({ addNode, flowData }: { addNode: Function; flowData: any }) {
+export function GoogleNode({ addNode, flowData, isConnectable }: { addNode: Function; flowData: any;  isConnectable: any }) {
   const [queryValue, setQueryValue] = useState<string>('');
   const [pagesValue, setPagesValue] = useState<number>(3);
   const handleSubmit = (event: any) => {
-    console.log(queryValue, pagesValue);
     event.preventDefault();
     api
       .get(`/ghdb/dorks/crawl?query=${queryValue}&pages=${pagesValue}`)
@@ -18,17 +20,26 @@ export function GoogleNode({ addNode, flowData }: { addNode: Function; flowData:
         let idx = 0;
         for (const [resultType, results] of Object.entries(resp.data)) {
           idx += 1;
-          console.log({ x: flowData.xPos + 600, y: flowData.yPos * 100 });
           if (results) {
             // @ts-ignore
             results.forEach((result, rIdx) => {
+              const id = getId();
+
               addNode(
+                id,
                 'result',
-                { x: flowData.xPos + 650, y: flowData.yPos + (205 * rIdx) },
+                { x: flowData.xPos + 450, y: flowData.yPos + 180 * rIdx },
                 {
                   label: result,
                 }
               );
+              console.log('source >> ', flowData.id)
+              // addEdge({
+              //   id: `edge${id}-${flowData.id}`, 
+              //   type: 'straight', 
+              //   source: `${flowData.id}`, 
+              //   target: id
+              //   })
             });
           }
         }
@@ -37,9 +48,37 @@ export function GoogleNode({ addNode, flowData }: { addNode: Function; flowData:
         console.warn(error);
       });
   };
-
+  console.log('google flow', flowData);
+const validateConn = () => {
+    console.log("validate connn");
+    return true;
+  };
   return (
     <div className='-m-3 flex flex-col justify-between rounded-lg p-3 transition duration-150 ease-in-out hover:bg-light-200 bg-light-100 w-72'>
+      <Handle
+        position={Position.Top}
+        id="a1"
+        key="a1"
+        type='source'
+      />
+      <Handle
+        position={Position.Bottom}
+        id="b1"
+        key="b1"
+        type='source'
+      />
+      <Handle
+        position={Position.Right}
+        id="r1"
+        key="r1"
+        type='source'
+      />
+      <Handle
+        position={Position.Left}
+        id="l1"
+        key="l1"
+        type="target"
+      />
       <div className='flex md:h-full '>
         <div className='flex-shrink-0 '>
           <div className='inline-flex  h-10 w-10 items-center justify-center rounded-md bg-info-200 text-white sm:h-12 sm:w-12'>
@@ -250,9 +289,16 @@ export function WebsiteNode() {
 }
 
 export function ResultNode({ data }: any) {
-  console.log('data ===> ', data.data.label);
+  // console.log('data ===> ', data.data.label);
+  console.log('data resultNode', data);
   return (
     <>
+     <Handle
+        position={Position.Left}
+        id="l1"
+        key="l1"
+        type="target"
+      />
       <div className='bg-light-200 flex text-dark-400 flex-col max-w-sm px-4 py-3'>
         <p className='text-sm truncate font-display mb-1'>{data.data.label.title && data.data.label.title}</p>
         <p className='text-sm  whitespace-wrap'>{data.data.label.description && data.data.label.description}</p>

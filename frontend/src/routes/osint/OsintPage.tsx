@@ -21,7 +21,7 @@ import NodeOptionsSlideOver from './_components/NodeOptionsSlideOver';
 import { GoogleNode, CseNode, WebsiteNode, ResultNode } from './_components/Nodes';
 
 let id = 0;
-const getId = () => `dndnode_${id++}`;
+const getId = () => `node-${id++}`;
 
 const keyMap = {
   TOGGLE_PALLET: ['shift+p'],
@@ -129,14 +129,24 @@ const tabs = [
   { name: 'Nodes', href: 'nodes', current: false },
 ];
 
+const initialEdges = []
+const initialNodes = []
+
 const DnDFlow = () => {
   const reactFlowWrapper = useRef(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
+  const onConnect = useCallback(
+    (connection) => setEdges((eds) => addEdge(connection, edges)),
+    [setEdges]
+  );
 
+const onEdgeUpdate = useCallback(
+    (oldEdge, newConnection) => setEdges((els) => updateEdge(oldEdge, newConnection, els)),
+    []
+  );
   const onDragOver = useCallback((event) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
@@ -164,30 +174,35 @@ const DnDFlow = () => {
         position,
         data: { label: `${type} node` },
       };
-
       setNodes((nds) => nds.concat(newNode));
     },
     [reactFlowInstance]
   );
 
- function addNode(type, position, data) {
+  function addNode(id, type, position, data) {
     const newNode = {
-      id: getId(),
+      id,
       type,
       position,
       data,
     };
     setNodes((nds) => nds.concat(newNode));
-  };
+  }
+
+  console.log('edges', edges);
+  console.log('nodes', nodes);
 
   const nodeTypes = useMemo(() => {
     return {
       website: () => <WebsiteNode id={getId()} data={'TODO: Add website node'} />,
-      google: (data) => <GoogleNode id={getId()} addNode={addNode} flowData={data} />,
+      google: (data) => (
+        <GoogleNode  id={getId()} addNode={addNode} flowData={data} />
+      ),
       cse: () => <CseNode id={getId()} data={'TODO: Add cse node'} />,
       result: (data) => <ResultNode id={getId()} data={data} />,
     };
   }, []);
+
   return (
     <div className='dndflow' style={{ width: '100%', height: '100%' }}>
       <ReactFlowProvider>
@@ -200,6 +215,7 @@ const DnDFlow = () => {
             onConnect={onConnect}
             onInit={setReactFlowInstance}
             onDrop={onDrop}
+            onEdgeUpdate={onEdgeUpdate}
             onDragOver={onDragOver}
             fitView
             nodeTypes={nodeTypes}
