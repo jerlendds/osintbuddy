@@ -6,9 +6,19 @@ import { ChevronUpDownIcon, DocumentIcon, MagnifyingGlassIcon } from '@heroicons
 import classNames from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
 let id = 0;
-const getId = () => `${id++}`;
+const getId = () => `rnode_${id++}`;
 
-export function GoogleNode({ addNode, flowData, isConnectable }: { addNode: Function; flowData: any;  isConnectable: any }) {
+export function GoogleNode({
+  addNode,
+  flowData,
+  isConnectable,
+  addEdge,  
+}: {
+  addNode: Function;
+  flowData: any;
+  isConnectable: any;
+  addEdge: Function
+}) {
   const [queryValue, setQueryValue] = useState<string>('');
   const [pagesValue, setPagesValue] = useState<number>(3);
   const handleSubmit = (event: any) => {
@@ -32,14 +42,11 @@ export function GoogleNode({ addNode, flowData, isConnectable }: { addNode: Func
                 {
                   label: result,
                 }
+                
               );
-              console.log('source >> ', flowData.id)
-              // addEdge({
-              //   id: `edge${id}-${flowData.id}`, 
-              //   type: 'straight', 
-              //   source: `${flowData.id}`, 
-              //   target: id
-              //   })
+              console.log('source >> ');
+
+              addEdge(flowData.id, id)
             });
           }
         }
@@ -49,84 +56,66 @@ export function GoogleNode({ addNode, flowData, isConnectable }: { addNode: Func
       });
   };
   console.log('google flow', flowData);
-const validateConn = () => {
-    console.log("validate connn");
+  const validateConn = () => {
+    console.log('validate connn');
     return true;
   };
   return (
-    <div className='-m-3 flex flex-col justify-between rounded-lg p-3 transition duration-150 ease-in-out hover:bg-light-200 bg-light-100 w-72'>
-      <Handle
-        position={Position.Top}
-        id="a1"
-        key="a1"
-        type='source'
-      />
-      <Handle
-        position={Position.Bottom}
-        id="b1"
-        key="b1"
-        type='source'
-      />
-      <Handle
-        position={Position.Right}
-        id="r1"
-        key="r1"
-        type='source'
-      />
-      <Handle
-        position={Position.Left}
-        id="l1"
-        key="l1"
-        type="target"
-      />
-      <div className='flex md:h-full '>
-        <div className='flex-shrink-0 '>
-          <div className='inline-flex  h-10 w-10 items-center justify-center rounded-md bg-info-200 text-white sm:h-12 sm:w-12'>
-            <GoogleIcon className='h-6 w-6' aria-hidden='true' />
+    <>
+      <Handle position={Position.Top} id='a1' key='a1' type='source' />
+      <Handle position={Position.Bottom} id='b1' key='b1' type='source' />
+      <Handle position={Position.Right} id='r1' key='r1' type='source' />
+      <Handle position={Position.Left} id='l1' key='l1' type='target' />
+      <div className=' flex flex-col justify-between rounded-lg m-0.5 p-2 transition duration-150 ease-in-out hover:bg-light-200 bg-light-100 w-72'>
+        <div className='flex md:h-full '>
+          <div className='flex-shrink-0 '>
+            <div className='inline-flex  h-10 w-10 items-center justify-center rounded-md bg-info-200 text-white sm:h-12 sm:w-12'>
+              <GoogleIcon className='h-6 w-6' aria-hidden='true' />
+            </div>
+          </div>
+          <div className='md:flex-col md:flex md:flex-1  md:justify-between '>
+            <form onSubmit={(event) => handleSubmit(event)} className='flex items-start flex-col'>
+              <div className='flex items-center'>
+                <p className='text-xs font-medium  text-dark mx-2'>Query</p>
+                <div className='mt-1 w-full flex bg-light-200 py-0.5 border-gray-50 relative border-opacity-20  text-gray-500 border rounded-sm focus:border-opacity-100  text-xs'>
+                  <MagnifyingGlassIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
+
+                  <input
+                    type='text'
+                    onChange={(event: any) => setQueryValue(event.target.value)}
+                    value={queryValue}
+                    className='placeholder:text-gray-50  focus:outline-none pl-4 w-full bg-light-200 focus:bg-light-50'
+                    placeholder='HTTP 403'
+                  />
+                </div>
+              </div>
+              <div className='flex items-center'>
+                <p className='text-xs font-medium  text-dark mx-2'>Pages</p>
+
+                <div className='mt-1 w-full flex bg-light-200 py-0.5 border-gray-50 relative border-opacity-20  text-gray-500 border rounded-sm focus:border-opacity-100  text-xs'>
+                  <DocumentIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
+
+                  <input
+                    type='number'
+                    onChange={(event: any) => setPagesValue(event.target.value)}
+                    value={pagesValue}
+                    className='placeholder:text-gray-50  focus:outline-none pl-4 w-full bg-light-200 focus:bg-light-50'
+                    placeholder='HTTP 403'
+                  />
+                </div>
+              </div>
+
+              <button
+                type='submit'
+                className='flex mt-2 py-1 ml-auto items-center bg-primary rounded-sm justify-between px-3'
+              >
+                <p className=' text-xs font-medium flex text-white whitespace-nowrap'>Search Google</p>
+              </button>
+            </form>
           </div>
         </div>
-        <div className='md:flex-col md:flex md:flex-1  md:justify-between '>
-          <form onSubmit={(event) => handleSubmit(event)} className='flex items-start flex-col'>
-            <div className='flex items-center'>
-              <p className='text-xs font-medium  text-dark mx-2'>Query</p>
-              <div className='mt-1 w-full flex bg-light-200 py-0.5 border-gray-50 relative border-opacity-20  text-gray-500 border rounded-sm focus:border-opacity-100  text-xs'>
-                <MagnifyingGlassIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
-
-                <input
-                  type='text'
-                  onChange={(event: any) => setQueryValue(event.target.value)}
-                  value={queryValue}
-                  className='placeholder:text-gray-50  focus:outline-none pl-4 w-full bg-light-200 focus:bg-light-50'
-                  placeholder='HTTP 403'
-                />
-              </div>
-            </div>
-            <div className='flex items-center'>
-              <p className='text-xs font-medium  text-dark mx-2'>Pages</p>
-
-              <div className='mt-1 w-full flex bg-light-200 py-0.5 border-gray-50 relative border-opacity-20  text-gray-500 border rounded-sm focus:border-opacity-100  text-xs'>
-                <DocumentIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
-
-                <input
-                  type='number'
-                  onChange={(event: any) => setPagesValue(event.target.value)}
-                  value={pagesValue}
-                  className='placeholder:text-gray-50  focus:outline-none pl-4 w-full bg-light-200 focus:bg-light-50'
-                  placeholder='HTTP 403'
-                />
-              </div>
-            </div>
-
-            <button
-              type='submit'
-              className='flex mt-2 py-1 ml-auto items-center bg-primary rounded-sm justify-between px-3'
-            >
-              <p className=' text-xs font-medium flex text-white whitespace-nowrap'>Search Google</p>
-            </button>
-          </form>
-        </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -293,12 +282,7 @@ export function ResultNode({ data }: any) {
   console.log('data resultNode', data);
   return (
     <>
-     <Handle
-        position={Position.Left}
-        id="l1"
-        key="l1"
-        type="target"
-      />
+      <Handle position={Position.Left} id='l1' key='l1' type='target' />
       <div className='bg-light-200 flex text-dark-400 flex-col max-w-sm px-4 py-3'>
         <p className='text-sm truncate font-display mb-1'>{data.data.label.title && data.data.label.title}</p>
         <p className='text-sm  whitespace-wrap'>{data.data.label.description && data.data.label.description}</p>

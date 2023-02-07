@@ -21,7 +21,7 @@ import NodeOptionsSlideOver from './_components/NodeOptionsSlideOver';
 import { GoogleNode, CseNode, WebsiteNode, ResultNode } from './_components/Nodes';
 
 let id = 0;
-const getId = () => `node-${id++}`;
+const getId = () => `gnode_${id++}`;
 
 const keyMap = {
   TOGGLE_PALLET: ['shift+p'],
@@ -129,8 +129,8 @@ const tabs = [
   { name: 'Nodes', href: 'nodes', current: false },
 ];
 
-const initialEdges = []
-const initialNodes = []
+const initialEdges = [];
+const initialNodes = [];
 
 const DnDFlow = () => {
   const reactFlowWrapper = useRef(null);
@@ -138,12 +138,9 @@ const DnDFlow = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  const onConnect = useCallback(
-    (connection) => setEdges((eds) => addEdge(connection, edges)),
-    [setEdges]
-  );
+  const onConnect = useCallback((connection) => setEdges((eds) => addEdge(connection, edges)), [setEdges]);
 
-const onEdgeUpdate = useCallback(
+  const onEdgeUpdate = useCallback(
     (oldEdge, newConnection) => setEdges((els) => updateEdge(oldEdge, newConnection, els)),
     []
   );
@@ -189,15 +186,20 @@ const onEdgeUpdate = useCallback(
     setNodes((nds) => nds.concat(newNode));
   }
 
-  console.log('edges', edges);
-  console.log('nodes', nodes);
+  function addEdge(source, target) {
+    const newEdge = {
+      source,
+      target,
+      sourceHandle: 'r1',
+      targetHandle: 'l1',
+    };
+    setEdges((eds) => eds.concat(newEdge));
+  }
 
   const nodeTypes = useMemo(() => {
     return {
       website: () => <WebsiteNode id={getId()} data={'TODO: Add website node'} />,
-      google: (data) => (
-        <GoogleNode  id={getId()} addNode={addNode} flowData={data} />
-      ),
+      google: (data) => <GoogleNode id={getId()} addNode={addNode} addEdge={addEdge} flowData={data} />,
       cse: () => <CseNode id={getId()} data={'TODO: Add cse node'} />,
       result: (data) => <ResultNode id={getId()} data={data} />,
     };
