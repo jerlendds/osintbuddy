@@ -1,6 +1,14 @@
 // @ts-nocheck
-import React, { useCallback, useState, useRef } from 'react';
-import ReactFlow, { addEdge, MiniMap, Controls, Background, useNodesState, ReactFlowProvider, useEdgesState } from 'reactflow';
+import React, { useCallback, useState, useRef, useMemo } from 'react';
+import ReactFlow, {
+  addEdge,
+  MiniMap,
+  Controls,
+  Background,
+  useNodesState,
+  ReactFlowProvider,
+  useEdgesState,
+} from 'reactflow';
 import { EllipsisVerticalIcon, HomeIcon } from '@heroicons/react/20/solid';
 import { HotKeys } from 'react-hotkeys';
 import { Link, Route, Routes, useLocation, useParams } from 'react-router-dom';
@@ -10,17 +18,10 @@ import CustomNode from './CustomNode';
 import classNames from 'classnames';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/24/outline';
 import NodeOptionsSlideOver from './_components/NodeOptionsSlideOver';
-import { GoogleNode, CseNode, WebsiteNode } from './_components/Nodes';
-
+import { GoogleNode, CseNode, WebsiteNode, ResultNode } from './_components/Nodes';
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
-
-const nodeTypes = {
-  website: () => <WebsiteNode  id={getId()} data={'TODO: Add website node'} />,
-  google: () => <GoogleNode id={getId()} data={'TODO: Add google search node'} />,
-  cse: () => <CseNode id={getId()} data={'TODO: Add cse node'} />,
-};
 
 const keyMap = {
   TOGGLE_PALLET: ['shift+p'],
@@ -76,7 +77,10 @@ function BreadcrumbHeader({
     { name: activeProject, href: '#', current: true },
   ];
   return (
-    <nav className='flex justify-between fixed top-0 z-40 border-b border-gray-200 bg-dark-800 w-full' aria-label='Breadcrumb'>
+    <nav
+      className='flex justify-between fixed top-0 z-40 border-b border-gray-200 bg-dark-800 w-full'
+      aria-label='Breadcrumb'
+    >
       <ol role='list' className='flex w-full max-w-screen-xl space-x-4 px-4 sm:px-6 lg:px-8'>
         <li className='flex'>
           <div className='flex items-center'>
@@ -108,15 +112,14 @@ function BreadcrumbHeader({
             </div>
           </li>
         ))}
-          <button
-        type='button'
-        onClick={() => toggleShowOptions()}
-        className='leading-3 ml-auto relative inline-flex items-center rounded border border-gray-300 bg-white px-2.5  text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
-      >
-        Add nodes
-      </button>
+        <button
+          type='button'
+          onClick={() => toggleShowOptions()}
+          className='leading-3 ml-auto relative inline-flex items-center rounded border border-gray-300 bg-white px-2.5  text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+        >
+          Add nodes
+        </button>
       </ol>
-    
     </nav>
   );
 }
@@ -125,7 +128,6 @@ const tabs = [
   { name: 'CSE Search', href: 'cses', current: false },
   { name: 'Nodes', href: 'nodes', current: false },
 ];
-
 
 const DnDFlow = () => {
   const reactFlowWrapper = useRef(null);
@@ -168,10 +170,28 @@ const DnDFlow = () => {
     [reactFlowInstance]
   );
 
+ function addNode(type, position, data) {
+    const newNode = {
+      id: getId(),
+      type,
+      position,
+      data,
+    };
+    setNodes((nds) => nds.concat(newNode));
+  };
+
+  const nodeTypes = useMemo(() => {
+    return {
+      website: () => <WebsiteNode id={getId()} data={'TODO: Add website node'} />,
+      google: (data) => <GoogleNode id={getId()} addNode={addNode} flowData={data} />,
+      cse: () => <CseNode id={getId()} data={'TODO: Add cse node'} />,
+      result: (data) => <ResultNode id={getId()} data={data} />,
+    };
+  }, []);
   return (
-    <div className="dndflow" style={{width: '100%', height: '100%'}} >
+    <div className='dndflow' style={{ width: '100%', height: '100%' }}>
       <ReactFlowProvider>
-        <div style={{width: '100%', height: '100%'}} ref={reactFlowWrapper}>
+        <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -191,7 +211,6 @@ const DnDFlow = () => {
     </div>
   );
 };
-
 
 export default function OsintPage() {
   const params = useParams();
