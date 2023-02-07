@@ -5,7 +5,39 @@ import { ChevronUpDownIcon, DocumentIcon, MagnifyingGlassIcon } from '@heroicons
 import classNames from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-export function GoogleNode() {
+export function GoogleNode({ addNode, flowData }: { addNode: Function; flowData: any }) {
+  const [queryValue, setQueryValue] = useState<string>('');
+  const [pagesValue, setPagesValue] = useState<number>(3);
+  const handleSubmit = (event: any) => {
+    console.log(queryValue, pagesValue);
+    event.preventDefault();
+    api
+      .get(`/ghdb/dorks/crawl?query=${queryValue}&pages=${pagesValue}`)
+      .then((resp) => {
+        console.log(resp);
+        let idx = 0;
+        for (const [resultType, results] of Object.entries(resp.data)) {
+          idx += 1;
+          console.log({ x: flowData.xPos + 600, y: flowData.yPos * 100 });
+          if (results) {
+            // @ts-ignore
+            results.forEach((result, rIdx) => {
+              addNode(
+                'result',
+                { x: flowData.xPos + 650, y: flowData.yPos + (205 * rIdx) },
+                {
+                  label: result,
+                }
+              );
+            });
+          }
+        }
+      })
+      .catch((error) => {
+        console.warn(error);
+      });
+  };
+
   return (
     <div className='-m-3 flex flex-col justify-between rounded-lg p-3 transition duration-150 ease-in-out hover:bg-light-200 bg-light-100 w-72'>
       <div className='flex md:h-full '>
@@ -15,7 +47,7 @@ export function GoogleNode() {
           </div>
         </div>
         <div className='md:flex-col md:flex md:flex-1  md:justify-between '>
-          <form className='flex items-start flex-col'>
+          <form onSubmit={(event) => handleSubmit(event)} className='flex items-start flex-col'>
             <div className='flex items-center'>
               <p className='text-xs font-medium  text-dark mx-2'>Query</p>
               <div className='mt-1 w-full flex bg-light-200 py-0.5 border-gray-50 relative border-opacity-20  text-gray-500 border rounded-sm focus:border-opacity-100  text-xs'>
@@ -23,6 +55,8 @@ export function GoogleNode() {
 
                 <input
                   type='text'
+                  onChange={(event: any) => setQueryValue(event.target.value)}
+                  value={queryValue}
                   className='placeholder:text-gray-50  focus:outline-none pl-4 w-full bg-light-200 focus:bg-light-50'
                   placeholder='HTTP 403'
                 />
@@ -35,15 +69,19 @@ export function GoogleNode() {
                 <DocumentIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
 
                 <input
-                  type='text'
-                  defaultValue={3}
+                  type='number'
+                  onChange={(event: any) => setPagesValue(event.target.value)}
+                  value={pagesValue}
                   className='placeholder:text-gray-50  focus:outline-none pl-4 w-full bg-light-200 focus:bg-light-50'
                   placeholder='HTTP 403'
                 />
               </div>
             </div>
 
-            <button className='flex mt-2 py-1 ml-auto items-center bg-primary rounded-sm justify-between px-3'>
+            <button
+              type='submit'
+              className='flex mt-2 py-1 ml-auto items-center bg-primary rounded-sm justify-between px-3'
+            >
               <p className=' text-xs font-medium flex text-white whitespace-nowrap'>Search Google</p>
             </button>
           </form>
@@ -65,13 +103,12 @@ export function CseNode() {
   const [activeCseData, setActiveCseData] = useState([]);
   const [cseData, setCseData] = useState([]);
 
-
   const getCseLinks = useCallback(() => {
     api
       .get('/cses/links')
       .then((resp) => {
         console.log(resp);
-        setCseData(resp.data)
+        setCseData(resp.data);
       })
       .catch((error) => {
         console.warn(error);
@@ -88,7 +125,7 @@ export function CseNode() {
       console.log('fetching');
     } else {
       isMounted.current = true;
-      getCseLinks()
+      getCseLinks();
     }
   }, [isMounted]);
   return (
@@ -132,7 +169,9 @@ export function CseNode() {
               <p className=' text-xs font-medium flex text-white whitespace-nowrap'>Search Google</p>
             </button>
             <Combobox className='w-full' as='div' value={selectedPerson} onChange={setSelectedPerson}>
-              <Combobox.Label className='block text-sm font-medium text-gray-700 font-display'>CSE Categories</Combobox.Label>
+              <Combobox.Label className='block text-sm font-medium text-gray-700 font-display'>
+                CSE Categories
+              </Combobox.Label>
               <div className='relative mt-1'>
                 <Combobox.Input
                   className='w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm'
@@ -187,7 +226,7 @@ export function CseNode() {
                                   {cseOption.title}
                                 </label>
                                 <p id='comments-description' className='text-gray-500'>
-                                 {cseOption.description}
+                                  {cseOption.description}
                                 </p>
                               </div>
                             </div>
@@ -208,4 +247,17 @@ export function CseNode() {
 
 export function WebsiteNode() {
   return <>Website Node</>;
+}
+
+export function ResultNode({ data }: any) {
+  console.log('data ===> ', data.data.label);
+  return (
+    <>
+      <div className='bg-light-200 flex text-dark-400 flex-col max-w-sm px-4 py-3'>
+        <p className='text-sm truncate font-display mb-1'>{data.data.label.title && data.data.label.title}</p>
+        <p className='text-sm  whitespace-wrap'>{data.data.label.description && data.data.label.description}</p>
+        <p className='text-sm text-info-200 whitespace-wrap'>{data.data.label.link && data.data.label.link}</p>
+      </div>
+    </>
+  );
 }

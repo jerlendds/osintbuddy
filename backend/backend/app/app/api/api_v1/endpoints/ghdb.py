@@ -62,7 +62,7 @@ def get_dorks_count(
     }
 
 
-@router.post('/dorks/crawl', response_model=Any)
+@router.get('/dorks/crawl', response_model=Any)
 def get_dork_results(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
