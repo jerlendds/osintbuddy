@@ -20,9 +20,6 @@ import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/24/outline';
 import NodeOptionsSlideOver from './_components/NodeOptionsSlideOver';
 import { GoogleNode, CseNode, WebsiteNode, ResultNode } from './_components/Nodes';
 
-let id = 0;
-const getId = () => `gnode_${id++}`;
-
 const keyMap = {
   TOGGLE_PALLET: ['shift+p'],
 };
@@ -133,6 +130,9 @@ const initialEdges = [];
 const initialNodes = [];
 
 const DnDFlow = () => {
+  let id = 0;
+  const getId = () => `gnode_${id++}`;
+
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -184,6 +184,9 @@ const DnDFlow = () => {
       data,
     };
     setNodes((nds) => nds.concat(newNode));
+    console.log(nodes[nodes.length - 1])
+
+    return newNode
   }
 
   function addEdge(source, target) {
@@ -198,10 +201,10 @@ const DnDFlow = () => {
 
   const nodeTypes = useMemo(() => {
     return {
-      website: () => <WebsiteNode id={getId()} data={'TODO: Add website node'} />,
-      google: (data) => <GoogleNode id={getId()} addNode={addNode} addEdge={addEdge} flowData={data} />,
-      cse: () => <CseNode id={getId()} data={'TODO: Add cse node'} />,
-      result: (data) => <ResultNode id={getId()} data={data} />,
+      website: () => <WebsiteNode data={'TODO: Add website node'} />,
+      google: (data) => <GoogleNode addNode={addNode} addEdge={addEdge} flowData={data} />,
+      cse: () => <CseNode data={'TODO: Add cse node'} />,
+      result: (data) => <ResultNode addNode={addNode} addEdge={addEdge} data={data} />,
     };
   }, []);
 

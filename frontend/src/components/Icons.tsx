@@ -4,6 +4,39 @@ export interface IconProps {
   className?: string;
 }
 
+export function IpIcon({ className }: IconProps) {
+  return (
+    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' enable-background='new 0 0 24 24' className={className}>
+      <path d='M 12 2 C 7.6 2 4 5.6 4 10 C 4 16 12 22 12 22 C 12 22 20 16 20 10 C 20 5.6 16.4 2 12 2 z M 9 7 L 10.40625 7 L 10.40625 14 L 9 14 L 9 7 z M 12 7 L 14.40625 7 C 15.80625 7 16.6875 8.0125 16.6875 9.3125 C 16.6875 10.5125 16.00625 11.5 14.40625 11.5 L 13.40625 11.5 L 13.40625 14 L 12 14 L 12 7 z M 13.40625 8.1875 L 13.40625 10.40625 L 14.40625 10.40625 C 14.80625 10.40625 15.1875 10.10625 15.1875 9.40625 C 15.1875 8.80625 15.00625 8.1875 14.40625 8.1875 L 13.40625 8.1875 z' />
+    </svg>
+  );
+}
+
+export function GripIcon({ className }: IconProps) {
+  return (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      className={className}
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      strokeWidth='2'
+      stroke='currentColor'
+      fill='none'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    >
+      <path stroke='none' d='M0 0h24v24H0z' fill='none'></path>
+      <path d='M9 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0'></path>
+      <path d='M9 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0'></path>
+      <path d='M9 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0'></path>
+      <path d='M15 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0'></path>
+      <path d='M15 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0'></path>
+      <path d='M15 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0'></path>
+    </svg>
+  );
+}
+
 export function GoogleIcon({ className }: IconProps) {
   return (
     <svg
