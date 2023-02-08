@@ -12,12 +12,12 @@ export function GoogleNode({
   addNode,
   flowData,
   isConnectable,
-  addEdge,  
+  addEdge,
 }: {
   addNode: Function;
   flowData: any;
   isConnectable: any;
-  addEdge: Function
+  addEdge: Function;
 }) {
   const [queryValue, setQueryValue] = useState<string>('');
   const [pagesValue, setPagesValue] = useState<number>(3);
@@ -26,7 +26,6 @@ export function GoogleNode({
     api
       .get(`/ghdb/dorks/crawl?query=${queryValue}&pages=${pagesValue}`)
       .then((resp) => {
-        console.log(resp);
         let idx = 0;
         for (const [resultType, results] of Object.entries(resp.data)) {
           idx += 1;
@@ -34,19 +33,18 @@ export function GoogleNode({
             // @ts-ignore
             results.forEach((result, rIdx) => {
               const id = getId();
-
               addNode(
                 id,
                 'result',
-                { x: flowData.xPos + 450, y: flowData.yPos + 180 * rIdx },
+                {
+                  x: rIdx % 2 === 0 ? flowData.xPos + 420 : flowData.xPos + 1120,
+                  y: rIdx % 2 === 0 ? rIdx * 60 - flowData.yPos : (rIdx - 1) * 60 - flowData.yPos,
+                },
                 {
                   label: result,
                 }
-                
               );
-              console.log('source >> ');
-
-              addEdge(flowData.id, id)
+              addEdge(flowData.id, id);
             });
           }
         }
@@ -62,11 +60,11 @@ export function GoogleNode({
   };
   return (
     <>
-      <Handle position={Position.Top} id='a1' key='a1' type='source' />
+      <Handle position={Position.Top} id='t1' key='t1' type='source' />
       <Handle position={Position.Bottom} id='b1' key='b1' type='source' />
       <Handle position={Position.Right} id='r1' key='r1' type='source' />
       <Handle position={Position.Left} id='l1' key='l1' type='target' />
-      <div className=' flex flex-col justify-between rounded-lg m-0.5 p-2 transition duration-150 ease-in-out hover:bg-light-200 bg-light-100 w-72'>
+      <div className=' flex flex-col  justify-between rounded-lg m-0.5 p-2 transition duration-150 ease-in-out hover:bg-light-200 bg-light-100'>
         <div className='flex md:h-full '>
           <div className='flex-shrink-0 '>
             <div className='inline-flex  h-10 w-10 items-center justify-center rounded-md bg-info-200 text-white sm:h-12 sm:w-12'>
@@ -283,10 +281,30 @@ export function ResultNode({ data }: any) {
   return (
     <>
       <Handle position={Position.Left} id='l1' key='l1' type='target' />
-      <div className='bg-light-200 flex text-dark-400 flex-col max-w-sm px-4 py-3'>
-        <p className='text-sm truncate font-display mb-1'>{data.data.label.title && data.data.label.title}</p>
-        <p className='text-sm  whitespace-wrap'>{data.data.label.description && data.data.label.description}</p>
-        <p className='text-sm text-info-200 whitespace-wrap'>{data.data.label.link && data.data.label.link}</p>
+      
+      <div className='min-w-[500px] bg-light-200 flex'>
+        <div
+        className={classNames(
+          'bg-primary px-2 py-3',
+          'flex-shrink-0 flex items-center justify-center w-16 text-white text-sm font-medium rounded-l-md'
+        )}
+      >
+        <GoogleIcon className='w-10 h-10' />
+      </div>
+        <ul role='list' className='w-full mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4'>
+          <li
+            key={data.data.label.title && data.data.label.title}
+            className='col-span-full flex rounded-md shadow-sm w-full'
+          >
+            <div className='flex-1 flex flex-col whitespace-wrap px-4 py-2 text-sm'>
+              {data.data.label.title && data.data.label.title}
+              <p className='text-sm  whitespace-wrap max-w-xl'>
+                {data.data.label.description && data.data.label.description}
+              </p>
+              <p className='text-sm text-info-200 max-w-xl whitespace-wrap'>{data.data.label.link && data.data.label.link}</p>
+            </div>
+          </li>
+        </ul>
       </div>
     </>
   );

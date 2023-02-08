@@ -109,38 +109,10 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 
 ## Progress Notes
 
-- [Jan 14, 2023]
-  - 
+- So far have google result nodes
 
-- [Dec 20, 2022]
-  - Rewriting the frontend in React
-  - Cleaning up the backend
-  - Adding NEO4J as the graphdb
-  - 
+![osintbuddy-nodes](https://user-images.githubusercontent.com/29207058/217337167-c6927c90-52fc-4d3b-a9b8-c7b1f392aa53.webm)
 
-- [Oct 5, 2021]
-  
-  - UI Updates
-  
-- [Sept 28, 2021]
-  
-  - Fixed bug in parsing the 'cse.js' response and massively increased crawler success rate (HTTP 200) when scraping CSE urls
-  - Implemented proxy support that will rotate through a list of proxies
-  - Added support for a brightdata.com proxy list
-  - Added infinite scrolling to CSE results on the frontend
-  - Started adding endpoints for querying search results
-  
-- [Sept 21, 2021]
-  
-  - Dockerized the Scrapy crawler and added to stack, made plans to add CSE link updating at regular intervals
-  
-  
-  
-  ### Progress Screenshots
-  
-  
-  
-![image](https://user-images.githubusercontent.com/29207058/208689361-f40ddc0a-a000-4586-83f7-e9f2b41662d7.png)
 
   
 <img alt="" src="./docs/assets/ob-flow.gif" />
@@ -184,7 +156,3 @@ Project Link: [https://github.com/jerlendds/osintbuddy](https://github.com/jerle
 [issues-shield]: https://img.shields.io/github/issues/jerlendds/osintbuddy.svg?style=for-the-badge
 [issues-url]: https://github.com/jerlendds/osintbuddy/issues
 
-
-# Search through any canadian business registry
-
-https://beta.canadasbusinessregistries.ca/search/results?search=%7B001%7D&status=All&page=1
