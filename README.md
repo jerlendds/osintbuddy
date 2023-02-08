@@ -16,8 +16,7 @@
   <h3 align="center">OSINT Buddy 2.0</h3>
 
   <p align="center">
-    osintbuddy is a work-in-progress OSINT tool for Google CSEs (Custom Search Engines).
-What CSEs are is a targeted search engine for a specific site(s) URL. You can create your own CSEs and these CSEs will return any results that google finds for the given URLs. So far I've collected 1175+ CSE URLs from sources on the internet targeting different platforms and Im slowly working on creating an open-source project that you can deploy as a webapp for OSINT purposes. The crawler directly queries Googles CSE API which is super fast
+    osintbuddy is a work-in-progress OSINT tool
     <br />  </p></p>
 
 
@@ -49,20 +48,9 @@ What CSEs are is a targeted search engine for a specific site(s) URL. You can cr
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-*this project is a work-in-progress however feel free to extract out the serp directory that's for the Google scraper, it's very fast :)*
+*this project is a work-in-progress however feel free to extract out the microservice directory in the backend that's for the Google scraper*
 
-Query the Google CSE API, store results, analyze, and more all through a deployable webapp.
-
-
-
-## Features
-
-- Directly query the Google CSE API through a two step request process that may return up to 100 results per API request. (Scrapy)
-- Web interface for visualizing and navigating through results (work-in-progress, Vue)
-- FastAPI app using a PostgreSQL Database with the SQLAlchemy ORM making additional analysis features a breeze to create
-- 1175+ CSE links targeting a variety of platforms and more being added weekly
-- plus more in development...
-
+The goal is to create a poor mans maltego :)
 
 
 <!-- GETTING STARTED -->
@@ -86,7 +74,8 @@ To get a local copy up and running follow these simple steps.
 3. Start the stack with Docker Compose:
 
    ```sh
-   docker-compose up -d
+   cd backend/
+   docker-compose up
    ```
 
  - **URLs**
@@ -109,19 +98,11 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 
 ## Progress Notes
 
-- So far have google result nodes
+- [x] Google search node
+- [x] Google dorks
 
-![osintbuddy-nodes](https://user-images.githubusercontent.com/29207058/217337167-c6927c90-52fc-4d3b-a9b8-c7b1f392aa53.webm)
-
-
+![osintbuddy-demo](https://user-images.githubusercontent.com/29207058/217613277-495ee424-9255-4e0a-a875-f3df0ab81614.gif)
   
-<img alt="" src="./docs/assets/ob-flow.gif" />
-  
-  
-  #### Total CSE URLs
-
-<img alt="OsintBuddy" src="./docs/assets/OB-cse-count.png" />
-
 
 <!-- CONTRIBUTING -->
 ## Contributing

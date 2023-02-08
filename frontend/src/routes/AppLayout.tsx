@@ -18,6 +18,8 @@ import classNames from 'classnames';
 import OSINTBuddyLogo from '@images/logo-dark.svg';
 import HamburgerMenu from '@/components/HamburgerMenu';
 import { GoogleIcon, ShellIcon } from '@/components/Icons';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const navigation = [
   { name: 'Dashboard', to: '/app/dashboard', icon: ViewfinderCircleIcon },
@@ -170,7 +172,12 @@ export default function AppLayout() {
             </div>
           </div>
         </div>
-        <div className={classNames('flex flex-col transition-transform duration-200', sidebarOpen ? 'md:translate-x-64 pr-64' : 'md:translate-x-12 pr-12')}>
+        <div
+          className={classNames(
+            'flex flex-col transition-transform duration-200',
+            sidebarOpen ? 'md:translate-x-64 pr-64' : 'md:translate-x-12 pr-12'
+          )}
+        >
           <button
             type='button'
             className='border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden'
@@ -181,6 +188,18 @@ export default function AppLayout() {
           </button>
 
           <main className='flex-1 block h-screen overflow-y-scroll'>
+            <ToastContainer
+              position='bottom-left'
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme='light'
+            />
             <Outlet />
           </main>
         </div>
