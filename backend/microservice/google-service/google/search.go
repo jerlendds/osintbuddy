@@ -48,18 +48,24 @@ type StoriesResult struct {
 	Description string `json:"description"`
 }
 
+type StatsResult struct {
+	Related []string `json:"related"`
+	Result  []string `json:"result"`
+}
+
 type SerpResults struct {
 	Stories   []StoriesResult  `json:"stories"`
 	Videos    []VideoResult    `json:"videos"`
 	Questions []QuestionResult `json:"questions"`
 	Search    []SearchResult   `json:"search"`
+	Stats     []StatsResult    `json:"stats"`
 }
 
 var serpResults = new(SerpResults)
 
 func CrawlGoogle(searchQuery string, pages string) {
 
-	var paginationIndex = 0
+	var paginationIndex = 1
 	totalPages, err := strconv.Atoi(pages)
 	if err != nil {
 		panic(err)
@@ -84,7 +90,7 @@ func CrawlGoogle(searchQuery string, pages string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	c.SetRequestTimeout(60 * time.Second)
+	c.SetRequestTimeout(10 * time.Second)
 
 	q, _ := queue.New(
 		2, // Number of consumer threads
@@ -106,6 +112,22 @@ func CrawlGoogle(searchQuery string, pages string) {
 		if paginationIndex <= totalPages {
 			q.AddURL(fmt.Sprintf("https://google.com/%sclient=firefox-b-e", link))
 		}
+	})
+	resultStats := new(StatsResult)
+	// parse related searches
+	c.OnHTML("div.s75CSd.OhScic.AB4Wff", func(e *colly.HTMLElement) {
+		relatedSearch := e.Text
+		resultStats.Related = append(resultStats.Related, relatedSearch)
+		fmt.Printf("%s", relatedSearch)
+	})
+	// parse about stats at top of page e.g. 'About 83,000,000 results (0.22 seconds) '
+	c.OnHTML("#result-stats", func(e *colly.HTMLElement) {
+		result := e.Text
+		resultStats.Result = append(resultStats.Result, result)
+		serpResults.Stats = append(serpResults.Stats, *resultStats)
+		fmt.Printf("%s", resultStats)
+		resultStats.Related = nil
+		resultStats.Result = nil
 	})
 
 	// parse top 'top stories' section
