@@ -9,58 +9,38 @@ import ReactFlow, {
   ReactFlowProvider,
   useEdgesState,
 } from 'reactflow';
+import {
+  ArchiveBoxIcon,
+  ArrowRightCircleIcon,
+  ChevronUpDownIcon,
+  ClipboardIcon,
+  DocumentDuplicateIcon,
+  DocumentIcon,
+  FolderOpenIcon,
+  HeartIcon,
+  MagnifyingGlassIcon,
+  PaperClipIcon,
+  PencilSquareIcon,
+  ServerIcon,
+  TrashIcon,
+  UserPlusIcon,
+  PlusIcon,
+} from '@heroicons/react/24/outline';
 import { EllipsisVerticalIcon, HomeIcon } from '@heroicons/react/20/solid';
 import { HotKeys } from 'react-hotkeys';
 import { Link, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import 'reactflow/dist/style.css';
-import CommandPallet from '@/routes/osint/CommandPallet';
+import CommandPallet from '@/routes/osint/_components/CommandPallet';
 import CustomNode from './CustomNode';
 import classNames from 'classnames';
-import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/24/outline';
 import NodeOptionsSlideOver from './_components/NodeOptionsSlideOver';
 import { GoogleNode, CseNode, WebsiteNode, ResultNode } from './_components/Nodes';
+import ContextMenu from './_components/ContextMenu';
+import { IpIcon } from '@/components/Icons';
 
 const keyMap = {
   TOGGLE_PALLET: ['shift+p'],
 };
-
-function SimpleCard() {
-  const project = { name: 'Graph API', initials: 'GA', href: '#', members: 16, bgColor: 'bg-pink-600' };
-  return (
-    <div>
-      <h2 className='text-sm font-medium text-gray-500'>Pinned Projects</h2>
-      <ul role='list' className='mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4'>
-        <li key={project.name} className='col-span-1 flex rounded-md shadow-sm'>
-          <div
-            className={classNames(
-              project.bgColor,
-              'flex-shrink-0 flex items-center justify-center w-16 text-white text-sm font-medium rounded-l-md'
-            )}
-          >
-            {project.initials}
-          </div>
-          <div className='flex flex-1 items-center justify-between truncate rounded-r-md border-t border-r border-b border-gray-200 bg-white'>
-            <div className='flex-1 truncate px-4 py-2 text-sm'>
-              <a href={project.href} className='font-medium text-gray-900 hover:text-gray-600'>
-                {project.name}
-              </a>
-              <p className='text-gray-500'>{project.members} Members</p>
-            </div>
-            <div className='flex-shrink-0 pr-2'>
-              <button
-                type='button'
-                className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-white bg-transparent text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
-              >
-                <span className='sr-only'>Open options</span>
-                <EllipsisVerticalIcon className='h-5 w-5' aria-hidden='true' />
-              </button>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  );
-}
 
 function BreadcrumbHeader({
   activeProject,
@@ -125,19 +105,25 @@ const tabs = [
   { name: 'CSE Search', href: 'cses', current: false },
   { name: 'Nodes', href: 'nodes', current: false },
 ];
-
+let nodeId = 0;
+const getNodeId = () => `node_${nodeId++}`;
 const initialEdges = [];
 const initialNodes = [];
 
-const DnDFlow = () => {
-  let id = 0;
-  const getId = () => `gnode_${id++}`;
-
-  const reactFlowWrapper = useRef(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [reactFlowInstance, setReactFlowInstance] = useState(null);
-
+const DnDFlow = ({
+  reactFlowWrapper,
+  nodes,
+  setNodes,
+  onNodesChange,
+  edges,
+  setEdges,
+  onEdgesChange,
+  reactFlowInstance,
+  setReactFlowInstance,
+  deleteNode,
+  addNode,
+  addEdge,
+}) => {
   const onConnect = useCallback((connection) => setEdges((eds) => addEdge(connection, edges)), [setEdges]);
 
   const onEdgeUpdate = useCallback(
@@ -166,7 +152,7 @@ const DnDFlow = () => {
         y: event.clientY - reactFlowBounds.top,
       });
       const newNode = {
-        id: getId(),
+        id: `${type.charAt(0)}${getNodeId()}`,
         type,
         position,
         data: { label: `${type} node` },
@@ -176,32 +162,9 @@ const DnDFlow = () => {
     [reactFlowInstance]
   );
 
-  function addNode(id, type, position, data) {
-    const newNode = {
-      id,
-      type,
-      position,
-      data,
-    };
-    setNodes((nds) => nds.concat(newNode));
-    console.log(nodes[nodes.length - 1])
-
-    return newNode
-  }
-
-  function addEdge(source, target) {
-    const newEdge = {
-      source,
-      target,
-      sourceHandle: 'r1',
-      targetHandle: 'l1',
-    };
-    setEdges((eds) => eds.concat(newEdge));
-  }
-
   const nodeTypes = useMemo(() => {
     return {
-      website: () => <WebsiteNode data={'TODO: Add website node'} />,
+      website: (data) => <WebsiteNode flowData={data} />,
       google: (data) => <GoogleNode addNode={addNode} addEdge={addEdge} flowData={data} />,
       cse: () => <CseNode data={'TODO: Add cse node'} />,
       result: (data) => <ResultNode addNode={addNode} addEdge={addEdge} data={data} />,
@@ -209,7 +172,7 @@ const DnDFlow = () => {
   }, []);
 
   return (
-    <div className='dndflow' style={{ width: '100%', height: '100%' }}>
+    <div style={{ width: '100%', height: '100%' }}>
       <ReactFlowProvider>
         <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
           <ReactFlow
@@ -232,8 +195,41 @@ const DnDFlow = () => {
     </div>
   );
 };
+let id = 0;
 
 export default function OsintPage() {
+  const reactFlowWrapper = useRef(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+  function addNode(id, type, position, data) {
+    const newNode = {
+      id,
+      type,
+      position,
+      data,
+    };
+    setNodes((nds) => nds.concat(newNode));
+    console.log(nodes[nodes.length - 1]);
+
+    return newNode;
+  }
+
+  function addEdge(source, target) {
+    const newEdge = {
+      source,
+      target,
+      sourceHandle: 'r1',
+      targetHandle: 'l1',
+    };
+    setEdges((eds) => eds.concat(newEdge));
+  }
+
+  function deleteNode(nodeId) {
+    setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+  }
+
   const params = useParams();
   const location = useLocation();
   const activeCase = location.state.activeCase;
@@ -252,15 +248,27 @@ export default function OsintPage() {
     TOGGLE_PALLET: togglePallet,
     CLOSE_PALLET: hideCommandPallet,
   };
-
+  const getId = () => `node_${nodeId++}`;
   return (
     <HotKeys keyMap={keyMap} handlers={handlers}>
       <div className='h-screen flex flex-col w-full'>
         <BreadcrumbHeader toggleShowOptions={toggleShowNodeOptions} activeProject={activeCase.name} />
         <div className='flex h-full'>
-          <DnDFlow />
+          <DnDFlow
+            addNode={addNode}
+            deleteNode={deleteNode}
+            addEdge={addEdge}
+            reactFlowWrapper={reactFlowWrapper}
+            nodes={nodes}
+            setNodes={setNodes}
+            onNodesChange={onNodesChange}
+            edges={edges}
+            setEdges={setEdges}
+            onEdgesChange={onEdgesChange}
+            reactFlowInstance={reactFlowInstance}
+            setReactFlowInstance={setReactFlowInstance}
+          />
         </div>
-
         <CommandPallet
           toggleShowOptions={toggleShowNodeOptions}
           isOpen={showCommandPallet}
@@ -268,6 +276,145 @@ export default function OsintPage() {
         />
       </div>
       <NodeOptionsSlideOver showOptions={showNodeOptions} setShowOptions={setShowNodeOptions} />
+      <ContextMenu
+        menu={({ node }) => {
+          let nodeType = null;
+          if (node) {
+            nodeType = node.classList[1].split('-');
+            nodeType = nodeType[nodeType.length - 1];
+          }
+          return (
+            <>
+              <div className='relative z-50 inline-block text-left'>
+                <ul className='absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+                  <div className='py-1'>
+                    <div>
+                      <div
+                        href='#'
+                        className={classNames(
+                          false ? 'bg-light-500 text-gray-900' : 'text-gray-700',
+                          'group flex items-center px-4 py-2 text-sm font-display'
+                        )}
+                      >
+                        <span className='text-dark-900 font-semibold font-display mr-3'>ID: </span>
+                        {node ? node.getAttribute('data-id') : 'No node selected'}
+                        {nodeType && (
+                          <span className='inline-flex ml-auto items-center rounded-full bg-blue-100 px-3 py-0.5 text-sm font-medium text-blue-800'>
+                            {nodeType.charAt(0).toUpperCase() + nodeType.slice(1)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  {nodeType === 'website' && (
+                    <>
+                      <div className='py-1'>
+                        <div>
+                          <button
+                            href='#'
+                            className={classNames(
+                              'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+                            )}
+                          >
+                            <IpIcon
+                              className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
+                              aria-hidden='true'
+                            />
+                            To IP
+                          </button>
+                        </div>
+                        <div>
+                          <button
+                            href='#'
+                            className={classNames(
+                              'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+                            )}
+                          >
+                            <PaperClipIcon
+                              className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
+                              aria-hidden='true'
+                            />
+                            To Backlinks
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {nodeType === 'result' && (
+                    <div className='py-1'>
+                      <div>
+                        <button
+                          onClick={(event) => {
+                            let rect = node.getBoundingClientRect();
+                            let newNode = addNode(
+                              `rw${getId()}`,
+                              'website',
+                              {
+                                x: rect.x + rect.left + node.scrollWidth,
+                                // y: rIdx % 2 === 0 ? (totalLines * 22)  : ((totalLines - rIdx) * 22) ,
+                                y: rect.y,
+                              },
+                              {
+                                label: {
+                                  url: node.querySelectorAll('[data-type]')[0].innerText,
+                                },
+                              }
+                            );
+                            addEdge(node.getAttribute('data-id'), newNode.id);
+                          }}
+                          className={classNames(
+                            'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+                          )}
+                        >
+                          <IpIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+                          To Website
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  {nodeType === 'google' && (
+                    <div className='py-1'>
+                      <div>
+                        <button
+                          href='#'
+                          className={classNames(
+                            'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+                          )}
+                        >
+                          <HeartIcon
+                            className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
+                            aria-hidden='true'
+                          />
+                          Add to favorites
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  {nodeType && (
+                    <div className='py-1'>
+                      <div>
+                        <button
+                          onClick={() => deleteNode(node.getAttribute('data-id'))}
+                          type='button'
+                          className={classNames(
+                            'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+                          )}
+                        >
+                          <TrashIcon
+                            className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
+                            aria-hidden='true'
+                          />
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </ul>
+              </div>
+            </>
+          );
+        }}
+      />
     </HotKeys>
   );
 }
