@@ -1,23 +1,30 @@
-import { GoogleIcon, GripIcon, IpIcon } from '@/components/Icons';
+import { GoogleIcon, GripIcon, IpIcon, WebsiteIcon } from '@/components/Icons';
 import { Handle, Position } from 'reactflow';
 import api from '@/services/api.service';
-import { Combobox } from '@headlessui/react';
+import { Combobox, Menu, Transition } from '@headlessui/react';
 import {
+  ArchiveBoxIcon,
+  ArrowRightCircleIcon,
   ChevronUpDownIcon,
   ClipboardIcon,
+  ComputerDesktopIcon,
+  DocumentDuplicateIcon,
   DocumentIcon,
   FolderOpenIcon,
+  HeartIcon,
   MagnifyingGlassIcon,
   PaperClipIcon,
+  PencilSquareIcon,
   ServerIcon,
+  TrashIcon,
+  UserPlusIcon,
 } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import mock from '../data.json';
 import { toast } from 'react-toastify';
-
-
+import ContextMenu from './ContextMenu';
 
 export const TargetHandleCombo = () => {
   const handleStyle = { background: '#fff', borderColor: 'rgb(33 129 181)', borderRadius: 500, width: 4, height: 4 };
@@ -31,7 +38,6 @@ export const TargetHandleCombo = () => {
   );
 };
 
-
 export const SourceHandleCombo = () => {
   const handleStyle = { background: '#fff', borderColor: 'rgb(33 129 181)', borderRadius: 500, width: 4, height: 4 };
   return (
@@ -44,6 +50,8 @@ export const SourceHandleCombo = () => {
   );
 };
 
+let googleId = 0;
+export const getGoogleId = () => `rnode_${googleId++}`;
 
 export function GoogleNode({
   addNode,
@@ -58,8 +66,7 @@ export function GoogleNode({
 }) {
   const [queryValue, setQueryValue] = useState<string>('');
   const [pagesValue, setPagesValue] = useState<number>(3);
-  let id = 0;
-const getId = () => `rnode_${id++}`;
+
   const handleSubmit = (event: any) => {
     event.preventDefault();
     api
@@ -71,14 +78,17 @@ const getId = () => `rnode_${id++}`;
       if (results) {
         // @ts-ignore
         results.forEach((result, rIdx) => {
-          const nodeId = getId()
+          const nodeId = getGoogleId();
           const newNode = addNode(
             nodeId,
             'result',
             {
               x: rIdx % 2 === 0 ? flowData.xPos + 420 : flowData.xPos + 1130,
               // y: rIdx % 2 === 0 ? (totalLines * 22)  : ((totalLines - rIdx) * 22) ,
-              y: rIdx % 2 === 0 ? (rIdx * 60 - flowData.yPos) +  Math.ceil(result.description.length / 60) * 50 : ((rIdx - 1) * 60 - flowData.yPos) +  Math.ceil(result.description.length / 60) * 50,
+              y:
+                rIdx % 2 === 0
+                  ? rIdx * 60 - flowData.yPos + Math.ceil(result.description.length / 60) * 50
+                  : (rIdx - 1) * 60 - flowData.yPos + Math.ceil(result.description.length / 60) * 50,
             },
             {
               label: result,
@@ -115,7 +125,8 @@ const getId = () => `rnode_${id++}`;
         <div className='flex md:h-full w-full  p-2'>
           <div className='md:flex-col md:flex w-full md:flex-1  md:justify-between '>
             <form onSubmit={(event) => handleSubmit(event)} className='flex items-start flex-col'>
-              <div className='flex items-center my-1'>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Query</p>
+              <div className='flex items-center mb-1'>
                 <div className='mt-1 w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <MagnifyingGlassIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
 
@@ -124,11 +135,14 @@ const getId = () => `rnode_${id++}`;
                     onChange={(event: any) => setQueryValue(event.target.value)}
                     value={queryValue}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-full bg-light-200 focus:bg-light-50'
-                    placeholder='HTTP 403'
+                    placeholder='Search...'
                   />
                 </div>
               </div>
-              <div className='flex items-center my-1'>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display mt-1'>
+                Total pages
+              </p>
+              <div className='flex items-center mb-1'>
                 <div className='mt-1 w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <DocumentIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
 
@@ -310,24 +324,72 @@ export function CseNode() {
   );
 }
 
-export function WebsiteNode() {
-  return <>Website Node</>;
+export function WebsiteNode({ flowData, deleteNode }: any) {
+  const [urlValue, setUrlValue] = useState<string>(flowData.data.label.url);
+  let id = 0;
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+  };
+
+  return (
+    <>
+      <Handle position={Position.Right} id='r1' key='r1' type='source' />
+      <Handle position={Position.Top} id='t1' key='t1' type='source' />
+      <Handle position={Position.Bottom} id='b1' key='b1' type='source' />
+      <Handle position={Position.Left} id='l1' key='l1' type='target' />
+      <div className=' flex flex-col w-72 max-w-2xl justify-between rounded-sm transition duration-150 ease-in-out hover:bg-light-200 bg-light-100'>
+        <div className='flex h-full w-full items-center justify-between rounded-t-sm bg-info-400 text-white py-2 px-1'>
+          <GripIcon className='h-5 w-5' />
+          <div className='flex w-full flex-col px-2 font-semibold'>
+            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>Website</p>
+            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display'>
+              <span className='text-xs text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
+              {flowData.id}
+            </p>
+          </div>
+          <WebsiteIcon className='h-5 w-5 mr-2' />
+        </div>
+        <div className='flex md:h-full w-full  p-2'>
+          <div className='md:flex-col md:flex w-full md:flex-1  md:justify-between '>
+            <form onSubmit={(event) => handleSubmit(event)} className='flex items-start flex-col'>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>URL</p>
+              <div className='flex items-center mb-1'>
+                <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
+                  <MagnifyingGlassIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
+
+                  <input
+                    type='text'
+                    onChange={(event: any) => setUrlValue(event.target.value)}
+                    value={urlValue}
+                    className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
+                    placeholder='https://www.google.com'
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 export function ResultNode({ data, addNode, addEdge }: { data: any; addNode: Function; addEdge: Function }) {
   // console.log('data ===> ', data.data.label);
   return (
     <>
-      <TargetHandleCombo />
+      <Handle position={Position.Left} id='l1' key='l1' type='target' />
+      <Handle position={Position.Right} id='r1' key='r1' type='source' />
+      <Handle position={Position.Top} id='t1' key='t1' type='target' />
+      <Handle position={Position.Bottom} id='b1' key='b1' type='target' />
       <div className='min-w-[500px] bg-light-200 max-w-2xl flex'>
         <div
           className={classNames(
-            'bg-info-400 px-2 py-3',
-            'flex-shrink-0 flex items-center justify-center  w-16 text-white text-sm font-medium rounded-l-md'
+            'bg-info-400 px-0 py-3',
+            'flex-shrink-0 flex flex-col items-center justify-center  w-16 text-white text-sm font-medium rounded-l-md'
           )}
         >
           <GoogleIcon className='w-10 h-10' />
-          {data.id}
         </div>
         <ul role='list' className='w-full grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4'>
           <li className='col-span-full flex rounded-md shadow-sm w-full'>
@@ -344,7 +406,7 @@ export function ResultNode({ data, addNode, addEdge }: { data: any; addNode: Fun
                 className='flex items-center'
               >
                 <PaperClipIcon className='w-5 h-5 text-info-200 mx-1' />
-                <p className='text-sm text-info-200 max-w-xl whitespace-wrap'>
+                <p data-type='link' className='text-sm text-info-200 max-w-xl whitespace-wrap'>
                   {data.data.label.link && data.data.label.link}
                 </p>
               </div>
@@ -355,5 +417,3 @@ export function ResultNode({ data, addNode, addEdge }: { data: any; addNode: Fun
     </>
   );
 }
-
-

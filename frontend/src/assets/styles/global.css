@@ -19,10 +19,10 @@ button {
 
 /* https://gradienta.io/editor */
 body {
-  @apply relative min-h-screen;
+  @apply relative min-h-screen bg-light-400;
 }
 #root {
-  @apply flex flex-col min-h-screen relative  bg-light-400 ;
+  @apply flex flex-col min-h-screen relative;
 }
 
 svg.icon {

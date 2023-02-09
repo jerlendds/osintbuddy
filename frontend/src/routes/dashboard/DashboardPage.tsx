@@ -384,7 +384,7 @@ const CasesCards = ({
   );
   return (
     <>
-      <div className='w-full flex items-center justify-center h-full pb-20'>
+      <div className='w-full flex items-center justify-center'>
         {casesData.length === 0 && (
           <>
             <div className='mt-6 flex flex-col items-center shadow-2xl px-48 bg-light-500 border-primary border-2 rounded-2xl py-20'>

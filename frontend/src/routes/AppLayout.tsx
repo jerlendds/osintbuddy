@@ -20,6 +20,9 @@ import HamburgerMenu from '@/components/HamburgerMenu';
 import { GoogleIcon, ShellIcon } from '@/components/Icons';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ContextMenu from './osint/_components/ContextMenu';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { closeSidebar, isSidebarOpen, setSidebar } from '@/features/settings/settingsSlice';
 
 const navigation = [
   { name: 'Dashboard', to: '/app/dashboard', icon: ViewfinderCircleIcon },
@@ -29,18 +32,17 @@ const navigation = [
 
 export default function AppLayout() {
   const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  const dispatch = useAppDispatch();
+  const showSidebar: boolean = useAppSelector((state) => isSidebarOpen(state));
 
   const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+    dispatch(setSidebar(!showSidebar));
   };
-
-  console.log(sidebarOpen);
 
   return (
     <>
-      <div>
-        <Transition.Root show={sidebarOpen} as={Fragment}>
+      <div className='flex flex-col max-w-screen'>
+        <Transition.Root show={showSidebar} as={Fragment}>
           <Dialog as='div' className='relative z-40 md:hidden' onClose={() => null}>
             <Transition.Child
               as={Fragment}
@@ -78,7 +80,7 @@ export default function AppLayout() {
                       <button
                         type='button'
                         className='ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'
-                        onClick={() => setSidebarOpen(false)}
+                        onClick={() => dispatch(setSidebar(false))}
                       >
                         <span className='sr-only'>Close sidebar</span>
                         <XMarkIcon className='h-6 w-6 text-white' aria-hidden='true' />
@@ -126,7 +128,7 @@ export default function AppLayout() {
         <div
           className={classNames(
             'hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col transition-transform duration-200',
-            sidebarOpen ? 'translate-x-0' : '-translate-x-52'
+            showSidebar ? 'translate-x-0' : '-translate-x-52'
           )}
         >
           {/* Sidebar component, swap this element with another sidebar if you like */}
@@ -134,12 +136,12 @@ export default function AppLayout() {
             <div
               className={classNames(
                 'flex h-12 flex-shrink-0 items-center bg-dark-800 justify-between',
-                sidebarOpen ? 'px-3' : 'px-1'
+                showSidebar ? 'px-3' : 'px-1'
               )}
             >
               <img className='h-7 w-auto' src={OSINTBuddyLogo} alt='Your Company' />
               <p className='text-light-200 text-2xl -ml-6 my-auto font-display'>SINTBuddy</p>
-              <HamburgerMenu isOpen={sidebarOpen} onClick={toggleSidebar} />
+              <HamburgerMenu isOpen={showSidebar} onClick={toggleSidebar} />
             </div>
 
             <div className='flex flex-1 flex-col overflow-y-auto'>
@@ -161,7 +163,7 @@ export default function AppLayout() {
                       className={classNames(
                         location.pathname === item.to ? 'text-primary' : 'text-gray-400 group-hover:text-gray-300',
                         'mr-3 flex-shrink-0 h-6 w-6 transition-transform duration-200',
-                        sidebarOpen ? 'translate-x-0' : 'translate-x-[12.7rem]'
+                        showSidebar ? 'translate-x-0' : 'translate-x-[12.7rem]'
                       )}
                       aria-hidden='true'
                     />
@@ -173,21 +175,14 @@ export default function AppLayout() {
           </div>
         </div>
         <div
+          style={{ width: `calc(100% - ${showSidebar ? 16 : 3}rem)` }}
           className={classNames(
-            'flex flex-col transition-transform duration-200',
-            sidebarOpen ? 'md:translate-x-64 pr-64' : 'md:translate-x-12 pr-12'
+            'flex-shrink transition-all duration-200 relative',
+            showSidebar ? 'md:translate-x-64' : 'md:translate-x-12'
           )}
         >
-          <button
-            type='button'
-            className='border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden'
-            onClick={() => setSidebarOpen(true)}
-          >
-            <span className='sr-only'>Open sidebar</span>
-            <Bars3BottomLeftIcon className='h-6 w-6' aria-hidden='true' />
-          </button>
-
-          <main className='flex-1 block h-screen overflow-y-scroll'>
+          <main className='flex-1 block h-screen relative w-full'>
+            <Outlet />{' '}
             <ToastContainer
               position='bottom-left'
               autoClose={3000}
@@ -200,7 +195,6 @@ export default function AppLayout() {
               pauseOnHover
               theme='light'
             />
-            <Outlet />
           </main>
         </div>
       </div>
