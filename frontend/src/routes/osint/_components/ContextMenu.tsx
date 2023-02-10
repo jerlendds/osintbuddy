@@ -40,7 +40,6 @@ const useContextMenu = () => {
 const ContextMenu = ({ menu }: any) => {
   const { xPos, yPos, showMenu, targetNode } = useContextMenu();
   const showSidebar = useAppSelector((state) => isSidebarOpen(state));
-  console.log(menu)
   return (
     <>
       {showMenu ? (

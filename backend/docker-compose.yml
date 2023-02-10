@@ -61,13 +61,6 @@ services:
       - '${DOCKER_FLOWER_PORT_FORWARD:-127.0.0.1:6565}:5555'
     env_file:
       - '.env'
-  hackbox:
-    image: openinfolabs/osintbuddy-hackbox:latest
-    build:
-      context: ./backend
-      dockerfile: hackbox.Dockerfile
-    command: bash -c "while true; do sleep 2; done"
-
   graphdb:
     image: neo4j:5.3.0-community
     environment:
@@ -75,13 +68,10 @@ services:
     ports:
       - '7474:7474'
       - '7687:7687'
-  maildev:
-    build:
-      context: .
-      dockerfile: ./backend/maildev.Dockerfile
+  selenium:
+    image: selenium/standalone-chrome
     ports:
-      - ${MAIL_CLIENT_PORT}:1080
-      - ${MAIL_PORT}:1025
+      - "4444:4444"
   
 volumes:
   osintbuddy-db-data:

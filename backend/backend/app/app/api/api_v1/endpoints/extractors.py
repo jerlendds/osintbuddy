@@ -1,14 +1,23 @@
-import requests
+import socket
 from typing import Any, List
 from datetime import datetime
 import urllib.parse
+from urllib.parse import urlparse, urljoin
 import requests
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from bs4 import BeautifulSoup
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from seoanalyzer import analyze
 from app.crud.base import get_or_create
 from app import crud, schemas, models
 from app.api import deps
-
+from app.core.driver import driver
+from selenium.webdriver.support.wait import WebDriverWait
 router = APIRouter(prefix='/extract')
 
 
@@ -45,3 +54,51 @@ def have_i_been_pwned(
         headers=headers
     )
     return response.json()
+
+
+@router.get('/domain/ip')
+def get_ipv4s_by_host(
+    current_user: models.User = Depends(deps.get_current_active_user),
+    db: Session = Depends(deps.get_db),
+    domain: str = ""
+):
+    ipv4 = []
+    ipv6 = []
+    try:
+        ips = socket.getaddrinfo(domain, 80)
+        for ip in ips:
+            ip_address = ip[4][0]
+            if len(ip_address) > 15:
+                ipv6.append(ip_address)
+            else:
+                ipv4.append(ip_address)
+    except socket.gaierror:
+        pass
+    return {
+        "ipv4": list(set(ipv4)),
+        "ipv6": list(set(ipv6))
+    }
+
+
+@router.get('/domain/whois')
+def funct(
+    current_user: models.User = Depends(deps.get_current_active_user),
+    db: Session = Depends(deps.get_db),
+    domain: str = ""
+):
+    try:
+        driver.get(f'https://www.whois.com/whois/{domain}')
+        element_present = EC.presence_of_element_located(
+            (By.ID, 'registrarData')
+        )
+        WebDriverWait(driver, 10).until(element_present)
+        # with open('file.html', 'w+') as f:
+        #     f.write(str(resp.content))
+        #     f.close()
+        # soup = BeautifulSoup(resp.content)
+        # print(soup.select('.whois-data'))
+        data = driver.find_element(by=By.ID, value='registrarData').text
+        return data
+    except Exception as e:
+        print(e)
+        return []
