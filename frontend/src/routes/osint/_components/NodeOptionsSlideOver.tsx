@@ -43,11 +43,11 @@ const searchOptions = [
     event: 'cse'
   },
   {
-    name: 'Website',
-    description: 'Find subdomains and IPs for a target site',
+    name: 'Domain',
+    description: 'Find SEO data, IPs, and more',
     href: '#',
     status: 'online',
-    event: 'website'
+    event: 'domain'
   },
 ];
 

@@ -1,42 +1,18 @@
 // @ts-nocheck
-import React, { useCallback, useState, useRef, useMemo } from 'react';
-import ReactFlow, {
-  addEdge,
-  MiniMap,
-  Controls,
-  Background,
-  useNodesState,
-  ReactFlowProvider,
-  useEdgesState,
-} from 'reactflow';
-import {
-  ArchiveBoxIcon,
-  ArrowRightCircleIcon,
-  ChevronUpDownIcon,
-  ClipboardIcon,
-  DocumentDuplicateIcon,
-  DocumentIcon,
-  FolderOpenIcon,
-  HeartIcon,
-  MagnifyingGlassIcon,
-  PaperClipIcon,
-  PencilSquareIcon,
-  ServerIcon,
-  TrashIcon,
-  UserPlusIcon,
-  PlusIcon,
-} from '@heroicons/react/24/outline';
-import { EllipsisVerticalIcon, HomeIcon } from '@heroicons/react/20/solid';
+import { useCallback, useState, useRef, useMemo } from 'react';
+import ReactFlow, { Controls, useNodesState, ReactFlowProvider, useEdgesState } from 'reactflow';
+import { DocumentMagnifyingGlassIcon, HeartIcon, PaperClipIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { HomeIcon } from '@heroicons/react/20/solid';
 import { HotKeys } from 'react-hotkeys';
-import { Link, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import 'reactflow/dist/style.css';
 import CommandPallet from '@/routes/osint/_components/CommandPallet';
-import CustomNode from './CustomNode';
 import classNames from 'classnames';
 import NodeOptionsSlideOver from './_components/NodeOptionsSlideOver';
-import { GoogleNode, CseNode, WebsiteNode, ResultNode } from './_components/Nodes';
+import { GoogleNode, CseNode, DomainNode as DomainNode, ResultNode, IpNode, SeoNode } from './_components/Nodes';
 import ContextMenu from './_components/ContextMenu';
 import { IpIcon } from '@/components/Icons';
+import api from '@/services/api.service';
 
 const keyMap = {
   TOGGLE_PALLET: ['shift+p'],
@@ -151,6 +127,7 @@ const DnDFlow = ({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
+
       const newNode = {
         id: `${type.charAt(0)}${getNodeId()}`,
         type,
@@ -164,10 +141,20 @@ const DnDFlow = ({
 
   const nodeTypes = useMemo(() => {
     return {
-      website: (data) => <WebsiteNode flowData={data} />,
-      google: (data) => <GoogleNode addNode={addNode} addEdge={addEdge} flowData={data} />,
-      cse: () => <CseNode data={'TODO: Add cse node'} />,
-      result: (data) => <ResultNode addNode={addNode} addEdge={addEdge} data={data} />,
+      domain: (data) => <DomainNode flowData={data} />,
+      google: (data) => (
+        <GoogleNode
+          project={reactFlowInstance}
+          bounds={reactFlowWrapper.current.getBoundingClientRect()}
+          addNode={addNode}
+          addEdge={addEdge}
+          flowData={data}
+        />
+      ),
+      cse: () => <CseNode flowData={'TODO: Add cse node'} />,
+      seo: (data) => <SeoNode flowData={data} />,
+      ip: (data) => <IpNode flowData={data} />,
+      result: (data) => <ResultNode addNode={addNode} addEdge={addEdge} flowData={data} />,
     };
   }, []);
 
@@ -195,10 +182,10 @@ const DnDFlow = ({
     </div>
   );
 };
-let id = 0;
 
 export default function OsintPage() {
   const reactFlowWrapper = useRef(null);
+  const [nodeId, setNodeId] = useState(0);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -211,9 +198,7 @@ export default function OsintPage() {
       data,
     };
     setNodes((nds) => nds.concat(newNode));
-    console.log(nodes[nodes.length - 1]);
-
-    return newNode;
+    return reactFlowInstance?.project(position);
   }
 
   function addEdge(source, target) {
@@ -238,7 +223,6 @@ export default function OsintPage() {
   const [showCommandPallet, setShowCommandPallet] = useState<boolean>(false);
 
   const [activePanelTab, setActivePanelTab] = useState<string>(tabs[0].name);
-  console.log(params, activeCase);
 
   const togglePallet = () => setShowCommandPallet(!showCommandPallet);
   const toggleShowNodeOptions = () => setShowNodeOptions(!showNodeOptions);
@@ -248,7 +232,10 @@ export default function OsintPage() {
     TOGGLE_PALLET: togglePallet,
     CLOSE_PALLET: hideCommandPallet,
   };
-  const getId = () => `node_${nodeId++}`;
+  const getId = () => {
+    setNodeId(nodeId + 1);
+    return `node_${nodeId}`;
+  };
   return (
     <HotKeys keyMap={keyMap} handlers={handlers}>
       <div className='h-screen flex flex-col w-full'>
@@ -278,6 +265,7 @@ export default function OsintPage() {
       <NodeOptionsSlideOver showOptions={showNodeOptions} setShowOptions={setShowNodeOptions} />
       <ContextMenu
         menu={({ node }) => {
+          const nodeData = node.querySelectorAll('[data-type]');
           let nodeType = null;
           if (node) {
             nodeType = node.classList[1].split('-');
@@ -306,12 +294,57 @@ export default function OsintPage() {
                       </div>
                     </div>
                   </div>
-                  {nodeType === 'website' && (
+                  {nodeType === 'domain' && (
                     <>
                       <div className='py-1'>
                         <div>
                           <button
-                            href='#'
+                            onClick={async (event) => {
+                              const domain = nodeData[0].value;
+
+                              const resp = await api.get(`/extract/domain/ip?domain=${domain}`);
+                              if (resp.data) {
+                                console.log(resp.data);
+                                resp.data.ipv4.map((ip, idx) => {
+                                  console.log('ipv4', ip);
+                                  const newId = `ip4${nodeId}${idx}`;
+                                  let bounds = node.getBoundingClientRect();
+                                  const newNode = addNode(
+                                    newId,
+                                    'ip',
+                                    reactFlowInstance.project({
+                                      x: bounds.x,
+                                      y: bounds.y + 50 + idx * 120,
+                                    }),
+                                    {
+                                      label: ip,
+                                    }
+                                  );
+                                  console.log('nodeId', nodeId);
+                                  addEdge(node.getAttribute('data-id'), newId);
+                                  return null;
+                                });
+                                resp.data.ipv6.map((ip, idx) => {
+                                  console.log('ipv6', ip);
+                                  const newId = `ip6${getId()}${idx}`;
+                                  let bounds = node.getBoundingClientRect();
+                                  const newNode = addNode(
+                                    newId,
+                                    'ip',
+                                    reactFlowInstance.project({
+                                      x: bounds.x + 360,
+                                      y: bounds.y + 50 + idx * 120,
+                                    }),
+                                    {
+                                      label: ip,
+                                    }
+                                  );
+                                  console.log(newNode);
+                                  addEdge(node.getAttribute('data-id'), newId);
+                                  return null;
+                                });
+                              }
+                            }}
                             className={classNames(
                               'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
                             )}
@@ -325,16 +358,45 @@ export default function OsintPage() {
                         </div>
                         <div>
                           <button
-                            href='#'
+                            onClick={async (event) => {
+                              let domain = null;
+                              if (nodeData[1].value) {
+                                domain = nodeData[1].value;
+                              } else {
+                                domain = nodeData[0].value ? `https://${nodeData[0].value}` : null;
+                              }
+                              if (domain) {
+                                const resp = await api.get(`/extract/domain/whois?domain=${domain}`);
+                                if (resp.data) {
+                                  const newId = `whois${getId()}`;
+                                  let bounds = node.getBoundingClientRect();
+                                  addNode(
+                                    newId,
+                                    'seo',
+                                    reactFlowInstance.project({
+                                      x: bounds.x + 360,
+                                      y: bounds.y + 50,
+                                    }),
+                                    {
+                                      label: resp.data,
+                                    }
+                                  );
+                                  addEdge(node.getAttribute('data-id'), newId);
+                                }
+                              }
+                            }}
+                            className={classNames(
+                              'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+                            )}
                             className={classNames(
                               'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
                             )}
                           >
-                            <PaperClipIcon
+                            <DocumentMagnifyingGlassIcon
                               className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
                               aria-hidden='true'
                             />
-                            To Backlinks
+                            To whois
                           </button>
                         </div>
                       </div>
@@ -345,29 +407,40 @@ export default function OsintPage() {
                       <div>
                         <button
                           onClick={(event) => {
+                            const nodeId = `rw${getId()}`;
                             let rect = node.getBoundingClientRect();
-                            let newNode = addNode(
-                              `rw${getId()}`,
-                              'website',
-                              {
-                                x: rect.x + rect.left + node.scrollWidth,
-                                // y: rIdx % 2 === 0 ? (totalLines * 22)  : ((totalLines - rIdx) * 22) ,
+                            const url = new URL(nodeData[2].innerText);
+                            console.log(url);
+                            console.log(
+                              'react flow project',
+                              reactFlowInstance.project({
+                                x: rect.x,
                                 y: rect.y,
-                              },
+                              })
+                            );
+                            addNode(
+                              nodeId,
+                              'domain',
+                              reactFlowInstance.project({
+                                x: rect.x + 160,
+                                y: rect.y + 40,
+                              }),
                               {
                                 label: {
-                                  url: node.querySelectorAll('[data-type]')[0].innerText,
+                                  href: url.href,
+                                  origin: url.origin,
+                                  domain: url.host,
                                 },
                               }
                             );
-                            addEdge(node.getAttribute('data-id'), newNode.id);
+                            addEdge(node.getAttribute('data-id'), nodeId);
                           }}
                           className={classNames(
                             'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
                           )}
                         >
                           <IpIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-                          To Website
+                          To Domain
                         </button>
                       </div>
                     </div>
