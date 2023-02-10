@@ -1,3 +1,4 @@
+import time
 import socket
 from typing import Any, List
 from datetime import datetime
@@ -14,10 +15,12 @@ from selenium.webdriver import Remote
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from seoanalyzer import analyze
+from celery.result import AsyncResult
 from app.crud.base import get_or_create
 from app import crud, schemas, models
 from app.api import deps
+from app.core.celery_app import app
+from app.worker import brute_force_subdomains
 from app.core.driver import get_driver
 from selenium.webdriver.support.wait import WebDriverWait
 router = APIRouter(prefix='/extract')
@@ -131,4 +134,30 @@ def get_dns_info(
     print(data)
     return data
     
-
+@router.get('/domain/subdomains')
+def get_subdomains(
+    current_user: models.User = Depends(deps.get_current_active_user),
+    db: Session = Depends(deps.get_db),
+    domain: str = ""
+):
+    task = brute_force_subdomains.delay(domain=domain)
+    
+    return {
+        "status": "start",
+        "domain": domain,
+        "id": task.task_id
+    }
+    
+    
+@router.get('/domain/subdomains/status')
+def get_subdomains_status(
+    current_user: models.User = Depends(deps.get_current_active_user),
+    db: Session = Depends(deps.get_db),
+    id: str = ""
+):
+    task = brute_force_subdomains.AsyncResult(id)
+    return {
+        "task": task.info,
+        "status": task.state,
+        "id": id
+    }

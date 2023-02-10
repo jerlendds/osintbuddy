@@ -34,14 +34,14 @@ services:
       - 5455:5432
   redis:
     image: redis:latest
+    ports:
+      - "6379:6379"
     deploy:
       resources:
         limits:
           cpus: '${DOCKER_REDIS_CPUS:-0}'
           memory: '${DOCKER_REDIS_MEMORY:-0}'
     command: 'redis-server'
-    volumes:
-      - 'redis:/data'
   worker:
     command: '/worker-start.sh'
     image: openinfolabs/osintbuddy-worker:latest
@@ -56,11 +56,11 @@ services:
     env_file:
       - '.env'
   flower:
-    image: mher/flower:0.9.7
+    image: mher/flower:1.2
     ports:
-      - '${DOCKER_FLOWER_PORT_FORWARD:-127.0.0.1:6565}:5555'
-    env_file:
-      - '.env'
+      - '${DOCKER_FLOWER_PORT_FORWARD:-127.0.0.1:5555}:5555'
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379//
   graphdb:
     image: neo4j:5.3.0-community
     environment:
@@ -75,4 +75,3 @@ services:
   
 volumes:
   osintbuddy-db-data:
-  redis:

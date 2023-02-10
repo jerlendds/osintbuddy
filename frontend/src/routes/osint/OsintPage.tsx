@@ -160,7 +160,7 @@ const DnDFlow = ({
           flowData={data}
         />
       ),
-      cse: () => <CseNode flowData={'TODO: Add cse node'} />,
+      cse: (data) => <CseNode flowData={data} />,
       whois: (data) => <WhoisNode flowData={data} />,
       ip: (data) => <IpNode flowData={data} />,
       result: (data) => <ResultNode addNode={addNode} addEdge={addEdge} flowData={data} />,
@@ -427,7 +427,7 @@ export default function OsintPage() {
                                         'dns',
                                         reactFlowInstance.project({
                                           x: rect.x + 160,
-                                          y: rect.y + 140 + (idx * 120),
+                                          y: rect.y + 140 + (idx * 180),
                                         }),
                                         {
                                           label: [
