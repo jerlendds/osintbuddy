@@ -39,14 +39,14 @@ def brute_force_subdomains(self, domain: str = None) -> dict:
                     result = socket.getaddrinfo(domain, 80)
                     if result:
                         matching_domains.append(domain)
-                    self.update_state(
-                        state='PENDING',
-                        meta={
-                            'checked': checked,
-                            'total': len(subdomains),
-                            'subdomains': matching_domains
-                        }
-                    )
+                        self.update_state(
+                            state='PENDING',
+                            meta={
+                                'checked': checked,
+                                'total': len(subdomains),
+                                'subdomains': matching_domains
+                            }
+                        )
                 except socket.gaierror:
                     pass
             return {"status": "ok", "data": matching_domains}
