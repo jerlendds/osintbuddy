@@ -1,9 +1,7 @@
 from celery import Celery
+from app.core.config import settings
 
-
-app = Celery("worker")  # guest@redis// http://guest@redis:15672/api//
-app.conf.result_backend = "redis://redis:6379/0"
-
+app = Celery("worker", broker=settings.CELERY_BROKER_URL, backend='redis://redis:6379/0')  # guest@redis// http://guest@redis:15672/api//
 
 app.conf.task_routes = {
     "app.worker.run_proxy_fingerprint": "main-queue",

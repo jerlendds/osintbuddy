@@ -109,6 +109,9 @@ class Settings(BaseSettings):
     NEO4J_USER: str
     NEO4J_PASSWORD: str
 
+    CELERY_BROKER_URL: str
+    CELERY_BACKEND: str
+
     class Config:
         case_sensitive = True
 

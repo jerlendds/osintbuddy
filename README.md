@@ -84,9 +84,13 @@ To get a local copy up and running follow these simple steps.
     - Documentation: http://localhost/docs -- http://localhost/redoc
     - PGAdmin: http://localhost:5050
     - Flower: http://localhost:5555
-    - Traefik UI: http://localhost:8090
+
+<!-- 
 
 
+https://github.com/danielmiessler/SecLists/tree/master/Discovery/DNS
+
+ -->
 
 <!-- ROADMAP -->
 

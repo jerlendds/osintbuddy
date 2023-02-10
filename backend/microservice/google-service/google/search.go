@@ -219,6 +219,7 @@ func CrawlGoogle(searchQuery string, pages string) {
 		log.Println("Something went wrong:", err)
 	})
 	if nextPage == "" {
+
 		q.AddURL(initialUrl)
 	}
 
