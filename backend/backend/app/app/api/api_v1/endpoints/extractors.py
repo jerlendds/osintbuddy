@@ -140,14 +140,16 @@ def get_subdomains(
     db: Session = Depends(deps.get_db),
     domain: str = ""
 ):
-    task = brute_force_subdomains.delay(domain=domain)
-    
+    if domain:
+        task = brute_force_subdomains.delay(domain=domain)
+        return {
+            "status": "PENDING",
+            "domain": domain,
+            "id": task.task_id
+        }
     return {
-        "status": "start",
-        "domain": domain,
-        "id": task.task_id
+        "status": "domainRequired"
     }
-    
     
 @router.get('/domain/subdomains/status')
 def get_subdomains_status(
@@ -156,6 +158,7 @@ def get_subdomains_status(
     id: str = ""
 ):
     task = brute_force_subdomains.AsyncResult(id)
+    print(task.info, task.state)
     return {
         "task": task.info,
         "status": task.state,
