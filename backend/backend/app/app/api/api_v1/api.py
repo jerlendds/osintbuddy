@@ -3,7 +3,6 @@ from fastapi import APIRouter
 from app.api.api_v1.endpoints import (
     login,
     users,
-    stripe,
     ghdb,
     cases,
     cses,
@@ -17,4 +16,4 @@ api_router.include_router(cses.router, tags=["cses"])
 api_router.include_router(cases.router, tags=["cases"])
 api_router.include_router(login.router, tags=["login"])
 api_router.include_router(users.router, tags=["users"])
-api_router.include_router(stripe.router, tags=["stripe"])
+

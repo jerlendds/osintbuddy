@@ -100,12 +100,13 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 - [x] Domain nodes
   - [x] To IP transformation
   - [x] To WHOIS transformation
+  - [x] To DNS transformation
 - [x] Google search node
 - [x] Google result node
   - [x] To domain transformation
 - [x] Google dorks
 
-[latest demo here](https://user-images.githubusercontent.com/29207058/217986267-a65b8fe2-2c6f-4bbe-a44e-03faf2d17330.webm)
+[latest demo here](https://user-images.githubusercontent.com/29207058/218106686-29c61e15-f494-4670-91dc-832ad08cd3f7.webm)
 
   
 

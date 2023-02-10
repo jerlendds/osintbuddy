@@ -9,7 +9,15 @@ import 'reactflow/dist/style.css';
 import CommandPallet from '@/routes/osint/_components/CommandPallet';
 import classNames from 'classnames';
 import NodeOptionsSlideOver from './_components/NodeOptionsSlideOver';
-import { GoogleNode, CseNode, DomainNode as DomainNode, ResultNode, IpNode, SeoNode } from './_components/Nodes';
+import {
+  GoogleNode,
+  CseNode,
+  DomainNode as DomainNode,
+  ResultNode,
+  IpNode,
+  WhoisNode,
+  DnsNode,
+} from './_components/Nodes';
 import ContextMenu from './_components/ContextMenu';
 import { IpIcon } from '@/components/Icons';
 import api from '@/services/api.service';
@@ -141,6 +149,7 @@ const DnDFlow = ({
 
   const nodeTypes = useMemo(() => {
     return {
+      dns: (data) => <DnsNode flowData={data} />,
       domain: (data) => <DomainNode flowData={data} />,
       google: (data) => (
         <GoogleNode
@@ -152,7 +161,7 @@ const DnDFlow = ({
         />
       ),
       cse: () => <CseNode flowData={'TODO: Add cse node'} />,
-      seo: (data) => <SeoNode flowData={data} />,
+      whois: (data) => <WhoisNode flowData={data} />,
       ip: (data) => <IpNode flowData={data} />,
       result: (data) => <ResultNode addNode={addNode} addEdge={addEdge} flowData={data} />,
     };
@@ -265,7 +274,7 @@ export default function OsintPage() {
       <NodeOptionsSlideOver showOptions={showNodeOptions} setShowOptions={setShowNodeOptions} />
       <ContextMenu
         menu={({ node }) => {
-          const nodeData = node.querySelectorAll('[data-type]');
+          const nodeData = node?.querySelectorAll('[data-type]');
           let nodeType = null;
           if (node) {
             nodeType = node.classList[1].split('-');
@@ -372,7 +381,7 @@ export default function OsintPage() {
                                   let bounds = node.getBoundingClientRect();
                                   addNode(
                                     newId,
-                                    'seo',
+                                    'whois',
                                     reactFlowInstance.project({
                                       x: bounds.x + 360,
                                       y: bounds.y + 50,
@@ -396,12 +405,60 @@ export default function OsintPage() {
                               className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
                               aria-hidden='true'
                             />
-                            To whois
+                            To WHOIS
+                          </button>
+                        </div>
+                        <div>
+                          <button
+                            onClick={(event) => {
+                              let rect = node.getBoundingClientRect();
+                              const domain = nodeData[0]?.value;
+                              console.log('domain', domain);
+                              if (domain) {
+                                api.get(`/extract/domain/dns?domain=${domain}`).then((resp) => {
+                                  console.log(resp.data);
+                                  let idx = 0;
+                                  for (const [key, value] of Object.entries(resp.data)) {
+                                    if (value) {
+                                      idx++;
+                                      const nodeId = `dns${getId()}${idx}`;
+                                      addNode(
+                                        nodeId,
+                                        'dns',
+                                        reactFlowInstance.project({
+                                          x: rect.x + 160,
+                                          y: rect.y + 140 + (idx * 120),
+                                        }),
+                                        {
+                                          label: [
+                                            {
+                                              value,
+                                              type: key,
+                                            },
+                                          ],
+                                        }
+                                      );
+                                      addEdge(node.getAttribute('data-id'), nodeId);
+                                    }
+                                  }
+                                });
+                              }
+                            }}
+                            className={classNames(
+                              'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+                            )}
+                          >
+                            <IpIcon
+                              className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
+                              aria-hidden='true'
+                            />
+                            To DNS
                           </button>
                         </div>
                       </div>
                     </>
                   )}
+                  {nodeType === 'ip' && <></>}
                   {nodeType === 'result' && (
                     <div className='py-1'>
                       <div>

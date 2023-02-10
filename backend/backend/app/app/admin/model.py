@@ -17,8 +17,6 @@ def admin_auth_handler(
 ) -> models.User:
         try:
             token = token.replace("Bearer ", "")
-            print("auth token in handler: ", token)
-            
             payload = jwt.decode(
                 token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
             )
@@ -39,21 +37,18 @@ def admin_auth_handler(
 class AuthModelAdmin(ModelView):
     def is_accessible(self, request) -> bool:
         return True
-        print(request, request.headers)
         if not settings.IS_PROD:
             print(" if not settings.IS_PROD:")
             return True
         current_user = admin_auth_handler(
             token=request.headers.get("authorization", "UNAUTHORIZED")
         )
-        print(current_user)
         if not crud.user.is_superuser(current_user):
             return False
         return True
 
     def is_visible(self, request) -> bool:
         return True
-        print(request, request.headers)
         if not settings.IS_PROD:
             print("is_visible() if not settings.IS_PROD:")
 
@@ -61,7 +56,6 @@ class AuthModelAdmin(ModelView):
         current_user = admin_auth_handler(
             token=request.headers.get("Authorization", "UNAUTHORIZED")
         )
-
         if not crud.user.is_superuser(current_user):
             return False
         return True
