@@ -3,12 +3,14 @@ from typing import Any, List
 from datetime import datetime
 import urllib.parse
 from urllib.parse import urlparse, urljoin
+import dns.resolver
 import requests
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from selenium.webdriver import Remote
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -16,7 +18,7 @@ from seoanalyzer import analyze
 from app.crud.base import get_or_create
 from app import crud, schemas, models
 from app.api import deps
-from app.core.driver import driver
+from app.core.driver import get_driver
 from selenium.webdriver.support.wait import WebDriverWait
 router = APIRouter(prefix='/extract')
 
@@ -81,9 +83,10 @@ def get_ipv4s_by_host(
 
 
 @router.get('/domain/whois')
-def funct(
+def get_raw_whois(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
+    driver: Remote = Depends(get_driver),
     domain: str = ""
 ):
     try:
@@ -92,13 +95,40 @@ def funct(
             (By.ID, 'registrarData')
         )
         WebDriverWait(driver, 10).until(element_present)
-        # with open('file.html', 'w+') as f:
-        #     f.write(str(resp.content))
-        #     f.close()
-        # soup = BeautifulSoup(resp.content)
-        # print(soup.select('.whois-data'))
         data = driver.find_element(by=By.ID, value='registrarData').text
         return data
     except Exception as e:
         print(e)
         return []
+
+
+@router.get('/domain/dns')
+def get_dns_info(
+    current_user: models.User = Depends(deps.get_current_active_user),
+    db: Session = Depends(deps.get_db),
+    domain: str = ""
+):
+    data = {
+        "NS": None,
+        "A": None,
+        "AAAA": None,
+        "CNAME": None,
+        "MX": None,
+        "SOA": None,
+        "TXT": None,
+        "PTR": None,
+        "SRV": None,
+        "CERT": None,
+        "DCHID": None,
+        "DNAME": None,
+    }
+    for key in data.keys():
+        try:
+            resolved = dns.resolver.resolve(domain, key)
+            data[key] = [str(answer) for answer in resolved]
+        except Exception as e:
+            print(e)
+    print(data)
+    return data
+    
+

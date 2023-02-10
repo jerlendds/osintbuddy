@@ -15,5 +15,4 @@ def test_celery_worker_test(
         headers=superuser_token_headers,
     )
     response = r.json()
-    print(response)
     assert response["status"] == "ok"

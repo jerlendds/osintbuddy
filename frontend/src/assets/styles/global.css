@@ -13,8 +13,8 @@ button {
   cursor: default;
 }
 * {
-  scrollbar-width: thin;
-  scrollbar-color: #3c3c40 #00000063;
+  scrollbar-width: auto;
+  scrollbar-color: #3c3c40 #3c3c40;
 }
 
 /* https://gradienta.io/editor */
@@ -60,11 +60,11 @@ figcaption {
 *::-webkit-scrollbar-thumb {
   background-color: #00000063;
   border-radius: 0px;
-  border-right: 4px solid #3c3c40;
+  border-right: 8px solid #3c3c40;
 }
 * {
-  scrollbar-width: thin;
-  scrollbar-color: #3c3c40 #00000063;
+  scrollbar-width: auto;
+  scrollbar-color: #00000063 #00000063;
 }
 /* end Custom Scrollbar Style */
 
