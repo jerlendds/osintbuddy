@@ -97,11 +97,16 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 
 
 ## Progress Notes
-
+- [x] Domain nodes
+  - [x] To IP transformation
+  - [x] To WHOIS transformation
 - [x] Google search node
+- [x] Google result node
+  - [x] To domain transformation
 - [x] Google dorks
 
-![osintbuddy-demo](https://user-images.githubusercontent.com/29207058/217613277-495ee424-9255-4e0a-a875-f3df0ab81614.gif)
+[latest demo here](https://user-images.githubusercontent.com/29207058/217986267-a65b8fe2-2c6f-4bbe-a44e-03faf2d17330.webm)
+
   
 
 <!-- CONTRIBUTING -->
