@@ -110,7 +110,7 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
   - [x] To domain transformation
 - [x] Google dorks
 
-[latest demo here](https://user-images.githubusercontent.com/29207058/218106686-29c61e15-f494-4670-91dc-832ad08cd3f7.webm)
+[latest demo here](https://user-images.githubusercontent.com/29207058/218184452-27809ec8-f68b-43d1-8e65-d83b56b153d8.webm)
 
   
 

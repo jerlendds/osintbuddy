@@ -1,7 +1,14 @@
 // @ts-nocheck
 import { useCallback, useState, useRef, useMemo } from 'react';
 import ReactFlow, { Controls, useNodesState, ReactFlowProvider, useEdgesState } from 'reactflow';
-import { DocumentMagnifyingGlassIcon, HeartIcon, PaperClipIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {
+  CogIcon,
+  DocumentMagnifyingGlassIcon,
+  HeartIcon,
+  PaperClipIcon,
+  TrashIcon,
+  WindowIcon,
+} from '@heroicons/react/24/outline';
 import { HomeIcon } from '@heroicons/react/20/solid';
 import { HotKeys } from 'react-hotkeys';
 import { Link, useLocation, useParams } from 'react-router-dom';
@@ -17,6 +24,7 @@ import {
   IpNode,
   WhoisNode,
   DnsNode,
+  SubdomainNode,
 } from './_components/Nodes';
 import ContextMenu from './_components/ContextMenu';
 import { IpIcon } from '@/components/Icons';
@@ -151,6 +159,7 @@ const DnDFlow = ({
     return {
       dns: (data) => <DnsNode flowData={data} />,
       domain: (data) => <DomainNode flowData={data} />,
+      subdomain: (data) => <SubdomainNode flowData={data} />,
       google: (data) => (
         <GoogleNode
           project={reactFlowInstance}
@@ -427,7 +436,7 @@ export default function OsintPage() {
                                         'dns',
                                         reactFlowInstance.project({
                                           x: rect.x + 160,
-                                          y: rect.y + 140 + (idx * 180),
+                                          y: rect.y + 140 + idx * 180,
                                         }),
                                         {
                                           label: [
@@ -448,11 +457,46 @@ export default function OsintPage() {
                               'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
                             )}
                           >
-                            <IpIcon
+                            <CogIcon
                               className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
                               aria-hidden='true'
                             />
                             To DNS
+                          </button>
+                        </div>
+                        <div>
+                          <button
+                            onClick={(event) => {
+                              let rect = node.getBoundingClientRect();
+                              const domain = nodeData[0]?.value;
+                              if (domain && domain !== "") {
+                                api.get(`/extract/domain/subdomains?domain=${domain}`).then((resp) => {
+                                  console.log(resp.data);
+                                  const nodeId = `sd${getId()}`;
+                                  addNode(
+                                    nodeId,
+                                    'subdomain',
+                                    reactFlowInstance.project({
+                                      x: rect.x + 160,
+                                      y: rect.y + 140,
+                                    }),
+                                    {
+                                      ...resp.data,
+                                    }
+                                  );
+                                  addEdge(node.getAttribute('data-id'), nodeId);
+                                });
+                              }
+                            }}
+                            className={classNames(
+                              'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+                            )}
+                          >
+                            <WindowIcon
+                              className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
+                              aria-hidden='true'
+                            />
+                            To subdomains
                           </button>
                         </div>
                       </div>
