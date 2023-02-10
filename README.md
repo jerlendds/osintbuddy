@@ -105,6 +105,7 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
   - [x] To IP transformation
   - [x] To WHOIS transformation
   - [x] To DNS transformation
+  - [x] To subdomains transformation
 - [x] Google search node
 - [x] Google result node
   - [x] To domain transformation
