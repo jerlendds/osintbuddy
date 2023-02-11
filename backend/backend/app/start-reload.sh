@@ -35,4 +35,4 @@ fi
 # --reload-dir /service/
 
 
-exec uvicorn --reload --reload-dir app --header server:app --host $HOST --port $PORT --log-level $LOG_LEVEL "$APP_MODULE"
+exec uvicorn --workers 4 --reload --reload-dir app --header server:app --host $HOST --port $PORT --log-level $LOG_LEVEL "$APP_MODULE"

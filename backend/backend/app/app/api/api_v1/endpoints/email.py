@@ -33,16 +33,14 @@ router = APIRouter(prefix='/extract/email')
 def have_i_been_pwned(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
-    driver: Remote = Depends(deps.get_driver),
     email: str = ""
 ):
     try:
-        driver.get(f'https://haveibeenpwned.com/')
-        inputElement = driver.find_element(by=By.ID, value="Account")
-        inputElement.send_keys(email)
-        driver.find_element(by=By.ID, value='searchPwnage').click()
-        driver.get_screenshot_as_file('foo.png')
-        return []
+        # @todo
+        # https://haveibeenpwned.com/API/Key
+        # https://haveibeenpwned.com/API/v3
+        resp = requests.get(f"https://haveibeenpwned.com/api/v3/breachedaccount/{email}")
+        return resp.json()
     except Exception as e:
         print(e)
         return []
