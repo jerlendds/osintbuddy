@@ -28,6 +28,7 @@ import { SubdomainNode } from './_nodes/SubdomainsNode';
 import { WhoisNode } from './_nodes/WhoisNode';
 import ContextMenu from './_components/ContextMenu';
 import { GeoNode } from './_nodes/GeoNode';
+import { TracerouteNode } from './_nodes/TracerouteNode';
 
 const fitViewOptions: FitViewOptions = {
   padding: 0,
@@ -104,6 +105,7 @@ const DnDFlow = ({
       ip: (data) => <IpNode flowData={data} />,
       result: (data) => <ResultNode addNode={addNode} addEdge={addEdge} flowData={data} />,
       geo: (data) => <GeoNode flowData={data} />,
+      traceroute: (data) => <TracerouteNode flowData={data} />,
     };
   }, []);
 
@@ -152,6 +154,10 @@ export interface AddEdge {
   target: string;
   sourceHandle?: string | undefined;
   targetHandle?: string | undefined;
+}
+
+export function capitalize(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
 export default function OsintPage() {
@@ -250,7 +256,7 @@ export default function OsintPage() {
             parentId = node.getAttribute('data-id');
             nodeType = node.classList[1].split('-');
             nodeType = nodeType[nodeType.length - 1];
-            titleNodeType = nodeType && nodeType?.charAt(0).toUpperCase() + nodeType?.slice(1);
+            titleNodeType = nodeType && capitalize(nodeType);
           }
           return (
             <>

@@ -140,7 +140,7 @@ export default function AppLayout() {
               )}
             >
               <img className='h-7 w-auto' src={OSINTBuddyLogo} alt='Your Company' />
-              <p className='text-light-200 text-2xl -ml-6 my-auto font-display'>SINTBuddy</p>
+              <p className='text-light-200 text-2xl -ml-6 my-auto font-semibold font-display'>SINTBuddy</p>
               <HamburgerMenu isOpen={showSidebar} onClick={toggleSidebar} />
             </div>
 

@@ -237,7 +237,7 @@ export function GeoNode({ flowData }: any) {
   );
 }
 
-export function EmailNodeContext({
+export function GeoNodeContext({
   node,
   reactFlowInstance,
   getId,
@@ -248,64 +248,6 @@ export function EmailNodeContext({
   parentId,
 }: NodeContextProps) {
   return (
-    <div className='py-1'>
-      <div>
-        <button
-          onClick={(event) => {
-            const nodeId = `rw${getId()}`;
-            api.get(`/extract/email/breaches?email=${nodeData[0].value}`).then((resp) => {
-              console.log(resp, resp.data);
-            });
-          }}
-          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
-        >
-          <LockOpenIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-          To Breaches
-        </button>
-      </div>
-      <div>
-        <button
-          onClick={(event) => {
-            const nodeId = `rw${getId()}`;
-            api.get(`/ghdb/dorks/crawl?query=${nodeData[0].value}&pages=${3}`).then((resp) => {
-              console.log(resp);
-              let rect = node.getBoundingClientRect();
-              let idx = 0;
-              for (const [resultType, results] of Object.entries(resp.data)) {
-                idx += 1;
-                if (results) {
-                  let newNode: any = null;
-                  // @ts-ignore
-
-                  results.forEach((result, rIdx) => {
-                    const nodeId = `r${getId()}`;
-                    newNode = addNode(
-                      nodeId,
-                      'result',
-                      {
-                        x: rIdx % 2 === 0 ? rect.x + 420 : rect.x + 1130,
-                        // y: rIdx % 2 === 0 ? (totalLines * 22)  : ((totalLines - rIdx) * 22) ,
-                        y:
-                          rIdx % 2 === 0
-                            ? rIdx * 60 - rect.y + Math.ceil(result.description.length / 60) * 50
-                            : (rIdx - 1) * 60 - rect.y + Math.ceil(result.description.length / 60) * 50,
-                      },
-                      {
-                        label: result,
-                      }
-                    );
-                    addEdge(parentId, nodeId);
-                  });
-                }
-              }
-            });
-          }}
-          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
-        >
-          <GoogleIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-          To Google
-        </button>
-      </div>
-    </div>
+    <></>
   );
 }

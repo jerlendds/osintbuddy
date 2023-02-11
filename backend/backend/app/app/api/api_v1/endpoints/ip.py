@@ -49,6 +49,37 @@ def resolve_domain(
             }
     except socket.gaierror:
         return []
+    
+    
+@router.get('/traceroute')
+def traceroute(
+    current_user: models.User = Depends(deps.get_current_active_user),
+    db: Session = Depends(deps.get_db),
+    ip: str = None
+):
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0',
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Content-Type': 'application/json',
+            'Origin': 'https://geekflare.com',
+            'Connection': 'keep-alive',
+            'Referer': 'https://geekflare.com/api/mtr',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+        }
+
+        json_data = {
+            'url': ip,
+        }
+
+        response = requests.post('https://geekflare.com/api/geekflare-api/mtr', headers=headers, json=json_data)
+        return response.json()
+    except Exception as e:
+        print(e)
+        return []
 
 
 @router.get('/locate')
