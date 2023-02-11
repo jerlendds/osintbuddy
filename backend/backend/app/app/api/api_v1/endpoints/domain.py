@@ -18,36 +18,18 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from celery.result import AsyncResult
+
 from app.crud.base import get_or_create
 from app import crud, schemas, models
 from app.api import deps
 from app.core.celery_app import app
 from app.worker import brute_force_subdomains
-from app.core.driver import get_driver
-from selenium.webdriver.support.wait import WebDriverWait
-router = APIRouter(prefix='/extract')
 
 
-@router.get('/email/breaches')
-def have_i_been_pwned(
-    current_user: models.User = Depends(deps.get_current_active_user),
-    db: Session = Depends(deps.get_db),
-    driver: Remote = Depends(get_driver),
-    email: str = ""
-):
-    try:
-        driver.get(f'https://haveibeenpwned.com/')
-        inputElement = driver.find_element(by=By.ID, value="Account")
-        inputElement.send_keys(email)
-        driver.find_element(by=By.ID, value='searchPwnage').click()
-        driver.get_screenshot_as_file('foo.png')
-        return []
-    except Exception as e:
-        print(e)
-        return []
-    
+router = APIRouter(prefix='/extract/domain')
 
-@router.get('/domain/ip')
+
+@router.get('/ip')
 def get_ipv4s_by_host(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
@@ -71,11 +53,11 @@ def get_ipv4s_by_host(
     }
 
 
-@router.get('/domain/whois')
+@router.get('/whois')
 def get_raw_whois(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
-    driver: Remote = Depends(get_driver),
+    driver: Remote = Depends(deps.get_driver),
     domain: str = ""
 ):
     try:
@@ -83,7 +65,7 @@ def get_raw_whois(
         element_present = EC.presence_of_element_located(
             (By.ID, 'registrarData')
         )
-        WebDriverWait(driver, 10).until(element_present)
+        WebDriverWait(driver, 15).until(element_present)
         data = driver.find_element(by=By.ID, value='registrarData').text
         return data
     except Exception as e:
@@ -91,7 +73,7 @@ def get_raw_whois(
         return []
 
 
-@router.get('/domain/dns')
+@router.get('/dns')
 def get_dns_info(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
@@ -119,7 +101,7 @@ def get_dns_info(
             print(e)
     return data
     
-@router.get('/domain/subdomains')
+@router.get('/subdomains')
 def get_subdomains(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
@@ -136,7 +118,7 @@ def get_subdomains(
         "status": "domainRequired"
     }
     
-@router.get('/domain/subdomains/status')
+@router.get('/subdomains/status')
 def get_subdomains_status(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
@@ -151,7 +133,7 @@ def get_subdomains_status(
     }
     
     
-@router.get('/domain/emails')
+@router.get('/emails')
 def get_subdomains_status(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
@@ -171,9 +153,14 @@ def get_subdomains_status(
         match = re.search(r'[\w.+-]+@[\w-]+\.[\w.-]+', compare)
         if match is not None:
             email = match.group(0)
+            print(domain[len(domain)-1])
+            if email[len(email)-1] == ".":
+                email = email[0:len(email) - 2]
+                
             if email.find(domain) == -1:
                 pass
             else:
+                print(email)
                 emails.append(email)
                 
     return list(set(emails))
