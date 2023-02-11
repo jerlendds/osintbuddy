@@ -1,6 +1,14 @@
 // @ts-nocheck
 import { useCallback, useState, useRef, useMemo, useEffect, createRef } from 'react';
-import ReactFlow, { Controls, useNodesState, ReactFlowProvider, useEdgesState, Edge, HandleProps, XYPosition } from 'reactflow';
+import ReactFlow, {
+  Controls,
+  useNodesState,
+  ReactFlowProvider,
+  useEdgesState,
+  Edge,
+  HandleProps,
+  XYPosition,
+} from 'reactflow';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { HotKeys } from 'react-hotkeys';
 import { useLocation, useParams } from 'react-router-dom';
@@ -19,6 +27,7 @@ import { ResultNode, ResultNodeContext } from './_nodes/ResultNode';
 import { SubdomainNode } from './_nodes/SubdomainsNode';
 import { WhoisNode } from './_nodes/WhoisNode';
 import ContextMenu from './_components/ContextMenu';
+import { GeoNode } from './_nodes/GeoNode';
 
 const fitViewOptions: FitViewOptions = {
   padding: 0,
@@ -42,7 +51,6 @@ const DnDFlow = ({
   addNode,
   addEdge,
 }) => {
-
   function getId(): NodeId {
     nodeId++;
     return `n_${nodeId}`;
@@ -95,6 +103,7 @@ const DnDFlow = ({
       whois: (data) => <WhoisNode flowData={data} />,
       ip: (data) => <IpNode flowData={data} />,
       result: (data) => <ResultNode addNode={addNode} addEdge={addEdge} flowData={data} />,
+      geo: (data) => <GeoNode flowData={data} />,
     };
   }, []);
 
@@ -144,7 +153,6 @@ export interface AddEdge {
   sourceHandle?: string | undefined;
   targetHandle?: string | undefined;
 }
-
 
 export default function OsintPage() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);

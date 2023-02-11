@@ -111,6 +111,12 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 - [x] Google result node
   - [x] To domain transformation
 - [x] Google dorks
+- [x] DNS Node
+- [x] Email Node
+- [x] Ip Node
+  - [x] To Geolocation transformation
+  - [x] To domain transformation
+- [ ] CSE Node
 
 
 [latest demo here](https://user-images.githubusercontent.com/29207058/218184452-27809ec8-f68b-43d1-8e65-d83b56b153d8.webm)
