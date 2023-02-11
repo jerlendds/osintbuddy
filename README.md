@@ -106,14 +106,18 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
   - [x] To WHOIS transformation
   - [x] To DNS transformation
   - [x] To subdomains transformation
+  - [x] To emails transformation
 - [x] Google search node
 - [x] Google result node
   - [x] To domain transformation
 - [x] Google dorks
 
-[latest demo here](https://user-images.githubusercontent.com/29207058/218184452-27809ec8-f68b-43d1-8e65-d83b56b153d8.webm)
 
+[latest demo here](https://user-images.githubusercontent.com/29207058/218184452-27809ec8-f68b-43d1-8e65-d83b56b153d8.webm)
   
+
+[osintbuddy-to-emails](https://user-images.githubusercontent.com/29207058/218228524-609a9ef6-e4d6-4d30-ba20-9c9617623b9e.webm)
+
 
 <!-- CONTRIBUTING -->
 ## Contributing
