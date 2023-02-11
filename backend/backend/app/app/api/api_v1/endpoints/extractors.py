@@ -1,4 +1,6 @@
+import re
 import time
+import json
 import socket
 from typing import Any, List
 from datetime import datetime
@@ -26,40 +28,24 @@ from selenium.webdriver.support.wait import WebDriverWait
 router = APIRouter(prefix='/extract')
 
 
-@router.get('/breaches')
+@router.get('/email/breaches')
 def have_i_been_pwned(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
+    driver: Remote = Depends(get_driver),
     email: str = ""
 ):
-    cookies = {
-        '__cf_bm': 'q8kXLSEmob3vdPqNcG8K3h0NEJzI9_iSHTlAUam4rS8-1675955598-0-AZZ5wiEG/wUx99lNBq5D92N6BL/I2Ys3EyXBZdCb11HDYKweAu5CTBvrIMUwP4eHOmwzVnnaXB4t5pU8cj6ZzVT669dM5NMamzaD3oPQ9ZVLMNq3lnjgt63XlRRBHlCG82gfaN6UgRdIh+7W5StBuLLI98mr753NUjDvUmZrBVlBeGTuJnAK9fkM2/UUSNf/9w==',
-        'Searches': '1',
-        'BreachedSites': '0',
-        'Pastes': '0',
-    }
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0',
-        'Accept': '*/*',
-        'Accept-Language': 'en-US,en;q=0.5',
-        # 'Accept-Encoding': 'gzip, deflate, br',
-        'Referer': 'https://haveibeenpwned.com/',
-        'X-Requested-With': 'XMLHttpRequest',
-        'Connection': 'keep-alive',
-        # 'Cookie': '__cf_bm=q8kXLSEmob3vdPqNcG8K3h0NEJzI9_iSHTlAUam4rS8-1675955598-0-AZZ5wiEG/wUx99lNBq5D92N6BL/I2Ys3EyXBZdCb11HDYKweAu5CTBvrIMUwP4eHOmwzVnnaXB4t5pU8cj6ZzVT669dM5NMamzaD3oPQ9ZVLMNq3lnjgt63XlRRBHlCG82gfaN6UgRdIh+7W5StBuLLI98mr753NUjDvUmZrBVlBeGTuJnAK9fkM2/UUSNf/9w==; Searches=1; BreachedSites=0; Pastes=0',
-        'Sec-Fetch-Dest': 'empty',
-        'Sec-Fetch-Mode': 'cors',
-        'Sec-Fetch-Site': 'same-origin',
-        # Requests doesn't support trailers
-        # 'TE': 'trailers',
-    }
-    response = requests.get(
-        f'https://haveibeenpwned.com/unifiedsearch/{urllib.parse.unquote(email)}',
-        cookies=cookies,
-        headers=headers
-    )
-    return response.json()
-
+    try:
+        driver.get(f'https://haveibeenpwned.com/')
+        inputElement = driver.find_element(by=By.ID, value="Account")
+        inputElement.send_keys(email)
+        driver.find_element(by=By.ID, value='searchPwnage').click()
+        driver.get_screenshot_as_file('foo.png')
+        return []
+    except Exception as e:
+        print(e)
+        return []
+    
 
 @router.get('/domain/ip')
 def get_ipv4s_by_host(
@@ -131,7 +117,6 @@ def get_dns_info(
             data[key] = [str(answer) for answer in resolved]
         except Exception as e:
             print(e)
-    print(data)
     return data
     
 @router.get('/domain/subdomains')
@@ -164,3 +149,31 @@ def get_subdomains_status(
         "status": task.state,
         "id": id
     }
+    
+    
+@router.get('/domain/emails')
+def get_subdomains_status(
+    current_user: models.User = Depends(deps.get_current_active_user),
+    db: Session = Depends(deps.get_db),
+    domain: str = ""
+):
+    if not domain:
+        raise HTTPException(status_code=422, detail="domainRequired")
+    if "www." in domain:
+        domain = domain.replace("www.", "")
+    encoded_query = urllib.parse.quote('intext:"@' + domain + '"')
+    google_results = requests.get(f'http://microservice:1323/google?query={encoded_query}&pages={7}')
+    data = google_results.json()
+    results = data.get('search', [])
+    emails = []
+    for result in results:
+        compare = result.get('description', '') + ' ' + result.get('title', '')
+        match = re.search(r'[\w.+-]+@[\w-]+\.[\w.-]+', compare)
+        if match is not None:
+            email = match.group(0)
+            if email.find(domain) == -1:
+                pass
+            else:
+                emails.append(email)
+                
+    return list(set(emails))
