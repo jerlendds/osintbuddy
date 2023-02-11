@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { Position, Handle } from 'reactflow';
 import { GripIcon, IpIcon } from '@/components/Icons';
 import { NodeContextProps } from '.';
+import api from '@/services/api.service';
 
 export function IpNode({ flowData, deleteNode }: any) {
   const [ips, setIps] = useState(flowData.data.ip);
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    console.log('ips', ips);
   };
 
   return (
@@ -74,34 +74,20 @@ export default function IpNodeContext({
           onClick={(event) => {
             const nodeId = `rw${getId()}`;
             let rect = node.getBoundingClientRect();
-            const url = new URL(nodeData[2].innerText);
-            console.log(url);
-            console.log(
-              'react flow project',
-              reactFlowInstance.project({
-                x: rect.x,
-                y: rect.y,
-              })
-            );
-            addNode(
-              nodeId,
-              'domain',
-              reactFlowInstance.project({
-                x: rect.x + 160,
-                y: rect.y + 40,
-              }),
-              {
-                label: {
-                  href: url.href,
-                  origin: url.origin,
-                  domain: url.host,
-                },
-              }
-            );
-            addEdge(parentId, nodeId);
+            api.get(`/extract/ip/domain?ip=${nodeData[0].value}`).then((resp) => {
+              addNode(
+                nodeId,
+                'domain',
+                reactFlowInstance.project({
+                  x: rect.x + 160,
+                  y: rect.y + 40,
+                }),
+                resp.data
+              );
+              addEdge(parentId, nodeId);
+            });
           }}
-          className=
-            'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
         >
           <IpIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
           To Domain

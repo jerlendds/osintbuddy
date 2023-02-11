@@ -48,7 +48,6 @@ def resolve_domain(
                 "domain": resolved[0]
             }
     except socket.gaierror:
-        print(e)
         return []
 
 
