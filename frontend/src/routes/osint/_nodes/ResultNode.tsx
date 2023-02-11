@@ -52,8 +52,7 @@ export function ResultNode({ flowData, addNode, addEdge }: { flowData: any; addN
   );
 }
 
-
-export function ResultNodeContext({ 
+export function ResultNodeContext({
   node,
   reactFlowInstance,
   getId,
@@ -87,11 +86,9 @@ export function ResultNodeContext({
                 y: rect.y + 40,
               }),
               {
-                label: {
-                  href: url.href,
-                  origin: url.origin,
-                  domain: url.host,
-                },
+                href: url.href,
+                origin: url.origin,
+                domain: url.host,
               }
             );
             addEdge(parentId, nodeId);

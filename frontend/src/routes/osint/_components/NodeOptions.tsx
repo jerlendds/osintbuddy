@@ -22,6 +22,11 @@ const searchOptions = [
     title: 'Find social accounts and more',
     event: 'email',
   },
+    {
+    name: 'IP',
+    title: 'Geolocate an IP and more',
+    event: 'ip',
+  },
 ];
 
 export default function NodeOptions() {

@@ -33,6 +33,25 @@ def to_camel_case(value: str):
     temp =  value.replace(' ', '_').lower().split('_')
     return temp[0] + ''.join(e.title() for e in temp[1:])
 
+
+@router.get('/domain')
+def resolve_domain(
+    current_user: models.User = Depends(deps.get_current_active_user),
+    db: Session = Depends(deps.get_db),
+    ip: str = None
+):
+    try:
+        resolved = socket.gethostbyaddr(ip)
+        if resolved and resolved[0]:
+            print(resolved)
+            return {
+                "domain": resolved[0]
+            }
+    except socket.gaierror:
+        print(e)
+        return []
+
+
 @router.get('/locate')
 def geolocate_ip(
     current_user: models.User = Depends(deps.get_current_active_user),

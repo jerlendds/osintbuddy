@@ -25,7 +25,7 @@ def get_driver() -> Generator:
         )
         yield driver
     finally:
-        driver.close()
+        driver.quit()
 
 
 def get_db() -> Generator:

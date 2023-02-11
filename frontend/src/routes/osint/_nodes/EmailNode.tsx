@@ -38,7 +38,7 @@ export function EmailNode({ flowData }: any) {
                     data-type='domain'
                     value={emailValue}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
-                    placeholder='www.google.com'
+                    placeholder='example@gmail.com'
                   />
                 </div>
               </div>

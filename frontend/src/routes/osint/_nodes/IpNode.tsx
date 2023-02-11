@@ -4,7 +4,7 @@ import { GripIcon, IpIcon } from '@/components/Icons';
 import { NodeContextProps } from '.';
 
 export function IpNode({ flowData, deleteNode }: any) {
-  const [ips, setIps] = useState(flowData.data.label);
+  const [ips, setIps] = useState(flowData.data.ip);
   const handleSubmit = (event: any) => {
     event.preventDefault();
     console.log('ips', ips);

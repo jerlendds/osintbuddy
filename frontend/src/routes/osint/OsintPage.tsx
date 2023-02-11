@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { useCallback, useState, useRef, useMemo } from 'react';
-import ReactFlow, { Controls, useNodesState, ReactFlowProvider, useEdgesState } from 'reactflow';
+import { useCallback, useState, useRef, useMemo, useEffect, createRef } from 'react';
+import ReactFlow, { Controls, useNodesState, ReactFlowProvider, useEdgesState, Edge, HandleProps, XYPosition } from 'reactflow';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { HotKeys } from 'react-hotkeys';
 import { useLocation, useParams } from 'react-router-dom';
@@ -20,12 +20,13 @@ import { SubdomainNode } from './_nodes/SubdomainsNode';
 import { WhoisNode } from './_nodes/WhoisNode';
 import ContextMenu from './_components/ContextMenu';
 
-const keyMap = {
-  TOGGLE_PALLET: ['shift+p'],
+const fitViewOptions: FitViewOptions = {
+  padding: 0,
 };
 
-const initialEdges = [];
-const initialNodes = [];
+let nodeId = 0;
+
+export type NodeId = `${string | ''}n_${number}`;
 
 const DnDFlow = ({
   reactFlowWrapper,
@@ -40,8 +41,13 @@ const DnDFlow = ({
   deleteNode,
   addNode,
   addEdge,
-  getId,
 }) => {
+
+  function getId(): NodeId {
+    nodeId++;
+    return `n_${nodeId}`;
+  }
+
   const onConnect = useCallback((connection) => setEdges((eds) => addEdge(connection, edges)), [setEdges]);
 
   const onEdgeUpdate = useCallback(
@@ -57,7 +63,6 @@ const DnDFlow = ({
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
-
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
       // check if the dropped element is valid
@@ -65,19 +70,18 @@ const DnDFlow = ({
         return;
       }
       const position = reactFlowInstance.project({
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
+        x: event.clientX,
+        y: event.clientY,
       });
-      console.log('getting id', getId());
       const newNode = {
         id: `${type.charAt(0)}${getId()}`,
         type,
         position,
-        data: { label: `${type} node` },
+        data: {},
       };
       setNodes((nds) => nds.concat(newNode));
     },
-    [reactFlowInstance]
+    [reactFlowInstance, nodeId]
   );
 
   const nodeTypes = useMemo(() => {
@@ -109,6 +113,7 @@ const DnDFlow = ({
             onEdgeUpdate={onEdgeUpdate}
             onDragOver={onDragOver}
             fitView
+            fitViewOptions={fitViewOptions}
             nodeTypes={nodeTypes}
           >
             <Controls />
@@ -119,42 +124,69 @@ const DnDFlow = ({
   );
 };
 
+const initialEdges = [];
+const initialNodes = [];
+
+const keyMap = {
+  TOGGLE_PALETTE: ['shift+p'],
+};
+
+export interface AddNode {
+  id: number;
+  type: string;
+  position: XYPosition;
+  data: any;
+}
+
+export interface AddEdge {
+  source: string;
+  target: string;
+  sourceHandle?: string | undefined;
+  targetHandle?: string | undefined;
+}
+
+
 export default function OsintPage() {
-  const reactFlowWrapper = useRef(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge[]>(initialEdges);
+
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [nodeId, setNodeId] = useState<number>(0);
 
-  const getId = useCallback(() => {
-    console.log(nodeId);
+  function getId(): NodeId {
     setNodeId(nodeId + 1);
-    console.log(nodeId);
-    return `node_${nodeId}`;
-  }, [nodeId]);
+    return `s_${nodeId}`;
+  }
 
-  function addNode(id, type, position, data) {
+  function addNode(id, type, position, data: AddNode): Node<XYPosition> {
+    let addPosition = null;
+    if (reactFlowInstance) {
+      addPosition = reactFlowInstance.project(position);
+    } else {
+      addPosition = position;
+    }
     const newNode = {
       id,
       type,
-      position,
       data,
+      position: addPosition,
     };
     setNodes((nds) => nds.concat(newNode));
-    return reactFlowInstance?.project(position);
+    return addPosition;
   }
 
-  function addEdge(source, target) {
+  function addEdge(source, target, sourceHandle, targetHandle: AddEdge): void {
     const newEdge = {
       source,
       target,
-      sourceHandle: 'r1',
-      targetHandle: 'l1',
+      sourceHandle: sourceHandle || 'r1',
+      targetHandle: targetHandle || 'l1',
     };
     setEdges((eds) => eds.concat(newEdge));
   }
 
-  function deleteNode(nodeId) {
+  function deleteNode(nodeId: NodeId): void {
     setNodes((nds) => nds.filter((node) => node.id !== nodeId));
   }
 
@@ -162,15 +194,13 @@ export default function OsintPage() {
   const activeCase = location.state.activeCase;
 
   const [showNodeOptions, setShowNodeOptions] = useState<boolean>(false);
-  const [showCommandPallet, setShowCommandPallet] = useState<boolean>(false);
+  const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
 
-  const togglePallet = () => setShowCommandPallet(!showCommandPallet);
+  const togglePalette = () => setShowCommandPalette(!showCommandPalette);
   const toggleShowNodeOptions = () => setShowNodeOptions(!showNodeOptions);
-  const hideCommandPallet = () => setShowCommandPallet(false);
 
   const handlers = {
-    TOGGLE_PALLET: togglePallet,
-    CLOSE_PALLET: hideCommandPallet,
+    TOGGLE_PALETTE: togglePalette,
   };
 
   return (
@@ -179,7 +209,6 @@ export default function OsintPage() {
         <BreadcrumbHeader activeProject={activeCase.name} />
         <div className='flex h-full'>
           <DnDFlow
-            getId={getId}
             addNode={addNode}
             deleteNode={deleteNode}
             addEdge={addEdge}
@@ -196,22 +225,25 @@ export default function OsintPage() {
         </div>
         <CommandPallet
           toggleShowOptions={toggleShowNodeOptions}
-          isOpen={showCommandPallet}
-          setOpen={setShowCommandPallet}
+          isOpen={showCommandPalette}
+          setOpen={setShowCommandPalette}
         />
       </div>
       <NodeOptions />
       <ContextMenu
         menu={({ node }) => {
-          const parentId = node.getAttribute('data-id');
-          const nodeData = node?.querySelectorAll('[data-type]');
+          let parentId = null;
+          let nodeData = null;
           let nodeType = null;
+          let titleNodeType = null;
+
           if (node) {
+            nodeData = node?.querySelectorAll('[data-type]');
+            parentId = node.getAttribute('data-id');
             nodeType = node.classList[1].split('-');
             nodeType = nodeType[nodeType.length - 1];
+            titleNodeType = nodeType && nodeType?.charAt(0).toUpperCase() + nodeType?.slice(1);
           }
-          const titleNodeType = nodeType?.charAt(0).toUpperCase() + nodeType?.slice(1);
-
           return (
             <>
               <div className='relative z-50 inline-block text-left'>
@@ -227,7 +259,7 @@ export default function OsintPage() {
                       >
                         <span className='text-dark-900 font-semibold font-display mr-3'>ID: </span>
                         {node ? parentId : 'No node selected'}
-                        {nodeType && (
+                        {nodeType && titleNodeType && (
                           <span className='inline-flex ml-auto items-center rounded-full bg-blue-100 px-3 py-0.5 text-sm font-medium text-blue-800'>
                             {titleNodeType}
                           </span>
@@ -237,6 +269,7 @@ export default function OsintPage() {
                   </div>
                   {nodeType === 'domain' && (
                     <DomainNodeContext
+                      parentId={parentId}
                       node={node}
                       nodeData={nodeData}
                       nodeType={nodeType}
@@ -248,6 +281,7 @@ export default function OsintPage() {
                   )}
                   {nodeType === 'email' && (
                     <EmailNodeContext
+                      parentId={parentId}
                       node={node}
                       nodeData={nodeData}
                       nodeType={nodeType}
@@ -259,6 +293,7 @@ export default function OsintPage() {
                   )}
                   {nodeType === 'ip' && (
                     <IpNodeContext
+                      parentId={parentId}
                       node={node}
                       nodeData={nodeData}
                       nodeType={nodeType}
@@ -270,6 +305,7 @@ export default function OsintPage() {
                   )}
                   {nodeType === 'result' && (
                     <ResultNodeContext
+                      parentId={parentId}
                       node={node}
                       nodeData={nodeData}
                       nodeType={nodeType}
@@ -281,6 +317,7 @@ export default function OsintPage() {
                   )}
                   {nodeType === 'google' && (
                     <GoogleNodeContext
+                      parentId={parentId}
                       node={node}
                       nodeData={nodeData}
                       nodeType={nodeType}

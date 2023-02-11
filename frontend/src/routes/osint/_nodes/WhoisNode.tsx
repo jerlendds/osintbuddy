@@ -9,7 +9,6 @@ export function WhoisNode({ flowData }: any) {
   const handleSubmit = (event: any) => {
     event.preventDefault();
   };
-  console.log(flowData.data.label);
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' />
@@ -32,8 +31,7 @@ export function WhoisNode({ flowData }: any) {
         <div className='flex  w-full p-2'>
           <div className='md:flex-col md:flex w-full md:flex-1  md:justify-between '>
             <div className='flex overflow-y-scroll h-52 flex-col mb-1 w-full'>
-              {flowData.data && flowData.data.label && flowData.data.label.split('\n').map((whois: string) => {
-                const data = whois.split(':');
+              {seoData.length !== 0 && seoData.split('\n').map((whois: string) => {
                 return (
                   <div className='flex items-center w-full'>
                     <p
