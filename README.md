@@ -115,8 +115,12 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 - [x] Email Node
 - [x] Ip Node
   - [x] To Geolocation transformation
-  - [x] To domain transformation
+  - [x] To Domain transformation
 - [ ] CSE Node
+
+
+
+[geolocation-osintbuddy](https://user-images.githubusercontent.com/29207058/218282847-f8eccc15-c5b9-4b95-916c-c2421f49b24d.webm)
 
 
 [latest demo here](https://user-images.githubusercontent.com/29207058/218184452-27809ec8-f68b-43d1-8e65-d83b56b153d8.webm)
