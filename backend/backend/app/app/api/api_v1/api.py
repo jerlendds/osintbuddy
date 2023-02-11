@@ -5,14 +5,22 @@ from app.api.api_v1.endpoints import (
     users,
     ghdb,
     cases,
-    cses,
-    extractors
+    cse,
+    domain,
+    ip,
+    email
 )
 
 api_router = APIRouter()
+
+
+api_router.include_router(cse.router, tags=["CSE Node Transformations"])
+api_router.include_router(domain.router, tags=["Domain Node Transformations"])
+api_router.include_router(ip.router, tags=["IP Node Transformations"])
+api_router.include_router(email.router, tags=["Email Node Transformation"])
+
+
 api_router.include_router(ghdb.router, tags=["ghdb"])
-api_router.include_router(extractors.router, tags=["extract"])
-api_router.include_router(cses.router, tags=["cses"])
 api_router.include_router(cases.router, tags=["cases"])
 api_router.include_router(login.router, tags=["login"])
 api_router.include_router(users.router, tags=["users"])

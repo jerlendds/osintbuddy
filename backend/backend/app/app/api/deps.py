@@ -1,5 +1,7 @@
 from typing import Generator
 
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
@@ -14,6 +16,16 @@ from app.db.session import SessionLocal
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/login/access-token"
 )
+
+def get_driver() -> Generator:
+    try:
+        driver: webdriver.Remote = webdriver.Remote(
+            "http://selenium:4444/wd/hub",
+            DesiredCapabilities.CHROME,
+        )
+        yield driver
+    finally:
+        driver.close()
 
 
 def get_db() -> Generator:
