@@ -134,6 +134,7 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
   - [x] To DNS transformation
   - [x] To subdomains transformation
   - [x] To emails transformation
+  - [x] To google
   - [x] To Traceroute transformation
   - [x] To URL scan transformation (urlscan.io)
   - [x] To URLs (extract all urls found on a page)
@@ -141,6 +142,8 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 - [x] Google search node
 - [ ] Google Cache search node
 - [x] Google result node
+  - [x] To domain
+  - [x] To URL
   - [x] To domain transformation
 - [x] Google dorks
 - [x] DNS Node
@@ -148,8 +151,11 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
   - [x] To Google result transformation
 - [x] Url Node
   - [x] Open in new tab
-  - [x] To URLs (extract all urls found on a page)
   - [x] To URL scan transformation (urlscan.io)
+  - [x] To IP
+  - [x] To Domain
+  - [x] To URLs (extract all urls found on a page)
+  - [x] To emails
   - [ ] To Google Cache
 - [x] Ip Node
   - [x] To Geolocation transformation

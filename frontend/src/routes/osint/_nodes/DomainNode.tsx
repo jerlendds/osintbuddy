@@ -1,6 +1,7 @@
 import { GripIcon, WebsiteIcon, IpIcon, GoogleIcon } from '@/components/Icons';
 import api from '@/services/api.service';
 import {
+  AtSymbolIcon,
   CogIcon,
   DocumentMagnifyingGlassIcon,
   MagnifyingGlassIcon,
@@ -11,14 +12,14 @@ import classNames from 'classnames';
 import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { NodeContextProps } from '.';
-import { NodeId } from '../OsintPage';
+import { NodeId } from '.';
 
 let nodeId = 0;
 
 export function DomainNode({ flowData }: any) {
-  const initialValue = flowData.data && flowData.data.domain ? flowData.data.domain : '';
+  const initialValue = (flowData.data && flowData.data.domain) || '';
   const [domainValue, setDomainValue] = useState<string>(initialValue);
-
+  console.log(flowData.data);
   const origin = flowData.data?.origin;
   const href = flowData.data?.href;
   return (
@@ -95,16 +96,15 @@ export function DomainNodeContext({
             if (resp.data) {
               console.log(resp.data);
               resp.data.ipv4.map((ip: string, idx: number) => {
-                console.log('ipv4', ip);
-                const newId = `i${getId()}${idx}`;
+                const newId = `ip${getId()}`;
                 let bounds = node.getBoundingClientRect();
                 const newNode = addNode(
                   newId,
                   'ip',
-                  reactFlowInstance.project({
-                    x: bounds.x,
+                  {
+                    x: bounds.x + 200,
                     y: bounds.y + 50 + idx * 120,
-                  }),
+                  },
                   {
                     ip,
                   }
@@ -118,10 +118,10 @@ export function DomainNodeContext({
                 const newNode = addNode(
                   newId,
                   'ip',
-                  reactFlowInstance.project({
+                  {
                     x: bounds.x + 360,
                     y: bounds.y + 50 + idx * 120,
-                  }),
+                  },
                   {
                     ip,
                   }
@@ -143,10 +143,13 @@ export function DomainNodeContext({
         <button
           onClick={async (event) => {
             let domain = null;
-            if (nodeData[1].value) {
-              domain = nodeData[1].value;
-            } else {
-              domain = nodeData[0].value ? `https://${nodeData[0].value}` : null;
+            // if (nodeData[1].value) {
+            //   domain = nodeData[1].value;
+            // } else {
+            //   domain = nodeData[0].value ? `https://${nodeData[0].value}` : null;
+            // }
+            if (nodeData[0].value) {
+              domain = nodeData[0].value;
             }
             if (domain) {
               const resp = await api.get(`/extract/domain/whois?domain=${domain}`);
@@ -156,10 +159,10 @@ export function DomainNodeContext({
                 addNode(
                   newId,
                   'whois',
-                  reactFlowInstance.project({
+                  {
                     x: bounds.x + 360,
                     y: bounds.y + 50,
-                  }),
+                  },
                   {
                     label: resp.data,
                   }
@@ -195,10 +198,10 @@ export function DomainNodeContext({
                     addNode(
                       nodeId,
                       'dns',
-                      reactFlowInstance.project({
+                      {
                         x: rect.x + 160,
                         y: rect.y + 140 + idx * 180,
-                      }),
+                      },
                       {
                         label: [
                           {
@@ -234,10 +237,10 @@ export function DomainNodeContext({
                 addNode(
                   nodeId,
                   'subdomain',
-                  reactFlowInstance.project({
+                  {
                     x: rect.x + 160,
                     y: rect.y + 140,
-                  }),
+                  },
                   {
                     ...resp.data,
                   }
@@ -267,10 +270,10 @@ export function DomainNodeContext({
                   addNode(
                     nodeId,
                     'email',
-                    reactFlowInstance.project({
+                    {
                       x: rect.x + 160,
                       y: rect.y + 140 + idx * 140,
-                    }),
+                    },
                     {
                       email,
                     }
@@ -282,52 +285,50 @@ export function DomainNodeContext({
           }}
           className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
         >
-          <WindowIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          <AtSymbolIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
           To emails
         </button>
       </div>
       <div>
         <button
           onClick={(event) => {
-            let rect = node.getBoundingClientRect();
+            let bounds = node.getBoundingClientRect();
             let domain = nodeData[0]?.value;
             if (domain && domain !== '') {
               if (domain.includes('www.')) domain.replace('www.', '');
               event.preventDefault();
               api
-                .get(`/ghdb/dorks/crawl?query=${domain}&pages=${3}`)
+                .get(`/extract/google/search?query=${domain}&pages=${3}`)
                 .then((resp) => {
                   let idx = 0;
-                  for (const [resultType, results] of Object.entries(resp.data)) {
-                    idx += 1;
-                    if (results) {
-                      let newNode: any = null;
-                      // @ts-ignore
-                      results.forEach((result, rIdx) => {
-                        const pos = {
-                          x: rect.x + 260,
-                          y: !newNode ? rIdx * result.description.length + 300 : newNode.y + 200,
-                        };
-                        const nodeId = `r${getId()}`;
-                        newNode = addNode(
-                          nodeId,
-                          'result',
-                          {
-                            x: rIdx % 2 === 0 ? rect.x + 420 : rect.x + 1130,
-                            // y: rIdx % 2 === 0 ? (totalLines * 22)  : ((totalLines - rIdx) * 22) ,
-                            y:
-                              rIdx % 2 === 0
-                                ? rIdx * 60 - rect.y + Math.ceil(result.description.length / 60) * 50
-                                : (rIdx - 1) * 60 - rect.y + Math.ceil(result.description.length / 60) * 50,
-                          },
-                          {
-                            label: result,
-                          }
-                        );
-                        addEdge(node.dataset.id, nodeId);
-                        console.log(nodeId, result.description.length, newNode, pos);
-                      });
-                    }
+                  idx += 1;
+                  if (resp.data) {
+                    let newNode: any = null;
+                    // @ts-ignore
+
+                    resp.data.forEach((result, rIdx) => {
+                      const pos = {
+                        x: bounds.xPos + 260,
+                        y: !newNode ? rIdx * result.description.length + 300 : newNode.y + 200,
+                      };
+                      const nodeId = getId();
+                      newNode = addNode(
+                        nodeId,
+                        'result',
+                        {
+                          x: rIdx % 2 === 0 ? bounds.xPos + 420 : bounds.xPos + 1130,
+                          y:
+                            rIdx % 2 === 0
+                              ? rIdx * 60 - bounds.yPos + Math.ceil(result.description.length / 60) * 100
+                              : (rIdx - 1) * 60 - bounds.yPos + Math.ceil(result.description.length / 60) * 100,
+                        },
+                        {
+                          ...result,
+                        }
+                      );
+                      addEdge(parentId, nodeId);
+                      console.log(nodeId, result.description.length, newNode, pos);
+                    });
                   }
                 })
                 .catch((error) => {
@@ -352,10 +353,10 @@ export function DomainNodeContext({
               addNode(
                 nodeId,
                 'traceroute',
-                reactFlowInstance.project({
+                {
                   x: rect.x + 160,
                   y: rect.y + 80,
-                }),
+                },
                 { ...resp.data }
               );
               addEdge(parentId, nodeId);
@@ -377,10 +378,10 @@ export function DomainNodeContext({
               addNode(
                 nodeId,
                 'urlscan',
-                reactFlowInstance.project({
+                {
                   x: bounds.x + 160,
                   y: bounds.y + 80,
-                }),
+                },
                 { ...resp.data }
               );
               addEdge(parentId, nodeId);
@@ -392,34 +393,34 @@ export function DomainNodeContext({
           To scan URL
         </button>
       </div>
-              <div>
-          <button
-            title='urlscan.io is a free service to scan and analyse websites. When a URL is submitted to urlscan.io, an automated process will browse to the URL like a regular user and record the activity that this page navigation creates. This includes the domains and IPs contacted, the resources (JavaScript, CSS, etc) requested from those domains, as well as additional information about the page itself. urlscan.io will take a screenshot of the page, record the DOM content, JavaScript global variables, cookies created by the page, and a myriad of other observations. If the site is targeting the users one of the more than 400 brands tracked by urlscan.io, it will be highlighted as potentially malicious in the scan results.'
-            onClick={(event) => {
-              let bounds = node.getBoundingClientRect();
-              const domain = nodeData[0].value;
-              api.get(`/extract/url/url?url=${encodeURIComponent(domain)}`).then((resp) => {
-                resp.data.forEach((url: string, idx: number) => {
-                  const nodeId = `ur${getId()}`;
-                  addNode(
-                    nodeId,
-                    'url',
-                    reactFlowInstance.project({
-                      x: bounds.x + 160,
-                      y: bounds.y + (idx+ 140),
-                    }),
-                    { url, domain }
-                  );
-                  addEdge(parentId, nodeId);
-                });
+      <div>
+        <button
+          title='urlscan.io is a free service to scan and analyse websites. When a URL is submitted to urlscan.io, an automated process will browse to the URL like a regular user and record the activity that this page navigation creates. This includes the domains and IPs contacted, the resources (JavaScript, CSS, etc) requested from those domains, as well as additional information about the page itself. urlscan.io will take a screenshot of the page, record the DOM content, JavaScript global variables, cookies created by the page, and a myriad of other observations. If the site is targeting the users one of the more than 400 brands tracked by urlscan.io, it will be highlighted as potentially malicious in the scan results.'
+          onClick={(event) => {
+            let bounds = node.getBoundingClientRect();
+            const domain = nodeData[0].value;
+            api.get(`/extract/url/urls?url=${encodeURIComponent(domain)}`).then((resp) => {
+              resp.data.forEach((url: string, idx: number) => {
+                const nodeId = `ur${getId()}`;
+                addNode(
+                  nodeId,
+                  'url',
+                  {
+                    x: bounds.x + 160,
+                    y: bounds.y + (idx + 140),
+                  },
+                  { url, domain }
+                );
+                addEdge(parentId, nodeId);
               });
-            }}
-            className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
-          >
-            <PaperClipIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-            To URLs
-          </button>
-        </div>
+            });
+          }}
+          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+        >
+          <PaperClipIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          To URLs
+        </button>
+      </div>
     </div>
   );
 }

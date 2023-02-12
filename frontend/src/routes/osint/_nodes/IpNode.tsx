@@ -4,6 +4,9 @@ import { GripIcon, IpIcon } from '@/components/Icons';
 import { NodeContextProps } from '.';
 import api from '@/services/api.service';
 import { PaperClipIcon } from '@heroicons/react/24/outline';
+import { NodeId } from '.';
+
+let nodeId = 0;
 
 export function IpNode({ flowData, deleteNode }: any) {
   const [ips, setIps] = useState(flowData.data.ip);
@@ -61,13 +64,17 @@ export function IpNode({ flowData, deleteNode }: any) {
 export default function IpNodeContext({
   node,
   reactFlowInstance,
-  getId,
   addNode,
   addEdge,
   nodeData,
   nodeType,
   parentId,
 }: NodeContextProps) {
+  const getId = (): NodeId => {
+    nodeId++;
+    return `n_${nodeId}`;
+  };
+
   return (
     <div className='py-1'>
       <div>

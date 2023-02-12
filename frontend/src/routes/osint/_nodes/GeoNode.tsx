@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { NodeContextProps } from '.';
 
+let nodeId = 0;
+
 export function GeoNode({ flowData }: any) {
   const [geoData, setGeoData] = useState<any>(flowData.data.geolocation);
   const [summaryData, setSummaryData] = useState<any>(flowData.data.summary);
@@ -43,7 +45,9 @@ export function GeoNode({ flowData }: any) {
                   />
                 </div>
               </div>
-               <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Coordinates</p>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>
+                Coordinates
+              </p>
               <div className='flex items-center mb-1'>
                 <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <MapIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
@@ -56,7 +60,7 @@ export function GeoNode({ flowData }: any) {
                   />
                 </div>
               </div>
-               <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Country</p>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Country</p>
               <div className='flex items-center mb-1'>
                 <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <MapIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
@@ -69,7 +73,7 @@ export function GeoNode({ flowData }: any) {
                   />
                 </div>
               </div>
-               <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Postal</p>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Postal</p>
               <div className='flex items-center mb-1'>
                 <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <MapPinIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
@@ -82,7 +86,7 @@ export function GeoNode({ flowData }: any) {
                   />
                 </div>
               </div>
-               <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>State</p>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>State</p>
               <div className='flex items-center mb-1'>
                 <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <MapIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
@@ -95,7 +99,7 @@ export function GeoNode({ flowData }: any) {
                   />
                 </div>
               </div>
-               <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Timezone</p>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Timezone</p>
               <div className='flex items-center mb-1'>
                 <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <ClockIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
@@ -125,7 +129,7 @@ export function GeoNode({ flowData }: any) {
                   />
                 </div>
               </div>
-               <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Hostname</p>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Hostname</p>
               <div className='flex items-center mb-1'>
                 <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <MapIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
@@ -138,7 +142,7 @@ export function GeoNode({ flowData }: any) {
                   />
                 </div>
               </div>
-               <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Range</p>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Range</p>
               <div className='flex items-center mb-1'>
                 <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <MapIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
@@ -151,7 +155,7 @@ export function GeoNode({ flowData }: any) {
                   />
                 </div>
               </div>
-               <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Company</p>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Company</p>
               <div className='flex items-center mb-1'>
                 <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <MapPinIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
@@ -164,7 +168,9 @@ export function GeoNode({ flowData }: any) {
                   />
                 </div>
               </div>
-               <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Hosted Domains</p>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>
+                Hosted Domains
+              </p>
               <div className='flex items-center mb-1'>
                 <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <MapIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
@@ -177,7 +183,7 @@ export function GeoNode({ flowData }: any) {
                   />
                 </div>
               </div>
-               <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Privacy</p>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Privacy</p>
               <div className='flex items-center mb-1'>
                 <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <ClockIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
@@ -190,7 +196,7 @@ export function GeoNode({ flowData }: any) {
                   />
                 </div>
               </div>
-               <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Anycast</p>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Anycast</p>
               <div className='flex items-center mb-1'>
                 <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <ClockIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
@@ -203,7 +209,7 @@ export function GeoNode({ flowData }: any) {
                   />
                 </div>
               </div>
-               <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>ASN type</p>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>ASN type</p>
               <div className='flex items-center mb-1'>
                 <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <ClockIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
@@ -216,7 +222,9 @@ export function GeoNode({ flowData }: any) {
                   />
                 </div>
               </div>
-               <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Abuse contact</p>
+              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>
+                Abuse contact
+              </p>
               <div className='flex items-center mb-1'>
                 <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
                   <ClockIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
@@ -240,14 +248,13 @@ export function GeoNode({ flowData }: any) {
 export function GeoNodeContext({
   node,
   reactFlowInstance,
-  getId,
+
   addNode,
   addEdge,
   nodeData,
   nodeType,
   parentId,
 }: NodeContextProps) {
-  return (
-    <></>
-  );
+  const getId = () => `rnode_${nodeId++}`;
+  return <></>;
 }

@@ -9,7 +9,7 @@ def get_sentry_logger():
 
 
 def get_logger(
-    logger_name: str,
+    name: str,
     log_path: Optional[str] = None,
     formatter: Optional[logging.Formatter] = None,
     is_sentry: bool = False,
@@ -28,7 +28,7 @@ def get_logger(
     Returns:
        logging.Logger: returns your standard python logger
     """
-    logger = logging.getLogger(logger_name)
+    logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
     log_format = logging.Formatter(
         "[%(levelname)s] %(asctime)s :: %(message)s", "%Y-%m-%d %H:%M:%S"

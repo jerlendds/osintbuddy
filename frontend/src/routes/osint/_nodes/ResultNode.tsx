@@ -4,8 +4,11 @@ import classNames from 'classnames';
 import { toast } from 'react-toastify';
 import { Handle, Position } from 'reactflow';
 import { NodeContextProps } from '.';
+import { NodeId } from '.';
 
-export function ResultNode({ flowData }: { flowData: any; }) {
+let nodeId = 0;
+
+export function ResultNode({ flowData }: { flowData: any }) {
   return (
     <>
       <Handle position={Position.Left} id='l1' key='l1' type='target' />
@@ -54,13 +57,16 @@ export function ResultNode({ flowData }: { flowData: any; }) {
 export function ResultNodeContext({
   node,
   reactFlowInstance,
-  getId,
   addNode,
   addEdge,
   nodeData,
   nodeType,
   parentId,
 }: NodeContextProps) {
+  const getId = (): NodeId => {
+    nodeId++;
+    return `n_${nodeId}`;
+  };
   return (
     <div className='py-1'>
       <div>
@@ -72,10 +78,10 @@ export function ResultNodeContext({
             addNode(
               nodeId,
               'domain',
-              reactFlowInstance.project({
-                x: bounds.x + 160,
-                y: bounds.y + 40,
-              }),
+              {
+                x: bounds.x + 220,
+                y: bounds.y + 80,
+              },
               {
                 href: url.href,
                 origin: url.origin,
@@ -101,10 +107,10 @@ export function ResultNodeContext({
             addNode(
               nodeId,
               'url',
-              reactFlowInstance.project({
-                x: bounds.x - bounds.left,
-                y: bounds.y + 40,
-              }),
+              {
+                x: bounds.x + 120,
+                y: bounds.y + 80,
+              },
               {
                 url,
               }

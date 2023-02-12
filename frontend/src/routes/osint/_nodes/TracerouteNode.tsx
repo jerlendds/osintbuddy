@@ -3,47 +3,52 @@ import * as echarts from 'echarts';
 import { Position, Handle } from 'reactflow';
 import { Column, useTable } from 'react-table';
 import { GripIcon, IpIcon } from '@/components/Icons';
-import { NodeContextProps } from '.';
+import { NodeContextProps, NodeId } from '.';
 import api from '@/services/api.service';
 import { capitalize } from '../OsintPage';
 import { ReactECharts } from '@/components/ReactEcharts';
+
+let nodeId = 0;
 
 export function TracerouteNode({ flowData, deleteNode }: any) {
   const [data, setData] = useState(flowData.data);
   const handleSubmit = (event: any) => {
     event.preventDefault();
   };
-  console.log(data.data.map((elm: any) => elm.hop), data.data)
+  console.log(
+    data.data.map((elm: any) => elm.hop),
+    data.data
+  );
   const chartRef = useRef(null);
-  var option: echarts.EChartsOption  = {
-        xAxis: {
-          type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  var option: echarts.EChartsOption = {
+    xAxis: {
+      type: 'category',
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    },
+    yAxis: {
+      type: 'value',
+    },
+    series: [
+      {
+        data: [120, 200, 150, 80, 70, 110, 130],
+        type: 'line',
+        symbol: 'triangle',
+        symbolSize: 20,
+        lineStyle: {
+          color: '#5470C6',
+          width: 4,
+          type: 'dashed',
         },
-        yAxis: {
-          type: 'value',
+        itemStyle: {
+          borderWidth: 3,
+          borderColor: '#EE6666',
+          color: 'yellow',
         },
-        series: [
-          {
-            data: [120, 200, 150, 80, 70, 110, 130],
-            type: 'line',
-            symbol: 'triangle',
-            symbolSize: 20,
-            lineStyle: {
-              color: '#5470C6',
-              width: 4,
-              type: 'dashed',
-            },
-            itemStyle: {
-              borderWidth: 3,
-              borderColor: '#EE6666',
-              color: 'yellow',
-            },
-          },
-        ],
-      };
+      },
+    ],
+  };
 
-  console.log('chartRef', chartRef)
+  console.log('chartRef', chartRef);
   function Table({ columns, data }: any) {
     // Use the state and functions returned from useTable to build your UI
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -87,7 +92,7 @@ export function TracerouteNode({ flowData, deleteNode }: any) {
   }
   return (
     <>
-    <ReactECharts option={option} />
+      {/* <ReactECharts option={option} /> */}
       <Handle position={Position.Right} id='r1' key='r1' type='source' />
       <Handle position={Position.Top} id='t1' key='t1' type='source' />
       <Handle position={Position.Bottom} id='b1' key='b1' type='source' />
@@ -166,12 +171,16 @@ export function TracerouteNode({ flowData, deleteNode }: any) {
 export default function TracerouteNodeContext({
   node,
   reactFlowInstance,
-  getId,
   addNode,
   addEdge,
   nodeData,
   nodeType,
   parentId,
 }: NodeContextProps) {
+  const getId = (): NodeId => {
+    nodeId++;
+    return `n_${nodeId}`;
+  };
+
   return <></>;
 }

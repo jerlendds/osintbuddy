@@ -5,6 +5,9 @@ import { GripIcon, IpIcon } from '@/components/Icons';
 import { NodeContextProps, Result, Welcome } from '.';
 import api from '@/services/api.service';
 import { capitalize } from '../OsintPage';
+import { NodeId } from '.';
+
+let nodeId = 0;
 
 interface Data extends Welcome {
   domain?: string;
@@ -107,7 +110,9 @@ export function UrlScanNode({ flowData, deleteNode }: any) {
                     })}
                   />
                 ) : (
-                  <><p className='text-xs font-display'>No results</p></>
+                  <>
+                    <p className='text-xs font-display'>No results</p>
+                  </>
                 )}
               </>
             </form>
@@ -121,12 +126,16 @@ export function UrlScanNode({ flowData, deleteNode }: any) {
 export default function UrlScanNodeContext({
   node,
   reactFlowInstance,
-  getId,
   addNode,
   addEdge,
   nodeData,
   nodeType,
   parentId,
 }: NodeContextProps) {
+  const getId = (): NodeId => {
+    nodeId++;
+    return `n_${nodeId}`;
+  };
+
   return <></>;
 }

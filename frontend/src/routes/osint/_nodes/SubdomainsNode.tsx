@@ -5,6 +5,7 @@ import { GripIcon, WebsiteIcon } from '@/components/Icons';
 import RoundLoader from '@/components/Loaders';
 import api from '@/services/api.service';
 
+let nodeId = 0;
 
 export function SubdomainNode({ flowData }: any) {
   const task = flowData?.data?.id;

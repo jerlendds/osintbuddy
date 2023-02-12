@@ -6,7 +6,7 @@ from app.core.logger import get_logger
 
 
 logger = get_logger(
-    logger_name="titan",
+    name="titan",
     is_celery=True,
     is_sentry=bool(settings.SENTRY_DSN)
 )

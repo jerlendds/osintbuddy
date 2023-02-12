@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Position, Handle } from 'reactflow';
 import { GripIcon, WebsiteIcon } from '@/components/Icons';
 
+let nodeId = 0;
 
 export function WhoisNode({ flowData }: any) {
   console.log(flowData);
@@ -31,18 +32,19 @@ export function WhoisNode({ flowData }: any) {
         <div className='flex  w-full p-2'>
           <div className='md:flex-col md:flex w-full md:flex-1  md:justify-between '>
             <div className='flex overflow-y-scroll h-52 flex-col mb-1 w-full'>
-              {seoData.length !== 0 && seoData.split('\n').map((whois: string) => {
-                return (
-                  <div className='flex items-center w-full'>
-                    <p
-                      className='truncate text-xs font-display flex items-center whitespace-wrap pl-4'
-                      placeholder='https://www.google.com'
-                    >
-                      {whois}
-                    </p>
-                  </div>
-                );
-              })}
+              {seoData.length !== 0 &&
+                seoData.split('\n').map((whois: string) => {
+                  return (
+                    <div className='flex items-center w-full'>
+                      <p
+                        className='truncate text-xs font-display flex items-center whitespace-wrap pl-4'
+                        placeholder='https://www.google.com'
+                      >
+                        {whois}
+                      </p>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>

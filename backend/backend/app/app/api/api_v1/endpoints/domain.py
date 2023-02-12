@@ -24,9 +24,12 @@ from app import crud, schemas, models
 from app.api import deps
 from app.core.celery_app import app
 from app.worker import brute_force_subdomains
+from app.api.utils import extract_emails_from_google
+from app.core.logger import get_logger
 
+logger = get_logger(name=" /extract/domain ")
 
-router = APIRouter(prefix='/extract/domain')
+router = APIRouter(prefix="/extract/domain")
 
 
 def add_similiar_domain(tx, domain, similiar_domain):
@@ -138,8 +141,10 @@ def get_raw_whois(
         element_present = EC.presence_of_element_located(
             (By.ID, 'registrarData')
         )
-        WebDriverWait(driver, 15).until(element_present)
+        driver.save_screenshot('foo.png')
+        WebDriverWait(driver, 20).until(element_present)
         data = driver.find_element(by=By.ID, value='registrarData').text
+        driver.save_screenshot('bar.png')
         return data
     except Exception as e:
         print(e)
@@ -204,36 +209,13 @@ def get_subdomains_status(
         "status": task.state,
         "id": id
     }
-    
+
     
 @router.get('/emails')
-def get_subdomains_status(
+def get_emails_from_google_results(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
     domain: str = ""
 ):
-    if not domain:
-        raise HTTPException(status_code=422, detail="domainRequired")
-    if "www." in domain:
-        domain = domain.replace("www.", "")
-    encoded_query = urllib.parse.quote('intext:"@' + domain + '"')
-    google_results = requests.get(f'http://microservice:1323/google?query={encoded_query}&pages={7}')
-    data = google_results.json()
-    results = data.get('search', [])
-    emails = []
-    for result in results:
-        compare = result.get('description', '') + ' ' + result.get('title', '')
-        match = re.search(r'[\w.+-]+@[\w-]+\.[\w.-]+', compare)
-        if match is not None:
-            email = match.group(0)
-            print(domain[len(domain)-1])
-            if email[len(email)-1] == ".":
-                email = email[0:len(email) - 2]
-                
-            if email.find(domain) == -1:
-                pass
-            else:
-                print(email)
-                emails.append(email)
-                
-    return list(set(emails))
+    emails = extract_emails_from_google(domain)
+    return emails

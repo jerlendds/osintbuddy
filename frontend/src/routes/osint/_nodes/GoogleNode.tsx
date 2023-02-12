@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { GoogleIcon, GripIcon } from '@/components/Icons';
 import { Handle, Position } from 'reactflow';
 import api from '@/services/api.service';
-import { DocumentIcon, HeartIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { NodeContextProps } from '.';
+import { DocumentIcon, HeartIcon, ListBulletIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { NodeContextProps, NodeId } from '.';
 
-let googleId = 0;
-export const getGoogleId = () => `rnode_${googleId++}`;
+let nodeId = 0;
 
 export function GoogleNode({
   addNode,
@@ -20,6 +19,8 @@ export function GoogleNode({
   bounds: any;
   reactFlowInstance: any;
 }) {
+  const getId = () => `rnode_${nodeId++}`;
+
   const [queryValue, setQueryValue] = useState<string>('');
   const [pagesValue, setPagesValue] = useState<number>(3);
   let newPos = { x: 0, y: 0 };
@@ -30,35 +31,35 @@ export function GoogleNode({
       .get(`/extract/google/search?query=${queryValue}&pages=${pagesValue}`)
       .then((resp) => {
         let idx = 0;
-          idx += 1;
-          if (resp.data) {
-            let newNode: any = null;
-            // @ts-ignore
+        idx += 1;
+        if (resp.data) {
+          let newNode: any = null;
+          // @ts-ignore
 
-            resp.data.forEach((result, rIdx) => {
-              const pos = {
-                x: flowData.xPos + 260,
-                y: !newNode ? rIdx * result.description.length + 300 : newNode.y + 200,
-              };
-              const nodeId = getGoogleId();
-              newNode = addNode(
-                nodeId,
-                'result',
-                {
-                  x: rIdx % 2 === 0 ? flowData.xPos + 420 : flowData.xPos + 1130,
-                  y:
-                    rIdx % 2 === 0
-                      ? rIdx * 60 - flowData.yPos + Math.ceil(result.description.length / 60) * 100
-                      : (rIdx - 1) * 60 - flowData.yPos + Math.ceil(result.description.length / 60) * 100,
-                },
-                {
-                  ...result,
-                }
-              );
-              addEdge(flowData.id, nodeId);
-              console.log(nodeId, result.description.length, newNode, pos);
-            });
-          }
+          resp.data.forEach((result, rIdx) => {
+            const pos = {
+              x: flowData.xPos + 260,
+              y: !newNode ? rIdx * result.description.length + 300 : newNode.y + 200,
+            };
+            const nodeId = getId();
+            newNode = addNode(
+              nodeId,
+              'result',
+              {
+                x: rIdx % 2 === 0 ? flowData.xPos + 420 : flowData.xPos + 1130,
+                y:
+                  rIdx % 2 === 0
+                    ? rIdx * 60 - flowData.yPos + Math.ceil(result.description.length / 60) * 100
+                    : (rIdx - 1) * 60 - flowData.yPos + Math.ceil(result.description.length / 60) * 100,
+              },
+              {
+                ...result,
+              }
+            );
+            addEdge(flowData.id, nodeId);
+            console.log(nodeId, result.description.length, newNode, pos);
+          });
+        }
       })
       .catch((error) => {
         console.warn(error);
@@ -121,13 +122,12 @@ export function GoogleNode({
                   />
                 </div>
               </div>
-
-              <button
+              {/* <button
                 type='submit'
                 className='flex w-full mt-2 py-2 ml-auto items-center bg-info-200 rounded-full justify-between px-3'
               >
                 <p className=' text-xs font-semibold font-display flex text-white whitespace-nowrap'>Search Google</p>
-              </button>
+              </button> */}
             </form>
           </div>
         </div>
@@ -139,19 +139,61 @@ export function GoogleNode({
 export function GoogleNodeContext({
   node,
   reactFlowInstance,
-  getId,
   addNode,
   addEdge,
   nodeData,
   nodeType,
   parentId,
 }: NodeContextProps) {
+  const getId = (): NodeId => {
+    nodeId++;
+    return `n_${nodeId}`;
+  };
   return (
     <div className='py-1'>
       <div>
-        <button className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'>
-          <HeartIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-          Add to favorites
+        <button onClick={() => {
+          const bounds = node.getBoundingClientRect()
+              api
+      .get(`/extract/google/search?query=${nodeData[0].value}&pages=${nodeData[1].value}`)
+      .then((resp) => {
+        let idx = 0;
+        idx += 1;
+        if (resp.data) {
+          let newNode: any = null;
+          // @ts-ignore
+
+          resp.data.forEach((result, rIdx) => {
+            const pos = {
+              x: bounds.x + 260,
+              y: !newNode ? rIdx * result.description.length + 300 : newNode.y + 200,
+            };
+            const nodeId = getId();
+            newNode = addNode(
+              nodeId,
+              'result',
+              {
+                x: rIdx % 2 === 0 ? bounds.x + 60 : bounds.x + 800,
+                y:
+                  rIdx % 2 === 0
+                    ? (rIdx * 60) + bounds.y 
+                    : ((rIdx - 1) * 60) + bounds.y ,
+              },
+              {
+                ...result,
+              }
+            );
+            addEdge(parentId, nodeId);
+            console.log(nodeId, result.description.length, newNode, pos);
+          });
+        }
+      })
+      .catch((error) => {
+        console.warn(error);
+      });
+        }} className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'>
+          <ListBulletIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          To results
         </button>
       </div>
     </div>
