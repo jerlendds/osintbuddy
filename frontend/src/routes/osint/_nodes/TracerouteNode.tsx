@@ -1,21 +1,51 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import * as echarts from 'echarts';
 import { Position, Handle } from 'reactflow';
 import { Column, useTable } from 'react-table';
 import { GripIcon, IpIcon } from '@/components/Icons';
 import { NodeContextProps } from '.';
 import api from '@/services/api.service';
 import { capitalize } from '../OsintPage';
+import { ReactECharts } from '@/components/ReactEcharts';
 
 export function TracerouteNode({ flowData, deleteNode }: any) {
   const [data, setData] = useState(flowData.data);
   const handleSubmit = (event: any) => {
     event.preventDefault();
   };
-  console.log();
+  console.log(data.data.map((elm: any) => elm.hop), data.data)
+  const chartRef = useRef(null);
+  var option: echarts.EChartsOption  = {
+        xAxis: {
+          type: 'category',
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        },
+        yAxis: {
+          type: 'value',
+        },
+        series: [
+          {
+            data: [120, 200, 150, 80, 70, 110, 130],
+            type: 'line',
+            symbol: 'triangle',
+            symbolSize: 20,
+            lineStyle: {
+              color: '#5470C6',
+              width: 4,
+              type: 'dashed',
+            },
+            itemStyle: {
+              borderWidth: 3,
+              borderColor: '#EE6666',
+              color: 'yellow',
+            },
+          },
+        ],
+      };
 
+  console.log('chartRef', chartRef)
   function Table({ columns, data }: any) {
     // Use the state and functions returned from useTable to build your UI
-    console.log(columns, data);
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
       // @ts-ignore
       columns,
@@ -29,7 +59,9 @@ export function TracerouteNode({ flowData, deleteNode }: any) {
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th className='font-display text-xs' {...column.getHeaderProps()}>{column.render('Header')}</th>
+                <th className='font-display text-xs' {...column.getHeaderProps()}>
+                  {column.render('Header')}
+                </th>
               ))}
             </tr>
           ))}
@@ -40,7 +72,11 @@ export function TracerouteNode({ flowData, deleteNode }: any) {
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
-                  return <td className='font-display text-[0.75rem]' {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                  return (
+                    <td className='font-display text-[0.75rem]' {...cell.getCellProps()}>
+                      {cell.render('Cell')}
+                    </td>
+                  );
                 })}
               </tr>
             );
@@ -51,6 +87,7 @@ export function TracerouteNode({ flowData, deleteNode }: any) {
   }
   return (
     <>
+    <ReactECharts option={option} />
       <Handle position={Position.Right} id='r1' key='r1' type='source' />
       <Handle position={Position.Top} id='t1' key='t1' type='source' />
       <Handle position={Position.Bottom} id='b1' key='b1' type='source' />
@@ -72,11 +109,12 @@ export function TracerouteNode({ flowData, deleteNode }: any) {
             <form onSubmit={(event) => handleSubmit(event)} className='flex items-start flex-col'>
               <>
                 <p className='text-xs ml-2 mb-3  font-semibold text-gray-400  whitespace-wrap font-display'>
-                  Running traceroute for <span className='text-base font-semibold text-gray-400  whitespace-wrap font-display'>
-                  {data.meta.url}
-                </span>
+                  Running traceroute for{' '}
+                  <span className='text-base font-semibold text-gray-400  whitespace-wrap font-display'>
+                    {data.meta.url}
+                  </span>
                 </p>
-                
+                <div ref={chartRef}></div>
                 <Table
                   columns={Object.keys(data.data[0]).map((columnName) => {
                     return { Header: capitalize(columnName), accessor: columnName };

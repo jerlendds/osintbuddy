@@ -79,18 +79,45 @@ To get a local copy up and running follow these simple steps.
    ```
 
  - **URLs**
-    - Frontend: http://localhost
-    - Backend: http://localhost/api/
+    - Frontend: http://localhost:3000
+    - Backend: http://localhost:8000/api/
     - Documentation: http://localhost/docs -- http://localhost/redoc
-    - PGAdmin: http://localhost:5050
     - Flower: http://localhost:5555
+    - Neo4J: http://localhost:7474/browser/
 
 <!-- 
-
+Awesome site: https://www.jsonapi.co/public-api
 
 https://github.com/danielmiessler/SecLists/tree/master/Discovery/DNS
 
+@todo add google cache crawl endpoint
+http://webcache.googleusercontent.com/search?q=
+
+
+COMB breach @todo add password searching
+magnet:?xt=urn:btih:7ffbcd8cee06aba2ce6561688cf68ce2addca0a3&dn=BreachCompilation&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fglotorrents.pw%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337
+
+
+@todo VirusTotal
+https://developers.virustotal.com/v2.0/reference/getting-started
+
+@todo URLhaus
+https://urlhaus-api.abuse.ch/
+
+@todo google safe browsing
+https://developers.google.com/safe-browsing/
+
+@todo alienvault
+https://otx.alienvault.com/api
+
+@todo abuse ip db
+https://docs.abuseipdb.com/#introduction
+
+@todo https://builtwith.com/
+
  -->
+
+
 
 <!-- ROADMAP -->
 
@@ -110,7 +137,9 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
   - [x] To Traceroute transformation
   - [x] To URL scan transformation (urlscan.io)
   - [x] To URLs (extract all urls found on a page)
+  - [ ] To Google Cache
 - [x] Google search node
+- [ ] Google Cache search node
 - [x] Google result node
   - [x] To domain transformation
 - [x] Google dorks
@@ -120,11 +149,13 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 - [x] Url Node
   - [x] To URLs (extract all urls found on a page)
   - [x] To URL scan transformation (urlscan.io)
+  - [ ] To Google Cache
 - [x] Ip Node
   - [x] To Geolocation transformation
   - [x] To Domain transformation
   - [x] To Traceroute transformation
   - [x] To URL scan transformation (urlscan.io)
+  - [ ] To Google Cache
 - [ ] CSE Node
 
 

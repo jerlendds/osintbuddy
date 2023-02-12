@@ -9,12 +9,14 @@ from app.api.api_v1.endpoints import (
     domain,
     ip,
     email,
-    url
+    url,
+    google
 )
 
 api_router = APIRouter()
 
 
+api_router.include_router(google.router, tags=["Google"])
 api_router.include_router(url.router, tags=["URL Node Transformations"])
 api_router.include_router(cse.router, tags=["CSE Node Transformations"])
 api_router.include_router(domain.router, tags=["Domain Node Transformations"])

@@ -7,6 +7,7 @@ from datetime import datetime
 import urllib.parse
 from urllib.parse import urlparse, urljoin
 import dns.resolver
+from lxml import etree
 import requests
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -18,7 +19,6 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from celery.result import AsyncResult
-
 from app.crud.base import get_or_create
 from app import crud, schemas, models
 from app.api import deps
@@ -27,6 +27,47 @@ from app.worker import brute_force_subdomains
 
 
 router = APIRouter(prefix='/extract/domain')
+
+
+def add_similiar_domain(tx, domain, similiar_domain):
+    tx.run()
+    
+
+
+@router.get('/domains')
+def to_similiar_domains(
+    current_user: models.User = Depends(deps.get_current_active_user),
+    db: Session = Depends(deps.get_db),
+    domain: str = None
+):
+    url = urllib.parse.urlparse(domain)
+    url: str = url.netloc
+    if url:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Alt-Used': 'domainsdb.info',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'same-origin',
+            'Sec-Fetch-User': '?1',
+        }
+        params = {
+            'query': url,
+            'tld': 'bundle_all_zones',
+        }
+        response = requests.get('https://domainsdb.info/', params=params, headers=headers)
+        soup = BeautifulSoup(response.content.decode('utf8'), features='lxml')
+        similar_domains_elm = soup.select_one('div.row:nth-child(2)')
+        similar_domains_elm.find('h3').decompose()
+        # first and last element not domains so removing
+        data = [x for x in similar_domains_elm.contents if getattr(x, 'name', None) != 'br'][1:-1]
+        return data
+    return []
+
 
 @router.get('/urls')
 def get_urls_for_ip_or_domain(

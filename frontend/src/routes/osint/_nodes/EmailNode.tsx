@@ -60,6 +60,7 @@ export function EmailNodeContext({
   nodeType,
   parentId,
 }: NodeContextProps) {
+  console.log(typeof reactFlowInstance)
   return (
     <div className='py-1'>
       {/* @todo retry with better proxies */}
@@ -81,37 +82,34 @@ export function EmailNodeContext({
         <button
           onClick={(event) => {
             const nodeId = `rw${getId()}`;
-            api.get(`/ghdb/dorks/crawl?query=${nodeData[0].value}&pages=${3}`).then((resp) => {
+            api.get(`/extract/google/search?query=${nodeData[0].value}&pages=${3}`).then((resp) => {
               console.log(resp);
               let rect = node.getBoundingClientRect();
               let idx = 0;
-              for (const [resultType, results] of Object.entries(resp.data)) {
                 idx += 1;
-                if (results) {
+                if (resp.data) {
                   let newNode: any = null;
                   // @ts-ignore
 
-                  results.forEach((result, rIdx) => {
+                  resp.data.forEach((result, rIdx) => {
                     const nodeId = `r${getId()}`;
                     newNode = addNode(
                       nodeId,
                       'result',
-                      {
-                        x: rIdx % 2 === 0 ? rect.x + 420 : rect.x + 1130,
-                        // y: rIdx % 2 === 0 ? (totalLines * 22)  : ((totalLines - rIdx) * 22) ,
+                      reactFlowInstance.project({
+                        x: rIdx % 2 === 0 ? rect.x + 420 : rect.x + 1200,
                         y:
                           rIdx % 2 === 0
-                            ? rIdx * 60 - rect.y + Math.ceil(result.description.length / 60) * 50
-                            : (rIdx - 1) * 60 - rect.y + Math.ceil(result.description.length / 60) * 50,
-                      },
+                            ? rIdx * 80 - rect.y + Math.ceil(result.description.length / 70) * 50
+                            : (rIdx - 1) * 80 - rect.y + Math.ceil(result.description.length / 70) * 50,
+                      }),
                       {
-                        label: result,
+                        ...result,
                       }
                     );
                     addEdge(parentId, nodeId);
                   });
                 }
-              }
             });
           }}
           className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
