@@ -27,16 +27,15 @@ export function GoogleNode({
   const handleSubmit = (event: any) => {
     event.preventDefault();
     api
-      .get(`/ghdb/dorks/crawl?query=${queryValue}&pages=${pagesValue}`)
+      .get(`/extract/google/search?query=${queryValue}&pages=${pagesValue}`)
       .then((resp) => {
         let idx = 0;
-        for (const [resultType, results] of Object.entries(resp.data)) {
           idx += 1;
-          if (results) {
+          if (resp.data) {
             let newNode: any = null;
             // @ts-ignore
 
-            results.forEach((result, rIdx) => {
+            resp.data.forEach((result, rIdx) => {
               const pos = {
                 x: flowData.xPos + 260,
                 y: !newNode ? rIdx * result.description.length + 300 : newNode.y + 200,
@@ -55,14 +54,13 @@ export function GoogleNode({
                       : (rIdx - 1) * 60 - flowData.yPos + Math.ceil(result.description.length / 60) * 100,
                 },
                 {
-                  label: result,
+                  ...result,
                 }
               );
               addEdge(flowData.id, nodeId);
               console.log(nodeId, result.description.length, newNode, pos);
             });
           }
-        }
       })
       .catch((error) => {
         console.warn(error);

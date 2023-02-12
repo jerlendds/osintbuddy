@@ -118,14 +118,12 @@ func CrawlGoogle(searchQuery string, pages string) {
 	c.OnHTML("div.s75CSd.OhScic.AB4Wff", func(e *colly.HTMLElement) {
 		relatedSearch := e.Text
 		resultStats.Related = append(resultStats.Related, relatedSearch)
-		fmt.Printf("%s", relatedSearch)
 	})
 	// parse about stats at top of page e.g. 'About 83,000,000 results (0.22 seconds) '
 	c.OnHTML("#result-stats", func(e *colly.HTMLElement) {
 		result := e.Text
 		resultStats.Result = append(resultStats.Result, result)
 		serpResults.Stats = append(serpResults.Stats, *resultStats)
-		fmt.Printf("%s", resultStats)
 		resultStats.Related = nil
 		resultStats.Result = nil
 	})
