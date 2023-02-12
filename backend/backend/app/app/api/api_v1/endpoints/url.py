@@ -1,44 +1,87 @@
 import re
+import urllib
 import time
-import json
-import socket
-from typing import Any, List
-from datetime import datetime
-import urllib.parse
-from urllib.parse import urlparse, urljoin
-import dns.resolver
-import requests
-from selenium.webdriver.common.keys import Keys
+import validators
 from selenium.webdriver.common.by import By
-from bs4 import BeautifulSoup
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from selenium.webdriver import Remote
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support import expected_conditions as EC
-from celery.result import AsyncResult
-
-from app.crud.base import get_or_create
+from selenium.webdriver import Remote
 from app import crud, schemas, models
 from app.api import deps
 from app.core.celery_app import app
 from app.worker import brute_force_subdomains
+from app.initial_data import logger
+from app.core.logger import get_logger
+from app.api.utils import extract_emails_from_google
 
+prefix='/extract/url'
 
-router = APIRouter(prefix='/extract/url')
+logger = get_logger(name=f" {prefix} ")
 
-@router.get('/url')
-def page_emails_extractor(
+router = APIRouter(prefix=prefix)
+
+@router.get('/urls')
+async def page_emails_extractor(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
     driver: Session = Depends(deps.get_driver),
     url: str = None
 ):
     if not url:
-        raise HTTPException(status_code=422, detail="domainRequired")
-    if "https://" not in url or "http://" not in url:
-        url + "https://" + url
-    driver.get(url)
-    urls = driver.find_elements(by=By.TAG_NAME, value='a')    
-    return [url.get_attribute('href') for url in urls]
+        raise HTTPException(status_code=422, detail="urlRequired")
+
+    if "https://" not in url and "http://" not in url:
+        url = "https://" + url
+
+    if not validators.url(url):
+        raise HTTPException(status_code=422, detail="malformedUrl")
+    
+    try:
+        driver.get(url)
+        url_elements = driver.find_elements(by=By.TAG_NAME, value='a')
+        return [elm.get_attribute('href') for elm in url_elements if validators.url(elm.get_attribute('href')) ]
+    except WebDriverException as e:
+        logger.error(f"Error fetching URLs for page: {url}")
+        raise HTTPException(status_code=422, detail="errorFetchingURLs")
+
+
+@router.get('/emails')
+async def page_emails_extractor(
+    current_user: models.User = Depends(deps.get_current_active_user),
+    driver: Remote = Depends(deps.get_driver),
+    url: str = None
+):
+    if not url:
+        raise HTTPException(status_code=422, detail="urlRequired")
+    if "https://" not in url and "http://" not in url:
+        url = "https://" + url
+        if not validators.url(url):
+            raise HTTPException(status_code=422, detail="malformedURL")
+            
+    try:
+        emails = extract_emails_from_google(urllib.parse.urlparse(url).netloc)
+    except Exception:
+        emails = []
+
+    try:
+        driver.get(url)
+        for elm in driver.find_elements(by=By.TAG_NAME, value="a"):
+            href = elm.get_attribute('href')
+            if validators.email(str(href)):
+                emails.append(href)
+        
+        tags = ["button", "h1", "h2", "h3", "h4", "h5", "h6", "p", "span"]
+        
+        for tag in tags:
+            elements = driver.find_elements(by=By.TAG_NAME, value=tag)
+            for elm in elements:
+                if elm.text and validators.email(str(elm.text)):
+                    emails.append(str(elm.text)) 
+                    
+        return list(set(emails)) 
+    
+    except WebDriverException as e:
+        logger.error(f"Error fetching Emails for page: {url} - {e}")
+        raise HTTPException(status_code=422, detail="errorFetchingEmails")

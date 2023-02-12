@@ -25,6 +25,7 @@ click-repl==0.2.0
 colorama==0.4.5
 cssselect==1.1.0
 cssutils==2.4.0
+decorator==5.1.1
 Deprecated==1.2.13
 dill==0.3.5.1
 dnspython==2.2.1
@@ -137,6 +138,7 @@ uritemplate==4.1.1
 urllib3==1.26.9
 uvicorn==0.17.6
 uvloop==0.16.0
+validators==0.20.0
 vine==5.0.0
 vulture==2.5
 watchgod==0.8

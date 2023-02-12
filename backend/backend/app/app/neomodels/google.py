@@ -20,7 +20,8 @@ class GoogleSearch(StructuredNode):
 
 
 def get_google_search_results(tx, search_query, pages):
-    return list({
+
+    return [{
             "result_type": result.get("result_type"),
             "breadcrumb": result.get("breadcrumb"),
             "description": result.get("description"),
@@ -29,4 +30,4 @@ def get_google_search_results(tx, search_query, pages):
         } for record in tx.run((
             "MATCH (n:GoogleSearch {search_query: $search_query, pages: $pages})"
             "-[]-(r) RETURN n, r"
-        ), search_query=search_query, pages=pages) if (url := (result := record['r']).get('url')))
+        ), search_query=search_query, pages=pages) if (url := (result := record['r']).get('url'))]

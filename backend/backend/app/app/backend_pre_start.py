@@ -6,7 +6,7 @@ from app.db.session import SessionLocal
 from app.core.logger import get_logger
 from app.core.config import settings
 
-logger = get_logger(logger_name=__name__)
+logger = get_logger(name=__name__)
 
 max_tries = 60 * 5  # 5 minutes
 wait_seconds = 1

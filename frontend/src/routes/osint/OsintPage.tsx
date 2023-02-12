@@ -38,8 +38,6 @@ const fitViewOptions: FitViewOptions = {
 
 let nodeId = 0;
 
-export type NodeId = `${string | ''}n_${number}`;
-
 const DnDFlow = ({
   reactFlowWrapper,
   nodes,
@@ -54,7 +52,7 @@ const DnDFlow = ({
   addNode,
   addEdge,
 }) => {
-  function getId(): NodeId {
+  function getId() {
     nodeId++;
     return `n_${nodeId}`;
   }

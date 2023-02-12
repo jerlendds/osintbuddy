@@ -19,9 +19,13 @@ reusable_oauth2 = OAuth2PasswordBearer(
 
 def get_driver() -> Generator:
     try:
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
         driver: webdriver.Remote = webdriver.Remote(
             "http://selenium:4444/wd/hub",
-            DesiredCapabilities.CHROME,
+            desired_capabilities=DesiredCapabilities.CHROME,
+            options=options
         )
         yield driver
     finally:

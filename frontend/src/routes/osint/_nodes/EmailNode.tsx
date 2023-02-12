@@ -5,9 +5,10 @@ import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { NodeContextProps } from '.';
 
+let nodeId = 0;
+
 export function EmailNode({ flowData }: any) {
   const [emailValue, setEmailValue] = useState<string>(flowData.data.email);
-
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' />
@@ -53,14 +54,14 @@ export function EmailNode({ flowData }: any) {
 export function EmailNodeContext({
   node,
   reactFlowInstance,
-  getId,
+
   addNode,
   addEdge,
   nodeData,
   nodeType,
   parentId,
 }: NodeContextProps) {
-  console.log(typeof reactFlowInstance)
+  const getId = () => `rnode_${nodeId++}`;
   return (
     <div className='py-1'>
       {/* @todo retry with better proxies */}
@@ -86,30 +87,29 @@ export function EmailNodeContext({
               console.log(resp);
               let rect = node.getBoundingClientRect();
               let idx = 0;
-                idx += 1;
-                if (resp.data) {
-                  let newNode: any = null;
-                  // @ts-ignore
-
-                  resp.data.forEach((result, rIdx) => {
-                    const nodeId = `r${getId()}`;
-                    newNode = addNode(
-                      nodeId,
-                      'result',
-                      reactFlowInstance.project({
-                        x: rIdx % 2 === 0 ? rect.x + 420 : rect.x + 1200,
-                        y:
-                          rIdx % 2 === 0
-                            ? rIdx * 80 - rect.y + Math.ceil(result.description.length / 70) * 50
-                            : (rIdx - 1) * 80 - rect.y + Math.ceil(result.description.length / 70) * 50,
-                      }),
-                      {
-                        ...result,
-                      }
-                    );
-                    addEdge(parentId, nodeId);
-                  });
-                }
+              idx += 1;
+              if (resp.data) {
+                let newNode: any = null;
+                // @ts-ignore
+                resp.data.forEach((result, rIdx) => {
+                  const nodeId = `r${getId()}`;
+                  newNode = addNode(
+                    nodeId,
+                    'result',
+                    {
+                      x: rIdx % 2 === 0 ? rect.x + 420 : rect.x + 1200,
+                      y:
+                        rIdx % 2 === 0
+                          ? rIdx * 80 - rect.y + Math.ceil(result.description.length / 70) * 50
+                          : (rIdx - 1) * 80 - rect.y + Math.ceil(result.description.length / 70) * 50,
+                    },
+                    {
+                      ...result,
+                    }
+                  );
+                  addEdge(parentId, nodeId);
+                });
+              }
             });
           }}
           className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
