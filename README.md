@@ -147,6 +147,7 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 - [x] Email Node
   - [x] To Google result transformation
 - [x] Url Node
+  - [x] Open in new tab
   - [x] To URLs (extract all urls found on a page)
   - [x] To URL scan transformation (urlscan.io)
   - [ ] To Google Cache
