@@ -37,7 +37,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={geoData.city}
+                    value={geoData && geoData.city && geoData.city}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />
@@ -50,7 +50,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={geoData.coordinates}
+                    value={geoData && geoData.coordinates && geoData.coordinates}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />
@@ -63,7 +63,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={geoData.country}
+                    value={geoData && geoData.country && geoData.country}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />
@@ -76,7 +76,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={geoData.postal}
+                    value={geoData && geoData.postal && geoData.postal}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />
@@ -89,7 +89,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={geoData.state}
+                    value={geoData && geoData.state && geoData.state}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />
@@ -102,7 +102,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={geoData.timezone}
+                    value={geoData && geoData.timezone && geoData.timezone}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />
@@ -119,7 +119,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={summaryData.asn}
+                    value={summaryData && summaryData.asn && summaryData.asn}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />
@@ -132,7 +132,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={summaryData.hostname}
+                    value={summaryData && summaryData.hostname && summaryData.hostname}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />
@@ -145,7 +145,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={summaryData.range}
+                    value={summaryData && summaryData.range && summaryData.range}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />
@@ -158,7 +158,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={summaryData.company}
+                    value={summaryData && summaryData.company && summaryData.company}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />
@@ -171,7 +171,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={summaryData.hostedDomains}
+                    value={summaryData && summaryData.hostedDomains && summaryData.hostedDomains}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />
@@ -184,7 +184,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={summaryData.privacy}
+                    value={summaryData && summaryData.privacy && summaryData.privacy}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />
@@ -197,7 +197,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={summaryData.anycast}
+                    value={summaryData && summaryData.anycast && summaryData.anycast}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />
@@ -210,7 +210,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={summaryData.asnType}
+                    value={summaryData && summaryData.asnType && summaryData.asnType}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />
@@ -223,7 +223,7 @@ export function GeoNode({ flowData }: any) {
                   <input
                     type='text'
                     data-type='domain'
-                    value={summaryData.abuseContact}
+                    value={summaryData && summaryData.abuseContact && summaryData.abuseContact}
                     className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     placeholder='example@gmail.com'
                   />

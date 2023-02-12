@@ -41,13 +41,11 @@ export function GoogleNode({
                 y: !newNode ? rIdx * result.description.length + 300 : newNode.y + 200,
               };
               const nodeId = getGoogleId();
-              console.log('newNode', newNode);
               newNode = addNode(
                 nodeId,
                 'result',
                 {
                   x: rIdx % 2 === 0 ? flowData.xPos + 420 : flowData.xPos + 1130,
-                  // y: rIdx % 2 === 0 ? (totalLines * 22)  : ((totalLines - rIdx) * 22) ,
                   y:
                     rIdx % 2 === 0
                       ? rIdx * 60 - flowData.yPos + Math.ceil(result.description.length / 60) * 100

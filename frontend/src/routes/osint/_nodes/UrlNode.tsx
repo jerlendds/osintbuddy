@@ -5,7 +5,7 @@ import { GripIcon, IpIcon } from '@/components/Icons';
 import { NodeContextProps } from '.';
 import api from '@/services/api.service';
 import { capitalize, NodeId } from '../OsintPage';
-import { AtSymbolIcon, LinkIcon, PaperClipIcon } from '@heroicons/react/24/outline';
+import { AtSymbolIcon, LinkIcon, PaperClipIcon, WindowIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 
 let nodeId = 0;
@@ -84,7 +84,6 @@ export default function UrlNodeContext({
   nodeType,
   parentId,
 }: NodeContextProps) {
-
   const getId = (): NodeId => {
     nodeId++;
     return `n_${nodeId}`;
@@ -93,59 +92,21 @@ export default function UrlNodeContext({
   return (
     <>
       <div className='py-1'>
-         <div>
-        <button
-          onClick={async (event) => {
-            const domain = nodeData[0].value;
-
-            const resp = await api.get(`/extract/domain/ip?domain=${domain}`);
-            if (resp.data) {
-              console.log(resp.data);
-              resp.data.ipv4.map((ip: string, idx: number) => {
-                console.log('ipv4', ip);
-                const newId = `i${getId()}${idx}`;
-                let bounds = node.getBoundingClientRect();
-                const newNode = addNode(
-                  newId,
-                  'ip',
-                  reactFlowInstance.project({
-                    x: bounds.x,
-                    y: bounds.y + 50 + idx * 120,
-                  }),
-                  {
-                    ip,
-                  }
-                );
-                addEdge(parentId, newId);
-                return null;
-              });
-              resp.data.ipv6.map((ip: string, idx: number) => {
-                const newId = `i${getId()}`;
-                let bounds = node.getBoundingClientRect();
-                const newNode = addNode(
-                  newId,
-                  'ip',
-                  reactFlowInstance.project({
-                    x: bounds.x + 360,
-                    y: bounds.y + 50 + idx * 120,
-                  }),
-                  {
-                    ip,
-                  }
-                );
-                addEdge(parentId, newId);
-                return null;
-              });
-            }
-          }}
-          className={classNames(
-            'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
-          )}
-        >
-          <IpIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-          To IP
-        </button>
-      </div>
+        <div>
+          <button
+            title='urlscan.io is a free service to scan and analyse websites. When a URL is submitted to urlscan.io, an automated process will browse to the URL like a regular user and record the activity that this page navigation creates. This includes the domains and IPs contacted, the resources (JavaScript, CSS, etc) requested from those domains, as well as additional information about the page itself. urlscan.io will take a screenshot of the page, record the DOM content, JavaScript global variables, cookies created by the page, and a myriad of other observations. If the site is targeting the users one of the more than 400 brands tracked by urlscan.io, it will be highlighted as potentially malicious in the scan results.'
+            onClick={(event) => {
+              let bounds = node.getBoundingClientRect();
+              const url = nodeData[0].value;
+              // @ts-ignore
+              if (url) window?.open(url, '_blank').focus();
+            }}
+            className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+          >
+            <WindowIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+            Open in new tab
+          </button>
+        </div>
         <div>
           <button
             title='urlscan.io is a free service to scan and analyse websites. When a URL is submitted to urlscan.io, an automated process will browse to the URL like a regular user and record the activity that this page navigation creates. This includes the domains and IPs contacted, the resources (JavaScript, CSS, etc) requested from those domains, as well as additional information about the page itself. urlscan.io will take a screenshot of the page, record the DOM content, JavaScript global variables, cookies created by the page, and a myriad of other observations. If the site is targeting the users one of the more than 400 brands tracked by urlscan.io, it will be highlighted as potentially malicious in the scan results.'
@@ -153,7 +114,7 @@ export default function UrlNodeContext({
               const nodeId = `us${getId()}`;
               let bounds = node.getBoundingClientRect();
               const domain = nodeData[3].value;
-              console.log('fuck', domain, nodeData)
+              console.log('fuck', domain, nodeData);
               api.get(`/extract/domain/urls?domain=${domain}`).then((resp) => {
                 addNode(
                   nodeId,
@@ -175,6 +136,60 @@ export default function UrlNodeContext({
         </div>
         <div>
           <button
+            onClick={async (event) => {
+              const domain = nodeData[0].value;
+
+              const resp = await api.get(`/extract/domain/ip?domain=${domain}`);
+              if (resp.data) {
+                console.log(resp.data);
+                resp.data.ipv4.map((ip: string, idx: number) => {
+                  console.log('ipv4', ip);
+                  const newId = `i${getId()}${idx}`;
+                  let bounds = node.getBoundingClientRect();
+                  const newNode = addNode(
+                    newId,
+                    'ip',
+                    reactFlowInstance.project({
+                      x: bounds.x,
+                      y: bounds.y + 50 + idx * 120,
+                    }),
+                    {
+                      ip,
+                    }
+                  );
+                  addEdge(parentId, newId);
+                  return null;
+                });
+                resp.data.ipv6.map((ip: string, idx: number) => {
+                  const newId = `i${getId()}`;
+                  let bounds = node.getBoundingClientRect();
+                  const newNode = addNode(
+                    newId,
+                    'ip',
+                    reactFlowInstance.project({
+                      x: bounds.x + 360,
+                      y: bounds.y + 50 + idx * 120,
+                    }),
+                    {
+                      ip,
+                    }
+                  );
+                  addEdge(parentId, newId);
+                  return null;
+                });
+              }
+            }}
+            className={classNames(
+              'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+            )}
+          >
+            <IpIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+            To IP
+          </button>
+        </div>
+
+        <div>
+          <button
             title='urlscan.io is a free service to scan and analyse websites. When a URL is submitted to urlscan.io, an automated process will browse to the URL like a regular user and record the activity that this page navigation creates. This includes the domains and IPs contacted, the resources (JavaScript, CSS, etc) requested from those domains, as well as additional information about the page itself. urlscan.io will take a screenshot of the page, record the DOM content, JavaScript global variables, cookies created by the page, and a myriad of other observations. If the site is targeting the users one of the more than 400 brands tracked by urlscan.io, it will be highlighted as potentially malicious in the scan results.'
             onClick={(event) => {
               let bounds = node.getBoundingClientRect();
@@ -187,7 +202,7 @@ export default function UrlNodeContext({
                     'url',
                     reactFlowInstance.project({
                       x: bounds.x + 160,
-                      y: bounds.y + (idx+ 140),
+                      y: bounds.y + (idx + 140),
                     }),
                     { url, domain }
                   );
