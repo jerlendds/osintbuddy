@@ -62,7 +62,8 @@ export function EmailNodeContext({
 }: NodeContextProps) {
   return (
     <div className='py-1'>
-      <div>
+      {/* @todo retry with better proxies */}
+      {/* <div>
         <button
           onClick={(event) => {
             const nodeId = `rw${getId()}`;
@@ -75,7 +76,7 @@ export function EmailNodeContext({
           <LockOpenIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
           To Breaches
         </button>
-      </div>
+      </div> */}
       <div>
         <button
           onClick={(event) => {

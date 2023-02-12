@@ -28,7 +28,39 @@ from app.worker import brute_force_subdomains
 
 router = APIRouter(prefix='/extract/domain')
 
+@router.get('/urls')
+def get_urls_for_ip_or_domain(
+    current_user: models.User = Depends(deps.get_current_active_user),
+    db: Session = Depends(deps.get_db),
+    domain: str = None
+):
+    
+    if domain:
+        domain = domain.replace('https://', '')
+        domain = domain.replace('http://', '')
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0',
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'Accept-Language': 'en-US,en;q=0.5',
+            # 'Accept-Encoding': 'gzip, deflate, br',
+            'Referer': 'https://urlscan.io/search/',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Connection': 'keep-alive',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            # Requests doesn't support trailers
+            # 'TE': 'trailers',
+            'If-None-Match': 'W/"35b5-canav/ugy73rSZLaEA1H7LXSq68"',
+        }
 
+        params = {
+            'q': urllib.parse.quote(domain),
+        }
+
+        response = requests.get('https://urlscan.io/api/v1/search/', params=params, headers=headers)
+        return response.json()
+    return []
 @router.get('/ip')
 def get_ipv4s_by_host(
     current_user: models.User = Depends(deps.get_current_active_user),
