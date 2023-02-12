@@ -108,16 +108,23 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
   - [x] To subdomains transformation
   - [x] To emails transformation
   - [x] To Traceroute transformation
+  - [x] To URL scan transformation (urlscan.io)
+  - [x] To URLs (extract all urls found on a page)
 - [x] Google search node
 - [x] Google result node
   - [x] To domain transformation
 - [x] Google dorks
 - [x] DNS Node
 - [x] Email Node
+  - [x] To Google result transformation
+- [x] Url Node
+  - [x] To URLs (extract all urls found on a page)
+  - [x] To URL scan transformation (urlscan.io)
 - [x] Ip Node
   - [x] To Geolocation transformation
   - [x] To Domain transformation
   - [x] To Traceroute transformation
+  - [x] To URL scan transformation (urlscan.io)
 - [ ] CSE Node
 
 

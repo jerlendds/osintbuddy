@@ -1,6 +1,12 @@
-import { GripIcon, WebsiteIcon, IpIcon } from '@/components/Icons';
+import { GripIcon, WebsiteIcon, IpIcon, GoogleIcon } from '@/components/Icons';
 import api from '@/services/api.service';
-import { CogIcon, DocumentMagnifyingGlassIcon, MagnifyingGlassIcon, WindowIcon } from '@heroicons/react/24/outline';
+import {
+  CogIcon,
+  DocumentMagnifyingGlassIcon,
+  MagnifyingGlassIcon,
+  PaperClipIcon,
+  WindowIcon,
+} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
@@ -9,9 +15,8 @@ import { NodeId } from '../OsintPage';
 
 let nodeId = 0;
 
-
 export function DomainNode({ flowData }: any) {
-  const initialValue = flowData.data && flowData.data.domain ? flowData.data.domain : ''
+  const initialValue = flowData.data && flowData.data.domain ? flowData.data.domain : '';
   const [domainValue, setDomainValue] = useState<string>(initialValue);
 
   const origin = flowData.data?.origin;
@@ -61,8 +66,6 @@ export function DomainNode({ flowData }: any) {
   );
 }
 
-
-
 export function DomainNodeContext({
   node,
   reactFlowInstance,
@@ -72,15 +75,14 @@ export function DomainNodeContext({
   nodeType,
   parentId,
 }: NodeContextProps) {
-
   // function getId(): NodeId {
   //   setNodeId(nodeId + 1);
   //   return `n_${nodeId}`;
   // }
   const getId = (): NodeId => {
-    nodeId++
-    return `n_${nodeId}`
-  } 
+    nodeId++;
+    return `n_${nodeId}`;
+  };
 
   return (
     <div className='py-1'>
@@ -337,7 +339,7 @@ export function DomainNodeContext({
             'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
           )}
         >
-          <WindowIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          <GoogleIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
           To google
         </button>
       </div>
@@ -365,7 +367,59 @@ export function DomainNodeContext({
           To Traceroute
         </button>
       </div>
+      <div>
+        <button
+          title='urlscan.io is a free service to scan and analyse websites. When a URL is submitted to urlscan.io, an automated process will browse to the URL like a regular user and record the activity that this page navigation creates. This includes the domains and IPs contacted, the resources (JavaScript, CSS, etc) requested from those domains, as well as additional information about the page itself. urlscan.io will take a screenshot of the page, record the DOM content, JavaScript global variables, cookies created by the page, and a myriad of other observations. If the site is targeting the users one of the more than 400 brands tracked by urlscan.io, it will be highlighted as potentially malicious in the scan results.'
+          onClick={(event) => {
+            const nodeId = `us${getId()}`;
+            let bounds = node.getBoundingClientRect();
+            api.get(`/extract/domain/urls?domain=${nodeData[0].value}`).then((resp) => {
+              addNode(
+                nodeId,
+                'urlscan',
+                reactFlowInstance.project({
+                  x: bounds.x + 160,
+                  y: bounds.y + 80,
+                }),
+                { ...resp.data }
+              );
+              addEdge(parentId, nodeId);
+            });
+          }}
+          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+        >
+          <PaperClipIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          To scan URL
+        </button>
+      </div>
+              <div>
+          <button
+            title='urlscan.io is a free service to scan and analyse websites. When a URL is submitted to urlscan.io, an automated process will browse to the URL like a regular user and record the activity that this page navigation creates. This includes the domains and IPs contacted, the resources (JavaScript, CSS, etc) requested from those domains, as well as additional information about the page itself. urlscan.io will take a screenshot of the page, record the DOM content, JavaScript global variables, cookies created by the page, and a myriad of other observations. If the site is targeting the users one of the more than 400 brands tracked by urlscan.io, it will be highlighted as potentially malicious in the scan results.'
+            onClick={(event) => {
+              let bounds = node.getBoundingClientRect();
+              const domain = nodeData[0].value;
+              api.get(`/extract/url/url?url=${encodeURIComponent(domain)}`).then((resp) => {
+                resp.data.forEach((url: string, idx: number) => {
+                  const nodeId = `ur${getId()}`;
+                  addNode(
+                    nodeId,
+                    'url',
+                    reactFlowInstance.project({
+                      x: bounds.x + 160,
+                      y: bounds.y + (idx+ 140),
+                    }),
+                    { url, domain }
+                  );
+                  addEdge(parentId, nodeId);
+                });
+              });
+            }}
+            className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+          >
+            <PaperClipIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+            To URLs
+          </button>
+        </div>
     </div>
   );
 }
-

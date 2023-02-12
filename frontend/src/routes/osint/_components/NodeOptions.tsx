@@ -27,6 +27,11 @@ const searchOptions = [
     title: 'Geolocate an IP and more',
     event: 'ip',
   },
+      {
+    name: 'URL',
+    title: 'A URL entity',
+    event: 'url',
+  },
 ];
 
 export default function NodeOptions() {

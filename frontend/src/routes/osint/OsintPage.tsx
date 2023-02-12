@@ -29,6 +29,8 @@ import { WhoisNode } from './_nodes/WhoisNode';
 import ContextMenu from './_components/ContextMenu';
 import { GeoNode } from './_nodes/GeoNode';
 import { TracerouteNode } from './_nodes/TracerouteNode';
+import { UrlScanNode } from './_nodes/UrlScanNode';
+import UrlNodeContext, { UrlNode } from './_nodes/UrlNode';
 
 const fitViewOptions: FitViewOptions = {
   padding: 0,
@@ -95,6 +97,7 @@ const DnDFlow = ({
 
   const nodeTypes = useMemo(() => {
     return {
+      url: (data) => <UrlNode flowData={data} />,
       dns: (data) => <DnsNode flowData={data} />,
       domain: (data) => <DomainNode flowData={data} />,
       email: (data) => <EmailNode flowData={data} />,
@@ -105,6 +108,7 @@ const DnDFlow = ({
       ip: (data) => <IpNode flowData={data} />,
       result: (data) => <ResultNode addNode={addNode} addEdge={addEdge} flowData={data} />,
       geo: (data) => <GeoNode flowData={data} />,
+      urlscan: (data) => <UrlScanNode flowData={data} />,
       traceroute: (data) => <TracerouteNode flowData={data} />,
     };
   }, []);
@@ -157,7 +161,7 @@ export interface AddEdge {
 }
 
 export function capitalize(value: string) {
-  return value.charAt(0).toUpperCase() + value.slice(1)
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 export default function OsintPage() {
@@ -331,6 +335,18 @@ export default function OsintPage() {
                   )}
                   {nodeType === 'google' && (
                     <GoogleNodeContext
+                      parentId={parentId}
+                      node={node}
+                      nodeData={nodeData}
+                      nodeType={nodeType}
+                      addNode={addNode}
+                      addEdge={addEdge}
+                      getId={getId}
+                      reactFlowInstance={reactFlowInstance}
+                    />
+                  )}
+                  {nodeType === 'url' && (
+                    <UrlNodeContext
                       parentId={parentId}
                       node={node}
                       nodeData={nodeData}
