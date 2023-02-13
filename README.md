@@ -115,6 +115,14 @@ https://docs.abuseipdb.com/#introduction
 
 @todo https://builtwith.com/
 
+
+@todo https://sploitus.com/
+
+@todo https://nvd.nist.gov/
+
+@todo https://www.reddit.com/dev/api/
+
+@todo https://github.com/JustAnotherArchivist/snscrape
  -->
 
 
