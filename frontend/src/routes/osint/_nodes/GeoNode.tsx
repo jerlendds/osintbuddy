@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { NodeContextProps } from '.';
 
-
 export function GeoNode({ flowData }: any) {
   const [geoData, setGeoData] = useState<any>(flowData.data.geolocation);
   const [summaryData, setSummaryData] = useState<any>(flowData.data.summary);
@@ -20,11 +19,12 @@ export function GeoNode({ flowData }: any) {
         <div className='flex h-full w-full items-center justify-between rounded-t-sm bg-primary text-white py-2 px-1'>
           <GripIcon className='h-5 w-5' />
           <div className='flex w-full flex-col px-2 font-semibold'>
-            <p className='text-[0.4rem] text-dark-300  whitespace-wrap font-display'>Geolocation</p>
-            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display'>
-              <span className='text-xs text-dark-300 max-w-xl whitespace-wrap font-display'>ID: </span>
+            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
+              {' '}
+              <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
               {flowData.id}
             </p>
+            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>Geolocation</p>
           </div>
           <WebsiteIcon className='h-5 w-5 mr-2' />
         </div>

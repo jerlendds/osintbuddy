@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { NodeContextProps } from '.';
 
-
 export function EmailNode({ flowData }: any) {
   const [emailValue, setEmailValue] = useState<string>(flowData.data.email);
   return (
@@ -18,11 +17,12 @@ export function EmailNode({ flowData }: any) {
         <div className='flex h-full w-full items-center justify-between rounded-t-sm bg-alert-600 text-white py-2 px-1'>
           <GripIcon className='h-5 w-5' />
           <div className='flex w-full flex-col px-2 font-semibold'>
-            <p className='text-[0.4rem] text-dark-300  whitespace-wrap font-display'>Email</p>
-            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display'>
-              <span className='text-xs text-dark-300 max-w-xl whitespace-wrap font-display'>ID: </span>
+            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
+              {' '}
+              <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
               {flowData.id}
             </p>
+            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>Email</p>
           </div>
           <WebsiteIcon className='h-5 w-5 mr-2' />
         </div>
@@ -61,7 +61,6 @@ export function EmailNodeContext({
   parentId,
   getId,
 }: NodeContextProps) {
-
   return (
     <div className='py-1'>
       {/* @todo retry with better proxies */}

@@ -5,7 +5,6 @@ import api from '@/services/api.service';
 import { DocumentIcon, ListBulletIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { NodeContextProps } from '.';
 
-
 export function GoogleNode({
   addNode,
   flowData,
@@ -18,9 +17,8 @@ export function GoogleNode({
   addEdge: Function;
   bounds: any;
   reactFlowInstance: any;
-  getId: Function
+  getId: Function;
 }) {
-
   const [queryValue, setQueryValue] = useState<string>('');
   const [pagesValue, setPagesValue] = useState<number>(3);
   let newPos = { x: 0, y: 0 };
@@ -79,11 +77,12 @@ export function GoogleNode({
         <div className='flex h-full w-full items-center justify-between rounded-t-sm bg-info-300 text-white py-2 px-1'>
           <GripIcon className='h-5 w-5' />
           <div className='flex w-full flex-col px-2 font-semibold'>
-            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>Google Search</p>
-            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display'>
-              <span className='text-xs text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
+            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
+              {' '}
+              <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
               {flowData.id}
             </p>
+            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>Google Search</p>
           </div>
           <GoogleIcon className='h-5 w-5 mr-2' />
         </div>
@@ -149,46 +148,46 @@ export function GoogleNodeContext({
   return (
     <div className='py-1'>
       <div>
-        <button onClick={() => {
-          const bounds = node.getBoundingClientRect()
-              api
-      .get(`/extract/google/search?query=${nodeData[0].value}&pages=${nodeData[1].value}`)
-      .then((resp) => {
-        let idx = 0;
-        idx += 1;
-        if (resp.data) {
-          let newNode: any = null;
-          // @ts-ignore
+        <button
+          onClick={() => {
+            const bounds = node.getBoundingClientRect();
+            api
+              .get(`/extract/google/search?query=${nodeData[0].value}&pages=${nodeData[1].value}`)
+              .then((resp) => {
+                let idx = 0;
+                idx += 1;
+                if (resp.data) {
+                  let newNode: any = null;
+                  // @ts-ignore
 
-          resp.data.forEach((result, rIdx) => {
-            const pos = {
-              x: bounds.x + 260,
-              y: !newNode ? rIdx * result.description.length + 300 : newNode.y + 200,
-            };
-            const nodeId = getId();
-            newNode = addNode(
-              nodeId,
-              'result',
-              {
-                x: rIdx % 2 === 0 ? bounds.x + 60 : bounds.x + 800,
-                y:
-                  rIdx % 2 === 0
-                    ? (rIdx * 60) + bounds.y 
-                    : ((rIdx - 1) * 60) + bounds.y ,
-              },
-              {
-                ...result,
-              }
-            );
-            addEdge(parentId, nodeId);
-            console.log(nodeId, result.description.length, newNode, pos);
-          });
-        }
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
-        }} className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'>
+                  resp.data.forEach((result, rIdx) => {
+                    const pos = {
+                      x: bounds.x + 260,
+                      y: !newNode ? rIdx * result.description.length + 300 : newNode.y + 200,
+                    };
+                    const nodeId = getId();
+                    newNode = addNode(
+                      nodeId,
+                      'result',
+                      {
+                        x: rIdx % 2 === 0 ? bounds.x + 60 : bounds.x + 800,
+                        y: rIdx % 2 === 0 ? rIdx * 60 + bounds.y : (rIdx - 1) * 60 + bounds.y,
+                      },
+                      {
+                        ...result,
+                      }
+                    );
+                    addEdge(parentId, nodeId);
+                    console.log(nodeId, result.description.length, newNode, pos);
+                  });
+                }
+              })
+              .catch((error) => {
+                console.warn(error);
+              });
+          }}
+          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+        >
           <ListBulletIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
           To results
         </button>
