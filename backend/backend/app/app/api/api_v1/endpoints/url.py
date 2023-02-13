@@ -1,6 +1,6 @@
 import re
-import urllib
 import time
+from urllib.parse import urlparse
 import validators
 from selenium.webdriver.common.by import By
 from fastapi import APIRouter, Depends, HTTPException
@@ -14,7 +14,7 @@ from app.core.celery_app import app
 from app.worker import brute_force_subdomains
 from app.initial_data import logger
 from app.core.logger import get_logger
-from app.api.utils import extract_emails_from_google
+from app.api.extractors import get_emails_from_google
 
 prefix='/extract/url'
 
@@ -51,6 +51,7 @@ async def page_emails_extractor(
 async def page_emails_extractor(
     current_user: models.User = Depends(deps.get_current_active_user),
     driver: Remote = Depends(deps.get_driver),
+    gdb: Remote = Depends(deps.get_gdb),
     url: str = None
 ):
     if not url:
@@ -61,7 +62,7 @@ async def page_emails_extractor(
             raise HTTPException(status_code=422, detail="malformedURL")
             
     try:
-        emails = extract_emails_from_google(urllib.parse.urlparse(url).netloc)
+        emails = get_emails_from_google(gdb, urlparse(url).netloc)
     except Exception:
         emails = []
 

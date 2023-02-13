@@ -1,5 +1,6 @@
 from typing import Generator
 
+from neo4j._sync import work
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from fastapi import Depends, HTTPException, status
