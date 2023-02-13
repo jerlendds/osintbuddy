@@ -5,7 +5,6 @@ import { GripIcon, WebsiteIcon } from '@/components/Icons';
 import RoundLoader from '@/components/Loaders';
 import api from '@/services/api.service';
 
-
 export function SubdomainNode({ flowData }: any) {
   const task = flowData?.data?.id;
   const [subdomains, setSubdomains] = useState<Array<string>>([]);
@@ -33,7 +32,6 @@ export function SubdomainNode({ flowData }: any) {
     }
   }, []);
 
-
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' />
@@ -44,11 +42,12 @@ export function SubdomainNode({ flowData }: any) {
         <div className='flex h-full w-full items-center justify-between rounded-t-sm bg-persian-300 text-white py-2 px-1'>
           <GripIcon className='h-5 w-5' />
           <div className='flex w-full flex-col px-2 font-semibold'>
-            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>Subdomains</p>
-            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display'>
-              <span className='text-xs text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
+            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
+              {' '}
+              <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
               {flowData.id}
             </p>
+            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>Subdomains</p>
           </div>
           <WebsiteIcon className='h-5 w-5 mr-2' />
         </div>

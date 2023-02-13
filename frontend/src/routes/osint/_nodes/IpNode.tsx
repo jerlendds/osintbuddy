@@ -4,7 +4,7 @@ import { GripIcon, IpIcon } from '@/components/Icons';
 import { NodeContextProps } from '.';
 import api from '@/services/api.service';
 import { PaperClipIcon } from '@heroicons/react/24/outline';
-
+import { toast } from 'react-toastify';
 
 export function IpNode({ flowData, deleteNode }: any) {
   const [ips, setIps] = useState(flowData.data.ip);
@@ -22,11 +22,12 @@ export function IpNode({ flowData, deleteNode }: any) {
         <div className='flex h-full w-full items-center justify-between rounded-t-sm bg-warning text-white py-2 px-1'>
           <GripIcon className='h-5 w-5' />
           <div className='flex w-full flex-col px-2 font-semibold'>
-            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>IP Address</p>
-            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display'>
-              <span className='text-xs text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
+            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
+              {' '}
+              <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
               {flowData.id}
             </p>
+            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>IP Address</p>
           </div>
           <IpIcon className='h-5 w-5 mr-2' />
         </div>
@@ -69,7 +70,6 @@ export default function IpNodeContext({
   parentId,
   getId,
 }: NodeContextProps) {
-
   return (
     <div className='py-1'>
       <div>
@@ -78,16 +78,20 @@ export default function IpNodeContext({
             const nodeId = `rw${getId()}`;
             let rect = node.getBoundingClientRect();
             api.get(`/extract/ip/domain?ip=${nodeData[0].value}`).then((resp) => {
-              addNode(
-                nodeId,
-                'domain',
-                {
-                  x: rect.x + 160,
-                  y: rect.y + 40,
-                },
-                resp.data
-              );
-              addEdge(parentId, nodeId);
+              if (resp.data.length != 0) {
+                addNode(
+                  nodeId,
+                  'domain',
+                  {
+                    x: rect.x + 160,
+                    y: rect.y + 40,
+                  },
+                  resp.data
+                );
+                addEdge(parentId, nodeId);
+              } else {
+                toast.error("Found no hostname records in the DNS")
+              }
             });
           }}
           className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
@@ -169,7 +173,7 @@ export default function IpNodeContext({
           className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
         >
           <PaperClipIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-          To URL scan 
+          To URL scan
         </button>
       </div>
     </div>

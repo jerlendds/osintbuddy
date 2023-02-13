@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Position, Handle } from 'reactflow';
 import { GripIcon, WebsiteIcon } from '@/components/Icons';
 
-
 export function WhoisNode({ flowData }: any) {
   console.log(flowData);
   const [seoData, setSeoData] = useState(flowData.data.label);
@@ -20,11 +19,12 @@ export function WhoisNode({ flowData }: any) {
         <div className='flex h-full w-full items-start justify-between rounded-t-sm bg-pink-600 text-white py-2 px-1'>
           <GripIcon className='h-5 w-5' />
           <div className='flex w-full flex-col px-2 font-semibold'>
-            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>WHOIS</p>
-            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display'>
-              <span className='text-xs text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
+            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
+              {' '}
+              <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
               {flowData.id}
             </p>
+            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>WHOIS</p>
           </div>
           <WebsiteIcon className='h-5 w-5 mr-2' />
         </div>

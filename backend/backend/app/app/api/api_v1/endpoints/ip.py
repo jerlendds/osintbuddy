@@ -24,6 +24,10 @@ from app import crud, schemas, models
 from app.api import deps
 from app.core.celery_app import app
 from app.worker import brute_force_subdomains
+from app.core.logger import get_logger
+
+
+logger = get_logger(name=" /extract/ip ")
 
 
 router = APIRouter(prefix='/extract/ip')
@@ -43,11 +47,10 @@ def resolve_domain(
     try:
         resolved = socket.gethostbyaddr(ip)
         if resolved and resolved[0]:
-            print(resolved)
             return {
                 "domain": resolved[0]
             }
-    except socket.gaierror:
+    except (socket.gaierror, socket.herror):
         return []
     
     
