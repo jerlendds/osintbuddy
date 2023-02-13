@@ -154,9 +154,8 @@ export default function IpNodeContext({
             const nodeId = `us${getId()}`;
             let bounds = node.getBoundingClientRect();
             const domain = nodeData[0].value;
-            console.log(new URL(domain).host);
             if (domain) {
-              api.get(`/extract/domain/urls?domain=${new URL(domain).host}`).then((resp) => {
+              api.get(`/extract/domain/urls?domain=${domain}`).then((resp) => {
                 addNode(
                   nodeId,
                   'urlscan',
