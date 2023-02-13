@@ -5,8 +5,6 @@ import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outl
 import { Combobox } from '@headlessui/react';
 import classNames from 'classnames';
 
-let nodeId = 0;
-const getId = () => `rnode_${nodeId++}`;
 
 export function CseNode({ flowData }: any) {
   const isMounted = useRef(false);

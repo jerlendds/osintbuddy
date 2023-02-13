@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -28,6 +27,5 @@ func googleCacheSearch(c echo.Context) error {
 
 func googleSearch(c echo.Context) error {
 	var crawlResults = google.GoogleService(c.QueryParam("query"), c.QueryParam("pages"))
-	fmt.Println(crawlResults)
 	return c.JSON(http.StatusOK, crawlResults)
 }

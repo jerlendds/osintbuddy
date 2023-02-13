@@ -24,8 +24,9 @@ from app import crud, schemas, models
 from app.api import deps
 from app.core.celery_app import app
 from app.worker import brute_force_subdomains
-from app.api.extractors import get_emails_from_google
+from app.api.extractors import get_emails_from_google, get_emails_from_url
 from app.core.logger import get_logger
+from app.api.utils import to_clean_domain
 
 logger = get_logger(name=" /extract/domain ")
 
@@ -206,17 +207,21 @@ def get_subdomains_status(
         logger.error(e)
         return []
 
-
     
 @router.get('/emails')
 def get_emails_from_google_results(
     current_user: models.User = Depends(deps.get_current_active_user),
     gdb: Session = Depends(deps.get_gdb),
+    driver: Session = Depends(deps.get_driver),
     domain: str = ""
 ):  
+    url = "https://" + domain
     try:
         emails = get_emails_from_google(gdb, domain, pages=10)
-        return emails
+        emails = emails + get_emails_from_url(driver, url)
+        logger.info(f"FUCK {emails[0].find(to_clean_domain(domain))} {domain} {emails[0]}")
+        domain = to_clean_domain(domain)
+        return list(set([email for email in emails if email.find(domain) != -1]))
     except Exception as e:
         logger.error(e)
         return []

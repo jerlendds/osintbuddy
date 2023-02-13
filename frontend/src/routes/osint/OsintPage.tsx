@@ -36,7 +36,12 @@ const fitViewOptions: FitViewOptions = {
   padding: 0,
 };
 
-let nodeId = 0;
+export var nodeId = 0;
+
+export const getId = (): NodeId => {
+  nodeId++;
+  return `n_${nodeId}`;
+};
 
 const DnDFlow = ({
   reactFlowWrapper,
@@ -52,11 +57,6 @@ const DnDFlow = ({
   addNode,
   addEdge,
 }) => {
-  function getId() {
-    nodeId++;
-    return `n_${nodeId}`;
-  }
-
   const onConnect = useCallback((connection) => setEdges((eds) => addEdge(connection, edges)), [setEdges]);
 
   const onEdgeUpdate = useCallback(
@@ -100,7 +100,7 @@ const DnDFlow = ({
       domain: (data) => <DomainNode flowData={data} />,
       email: (data) => <EmailNode flowData={data} />,
       subdomain: (data) => <SubdomainNode flowData={data} />,
-      google: (data) => <GoogleNode addNode={addNode} addEdge={addEdge} flowData={data} />,
+      google: (data) => <GoogleNode addNode={addNode} addEdge={addEdge} getId={() => getId()} flowData={data} />,
       cse: (data) => <CseNode flowData={data} />,
       whois: (data) => <WhoisNode flowData={data} />,
       ip: (data) => <IpNode flowData={data} />,
@@ -170,10 +170,6 @@ export default function OsintPage() {
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [nodeId, setNodeId] = useState<number>(0);
 
-  function getId(): NodeId {
-    setNodeId(nodeId + 1);
-    return `s_${nodeId}`;
-  }
 
   function addNode(id, type, position, data: AddNode): Node<XYPosition> {
     let addPosition = null;

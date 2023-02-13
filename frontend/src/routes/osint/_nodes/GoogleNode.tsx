@@ -2,15 +2,15 @@ import { useState } from 'react';
 import { GoogleIcon, GripIcon } from '@/components/Icons';
 import { Handle, Position } from 'reactflow';
 import api from '@/services/api.service';
-import { DocumentIcon, HeartIcon, ListBulletIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { NodeContextProps, NodeId } from '.';
+import { DocumentIcon, ListBulletIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { NodeContextProps } from '.';
 
-let nodeId = 0;
 
 export function GoogleNode({
   addNode,
   flowData,
   addEdge,
+  getId,
 }: {
   addNode: Function;
   flowData: any;
@@ -18,8 +18,8 @@ export function GoogleNode({
   addEdge: Function;
   bounds: any;
   reactFlowInstance: any;
+  getId: Function
 }) {
-  const getId = () => `rnode_${nodeId++}`;
 
   const [queryValue, setQueryValue] = useState<string>('');
   const [pagesValue, setPagesValue] = useState<number>(3);
@@ -144,11 +144,8 @@ export function GoogleNodeContext({
   nodeData,
   nodeType,
   parentId,
+  getId,
 }: NodeContextProps) {
-  const getId = (): NodeId => {
-    nodeId++;
-    return `n_${nodeId}`;
-  };
   return (
     <div className='py-1'>
       <div>

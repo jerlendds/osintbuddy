@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { NodeContextProps } from '.';
 
-let nodeId = 0;
 
 export function GeoNode({ flowData }: any) {
   const [geoData, setGeoData] = useState<any>(flowData.data.geolocation);
@@ -248,13 +247,12 @@ export function GeoNode({ flowData }: any) {
 export function GeoNodeContext({
   node,
   reactFlowInstance,
-
+  getId,
   addNode,
   addEdge,
   nodeData,
   nodeType,
   parentId,
 }: NodeContextProps) {
-  const getId = () => `rnode_${nodeId++}`;
   return <></>;
 }

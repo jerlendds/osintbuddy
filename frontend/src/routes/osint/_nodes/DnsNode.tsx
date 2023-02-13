@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Position, Handle } from 'reactflow';
 import { GripIcon, IpIcon } from '@/components/Icons';
 
-let nodeId = 0;
 
 export function DnsNode({ flowData }: any) {
   const [dnsData, setDnsData] = useState(flowData.data.label);

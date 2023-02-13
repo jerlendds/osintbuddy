@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Position, Handle } from 'reactflow';
 import { GripIcon, WebsiteIcon } from '@/components/Icons';
 
-let nodeId = 0;
 
 export function WhoisNode({ flowData }: any) {
   console.log(flowData);
