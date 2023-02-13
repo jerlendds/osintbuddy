@@ -13,10 +13,7 @@ export function TracerouteNode({ flowData, deleteNode }: any) {
   const handleSubmit = (event: any) => {
     event.preventDefault();
   };
-  console.log(
-    data.data.map((elm: any) => elm.hop),
-    data.data
-  );
+
   const chartRef = useRef(null);
   var option: echarts.EChartsOption = {
     xAxis: {
@@ -46,7 +43,6 @@ export function TracerouteNode({ flowData, deleteNode }: any) {
     ],
   };
 
-  console.log('chartRef', chartRef);
   function Table({ columns, data }: any) {
     // Use the state and functions returned from useTable to build your UI
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
