@@ -141,10 +141,8 @@ def get_raw_whois(
         element_present = EC.presence_of_element_located(
             (By.ID, 'registrarData')
         )
-        driver.save_screenshot('foo.png')
         WebDriverWait(driver, 20).until(element_present)
         data = driver.find_element(by=By.ID, value='registrarData').text
-        driver.save_screenshot('bar.png')
         return data
     except Exception as e:
         print(e)
