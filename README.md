@@ -75,7 +75,7 @@ To get a local copy up and running follow these simple steps.
 
    ```sh
    cd backend/
-   docker-compose up
+   docker compose up
    ```
 
  - **URLs**
@@ -86,12 +86,20 @@ To get a local copy up and running follow these simple steps.
     - Neo4J: http://localhost:7474/browser/
 
 <!-- 
+
+mk-fg recommendations: 
+nmap with os fingerprinting options, metasploit/w3af scan, ssh whoarethey using corpus of pubkeys from github ( https://www.agwa.name/blog/post/whoarethey ), torrent activity for IP (from DHT and such, e.g. https://iknowwhatyoudownload.com/ but better data/targeting), dns name(s) for IP via various leaky protocols and related IPs from that (e.g. TLS cert altnames, SMTP, etc), spam-lists/dmarc reputation for IP/name, info on services and keys associated with name(s) from TXT/SRV records, address' AS BGP info
+
+moddy recommendations:
+math, map, reduce, filter, zip and zipwith function blocks
+
+
 Awesome site: https://www.jsonapi.co/public-api
 
 https://github.com/danielmiessler/SecLists/tree/master/Discovery/DNS
 
 @todo add google cache crawl endpoint
-http://webcache.googleusercontent.com/search?q=
+http://webcache.googleusercontent.com/search?q=cache:
 
 
 COMB breach @todo add password searching
@@ -123,6 +131,25 @@ https://docs.abuseipdb.com/#introduction
 @todo https://www.reddit.com/dev/api/
 
 @todo https://github.com/JustAnotherArchivist/snscrape
+
+
+@todo username finder
+https://whatsmyname.app/
+
+@todo
+https://github.com/Greyjedix/Profil3r - Profil3r is an OSINT tool that allows you to find potential profiles of a person on social networks, as well as their email addresses. This program also alerts you to the presence of a data leak for the found emails.
+
+@todo https://epieos.com/
+
+@todo https://github.com/megadose/holehe
+https://os2int.com/toolbox/verifying-and-investigating-email-addresses-with-holehe/
+
+https://github.com/kpcyrd/sn0int
+
+https://github.com/DataSploit/datasploit
+
+
+https://github.com/mxrch/ghunt
  -->
 
 
