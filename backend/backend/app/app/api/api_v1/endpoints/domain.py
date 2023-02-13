@@ -24,17 +24,12 @@ from app import crud, schemas, models
 from app.api import deps
 from app.core.celery_app import app
 from app.worker import brute_force_subdomains
-from app.api.utils import extract_emails_from_google
+from app.api.extractors import get_emails_from_google
 from app.core.logger import get_logger
 
 logger = get_logger(name=" /extract/domain ")
 
 router = APIRouter(prefix="/extract/domain")
-
-
-def add_similiar_domain(tx, domain, similiar_domain):
-    tx.run()
-    
 
 
 @router.get('/domains')
@@ -105,8 +100,10 @@ def get_urls_for_ip_or_domain(
         response = requests.get('https://urlscan.io/api/v1/search/', params=params, headers=headers)
         return response.json()
     return []
+
+
 @router.get('/ip')
-def get_ipv4s_by_host(
+def get_ips_by_host(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
     domain: str = ""
@@ -174,13 +171,13 @@ def get_dns_info(
             resolved = dns.resolver.resolve(domain, key)
             data[key] = [str(answer) for answer in resolved]
         except Exception as e:
-            print(e)
+            logger.info(e)
     return data
-    
+
+
 @router.get('/subdomains')
 def get_subdomains(
     current_user: models.User = Depends(deps.get_current_active_user),
-    db: Session = Depends(deps.get_db),
     domain: str = ""
 ):
     if domain:
@@ -190,30 +187,36 @@ def get_subdomains(
             "domain": domain,
             "id": task.task_id
         }
-    return {
-        "status": "domainRequired"
-    }
-    
+    raise HTTPException(status_code=422, detail="domainRequired")
+
+
 @router.get('/subdomains/status')
 def get_subdomains_status(
     current_user: models.User = Depends(deps.get_current_active_user),
-    db: Session = Depends(deps.get_db),
     id: str = ""
 ):
-    task = brute_force_subdomains.AsyncResult(id)
-    print(task.info, task.state)
-    return {
-        "task": task.info,
-        "status": task.state,
-        "id": id
-    }
+    try:
+        task = brute_force_subdomains.AsyncResult(id)
+        return {
+            "task": task.info,
+            "status": task.state,
+            "id": id
+        }
+    except Exception as e:
+        logger.error(e)
+        return []
+
 
     
 @router.get('/emails')
 def get_emails_from_google_results(
     current_user: models.User = Depends(deps.get_current_active_user),
-    db: Session = Depends(deps.get_db),
+    gdb: Session = Depends(deps.get_gdb),
     domain: str = ""
-):
-    emails = extract_emails_from_google(domain)
-    return emails
+):  
+    try:
+        emails = get_emails_from_google(gdb, domain, pages=10)
+        return emails
+    except Exception as e:
+        logger.error(e)
+        return []

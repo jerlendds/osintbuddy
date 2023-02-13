@@ -87,6 +87,8 @@ To get a local copy up and running follow these simple steps.
 
 <!-- 
 
+
+
 mk-fg recommendations: 
 nmap with os fingerprinting options, metasploit/w3af scan, ssh whoarethey using corpus of pubkeys from github ( https://www.agwa.name/blog/post/whoarethey ), torrent activity for IP (from DHT and such, e.g. https://iknowwhatyoudownload.com/ but better data/targeting), dns name(s) for IP via various leaky protocols and related IPs from that (e.g. TLS cert altnames, SMTP, etc), spam-lists/dmarc reputation for IP/name, info on services and keys associated with name(s) from TXT/SRV records, address' AS BGP info
 
@@ -97,9 +99,6 @@ math, map, reduce, filter, zip and zipwith function blocks
 Awesome site: https://www.jsonapi.co/public-api
 
 https://github.com/danielmiessler/SecLists/tree/master/Discovery/DNS
-
-@todo add google cache crawl endpoint
-http://webcache.googleusercontent.com/search?q=cache:
 
 
 COMB breach @todo add password searching

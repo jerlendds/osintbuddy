@@ -1,32 +1,35 @@
 import re
 import urllib
+from typing import List
+from pydantic import EmailStr
 import requests
 from fastapi import HTTPException
+from neo4j._sync import work
+from app.core.logger import get_logger
 
 
-def extract_emails_from_google(domain):
+logger = get_logger(name=" app.api.utils ")
+
+
+def find_emails(value: str) -> List[EmailStr]:
     emails = []
-    if not domain:
-        raise HTTPException(status_code=422, detail="domainRequired")
-    if "www." in domain:
-        domain = domain.replace("www.", "")
-    try:
-        encoded_query = urllib.parse.quote('intext:"@' + domain + '"')
-        google_results = requests.get(f'http://microservice:1323/google?query={encoded_query}&pages={7}')
-        data = google_results.json()
-    except Exception as e:
-        return []
-    results = data.get('search', [])
-    for result in results:
-        compare = result.get('description', '') + ' ' + result.get('title', '')
-        match = re.search(r'[\w.+-]+@[\w-]+\.[\w.-]+', compare)
-        if match is not None:
-            email = match.group(0)
-            if email[len(email)-1] == ".":
-                email = email[0:len(email) - 2]
-            if email.find(domain) == -1:
-                pass
-            else:
-                emails.append(email)
-                
+    match = re.search(r'[\w.+-]+@[\w-]+\.[\w.-]+', value)
+    if match is not None:
+        email = match.group(0)
+        # if trailing dot, remove
+        if email[len(email)-1] == ".":
+            emails.append(email[0:len(email) - 2])
+        else:
+            emails.append(email)
     return list(set(emails))
+
+
+def to_clean_domain(value: str):
+    if "http://" not in value and "https://" not in value: 
+        value = "https://" + value
+    url = urllib.parse.urlparse(value)
+    split_domain = url.netloc.split('.')
+    if len(split_domain) >= 3:
+        split_domain.pop(0)
+    domain = '.'.join(split_domain)
+    return domain
