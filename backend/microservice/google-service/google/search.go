@@ -189,9 +189,9 @@ func CrawlGoogle(searchQuery string, pages string) {
 	// parse typical search results
 	c.OnHTML("#cnt", func(e *colly.HTMLElement) {
 		e.ForEach(".MjjYud", func(_ int, el *colly.HTMLElement) {
-			ParseGoogleResult(el)
+			ParseGoogleResult(el, serpResults)
 			el.ForEach("div.d4rhi", func(_ int, elm *colly.HTMLElement) {
-				ParseGoogleResult(elm)
+				ParseGoogleResult(elm, serpResults)
 			})
 		})
 	})
@@ -211,6 +211,7 @@ func CrawlGoogle(searchQuery string, pages string) {
 
 func GoogleService(query string, pages string) SerpResults {
 	serpResults = new(SerpResults)
-	CrawlGoogleCache(query, pages)
+	CrawlGoogle(query, pages)
+	fmt.Println(*serpResults)
 	return *serpResults
 }

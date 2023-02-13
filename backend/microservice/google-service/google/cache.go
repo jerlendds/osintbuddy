@@ -14,7 +14,7 @@ import (
 
 var cacheSerpResults = new(SerpResults)
 
-func ParseGoogleResult(el *colly.HTMLElement) {
+func ParseGoogleResult(el *colly.HTMLElement, data *SerpResults) {
 	var breadcrumb string = el.ChildText("div.TbwUpd.NJjxre cite")
 	var heading string = el.ChildText("a h3.LC20lb.MBeuO.DKV0Md")
 	var urlString string = el.ChildAttr("div.yuRUbf a", "href")
@@ -34,7 +34,7 @@ func ParseGoogleResult(el *colly.HTMLElement) {
 			Link:        urlString,
 			Breadcrumb:  breadcrumb,
 		}
-		cacheSerpResults.Search = append(cacheSerpResults.Search, *searchResult)
+		data.Search = append(data.Search, *searchResult)
 	}
 }
 
@@ -164,9 +164,9 @@ func CrawlGoogleCache(searchQuery string, pages string) {
 	// parse typical search results
 	c.OnHTML("#cnt", func(e *colly.HTMLElement) {
 		e.ForEach(".MjjYud", func(_ int, el *colly.HTMLElement) {
-			ParseGoogleResult(el)
+			ParseGoogleResult(el, cacheSerpResults)
 			el.ForEach("div.d4rhi", func(_ int, elm *colly.HTMLElement) {
-				ParseGoogleResult(elm)
+				ParseGoogleResult(elm, cacheSerpResults)
 			})
 		})
 	})
