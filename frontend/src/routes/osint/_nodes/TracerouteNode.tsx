@@ -3,12 +3,11 @@ import * as echarts from 'echarts';
 import { Position, Handle } from 'reactflow';
 import { Column, useTable } from 'react-table';
 import { GripIcon, IpIcon } from '@/components/Icons';
-import { NodeContextProps, NodeId } from '.';
+import { NodeContextProps } from '.';
 import api from '@/services/api.service';
 import { capitalize } from '../OsintPage';
 import { ReactECharts } from '@/components/ReactEcharts';
 
-let nodeId = 0;
 
 export function TracerouteNode({ flowData, deleteNode }: any) {
   const [data, setData] = useState(flowData.data);
@@ -176,11 +175,8 @@ export default function TracerouteNodeContext({
   nodeData,
   nodeType,
   parentId,
-}: NodeContextProps) {
-  const getId = (): NodeId => {
-    nodeId++;
-    return `n_${nodeId}`;
-  };
+  getId,
 
+}: NodeContextProps) {
   return <></>;
 }

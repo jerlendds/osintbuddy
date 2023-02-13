@@ -4,9 +4,7 @@ import classNames from 'classnames';
 import { toast } from 'react-toastify';
 import { Handle, Position } from 'reactflow';
 import { NodeContextProps } from '.';
-import { NodeId } from '.';
 
-let nodeId = 0;
 
 export function ResultNode({ flowData }: { flowData: any }) {
   return (
@@ -62,11 +60,9 @@ export function ResultNodeContext({
   nodeData,
   nodeType,
   parentId,
+  getId,
 }: NodeContextProps) {
-  const getId = (): NodeId => {
-    nodeId++;
-    return `n_${nodeId}`;
-  };
+
   return (
     <div className='py-1'>
       <div>

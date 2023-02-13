@@ -24,5 +24,9 @@ def get_search_results(
     query: str = None,
     force_search: str = False
 ):
-    results = get_google_results(gdb, query, pages, force_search)
-    return results
+    try:
+        results = get_google_results(gdb, query, pages, force_search)
+        return results
+    except Exception as e:
+        logger.error(e)
+        return []

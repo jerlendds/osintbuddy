@@ -20,7 +20,6 @@ class GoogleSearch(StructuredNode):
 
 
 def get_google_search_results(tx, search_query, pages):
-
     return [{
             "result_type": result.get("result_type"),
             "breadcrumb": result.get("breadcrumb"),

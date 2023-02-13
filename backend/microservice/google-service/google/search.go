@@ -64,7 +64,7 @@ type SerpResults struct {
 var serpResults = new(SerpResults)
 
 func CrawlGoogle(searchQuery string, pages string) {
-
+	fmt.Println(searchQuery, url.QueryEscape(searchQuery))
 	var paginationIndex = 1
 	totalPages, err := strconv.Atoi(pages)
 	if err != nil {
@@ -196,7 +196,6 @@ func CrawlGoogle(searchQuery string, pages string) {
 		})
 	})
 
-
 	c.OnError(func(_ *colly.Response, err error) {
 		log.Println("Something went wrong:", err)
 	})
@@ -212,6 +211,5 @@ func CrawlGoogle(searchQuery string, pages string) {
 func GoogleService(query string, pages string) SerpResults {
 	serpResults = new(SerpResults)
 	CrawlGoogle(query, pages)
-	fmt.Println(*serpResults)
 	return *serpResults
 }

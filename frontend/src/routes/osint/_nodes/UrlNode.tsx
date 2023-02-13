@@ -2,13 +2,11 @@ import { useState } from 'react';
 import { Position, Handle } from 'reactflow';
 import { Column, useTable } from 'react-table';
 import { GripIcon, IpIcon } from '@/components/Icons';
-import { NodeContextProps, NodeId } from '.';
+import { NodeContextProps } from '.';
 import api from '@/services/api.service';
 import { capitalize } from '../OsintPage';
 import { AtSymbolIcon, LinkIcon, PaperClipIcon, WindowIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
-
-let nodeId = 0;
 
 export function UrlNode({ flowData, deleteNode }: any) {
   const [url, setUrl] = useState<string>(flowData.data?.url);
@@ -83,19 +81,15 @@ export default function UrlNodeContext({
   nodeData,
   nodeType,
   parentId,
+  getId,
 }: NodeContextProps) {
-  const getId = (): NodeId => {
-    nodeId++;
-    return `n_${nodeId}`;
-  };
-
   return (
     <>
       <div className='py-1'>
         <div>
           <button
             title='urlscan.io is a free service to scan and analyse websites. When a URL is submitted to urlscan.io, an automated process will browse to the URL like a regular user and record the activity that this page navigation creates. This includes the domains and IPs contacted, the resources (JavaScript, CSS, etc) requested from those domains, as well as additional information about the page itself. urlscan.io will take a screenshot of the page, record the DOM content, JavaScript global variables, cookies created by the page, and a myriad of other observations. If the site is targeting the users one of the more than 400 brands tracked by urlscan.io, it will be highlighted as potentially malicious in the scan results.'
-            onClick={(event) => {
+            onClick={() => {
               const url = nodeData[0].value;
               // @ts-ignore
               if (url) window?.open(url, '_blank').focus();
@@ -134,7 +128,7 @@ export default function UrlNodeContext({
         </div>
         <div>
           <button
-            onClick={async (event) => {
+            onClick={async () => {
               const domain = nodeData[3].value;
 
               const resp = await api.get(`/extract/domain/ip?domain=${domain}`);
@@ -142,7 +136,7 @@ export default function UrlNodeContext({
                 console.log(resp.data);
                 resp.data.ipv4.map((ip: string, idx: number) => {
                   console.log('ipv4', ip);
-                  const newId = `i${getId()}${idx}`;
+                  const newId = `i${getId()}`;
                   let bounds = node.getBoundingClientRect();
                   const newNode = addNode(
                     newId,
@@ -188,7 +182,7 @@ export default function UrlNodeContext({
         <div>
           <button
             title='urlscan.io is a free service to scan and analyse websites. When a URL is submitted to urlscan.io, an automated process will browse to the URL like a regular user and record the activity that this page navigation creates. This includes the domains and IPs contacted, the resources (JavaScript, CSS, etc) requested from those domains, as well as additional information about the page itself. urlscan.io will take a screenshot of the page, record the DOM content, JavaScript global variables, cookies created by the page, and a myriad of other observations. If the site is targeting the users one of the more than 400 brands tracked by urlscan.io, it will be highlighted as potentially malicious in the scan results.'
-            onClick={(event) => {
+            onClick={() => {
               let bounds = node.getBoundingClientRect();
               const domain = nodeData[3].value;
               const nodeId = `ur${getId()}`;
@@ -212,7 +206,7 @@ export default function UrlNodeContext({
         <div>
           <button
             title='urlscan.io is a free service to scan and analyse websites. When a URL is submitted to urlscan.io, an automated process will browse to the URL like a regular user and record the activity that this page navigation creates. This includes the domains and IPs contacted, the resources (JavaScript, CSS, etc) requested from those domains, as well as additional information about the page itself. urlscan.io will take a screenshot of the page, record the DOM content, JavaScript global variables, cookies created by the page, and a myriad of other observations. If the site is targeting the users one of the more than 400 brands tracked by urlscan.io, it will be highlighted as potentially malicious in the scan results.'
-            onClick={(event) => {
+            onClick={() => {
               let bounds = node.getBoundingClientRect();
               const domain = nodeData[0].value;
               api.get(`/extract/url/urls?url=${domain}`).then((resp) => {
@@ -239,14 +233,14 @@ export default function UrlNodeContext({
         </div>
         <div>
           <button
-            onClick={(event) => {
+            onClick={() => {
               let rect = node.getBoundingClientRect();
               const domain = nodeData[0]?.value;
               if (domain && domain !== '') {
                 api.get(`/extract/url/emails?url=${domain}`).then((resp) => {
                   console.log(resp.data);
                   resp.data.forEach((email: string, idx: number) => {
-                    const nodeId = `e${getId()}${idx}`;
+                    const nodeId = `e${getId()}`;
                     addNode(
                       nodeId,
                       'email',

@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { NodeContextProps } from '.';
 
-let nodeId = 0;
 
 export function EmailNode({ flowData }: any) {
   const [emailValue, setEmailValue] = useState<string>(flowData.data.email);
@@ -60,8 +59,9 @@ export function EmailNodeContext({
   nodeData,
   nodeType,
   parentId,
+  getId,
 }: NodeContextProps) {
-  const getId = () => `rnode_${nodeId++}`;
+
   return (
     <div className='py-1'>
       {/* @todo retry with better proxies */}

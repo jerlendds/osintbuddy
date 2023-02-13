@@ -5,7 +5,6 @@ import { GripIcon, WebsiteIcon } from '@/components/Icons';
 import RoundLoader from '@/components/Loaders';
 import api from '@/services/api.service';
 
-let nodeId = 0;
 
 export function SubdomainNode({ flowData }: any) {
   const task = flowData?.data?.id;
@@ -23,9 +22,7 @@ export function SubdomainNode({ flowData }: any) {
     });
     if (status === 'PENDING') {
       scheduler.registerTask(parseCronExpression('*/30 * * * *'), async () => {
-        console.log('CALLED');
         await api.get(`/extract/domain/subdomains/status?id=${task}`).then((resp) => {
-          console.log('CALLED inside', resp);
           if (resp.data.status !== 'PENDING') {
             setStatus('DONE');
             scheduler.stop();
@@ -36,7 +33,7 @@ export function SubdomainNode({ flowData }: any) {
     }
   }, []);
 
-  console.log('flowData', flowData.data);
+
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' />

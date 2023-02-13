@@ -12,9 +12,7 @@ import classNames from 'classnames';
 import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { NodeContextProps } from '.';
-import { NodeId } from '.';
 
-let nodeId = 0;
 
 export function DomainNode({ flowData }: any) {
   const initialValue = (flowData.data && flowData.data.domain) || '';
@@ -75,15 +73,9 @@ export function DomainNodeContext({
   nodeData,
   nodeType,
   parentId,
+  getId,
 }: NodeContextProps) {
-  // function getId(): NodeId {
-  //   setNodeId(nodeId + 1);
-  //   return `n_${nodeId}`;
-  // }
-  const getId = (): NodeId => {
-    nodeId++;
-    return `n_${nodeId}`;
-  };
+
 
   return (
     <div className='py-1'>
@@ -194,7 +186,7 @@ export function DomainNodeContext({
                 for (const [key, value] of Object.entries(resp.data)) {
                   if (value) {
                     idx++;
-                    const nodeId = `dns${getId()}${idx}`;
+                    const nodeId = `dns${getId()}`;
                     addNode(
                       nodeId,
                       'dns',
@@ -266,7 +258,7 @@ export function DomainNodeContext({
               api.get(`/extract/domain/emails?domain=${domain}`).then((resp) => {
                 console.log(resp.data);
                 resp.data.forEach((email: string, idx: number) => {
-                  const nodeId = `e${getId()}${idx}`;
+                  const nodeId = `e${getId()}`;
                   addNode(
                     nodeId,
                     'email',

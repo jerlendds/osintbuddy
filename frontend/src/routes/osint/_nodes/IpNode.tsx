@@ -4,9 +4,7 @@ import { GripIcon, IpIcon } from '@/components/Icons';
 import { NodeContextProps } from '.';
 import api from '@/services/api.service';
 import { PaperClipIcon } from '@heroicons/react/24/outline';
-import { NodeId } from '.';
 
-let nodeId = 0;
 
 export function IpNode({ flowData, deleteNode }: any) {
   const [ips, setIps] = useState(flowData.data.ip);
@@ -69,27 +67,24 @@ export default function IpNodeContext({
   nodeData,
   nodeType,
   parentId,
+  getId,
 }: NodeContextProps) {
-  const getId = (): NodeId => {
-    nodeId++;
-    return `n_${nodeId}`;
-  };
 
   return (
     <div className='py-1'>
       <div>
         <button
-          onClick={(event) => {
+          onClick={() => {
             const nodeId = `rw${getId()}`;
             let rect = node.getBoundingClientRect();
             api.get(`/extract/ip/domain?ip=${nodeData[0].value}`).then((resp) => {
               addNode(
                 nodeId,
                 'domain',
-                reactFlowInstance.project({
+                {
                   x: rect.x + 160,
                   y: rect.y + 40,
-                }),
+                },
                 resp.data
               );
               addEdge(parentId, nodeId);
@@ -103,17 +98,17 @@ export default function IpNodeContext({
       </div>
       <div>
         <button
-          onClick={(event) => {
+          onClick={() => {
             const nodeId = `rw${getId()}`;
             let rect = node.getBoundingClientRect();
             api.get(`/extract/ip/locate?ip=${nodeData[0].value}`).then((resp) => {
               addNode(
                 nodeId,
                 'geo',
-                reactFlowInstance.project({
+                {
                   x: rect.x + 160,
                   y: rect.y + 80,
-                }),
+                },
                 { ...resp.data }
               );
               addEdge(parentId, nodeId);
@@ -127,17 +122,17 @@ export default function IpNodeContext({
       </div>
       <div>
         <button
-          onClick={(event) => {
+          onClick={() => {
             const nodeId = `rw${getId()}`;
             let rect = node.getBoundingClientRect();
             api.get(`/extract/ip/traceroute?ip=${nodeData[0].value}`).then((resp) => {
               addNode(
                 nodeId,
                 'traceroute',
-                reactFlowInstance.project({
+                {
                   x: rect.x + 160,
                   y: rect.y + 80,
-                }),
+                },
                 { ...resp.data }
               );
               addEdge(parentId, nodeId);
@@ -151,7 +146,7 @@ export default function IpNodeContext({
       </div>
       <div>
         <button
-          onClick={(event) => {
+          onClick={() => {
             const nodeId = `us${getId()}`;
             let bounds = node.getBoundingClientRect();
             const domain = nodeData[0].value;
@@ -161,10 +156,10 @@ export default function IpNodeContext({
                 addNode(
                   nodeId,
                   'urlscan',
-                  reactFlowInstance.project({
+                  {
                     x: bounds.x + 160,
                     y: bounds.y + 80,
-                  }),
+                  },
                   { ...resp.data, domain }
                 );
                 addEdge(parentId, nodeId);
@@ -174,7 +169,7 @@ export default function IpNodeContext({
           className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
         >
           <PaperClipIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-          To URL scan
+          To URL scan 
         </button>
       </div>
     </div>
