@@ -203,16 +203,7 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 - [ ] CSE Node
 
 
-[to-trace-route](https://user-images.githubusercontent.com/29207058/218284782-470b3d8d-480d-4b4e-9fca-1c2c34d94fee.webm)
-
-
-[latest-demo](https://user-images.githubusercontent.com/29207058/218184452-27809ec8-f68b-43d1-8e65-d83b56b153d8.webm)
-  
-
-[geolocation-osintbuddy](https://user-images.githubusercontent.com/29207058/218282847-f8eccc15-c5b9-4b95-916c-c2421f49b24d.webm)
-
-
-[osintbuddy-to-emails](https://user-images.githubusercontent.com/29207058/218228524-609a9ef6-e4d6-4d30-ba20-9c9617623b9e.webm)
+[osintbuddy-demo](https://user-images.githubusercontent.com/29207058/218629002-752322e1-4537-4849-ba1a-76fe4450404d.webm)
 
 
 ## Contributing

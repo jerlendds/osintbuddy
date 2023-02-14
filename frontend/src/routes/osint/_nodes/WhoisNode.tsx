@@ -32,7 +32,7 @@ export function WhoisNode({ flowData }: any) {
           <div className='md:flex-col md:flex w-full md:flex-1  md:justify-between '>
             <div className='flex overflow-y-scroll h-52 flex-col mb-1 w-full'>
               {seoData.length !== 0 &&
-                seoData.split('\n').map((whois: string) => {
+                seoData.map((whois: string) => {
                   return (
                     <div className='flex items-center w-full'>
                       <p

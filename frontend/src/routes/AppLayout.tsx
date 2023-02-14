@@ -15,7 +15,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { MagnifyingGlassIcon, ViewfinderCircleIcon } from '@heroicons/react/20/solid';
 import classNames from 'classnames';
-import OSINTBuddyLogo from '@images/logo-dark.svg';
+import OSINTBuddyLogo from '@images/logo.svg';
 import HamburgerMenu from '@/components/HamburgerMenu';
 import { GoogleIcon, ShellIcon } from '@/components/Icons';
 import { ToastContainer } from 'react-toastify';
@@ -118,20 +118,17 @@ export default function AppLayout() {
                 </Dialog.Panel>
               </Transition.Child>
               <div className='w-14 flex-shrink-0 z-0' aria-hidden='true'>
-                {/* Dummy element to force sidebar to shrink to fit close icon */}
               </div>
             </div>
           </Dialog>
         </Transition.Root>
 
-        {/* Static sidebar for desktop */}
         <div
           className={classNames(
             'hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col transition-transform duration-200',
             showSidebar ? 'translate-x-0' : '-translate-x-52'
           )}
         >
-          {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className='flex min-h-0 flex-1 flex-col bg-dark-800 px-1.5'>
             <div
               className={classNames(
@@ -140,7 +137,6 @@ export default function AppLayout() {
               )}
             >
               <img className='h-7 w-auto' src={OSINTBuddyLogo} alt='Your Company' />
-              <p className='text-light-200 text-2xl -ml-6 my-auto font-semibold font-display'>SINTBuddy</p>
               <HamburgerMenu isOpen={showSidebar} onClick={toggleSidebar} />
             </div>
 
