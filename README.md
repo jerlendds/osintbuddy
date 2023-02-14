@@ -16,7 +16,7 @@
   <h1 align="center">Introducing OSINTBuddy 2.0</h1>
 
   <h4 align="center">
-  Mine, map, and merge data for novel insights.
+  Mine, merge, and map data for novel insights.
   </h4>
 </p>
 

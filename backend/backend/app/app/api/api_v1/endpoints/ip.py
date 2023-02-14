@@ -129,3 +129,25 @@ def geolocate_ip(
     except Exception as e:
         print(e)
         return []
+
+
+@router.get('/subdomains')
+def get_subdomains(
+    current_user: models.User = Depends(deps.get_current_active_user),
+    gdb: Session = Depends(deps.get_ddb),
+    ip: str = None
+):
+    try:
+        params = {
+            'q': ip,
+        }
+        response = requests.post(
+            'https://api.hackertarget.com/reverseiplookup/',
+            params=params
+        )
+        data = response.content.decode('utf8')
+        data = data.split('\n')
+        return data
+    except Exception as e:
+        logger.error(e)
+        return []
