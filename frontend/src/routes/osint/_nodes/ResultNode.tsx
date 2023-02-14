@@ -26,10 +26,10 @@ export function ResultNode({ flowData }: { flowData: any }) {
         >
           <li className='col-span-full flex  w-full'>
             <div className='flex-1 flex flex-col whitespace-wrap px-4 pb-2 text-sm'>
-              <p data-type='title' className='text-lg '>
+              <p data-type='title' className='text-lg break-words'>
                 {flowData.data && flowData.data.title && flowData.data.title}
               </p>
-              <p data-type='description' className='text-sm  whitespace-wrap max-w-xl'>
+              <p data-type='description' className='text-sm  whitespace-wrap max-w-xl break-words'>
                 {flowData.data && flowData.data.description && flowData.data.description}
               </p>
               <div
