@@ -33,13 +33,20 @@ export function WhoisNode({ flowData }: any) {
             <div className='flex overflow-y-scroll h-52 flex-col mb-1 w-full'>
               {seoData.length !== 0 &&
                 seoData.map((whois: string) => {
+                  const entry = whois.split(/:(.*)/s)
                   return (
-                    <div className='flex items-center w-full'>
-                      <p
-                        className='truncate text-xs font-display flex items-center whitespace-wrap pl-4'
+                    <div className='flex items-start w-full my-0.5'>
+                       <p
+                        className='text-xs font-display font-semibold flex items-center break-inside-avoid whitespace-nowrap'
                         placeholder='https://www.google.com'
                       >
-                        {whois}
+                        {entry[0]}:
+                      </p>
+                      <p
+                        className=' text-xs font-display flex items-center whitespace-wrap pl-2 break-words'
+                        placeholder='https://www.google.com'
+                      >
+                        {entry[1]}
                       </p>
                     </div>
                   );
