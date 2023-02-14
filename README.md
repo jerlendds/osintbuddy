@@ -75,7 +75,7 @@ To get a local copy up and running follow these simple steps.
 3. Start the stack with Docker:
 
    ```sh
-   cd backend/
+   cd osintbuddy/backend/
    docker compose up
    ```
 4. Start the frontend:
