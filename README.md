@@ -13,15 +13,14 @@
 
 
 
-  <h3 align="center">OSINT Buddy 2.0</h3>
+  <h1 align="center">Introducing OSINTBuddy 2.0</h1>
 
-  <p align="center">
-    osintbuddy is a work-in-progress OSINT tool
-    <br />  </p></p>
+  <h4 align="center">
+  Mine, map, and merge data for novel insights.
+  </h4>
+</p>
 
 
-
-<!-- TABLE OF CONTENTS -->
 
 <details open="open">
   <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
@@ -45,15 +44,17 @@
 
 
 
-<!-- ABOUT THE PROJECT -->
 ## About The Project
 
-*this project is a work-in-progress however feel free to extract out the microservice directory in the backend that's for the Google scraper*
+Fetch data from different sources and returns the results 
+as visual entities that you can explore step-by-step! *(scroll down for video demos)*
 
-The goal is to create a poor mans maltego :)
+OSINTBuddy is a work-in-progress OSINT tool, which is distributed 
+for educational and investigative purposes, the person who has bought 
+or uses this tool is responsible for its proper use or actions committed, 
+jerlendds, aka the developer of OSINTBuddy, is not responsible for the use 
+or the scope that people can have through this software.
 
-
-<!-- GETTING STARTED -->
 
 ## Getting Started
 
@@ -69,13 +70,19 @@ To get a local copy up and running follow these simple steps.
    git clone https://github.com/jerlendds/osintbuddy.git
    ```
    
-2. Install Docker Compose
+2. Install Docker
 
-3. Start the stack with Docker Compose:
+3. Start the stack with Docker:
 
    ```sh
    cd backend/
    docker compose up
+   ```
+4. Start the frontend:
+
+   ```sh
+   cd ../frontend
+   yarn && yarn start
    ```
 
  - **URLs**
@@ -152,13 +159,9 @@ https://github.com/mxrch/ghunt
  -->
 
 
-
-<!-- ROADMAP -->
-
 ## Roadmap
 
 See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list of proposed features (and known issues).
-
 
 
 ## Progress Notes
@@ -212,7 +215,6 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 [osintbuddy-to-emails](https://user-images.githubusercontent.com/29207058/218228524-609a9ef6-e4d6-4d30-ba20-9c9617623b9e.webm)
 
 
-<!-- CONTRIBUTING -->
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -224,8 +226,6 @@ Contributions are what make the open source community such an amazing place to l
 5. Open a Pull Request
 
 
-
-<!-- CONTACT -->
 ## Contact
 
 Open an issue if you need to get in touch with me
@@ -234,7 +234,6 @@ Project Link: [https://github.com/jerlendds/osintbuddy](https://github.com/jerle
 
 
 
-<!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/jerlendds/osintbuddy.svg?style=for-the-badge
 [contributors-url]: https://github.com/jerlendds/osintbuddy/graphs/contributors
