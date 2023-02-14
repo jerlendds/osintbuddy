@@ -71,3 +71,5 @@ app/.venv
 app/app/utilities/google_service_secret.json
 app/app/utilities/sheets_service.json
 app/app/utilities/google_client_secret.json
+
+proxies.txt
