@@ -29,4 +29,4 @@ def get_search_results(
         return results
     except Exception as e:
         logger.error(e)
-        return []
+        raise HTTPException(status_code=422, detail=e.args[0])

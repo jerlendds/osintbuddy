@@ -134,17 +134,27 @@ def get_raw_whois(
     driver: Remote = Depends(deps.get_driver),
     domain: str = ""
 ):
+    data = []
     try:
         driver.get(f'https://www.whois.com/whois/{domain}')
         element_present = EC.presence_of_element_located(
             (By.ID, 'registrarData')
         )
         WebDriverWait(driver, 20).until(element_present)
-        data = driver.find_element(by=By.ID, value='registrarData').text
+
+        raw_whois_data = driver.find_element(by=By.ID, value='registrarData').text
+
+        for line in raw_whois_data.split('\n'):
+            if "DNSSEC" in line:
+                data.append(line)
+                break
+            else:
+                data.append(line)
+
         return data
     except Exception as e:
-        print(e)
-        return []
+        logger.error(e)
+        return data
 
 
 @router.get('/dns')
@@ -172,7 +182,7 @@ def get_dns_info(
             resolved = dns.resolver.resolve(domain, key)
             data[key] = [str(answer) for answer in resolved]
         except Exception as e:
-            logger.info(e)
+            logger.error(e)
     return data
 
 

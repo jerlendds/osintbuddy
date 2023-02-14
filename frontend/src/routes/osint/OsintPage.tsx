@@ -100,7 +100,7 @@ const DnDFlow = ({
       domain: (data) => <DomainNode flowData={data} />,
       email: (data) => <EmailNode flowData={data} />,
       subdomain: (data) => <SubdomainNode flowData={data} />,
-      google: (data) => <GoogleNode addNode={addNode} addEdge={addEdge} getId={() => getId()} flowData={data} />,
+      google: (data) => <GoogleNode flowData={data} />,
       cse: (data) => <CseNode flowData={data} />,
       whois: (data) => <WhoisNode flowData={data} />,
       ip: (data) => <IpNode flowData={data} />,

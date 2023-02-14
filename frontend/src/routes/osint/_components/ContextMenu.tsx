@@ -10,8 +10,6 @@ const useContextMenu = () => {
   const handleContextMenu = useCallback(
     (e: any) => {
       e.preventDefault();
-      console.log(e, e.target);
-      console.log();
       setXPos(`${e.pageX}px`);
       setYPos(`${e.pageY}px`);
       setShowMenu(true);
