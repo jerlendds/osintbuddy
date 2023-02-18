@@ -31,12 +31,14 @@ type SearchResult struct {
 	Description string `json:"description"`
 	Link        string `json:"link"`
 	Breadcrumb  string `json:"breadcrumb"`
+	Index       int    `json:"index"`
 }
 
 type VideoResult struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Link        string `json:"link"`
+	Index       int    `json:"index"`
 }
 
 type QuestionResult struct {
@@ -46,6 +48,7 @@ type QuestionResult struct {
 type StoriesResult struct {
 	Link        string `json:"link"`
 	Description string `json:"description"`
+	Index       int    `json:"index"`
 }
 
 type StatsResult struct {
@@ -64,7 +67,7 @@ type SerpResults struct {
 var serpResults = new(SerpResults)
 
 func CrawlGoogle(searchQuery string, pages string) {
-	fmt.Println(searchQuery, url.QueryEscape(searchQuery))
+	var resultIndex int = 0
 	var paginationIndex = 1
 	totalPages, err := strconv.Atoi(pages)
 	if err != nil {
@@ -139,9 +142,11 @@ func CrawlGoogle(searchQuery string, pages string) {
 				fmt.Println(err)
 				return
 			}
+			resultIndex++
 			storiesResult := &StoriesResult{
 				Description: storiesDesc,
 				Link:        storiesLink,
+				Index:       resultIndex,
 			}
 			serpResults.Stories = append(serpResults.Stories, *storiesResult)
 		}
@@ -159,19 +164,34 @@ func CrawlGoogle(searchQuery string, pages string) {
 				fmt.Println(err)
 				return
 			}
+			resultIndex++
 			videoResult := &VideoResult{
 				Title:       videosHeader,
 				Description: videosSubheader,
 				Link:        videosLink,
+				Index:       resultIndex,
 			}
 			serpResults.Videos = append(serpResults.Videos, *videoResult)
+
 		}
+	})
+
+	// parse typical search results
+	c.OnHTML("#cnt", func(e *colly.HTMLElement) {
+		e.ForEach(".MjjYud", func(_ int, el *colly.HTMLElement) {
+			resultIndex++
+			ParseGoogleResult(el, serpResults, resultIndex)
+			el.ForEach("div.d4rhi", func(_ int, elm *colly.HTMLElement) {
+				resultIndex++
+				ParseGoogleResult(elm, serpResults, resultIndex)
+			})
+		})
 	})
 
 	// parse people also ask section
 	c.OnHTML("div.wQiwMc.related-question-pair div div span", func(e *colly.HTMLElement) {
-		var peopleAlsoAskQuestion = e.ChildText("div.JlqpRe")
-		if len(peopleAlsoAskQuestion) > 0 {
+		var question = e.Text
+		if len(question) > 0 {
 			var jsonObj map[string]interface{}
 			err := json.Unmarshal([]byte("{}"), &jsonObj)
 			if err != nil {
@@ -179,21 +199,12 @@ func CrawlGoogle(searchQuery string, pages string) {
 				return
 			}
 			questionResult := &QuestionResult{
-				Question: peopleAlsoAskQuestion,
+				Question: question,
 			}
 			serpResults.Questions = append(serpResults.Questions, *questionResult)
+
 		}
 
-	})
-
-	// parse typical search results
-	c.OnHTML("#cnt", func(e *colly.HTMLElement) {
-		e.ForEach(".MjjYud", func(_ int, el *colly.HTMLElement) {
-			ParseGoogleResult(el, serpResults)
-			el.ForEach("div.d4rhi", func(_ int, elm *colly.HTMLElement) {
-				ParseGoogleResult(elm, serpResults)
-			})
-		})
 	})
 
 	c.OnError(func(_ *colly.Response, err error) {
@@ -205,7 +216,6 @@ func CrawlGoogle(searchQuery string, pages string) {
 	}
 
 	q.Run(c)
-
 }
 
 func GoogleService(query string, pages string) SerpResults {

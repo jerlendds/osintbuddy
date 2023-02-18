@@ -14,7 +14,7 @@ import (
 
 var cacheSerpResults = new(SerpResults)
 
-func ParseGoogleResult(el *colly.HTMLElement, data *SerpResults) {
+func ParseGoogleResult(el *colly.HTMLElement, data *SerpResults, index int) {
 	var breadcrumb string = el.ChildText("div.TbwUpd.NJjxre cite")
 	var heading string = el.ChildText("a h3.LC20lb.MBeuO.DKV0Md")
 	var urlString string = el.ChildAttr("div.yuRUbf a", "href")
@@ -33,13 +33,14 @@ func ParseGoogleResult(el *colly.HTMLElement, data *SerpResults) {
 			Description: description,
 			Link:        urlString,
 			Breadcrumb:  breadcrumb,
+			Index:       index,
 		}
 		data.Search = append(data.Search, *searchResult)
 	}
 }
 
 func CrawlGoogleCache(searchQuery string, pages string) {
-
+	var resultIndex int = 0
 	var paginationIndex = 1
 	totalPages, err := strconv.Atoi(pages)
 	if err != nil {
@@ -114,9 +115,11 @@ func CrawlGoogleCache(searchQuery string, pages string) {
 				fmt.Println(err)
 				return
 			}
+			resultIndex++
 			storiesResult := &StoriesResult{
 				Description: storiesDesc,
 				Link:        storiesLink,
+				Index:				resultIndex,
 			}
 			cacheSerpResults.Stories = append(cacheSerpResults.Stories, *storiesResult)
 		}
@@ -134,10 +137,12 @@ func CrawlGoogleCache(searchQuery string, pages string) {
 				fmt.Println(err)
 				return
 			}
+			resultIndex++
 			videoResult := &VideoResult{
 				Title:       videosHeader,
 				Description: videosSubheader,
 				Link:        videosLink,
+				Index:				resultIndex,
 			}
 			cacheSerpResults.Videos = append(cacheSerpResults.Videos, *videoResult)
 		}
@@ -164,9 +169,11 @@ func CrawlGoogleCache(searchQuery string, pages string) {
 	// parse typical search results
 	c.OnHTML("#cnt", func(e *colly.HTMLElement) {
 		e.ForEach(".MjjYud", func(_ int, el *colly.HTMLElement) {
-			ParseGoogleResult(el, cacheSerpResults)
+			resultIndex++
+			ParseGoogleResult(el, cacheSerpResults, resultIndex)
 			el.ForEach("div.d4rhi", func(_ int, elm *colly.HTMLElement) {
-				ParseGoogleResult(elm, cacheSerpResults)
+				resultIndex++
+				ParseGoogleResult(elm, cacheSerpResults, resultIndex)
 			})
 		})
 	})
