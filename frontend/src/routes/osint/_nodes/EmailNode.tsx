@@ -1,6 +1,6 @@
 import { GoogleIcon, GripIcon, WebsiteIcon } from '@/components/Icons';
 import api from '@/services/api.service';
-import { LockOpenIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { AtSymbolIcon, LockOpenIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { NodeContextProps } from '.';
@@ -53,7 +53,6 @@ export function EmailNode({ flowData }: any) {
 export function EmailNodeContext({
   node,
   reactFlowInstance,
-
   addNode,
   addEdge,
   nodeData,
@@ -64,20 +63,33 @@ export function EmailNodeContext({
   return (
     <div className='py-1'>
       {/* @todo retry with better proxies */}
-      {/* <div>
+      <div>
         <button
-          onClick={(event) => {
-            const nodeId = `rw${getId()}`;
-            api.get(`/extract/email/breaches?email=${nodeData[0].value}`).then((resp) => {
+          onClick={() => {
+            const nodeId = `${getId()}`;
+            let bounds = node.getBoundingClientRect();
+            api.get(`/extract/email/smtp-test?email=${nodeData[0].value}`).then((resp) => {
               console.log(resp, resp.data);
+              addNode(
+                    nodeId,
+                    'smtp',
+                    {
+                      x: bounds.x + 110,
+                      y: bounds.y + 110,
+                    },
+                    {
+                      data: resp.data,
+                    }
+                  );
+                  addEdge(parentId, nodeId);
             });
           }}
           className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
         >
-          <LockOpenIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-          To Breaches
+          <AtSymbolIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          To SMTP Test
         </button>
-      </div> */}
+      </div>
       <div>
         <button
           onClick={(event) => {
@@ -92,7 +104,7 @@ export function EmailNodeContext({
                 // @ts-ignore
                 resp.data.forEach((result, rIdx) => {
                   const nodeId = `r${getId()}`;
-                  newNode = addNode(
+                  addNode(
                     nodeId,
                     'result',
                     {

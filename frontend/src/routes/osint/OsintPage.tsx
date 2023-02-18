@@ -32,6 +32,7 @@ import { GeoNode } from './_nodes/GeoNode';
 import { TracerouteNode } from './_nodes/TracerouteNode';
 import { UrlScanNode } from './_nodes/UrlScanNode';
 import UrlNodeContext, { UrlNode } from './_nodes/UrlNode';
+import { SmtpNode } from './_nodes/SmtpNode';
 
 const fitViewOptions: FitViewOptions = {
   padding: 50,
@@ -103,6 +104,7 @@ const DnDFlow = ({
       subdomain: (data) => <SubdomainNode flowData={data} />,
       google: (data) => <GoogleNode flowData={data} />,
       cse: (data) => <CseNode flowData={data} />,
+      smtp: (data) => <SmtpNode flowData={data} />,
       whois: (data) => <WhoisNode flowData={data} />,
       ip: (data) => <IpNode flowData={data} />,
       result: (data) => <ResultNode addNode={addNode} addEdge={addEdge} flowData={data} />,

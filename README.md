@@ -88,7 +88,7 @@ To get a local copy up and running follow these simple steps.
  - **URLs**
     - Frontend: http://localhost:3000
     - Backend: http://localhost:8000/api/
-    - Documentation: http://localhost/docs -- http://localhost/redoc
+    - Documentation: http://localhost:8000/docs -- http://localhost:8000/redoc
     - Flower: http://localhost:5555
     - Neo4J: http://localhost:7474/browser/
 
