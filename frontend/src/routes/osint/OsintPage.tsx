@@ -8,6 +8,7 @@ import ReactFlow, {
   Edge,
   HandleProps,
   XYPosition,
+  useReactFlow,
 } from 'reactflow';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { HotKeys } from 'react-hotkeys';
@@ -33,7 +34,7 @@ import { UrlScanNode } from './_nodes/UrlScanNode';
 import UrlNodeContext, { UrlNode } from './_nodes/UrlNode';
 
 const fitViewOptions: FitViewOptions = {
-  padding: 0,
+  padding: 50,
 };
 
 export var nodeId = 0;
@@ -156,6 +157,7 @@ export interface AddEdge {
   target: string;
   sourceHandle?: string | undefined;
   targetHandle?: string | undefined;
+  type?: string | undefined;
 }
 
 export function capitalize(value: string) {
@@ -169,7 +171,10 @@ export default function OsintPage() {
 
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [nodeId, setNodeId] = useState<number>(0);
-
+  let setViewport, zoomIn, zoomOut = null;
+  if (reactFlowInstance) {
+    ({ setViewport, zoomIn, zoomOut } = reactFlowInstance);
+  }
 
   function addNode(id, type, position, data: AddNode): Node<XYPosition> {
     let addPosition = null;
@@ -188,12 +193,13 @@ export default function OsintPage() {
     return addPosition;
   }
 
-  function addEdge(source, target, sourceHandle, targetHandle: AddEdge): void {
+  function addEdge(source, target, sourceHandle, targetHandle, type: AddEdge): void {
     const newEdge = {
       source,
       target,
       sourceHandle: sourceHandle || 'r1',
       targetHandle: targetHandle || 'l1',
+      type: type || 'smoothstep',
     };
     setEdges((eds) => eds.concat(newEdge));
   }
@@ -201,7 +207,7 @@ export default function OsintPage() {
   function deleteNode(nodeId: NodeId): void {
     setNodes((nds) => nds.filter((node) => node.id !== nodeId));
   }
-
+  // https://reactflow.dev/docs/examples/layout/dagre/
   const location = useLocation();
   const activeCase = location.state.activeCase;
 
@@ -364,6 +370,36 @@ export default function OsintPage() {
                             aria-hidden='true'
                           />
                           Delete
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  {!nodeType && (
+                    <div className='py-1'>
+                      <div>
+                        <button
+                          onClick={() => zoomIn && zoomIn({ duration: 200 })}
+                          type='button'
+                          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+                        >
+                          <TrashIcon
+                            className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
+                            aria-hidden='true'
+                          />
+                          Zoom in
+                        </button>
+                      </div>
+                      <div>
+                        <button
+                          onClick={() => zoomOut && zoomOut({ duration: 200 })}
+                          type='button'
+                          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+                        >
+                          <TrashIcon
+                            className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
+                            aria-hidden='true'
+                          />
+                          Zoom out
                         </button>
                       </div>
                     </div>
