@@ -97,18 +97,11 @@ export function GoogleNodeContext({
             api
               .get(`/extract/google/search?query=${nodeData[0].value}&pages=${nodeData[1].value}`)
               .then((resp) => {
-                toast.success("Fetching results")
-                let idx = 0;
-                idx += 1;
                 if (resp.data && resp.status === 200) {
-                  let newNode: any = null;
+                  toast.success("Fetching results")
                   resp.data.forEach((result: any, rIdx: number) => {
-                    const pos = {
-                      x: bounds.x + 260,
-                      y: !newNode ? rIdx * result.description.length + 300 : newNode.y + 200,
-                    };
                     const nodeId = getId();
-                    newNode = addNode(
+                    addNode(
                       nodeId,
                       'result',
                       {
