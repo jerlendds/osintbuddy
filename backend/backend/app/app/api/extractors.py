@@ -1,23 +1,28 @@
 import time
-import json
-import urllib
 from typing import List
 import validators
 from pydantic import EmailStr
 import requests
-from fastapi import HTTPException
 from neo4j._sync import work
 from app.core.logger import get_logger
-from app.api.deps import get_gdb
-from app.neomodels.google import GoogleSearch, GoogleResult, get_google_search_results
+from app.neomodels.google import (
+    GoogleSearch,
+    GoogleResult,
+    get_google_search_results
+)
 from app.api.utils import find_emails, to_clean_domain
 from selenium.webdriver.common.by import By
 
 
 logger = get_logger(name=" app.api.extractors ")
 
-    
-def get_google_results(gdb: work.Session, query: str, pages: int = 3, force_search: str = False):
+
+def get_google_results(
+    gdb: work.Session,
+    query: str,
+    pages: int = 3,
+    force_search: str = False
+):
     existing_results = gdb.execute_read(
         get_google_search_results,
         search_query=query,
@@ -26,10 +31,10 @@ def get_google_results(gdb: work.Session, query: str, pages: int = 3, force_sear
 
     if len(existing_results) != 0 and force_search is False:
         return list({v['url']: v for v in existing_results}.values())
-    
+
     if not query:
         raise Exception("queryRequired")
-    
+
     try:
         logger.info(f'query -- {query}')
         google_resp = requests.get((
@@ -39,7 +44,7 @@ def get_google_results(gdb: work.Session, query: str, pages: int = 3, force_sear
         google_results = google_resp.json()
     except Exception:
         raise Exception("crawlGoogleError")
-    
+
     stats = google_results.get('stats')
     related_searches = []
     result_stats = []
@@ -62,16 +67,21 @@ def get_google_results(gdb: work.Session, query: str, pages: int = 3, force_sear
             if google_results.get(key):
                 for result in google_results.get(key):
                     result_node = GoogleResult(
-                        title=result.get('title', None),
-                        description=result.get('description', None),
-                        url=result.get('link', None),
-                        breadcrumb=result.get('breadcrumb', None),
-                        question=result.get('question', None),
-                        result_type=key
+                        index=result.get('index'),
+                        title=result.get('title'),
+                        description=result.get('description'),
+                        url=result.get('link'),
+                        breadcrumb=result.get('breadcrumb'),
+                        question=result.get('question'),
+                        result_type=key,
                     ).save()
                     search_node.results.connect(result_node)
     search_node.save()
-    return gdb.execute_read(get_google_search_results, search_query=query, pages=int(pages))
+    return gdb.execute_read(
+        get_google_search_results,
+        search_query=query,
+        pages=pages
+    )
 
 
 def get_emails_from_google(gdb: work.Session, domain: str = None, pages: int = 12):
@@ -87,7 +97,6 @@ def get_emails_from_google(gdb: work.Session, domain: str = None, pages: int = 1
         raise Exception("crawlGoogleError")
 
     emails = []
-    # logger.info(json.dumps(results, indent=2))
     for result in results:
         compare = result.get("title", "") + " " + result.get("description", "")
         emails = emails + find_emails(compare)
@@ -104,18 +113,18 @@ def get_emails_from_url(driver, url: str = None) -> List[EmailStr]:
             href = href.replace("mailto:", "")
             if validators.email(href):
                 emails.append(href)
-        
+
         tags = ["button", "h1", "h2", "h3", "h4", "h5", "h6", "p", "span"]
-        
+
         for tag in tags:
             elements = driver.find_elements(by=By.TAG_NAME, value=tag)
             for elm in elements:
                 emails = emails + find_emails(elm.text)
                 if elm.text and validators.email(str(elm.text)):
-                    emails.append(str(elm.text)) 
-                    
-        return list(set(emails)) 
-    
+                    emails.append(str(elm.text))
+
+        return list(set(emails))
+
     except Exception as e:
         logger.error(f"Error fetching Emails for page: {url} - {e}")
         return emails
