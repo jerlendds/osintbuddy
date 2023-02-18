@@ -13,3 +13,4 @@ RUN  if test -e /app/dev-requirements.txt; then pip install --no-cache-dir -r /a
 COPY ./app/worker-start.sh /worker-start.sh
 COPY ./app/ /app
 
+CMD ["/bin/bash", "-c", "./worker-start.sh"]
