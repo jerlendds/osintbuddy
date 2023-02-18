@@ -23,7 +23,6 @@ from app.crud.base import get_or_create
 from app import crud, schemas, models
 from app.api import deps
 from app.core.celery_app import app
-from app.worker import brute_force_subdomains
 from app.core.logger import get_logger
 
 
@@ -34,7 +33,7 @@ router = APIRouter(prefix='/extract/ip')
 
 
 def to_camel_case(value: str):
-    temp =  value.replace(' ', '_').lower().split('_')
+    temp = value.replace(' ', '_').lower().split('_')
     return temp[0] + ''.join(e.title() for e in temp[1:])
 
 
@@ -52,8 +51,8 @@ def resolve_domain(
             }
     except (socket.gaierror, socket.herror):
         return []
-    
-    
+
+
 @router.get('/traceroute')
 def traceroute(
     current_user: models.User = Depends(deps.get_current_active_user),
@@ -62,7 +61,7 @@ def traceroute(
 ):
     try:
         headers = {
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0',  # noqa
             'Accept': 'application/json, text/plain, */*',
             'Accept-Language': 'en-US,en;q=0.5',
             'Content-Type': 'application/json',
@@ -92,6 +91,16 @@ def geolocate_ip(
     driver: Remote = Depends(deps.get_driver),
     ip: str = None
 ):
+
+    def get_summary_xpath(value: str):
+        return (
+            f"//td//span[contains(text(),'{value}')]"
+            "/ancestor::td/following-sibling::td"
+        )
+
+    def get_geo_xpath(value: str):
+        return f"//td[contains(text(),'{value}')]/following-sibling::td"
+
     data = {
         "geolocation": {},
         "summary": {}
@@ -103,26 +112,30 @@ def geolocate_ip(
                 (By.XPATH, "//h2[contains(text(),'Geolocation Data')]")
             )
             WebDriverWait(driver, 15).until(element_present)
-            
-            def get_summary_xpath(value: str):
-                return f"//td//span[contains(text(),'{value}')]/ancestor::td/following-sibling::td"
-            
-            def get_geo_xpath(value: str):
-                return f"//td[contains(text(),'{value}')]/following-sibling::td"
-            
-            summary = ['ASN', 'Hostname', 'Range', 'Company', 'Hosted domains', 'Privacy', 'Anycast', 'ASN type', 'Abuse contact']
-            
+
+            summary = ['ASN', 'Hostname', 'Range', 'Company', 'Hosted domains', 'Privacy', 'Anycast', 'ASN type', 'Abuse contact']  # noqa
+
             for value in summary:
                 try:
-                    data['summary'][to_camel_case(value)] = driver.find_element(by=By.XPATH, value=get_summary_xpath(value)).text
+                    data['summary'][
+                        to_camel_case(value)
+                    ] = driver.find_element(
+                        by=By.XPATH,
+                        value=get_summary_xpath(value)
+                    ).text
                 except Exception as e:
                     print(e)
-            
-            geolocation = ['City', 'State', 'Country', 'Postal', 'Timezone', 'Coordinates']
-            
+
+            geolocation = ['City', 'State', 'Country', 'Postal', 'Timezone', 'Coordinates']  # noqa
+
             for value in geolocation:
                 try:
-                    data['geolocation'][to_camel_case(value)] = driver.find_element(by=By.XPATH, value=get_geo_xpath(value)).text
+                    data['geolocation'][
+                        to_camel_case(value)
+                    ] = driver.find_element(
+                        by=By.XPATH,
+                        value=get_geo_xpath(value)
+                    ).text
                 except Exception as e:
                     print(e)
         return data
@@ -134,7 +147,7 @@ def geolocate_ip(
 @router.get('/subdomains')
 def get_subdomains(
     current_user: models.User = Depends(deps.get_current_active_user),
-    gdb: Session = Depends(deps.get_ddb),
+    gdb: Session = Depends(deps.get_gdb),
     ip: str = None
 ):
     try:

@@ -18,6 +18,7 @@ reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/login/access-token"
 )
 
+
 def get_driver() -> Generator:
     try:
         options = webdriver.ChromeOptions()
