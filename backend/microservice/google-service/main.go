@@ -16,6 +16,7 @@ func main() {
 
 	e.GET("/google", googleSearch)
 	e.GET("/google-cache", googleCacheSearch)
+	e.GET("/google-cse", cseSearch)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
@@ -27,5 +28,10 @@ func googleCacheSearch(c echo.Context) error {
 
 func googleSearch(c echo.Context) error {
 	var crawlResults = google.GoogleService(c.QueryParam("query"), c.QueryParam("pages"))
+	return c.JSON(http.StatusOK, crawlResults)
+}
+
+func cseSearch(c echo.Context) error {
+	var crawlResults = google.GoogleCSEService(c.QueryParam("query"), c.QueryParam("pages"), c.QueryParam("urls"))
 	return c.JSON(http.StatusOK, crawlResults)
 }
