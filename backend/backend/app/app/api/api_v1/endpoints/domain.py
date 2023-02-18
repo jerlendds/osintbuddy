@@ -229,7 +229,6 @@ def get_emails_from_google_results(
     try:
         emails = get_emails_from_google(gdb, domain, pages=10)
         emails = emails + get_emails_from_url(driver, url)
-        logger.info(f"FUCK {emails[0].find(to_clean_domain(domain))} {domain} {emails[0]}")
         domain = to_clean_domain(domain)
         return list(set([email for email in emails if email.find(domain) != -1]))
     except Exception as e:
