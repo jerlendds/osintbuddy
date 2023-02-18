@@ -36,7 +36,6 @@ logger = get_logger(name=" /extract/email ")
 router = APIRouter(prefix='/extract/email')
 
 
-
 @router.get('/breaches')
 def have_i_been_pwned(
     current_user: models.User = Depends(deps.get_current_active_user),
@@ -66,6 +65,9 @@ def smtp_test(
         xpath = '//*[@id="email"]'
         driver.find_element(by=By.XPATH, value=xpath).send_keys(email)
         driver.find_element(by=By.XPATH, value='//*[@id="go"]').click()
-        return driver.find_element(by=By.XPATH, value="/html/body/p[2]").text.split('\n')
+        return driver.find_element(
+            by=By.XPATH,
+            value="/html/body/p[2]"
+        ).text.split('\n')
     except Exception as e:
         logger.error(e)
