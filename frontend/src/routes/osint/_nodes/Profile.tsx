@@ -1,10 +1,10 @@
 import { GripIcon } from '@/components/Icons';
-import { PaperClipIcon, UserIcon } from '@heroicons/react/24/outline';
+import { PaperClipIcon, UserIcon, WindowIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-toastify';
 import { Handle, Position } from 'reactflow';
+import { NodeContextProps } from '.';
 
-
-export function UserResultNode({ flowData }: { flowData: any }) {
+export function ProfileNode({ flowData }: { flowData: any }) {
   return (
     <>
       <Handle position={Position.Left} id='l1' key='l1' type='target' />
@@ -50,3 +50,34 @@ export function UserResultNode({ flowData }: { flowData: any }) {
     </>
   );
 }
+
+export function ProfileNodeContext({
+  node,
+  reactFlowInstance,
+  addNode,
+  addEdge,
+  nodeData,
+  nodeType,
+  parentId,
+  getId,
+}: NodeContextProps) {
+
+  return (
+    <div className='py-1'>
+      <div>
+        <button
+          onClick={(event) => {
+            const url = nodeData[2].innerText;
+            // @ts-ignore
+            if (url) window?.open(url, '_blank').focus();
+          }}
+          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+        >
+          <WindowIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          Open in new tab
+        </button>
+      </div>
+    </div>
+  );
+}
+
