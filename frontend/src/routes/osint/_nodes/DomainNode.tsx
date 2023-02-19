@@ -16,7 +16,6 @@ import { NodeContextProps } from '.';
 export function DomainNode({ flowData }: any) {
   const initialValue = (flowData.data && flowData.data.domain) || '';
   const [domainValue, setDomainValue] = useState<string>(initialValue);
-  console.log(flowData.data);
   const origin = flowData.data?.origin;
   const href = flowData.data?.href;
   return (
@@ -84,7 +83,6 @@ export function DomainNodeContext({
 
             const resp = await api.get(`/extract/domain/ip?domain=${domain}`);
             if (resp.data) {
-              console.log(resp.data);
               resp.data.ipv4.map((ip: string, idx: number) => {
                 const newId = `ip${getId()}`;
                 let bounds = node.getBoundingClientRect();
@@ -157,7 +155,6 @@ export function DomainNodeContext({
                     label: resp.data,
                   }
                 );
-                console.log(parentId);
                 addEdge(parentId, newId);
               }
             }
@@ -176,10 +173,8 @@ export function DomainNodeContext({
           onClick={(event) => {
             let rect = node.getBoundingClientRect();
             const domain = nodeData[0]?.value;
-            console.log('domain', domain);
             if (domain) {
               api.get(`/extract/domain/dns?domain=${domain}`).then((resp) => {
-                console.log(resp.data);
                 let idx = 0;
                 for (const [key, value] of Object.entries(resp.data)) {
                   if (value) {
@@ -222,7 +217,6 @@ export function DomainNodeContext({
             const domain = nodeData[0]?.value;
             if (domain && domain !== '') {
               api.get(`/extract/domain/subdomains?domain=${domain}`).then((resp) => {
-                console.log(resp.data);
                 const nodeId = `sd${getId()}`;
                 addNode(
                   nodeId,
@@ -254,7 +248,6 @@ export function DomainNodeContext({
             const domain = nodeData[0]?.value;
             if (domain && domain !== '') {
               api.get(`/extract/domain/emails?domain=${domain}`).then((resp) => {
-                console.log(resp.data);
                 resp.data.forEach((email: string, idx: number) => {
                   const nodeId = `e${getId()}`;
                   addNode(
@@ -317,7 +310,6 @@ export function DomainNodeContext({
                         }
                       );
                       addEdge(parentId, nodeId);
-                      console.log(nodeId, result.description.length, newNode, pos);
                     });
                   }
                 })
