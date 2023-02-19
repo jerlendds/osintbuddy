@@ -32,6 +32,11 @@ const searchOptions = [
     title: 'A URL entity',
     event: 'url',
   },
+  {
+    name: 'Username',
+    title: 'Find accounts by username',
+    event: 'username',
+  },
 ];
 
 export default function NodeOptions() {

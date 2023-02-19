@@ -33,6 +33,9 @@ import { TracerouteNode } from './_nodes/TracerouteNode';
 import { UrlScanNode } from './_nodes/UrlScanNode';
 import UrlNodeContext, { UrlNode } from './_nodes/UrlNode';
 import { SmtpNode } from './_nodes/SmtpNode';
+import { UsernameNode, UsernameNodeContext } from './_nodes/UsernameNode';
+import { UserResultNode } from './_nodes/UserResult';
+
 
 const fitViewOptions: FitViewOptions = {
   padding: 50,
@@ -108,9 +111,11 @@ const DnDFlow = ({
       whois: (data) => <WhoisNode flowData={data} />,
       ip: (data) => <IpNode flowData={data} />,
       result: (data) => <ResultNode addNode={addNode} addEdge={addEdge} flowData={data} />,
+      userresult: (data) => <UserResultNode addNode={addNode} addEdge={addEdge} flowData={data} />,
       geo: (data) => <GeoNode flowData={data} />,
       urlscan: (data) => <UrlScanNode flowData={data} />,
       traceroute: (data) => <TracerouteNode flowData={data} />,
+      username: (data) => <UsernameNode flowData={data} />,
     };
   }, []);
 
@@ -349,6 +354,18 @@ export default function OsintPage() {
                   )}
                   {nodeType === 'url' && (
                     <UrlNodeContext
+                      parentId={parentId}
+                      node={node}
+                      nodeData={nodeData}
+                      nodeType={nodeType}
+                      addNode={addNode}
+                      addEdge={addEdge}
+                      getId={getId}
+                      reactFlowInstance={reactFlowInstance}
+                    />
+                  )}
+                  {nodeType === 'username' && (
+                    <UsernameNodeContext
                       parentId={parentId}
                       node={node}
                       nodeData={nodeData}
