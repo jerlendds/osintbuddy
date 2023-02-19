@@ -69,7 +69,6 @@ export function EmailNodeContext({
             const nodeId = `${getId()}`;
             let bounds = node.getBoundingClientRect();
             api.get(`/extract/email/smtp-test?email=${nodeData[0].value}`).then((resp) => {
-              console.log(resp, resp.data);
               addNode(
                     nodeId,
                     'smtp',
@@ -95,7 +94,6 @@ export function EmailNodeContext({
           onClick={(event) => {
             const nodeId = `rw${getId()}`;
             api.get(`/extract/google/search?query=${nodeData[0].value}&pages=${3}`).then((resp) => {
-              console.log(resp);
               let rect = node.getBoundingClientRect();
               let idx = 0;
               idx += 1;

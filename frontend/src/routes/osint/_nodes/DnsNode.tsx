@@ -7,7 +7,6 @@ export function DnsNode({ flowData }: any) {
   const [dnsData, setDnsData] = useState(flowData.data.label);
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    console.log('ips', dnsData);
   };
 
   return (
@@ -34,7 +33,6 @@ export function DnsNode({ flowData }: any) {
             <form onSubmit={(event) => handleSubmit(event)} className='flex items-start flex-col'>
               <>
                 {dnsData.map((dns: any) => {
-                  console.log(dns.value);
                   return (
                     <>
                       <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>

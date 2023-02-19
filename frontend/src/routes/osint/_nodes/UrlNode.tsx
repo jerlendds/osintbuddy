@@ -134,9 +134,7 @@ export default function UrlNodeContext({
 
               const resp = await api.get(`/extract/domain/ip?domain=${domain}`);
               if (resp.data) {
-                console.log(resp.data);
                 resp.data.ipv4.map((ip: string, idx: number) => {
-                  console.log('ipv4', ip);
                   const newId = `i${getId()}`;
                   let bounds = node.getBoundingClientRect();
                   const newNode = addNode(
@@ -239,7 +237,6 @@ export default function UrlNodeContext({
               const domain = nodeData[0]?.value;
               if (domain && domain !== '') {
                 api.get(`/extract/url/emails?url=${domain}`).then((resp) => {
-                  console.log(resp.data);
                   resp.data.forEach((email: string, idx: number) => {
                     const nodeId = `e${getId()}`;
                     addNode(

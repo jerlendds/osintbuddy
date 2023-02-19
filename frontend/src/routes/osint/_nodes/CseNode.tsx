@@ -16,7 +16,6 @@ export function CseNode({ flowData }: any) {
     api
       .get('/cses/links')
       .then((resp) => {
-        console.log(resp);
         setCseData(resp.data);
       })
       .catch((error) => {

@@ -32,7 +32,6 @@ export function ProfileNode({ flowData }: { flowData: any }) {
               </p>
               <div
                 onClick={() => {
-                  console.log(flowData)
                   navigator.clipboard.writeText(flowData.data.link);
                   toast.success('The URL has been copied to your clipboard');
                 }}
