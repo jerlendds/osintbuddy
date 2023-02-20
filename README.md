@@ -195,12 +195,15 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
   - [x] To emails
   - [ ] To Google Cache
 - [x] Ip Node
-  - [x] To Geolocation transformation
   - [x] To Domain transformation
+  - [x] To Subdomains transformation
+  - [x] To Geolocation transformation
   - [x] To Traceroute transformation
   - [x] To URL scan transformation (urlscan.io)
   - [ ] To Google Cache
 - [ ] CSE Node
+- [x] Username Node
+    - [x] To Profiles
 
 
 [osintbuddy-demo](https://user-images.githubusercontent.com/29207058/218629002-752322e1-4537-4849-ba1a-76fe4450404d.webm)

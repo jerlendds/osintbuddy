@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Position, Handle } from 'reactflow';
-import { GripIcon, IpIcon } from '@/components/Icons';
+import { GripIcon, IpIcon, WebsiteIcon } from '@/components/Icons';
 import { NodeContextProps } from '.';
 import api from '@/services/api.service';
-import { PaperClipIcon } from '@heroicons/react/24/outline';
+import { GlobeAltIcon, PaperClipIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-toastify';
 
 export function IpNode({ flowData, deleteNode }: any) {
@@ -90,20 +90,54 @@ export default function IpNodeContext({
                 );
                 addEdge(parentId, nodeId);
               } else {
-                toast.error("Found no hostname records in the DNS")
+                toast.error('Found no hostname records in the DNS');
               }
             });
           }}
           className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
         >
-          <IpIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          <GlobeAltIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
           To Domain
+        </button>
+
+      </div>
+      <div>
+        <button
+          onClick={() => {
+            let rect = node.getBoundingClientRect();
+            api.get(`/extract/ip/subdomains?ip=${nodeData[0].value}`).then((resp) => {
+              if (resp.data) {
+                console.log(resp.data);
+                resp.data.forEach((domain: string, idx: number) => {
+                  const nodeId = `${getId()}`;
+                  addNode(
+                    nodeId,
+                    'domain',
+                    {
+                      x: rect.x + 160 + (idx + 200),
+                      y: rect.y + 40 + (idx * 120),
+                    },
+                    {
+                      domain,
+                    }
+                  );
+                  addEdge(parentId, nodeId);
+                });
+              } else {
+                toast.error('Found no hostname records in the DNS');
+              }
+            });
+          }}
+          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
+        >
+          <WebsiteIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          To Subdomains
         </button>
       </div>
       <div>
         <button
           onClick={() => {
-            const nodeId = `rw${getId()}`;
+            const nodeId = `${getId()}`;
             let rect = node.getBoundingClientRect();
             api.get(`/extract/ip/locate?ip=${nodeData[0].value}`).then((resp) => {
               addNode(
@@ -127,7 +161,7 @@ export default function IpNodeContext({
       <div>
         <button
           onClick={() => {
-            const nodeId = `rw${getId()}`;
+            const nodeId = `${getId()}`;
             let rect = node.getBoundingClientRect();
             api.get(`/extract/ip/traceroute?ip=${nodeData[0].value}`).then((resp) => {
               addNode(
