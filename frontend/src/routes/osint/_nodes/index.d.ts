@@ -347,3 +347,91 @@ const typeMap: any = {
   Source: ['certstream-suspicious'],
   Visibility: ['public'],
 };
+
+export interface CSEResponse {
+    context:          Context;
+    cursor:           Cursor;
+    findMoreOnGoogle: FindMoreOnGoogle;
+    results:          Result[];
+}
+
+export interface Context {
+    facets:        Facet[];
+    title:         string;
+    total_results: string;
+}
+
+export interface Facet {
+    anchor:        string;
+    count:         string;
+    label:         string;
+    label_with_op: string;
+}
+
+export interface Cursor {
+    currentPageIndex:     number;
+    estimatedResultCount: string;
+    moreResultsUrl:       string;
+    pages:                Page[];
+    resultCount:          string;
+    searchResultTime:     string;
+}
+
+export interface Page {
+    label: number;
+    start: string;
+}
+
+export interface FindMoreOnGoogle {
+    url: string;
+}
+
+export interface Result {
+    breadcrumbUrl:       BreadcrumbURL;
+    cacheUrl:            string;
+    clicktrackUrl:       string;
+    content:             string;
+    contentNoFormatting: string;
+    formattedUrl:        string;
+    richSnippet:         RichSnippet;
+    title:               string;
+    titleNoFormatting:   string;
+    unescapedUrl:        string;
+    url:                 string;
+    visibleUrl:          string;
+}
+
+export interface BreadcrumbURL {
+    crumbs: string[];
+    host:   string;
+}
+
+export interface RichSnippet {
+    cseImage?:     CSEImage;
+    cseThumbnail?: CSEThumbnail;
+    metatags:      { [key: string]: string };
+    blogposting?:  Blogposting;
+    person?:       Person;
+}
+
+export interface Blogposting {
+    articlebody: string;
+    blogid:      string;
+    imageUrl:    string;
+    name:        string;
+    postid:      string;
+}
+
+export interface CSEImage {
+    src: string;
+}
+
+export interface CSEThumbnail {
+    height: string;
+    src:    string;
+    width:  string;
+}
+
+export interface Person {
+    name: string;
+}
