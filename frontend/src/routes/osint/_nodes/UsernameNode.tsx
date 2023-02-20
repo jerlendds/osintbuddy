@@ -74,7 +74,7 @@ export function UsernameNodeContext({
                       const nodeId = getId();
                       addNode(
                         nodeId,
-                        'userresult',
+                        'profile',
                         {
                           x: rIdx % 2 === 0 ? bounds.x + 60 : bounds.x + 800,
                           y: rIdx % 2 === 0 ? rIdx * 60 + bounds.y : (rIdx - 1) * 60 + bounds.y,
@@ -93,7 +93,7 @@ export function UsernameNodeContext({
             className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
           >
             <ListBulletIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
-            To results
+            To profiles
           </button>
         </div>
       </div>
