@@ -64,8 +64,7 @@ func CrawlCse(searchQuery string, pages string, cseUrl string) {
 		r.Save(fmt.Sprintf("%d.html", paginationIndex))
 		paginationIndex += 1
 		vUrl := fmt.Sprintf("https://cse.google.com/cse/element/v1?"+"rsz=filtered_cse&num=100&hl=en&source=gcsc&gss=.com&cselibv=%s&cx=%s&q=%s&safe=off&cse_tok=%s&sort=&exp=&oq=%s&cseclient=hosted-page-client&callback=1431", jsonMap["cselibVersion"], jsonMap["cx"], searchQuery, jsonMap["cse_token"], searchQuery)
-		fmt.Println(vUrl)
-		c.Visit(vUrl)
+		q.AddURL(vUrl)
 	})
 
 	c.OnResponse(func(r *colly.Response) {
