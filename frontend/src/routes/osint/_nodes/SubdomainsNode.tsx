@@ -13,7 +13,6 @@ export function SubdomainNode({ flowData }: any) {
   useEffect(() => {
     const scheduler = new IntervalBasedCronScheduler(60 * 1000);
     api.get(`/extract/domain/subdomains/status?id=${task}`).then((resp) => {
-      console.log('CALLED inside', resp);
       if (resp.data.status !== 'PENDING') {
         setStatus('DONE');
       }

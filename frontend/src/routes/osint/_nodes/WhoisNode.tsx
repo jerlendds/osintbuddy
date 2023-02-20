@@ -3,7 +3,6 @@ import { Position, Handle } from 'reactflow';
 import { GripIcon, WebsiteIcon } from '@/components/Icons';
 
 export function WhoisNode({ flowData }: any) {
-  console.log(flowData);
   const [seoData, setSeoData] = useState(flowData.data.label);
   const handleSubmit = (event: any) => {
     event.preventDefault();
