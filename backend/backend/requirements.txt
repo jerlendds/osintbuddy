@@ -114,7 +114,6 @@ rsa==4.8
 scapy==2.5.0
 selenium==4.8.0
 sentry-sdk==1.5.8
-Shapely==1.7.1
 six==1.16.0
 sniffio==1.2.0
 snowballstemmer==2.2.0
