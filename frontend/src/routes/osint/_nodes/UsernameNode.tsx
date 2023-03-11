@@ -99,6 +99,4 @@ export function UsernameNodeContext({
       </div>
     );
   }
-  
 
-// http://localhost:8000/api/v1/extract/username/accounts?username=cucumber
