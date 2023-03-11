@@ -6,8 +6,8 @@ IMAGE_NAME="openinfolabs/osintbuddy-backend"
 CONTAINER_NAME="backend"
 REPOSITORY_PATH="docker.io"
 FULLY_QUALIFIED_IMAGE_NAME="$REPOSITORY_PATH/$IMAGE_NAME"
-HOST_PORT=8000
-CONTAINER_PORT=8000
+HOST_PORT=5000
+CONTAINER_PORT=5000
 
 # Get version from package.json file so can tag the built image with version number.
 # If you don't have node installed, you can just hardcode the version number here.
