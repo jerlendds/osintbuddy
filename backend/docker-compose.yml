@@ -1,9 +1,10 @@
 version: '3.9'
 services:
   backend:
+    image: openinfolabs/osintbuddy-backend
     command: ['/bin/sh', '-c', './start-reload.sh']
     build:
-      context: './backend'
+      context: ./backend
       dockerfile: 'backend.Dockerfile'
     volumes:
       - ./backend/app:/app/
@@ -13,16 +14,15 @@ services:
       - 5000:80
     env_file:
       - .env
-    depends_on:
-      - db
   microservice:
-      build:
-        context: ./microservice
-        dockerfile: Dockerfile
-      ports:
-        - 1323:1323
-      env_file:
-        - '.env'
+    image: openinfolabs/osintbuddy-microservice
+    build:
+      context: ./microservice
+      dockerfile: Dockerfile
+    ports:
+      - 1323:1323
+    env_file:
+      - '.env'
   db:
     image: postgres:14.2
     volumes:
@@ -35,8 +35,9 @@ services:
     image: redis:latest
     ports:
       - 6379:6379
-    command: 'redis-server'
+    command: redis-server
   worker:
+    image: openinfolabs/osintbuddy-worker
     command: /worker-start.sh
     build:
       context: ./backend
