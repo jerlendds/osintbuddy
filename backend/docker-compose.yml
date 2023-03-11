@@ -1,7 +1,6 @@
 version: '3.9'
 services:
   backend:
-    image: 'openinfolabs/osintbuddy-backend:latest'
     command: ['/bin/sh', '-c', './start-reload.sh']
     build:
       context: './backend'
@@ -11,15 +10,15 @@ services:
     environment:
       PYTHONDONTWRITEBYTECODE: 1
     ports:
-      - '${DOCKER_WEB_PORT_FORWARD:-0.0.0.0:8000}:80'
+      - 8000:80
     env_file:
-      - '.env'
+      - .env
   microservice:
       build:
-        context: './microservice'
-        dockerfile: 'Dockerfile'
+        context: ./microservice
+        dockerfile: Dockerfile
       ports:
-        - '${DOCKER_WEB_PORT_FORWARD:-0.0.0.0:1323}:1323'
+        - 1323:1323
       env_file:
         - '.env'
   db:
@@ -27,38 +26,27 @@ services:
     volumes:
       - osintbuddy-db-data:/var/lib/postgresql/data/pgdata
     environment:
-      PGDATA: '/var/lib/postgresql/data/pgdata'
+      PGDATA: /var/lib/postgresql/data/pgdata
     env_file:
-      - '.env'
+      - .env
     ports:
-      - 5455:5432
+      - 5432:5432
   redis:
     image: redis:latest
     ports:
-      - "6379:6379"
-    deploy:
-      resources:
-        limits:
-          cpus: '${DOCKER_REDIS_CPUS:-0}'
-          memory: '${DOCKER_REDIS_MEMORY:-0}'
+      - 6379:6379
     command: 'redis-server'
   worker:
-    command: '/worker-start.sh'
-    image: openinfolabs/osintbuddy-worker:latest
+    command: /worker-start.sh
     build:
       context: ./backend
       dockerfile: worker.Dockerfile
-    deploy:
-      resources:
-        limits:
-          cpus: '${DOCKER_WORKER_CPUS:-0}'
-          memory: '${DOCKER_WORKER_MEMORY:-0}'
     env_file:
-      - '.env'
+      - .env
   flower:
     image: mher/flower:1.2
     ports:
-      - '${DOCKER_FLOWER_PORT_FORWARD:-127.0.0.1:5555}:5555'
+      - 5555:5555
     environment:
       - CELERY_BROKER_URL=redis://redis:6379//
   graphdb:
@@ -66,12 +54,12 @@ services:
     environment:
       NEO4J_AUTH: neo4j/password
     ports:
-      - '7474:7474'
-      - '7687:7687'
+      - 7474:7474
+      - 7687:7687
   selenium:
     image: selenium/standalone-chrome
     ports:
-      - "4444:4444"
+      - 4444:4444
     environment:
       - JAVA_OPTS=-Dwebdriver.chrome.whitelistedIps=
   
