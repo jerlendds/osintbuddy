@@ -10,9 +10,11 @@ services:
     environment:
       PYTHONDONTWRITEBYTECODE: 1
     ports:
-      - 8000:80
+      - 5000:80
     env_file:
       - .env
+    depends_on:
+      - db
   microservice:
       build:
         context: ./microservice
@@ -25,8 +27,6 @@ services:
     image: postgres:14.2
     volumes:
       - osintbuddy-db-data:/var/lib/postgresql/data/pgdata
-    environment:
-      PGDATA: /var/lib/postgresql/data/pgdata
     env_file:
       - .env
     ports:

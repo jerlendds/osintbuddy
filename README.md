@@ -10,13 +10,10 @@
     <img src="./docs/assets/logo-watermark.svg" height="200px" alt="OSINT Buddy Logo">
   </a>
 
-
-
-
   <h1 align="center">Introducing OSINTBuddy 2.0</h1>
 
   <h4 align="center">
-  Mine, merge, and map data for novel insights.
+    Mine, merge, and map data for novel insights.
   </h4>
 </p>
 
@@ -47,12 +44,12 @@
 ## About The Project
 
 Fetch data from different sources and returns the results 
-as visual entities that you can explore step-by-step! *(scroll down for video demos)*
+as visual entities that you can explore step-by-step!
 
 OSINTBuddy is a work-in-progress OSINT tool, which is distributed 
 for educational and investigative purposes, the person who has bought 
 or uses this tool is responsible for its proper use or actions committed, 
-jerlendds, aka the developer of OSINTBuddy, is not responsible for the use 
+jerlendds, the developer(s) of OSINTBuddy, are not responsible for the use 
 or the scope that people can have through this software.
 
 
@@ -87,74 +84,27 @@ To get a local copy up and running follow these simple steps.
 
  - **URLs**
     - Frontend: http://localhost:3000
-    - Backend: http://localhost:8000/api/
-    - Documentation: http://localhost:8000/docs -- http://localhost:8000/redoc
+    - Backend: http://localhost:5000/api/
+    - Documentation: http://localhost:5000/docs -- http://localhost:5000/redoc
     - Flower: http://localhost:5555
     - Neo4J: http://localhost:7474/browser/
 
 <!-- 
-
-
-
 mk-fg recommendations: 
-nmap with os fingerprinting options, metasploit/w3af scan, ssh whoarethey using corpus of pubkeys from github ( https://www.agwa.name/blog/post/whoarethey ), torrent activity for IP (from DHT and such, e.g. https://iknowwhatyoudownload.com/ but better data/targeting), dns name(s) for IP via various leaky protocols and related IPs from that (e.g. TLS cert altnames, SMTP, etc), spam-lists/dmarc reputation for IP/name, info on services and keys associated with name(s) from TXT/SRV records, address' AS BGP info
-
+ssh whoarethey using corpus of pubkeys from github ( https://www.agwa.name/blog/post/whoarethey ),  , , , address' AS BGP info
 moddy recommendations:
 math, map, reduce, filter, zip and zipwith function blocks
-
-
-Awesome site: https://www.jsonapi.co/public-api
-
 https://github.com/danielmiessler/SecLists/tree/master/Discovery/DNS
-
-
 COMB breach @todo add password searching
 magnet:?xt=urn:btih:7ffbcd8cee06aba2ce6561688cf68ce2addca0a3&dn=BreachCompilation&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fglotorrents.pw%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337
-
-
-@todo VirusTotal
-https://developers.virustotal.com/v2.0/reference/getting-started
-
-@todo URLhaus
-https://urlhaus-api.abuse.ch/
-
-@todo google safe browsing
-https://developers.google.com/safe-browsing/
-
-@todo alienvault
-https://otx.alienvault.com/api
-
-@todo abuse ip db
-https://docs.abuseipdb.com/#introduction
-
-@todo https://builtwith.com/
-
-
-@todo https://sploitus.com/
-
 @todo https://nvd.nist.gov/
-
-@todo https://www.reddit.com/dev/api/
-
 @todo https://github.com/JustAnotherArchivist/snscrape
-
-
-@todo username finder
-https://whatsmyname.app/
-
-@todo
 https://github.com/Greyjedix/Profil3r - Profil3r is an OSINT tool that allows you to find potential profiles of a person on social networks, as well as their email addresses. This program also alerts you to the presence of a data leak for the found emails.
-
 @todo https://epieos.com/
-
 @todo https://github.com/megadose/holehe
 https://os2int.com/toolbox/verifying-and-investigating-email-addresses-with-holehe/
-
 https://github.com/kpcyrd/sn0int
-
 https://github.com/DataSploit/datasploit
-
-
 https://github.com/mxrch/ghunt
  -->
 
