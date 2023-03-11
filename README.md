@@ -39,8 +39,6 @@
 </details>
 
 
-
-
 ## About The Project
 
 Fetch data from different sources and returns the results 
@@ -73,6 +71,7 @@ To get a local copy up and running follow these simple steps.
 
    ```sh
    cd osintbuddy/backend/
+   cp .env.example .env
    docker compose up
    ```
 4. Start the frontend:
