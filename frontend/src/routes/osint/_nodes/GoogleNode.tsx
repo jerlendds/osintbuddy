@@ -16,60 +16,56 @@ export function GoogleNode({ flowData }: { flowData: any }) {
       <Handle position={Position.Top} id='t1' key='t1' type='source' />
       <Handle position={Position.Bottom} id='b1' key='b1' type='source' />
       <Handle position={Position.Left} id='l1' key='l1' type='target' />
-      <div className=' flex flex-col w-full max-w-sm justify-between rounded-sm transition duration-150 ease-in-out hover:bg-light-200 bg-light-100'>
-        <div className='flex h-full w-full items-center justify-between rounded-t-sm bg-info-300 text-white py-2 px-1'>
+
+      <div className=' flex flex-col w-full max-w-sm justify-between rounded-sm transition duration-150 ease-in-out bg-slate-800/80 ring-1 ring-white/10 backdrop-blur'>
+        <div className='absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-persian-400/0 via-persian-400 to-persian-400/0' />
+        <div className='flex h-full w-full items-center justify-between rounded-t-sm bg-info-300 bg-opacity-20 text-slate-100 py-2 px-1'>
           <GripIcon className='h-5 w-5' />
-          <div className='flex w-full flex-col px-2 font-semibold'>
-            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
+          <div className='flex w-full flex-col px-2 font-medium'>
+            <p className='text-[0.4rem] text-slate-400  whitespace-wrap font-display'>
               {' '}
-              <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
+              <span className='text-[0.5rem] text-slate-400 max-w-xl whitespace-wrap font-display'>ID: </span>
               {flowData.id}
             </p>
-            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>Google Search</p>
+            <p className='text-xs text-slate-400 max-w-xl whitespace-wrap font-display font-medium'>Google Search</p>
           </div>
           <GoogleIcon className='h-5 w-5 mr-2' />
         </div>
         <div className='flex md:h-full w-full  p-2'>
           <div className='md:flex-col md:flex w-full md:flex-1  md:justify-between '>
             <form className='flex items-start flex-col'>
-              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>Query</p>
+              <p className='text-[0.5rem] font-medium text-slate-400  whitespace-wrap font-display'>Query</p>
               <div className='flex items-center mb-1'>
-                <div className='mt-1 w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
-                  <MagnifyingGlassIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
+                <div className='mt-1 w-full  flex py-0.5 relative border-opacity-60  text-slate-500 focus:border-opacity-100  text-xs border border-info-400 focus:border-info-300 active:border-info-300 bg-slate-700 focus:ring-info-50 sm:text-sm text-light-20'>
+                  <MagnifyingGlassIcon className='h-4 w-4 pl-0.5 mt-0.5 absolute top-1 text-gray-50 z-50' />
 
                   <input
                     data-type='query'
                     type='text'
                     onChange={(event: any) => setQueryValue(event.target.value)}
                     value={queryValue}
-                    className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-full bg-light-200 focus:bg-light-50'
+                    className='placeholder:text-gray-50 text-slate-100 bg-slate-700 focus:outline-none pl-5 w-full '
                     placeholder='Search...'
                   />
                 </div>
               </div>
-              <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display mt-1'>
+              <p className='text-[0.5rem] font-medium text-slate-400  whitespace-wrap font-display mt-1'>
                 Total pages
               </p>
               <div className='flex items-center mb-1'>
-                <div className='mt-1 w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
-                  <DocumentIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
+                <div className='mt-1 w-full  flex py-0.5 relative border-opacity-60  text-slate-500 focus:border-opacity-100  text-xs border border-info-400 focus:border-info-300 active:border-info-300 bg-slate-700 focus:ring-info-50 sm:text-sm text-light-20'>
+                  <DocumentIcon className='h-4 w-4 pl-0.5 mt-0.5 absolute top-1 text-gray-50 z-50' />
 
                   <input
                     data-type='pages'
                     type='number'
                     onChange={(event: any) => setPagesValue(event.target.value)}
                     value={pagesValue}
-                    className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-full bg-light-200 focus:bg-light-50'
+                    className='placeholder:text-gray-50 text-slate-100 bg-slate-700 focus:outline-none pl-5 w-full'
                     placeholder='HTTP 403'
                   />
                 </div>
               </div>
-              {/* <button
-                type='submit'
-                className='flex w-full mt-2 py-2 ml-auto items-center bg-info-200 rounded-full justify-between px-3'
-              >
-                <p className=' text-xs font-semibold font-display flex text-white whitespace-nowrap'>Search Google</p>
-              </button> */}
             </form>
           </div>
         </div>
@@ -98,7 +94,7 @@ export function GoogleNodeContext({
               .get(`/extract/google/search?query=${nodeData[0].value}&pages=${nodeData[1].value}`)
               .then((resp) => {
                 if (resp.data && resp.status === 200) {
-                  toast.success("Fetching results")
+                  toast.success('Fetching results');
                   resp.data.forEach((result: any, rIdx: number) => {
                     const nodeId = getId();
                     addNode(

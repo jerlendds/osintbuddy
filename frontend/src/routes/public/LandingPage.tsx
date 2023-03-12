@@ -1,3 +1,4 @@
+import MarkdownPreview from "@uiw/react-markdown-preview";
 import { Fragment } from 'react';
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import { HeroBackground, TrafficLightsIcon } from '@/components/Icons';
@@ -5,26 +6,16 @@ import blurCyanImage from '@images/blur-cyan.png'
 import blurIndigoImage from '@images/blur-indigo.png'
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
+import {MDXProvider} from '@mdx-js/react'
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
-const codeLanguage = 'javascript'
-const code = `export default {
-  strategy: 'predictive',
-  engine: {
-    cpus: 12,
-    backups: ['./storage/cache.wtf'],
-  },
-}`
-
-const tabs = [
-  { name: 'cache-advance.config.js', isActive: true },
-  { name: 'package.json', isActive: false },
-];
 
 export default function LandingPage(): React.ReactElement {
   return (
- <div className="overflow-hidden bg-slate-900 dark:-mb-32 dark:mt-[-4.5rem] dark:pb-32 dark:pt-[4.5rem] dark:lg:mt-[-4.75rem] dark:lg:pt-[4.75rem]">
-      <div className="py-16 sm:px-2 lg:relative lg:py-20 lg:px-0">
-        <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-y-16 gap-x-8 px-4 lg:max-w-8xl lg:grid-cols-2 lg:px-8 xl:gap-x-16 xl:px-12">
+ <>
+ <div className="overflow-hidden bg-slate-900 dark:mt-[-4.5rem] dark:pb-32 dark:pt-[4.5rem] dark:lg:mt-[-4.75rem] dark:lg:pt-[4.75rem]">
+      <div className="py-16 sm:px-2 lg:relative  lg:px-0">
+        <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-y-16 py-24 gap-x-8 px-4 lg:max-w-8xl lg:grid-cols-2 lg:px-8 xl:gap-x-16 xl:px-12">
           <div className="relative z-10 md:text-center lg:text-left">
             <img
               className="absolute bottom-full right-full -mr-72 -mb-56 opacity-50"
@@ -80,7 +71,6 @@ export default function LandingPage(): React.ReactElement {
                       aria-hidden="true"
                       className="select-none border-r border-slate-300/5 pr-4 font-mono text-slate-600"
                     >
-                      
                     </div>
                     
                   </div>
@@ -90,6 +80,66 @@ export default function LandingPage(): React.ReactElement {
           </div>
         </div>
       </div>
+
     </div>
+
+<div className="relative ml-48 mx-auto flex w-full justify-center sm:px-2 lg:px-8 xl:px-12">
+      
+        <div className="min-w-0 max-w-2xl flex-auto px-4 py-4 lg:max-w-none lg:pr-0 lg:pl-8 xl:px-16">
+          <article>
+              <header className="mb-9 space-y-1">
+                  <p className="font-display text-sm font-medium text-sky-500">
+                    Introduction
+                  </p>
+                  <h1 className="font-display text-3xl tracking-tight text-slate-200 dark:text-white">
+                    Getting Started with OSINTBuddy
+                  </h1>
+              </header>
+          
+          </article>
+          <dl className="mt-12 flex border-t border-slate-400 pt-6 dark:border-slate-800">
+            {true && (
+              <div>
+                <dt className="font-display text-sm font-medium text-slate-900 dark:text-white">
+                  Previous
+                </dt>
+                <dd className="mt-1">
+                  <Link
+                    to={''}
+                    className="text-base flex items-center font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
+                  >
+                    <ChevronLeftIcon className='text-slate-400 h-5 w-5 mr-2' />
+                   {/* Welcome */}
+                  </Link>
+                </dd>
+              </div>
+            )}
+            {true && (
+              <div className="ml-auto text-right">
+                <dt className="font-display text-sm font-medium text-slate-900 dark:text-white">
+                  Next
+                </dt>
+                <dd className="mt-1">
+                  <Link
+                    to=''
+                    className="text-base flex items-center font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
+                  >
+                    {/* Node Workflow  */}
+                    <ChevronRightIcon className='text-slate-400 h-5 w-5 ml-2' />
+                  </Link>
+                </dd>
+              </div>
+            )}
+          </dl>
+        </div>
+        <div className="hidden xl:sticky xl:top-[4.5rem] xl:-mr-6 xl:block xl:h-[calc(100vh-4.5rem)] xl:flex-none xl:overflow-y-auto xl:py-16 xl:pr-6">
+          <nav aria-labelledby="on-this-page-title" className="w-56">
+          {/* @ts-ignore */}
+          </nav>
+        </div>
+        
+      </div>
+
+    </>
   );
 }

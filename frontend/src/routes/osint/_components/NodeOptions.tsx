@@ -46,10 +46,10 @@ export default function NodeOptions() {
   };
 
   return (
-    <Disclosure as='div' className='absolute bg-slate-300 w-44 py-2 left-5 top-16 z-50'>
+    <Disclosure as='div' className='absolute bg-dark-300 w-44 py-2 left-5 top-16 z-50'>
       <Disclosure.Button className='text-xl items-center justify-between w-full flex px-4 '>
-        <span className='font-display text-info font-semibold'>Nodes</span>
-        <PlusIcon className='w-4 h-4 text-info' />
+        <span className='font-display text-slate-400 font-semibold'>Nodes</span>
+        <PlusIcon className='w-4 h-4 text-slate-400' />
       </Disclosure.Button>
 
       <Transition
@@ -67,11 +67,11 @@ export default function NodeOptions() {
                 draggable
                 key={searchOption.name}
                 onDragStart={(event) => onDragStart(event, searchOption.event)}
-                className='border-l-4 active:border-l-info-400 py-2 my-1 bg-slate-200 flex items-center px-4 border-l-info-200'
+                className='border-l-4 active:border-l-dark-400 py-2 my-1 bg-dark-400 flex items-center px-4 border-l-dark-50'
                 title={searchOption.title}
               >
-                <PlusIcon className='w-3 h-3 mr-1 text-info' />
-                <p className='text-xs font-semibold text-info font-display'>{searchOption.name}</p>
+                <PlusIcon className='w-3 h-3 mr-1 text-slate-400' />
+                <p className='text-xs font-medium text-slate-400 font-display'>{searchOption.name}</p>
               </li>
             ))}
           </ul>

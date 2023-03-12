@@ -34,7 +34,7 @@ export default function BreadcrumbHeader({ activeProject }: { activeProject: str
                 <path d='M.293 0l22 22-22 22h1.414l22-22-22-22H.293z' />
               </svg>
               <button
-                className='ml-4 text-sm font-medium text-light-500 hover:text-light-700'
+                className='ml-4 text-sm font-medium text-slate-400 hover:text-slate-300'
                 aria-current={page.current ? 'page' : undefined}
               >
                 {page.name}

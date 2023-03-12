@@ -172,7 +172,7 @@ export default function AppLayout() {
         <div
           style={{ width: `calc(100% - ${showSidebar ? 16 : 3}rem)` }}
           className={classNames(
-            'flex-shrink transition-all duration-100 relative  bg-dark-500',
+            'flex-shrink transition-all duration-100 relative ',
             showSidebar ? 'md:translate-x-64' : 'md:translate-x-12'
           )}
         >
