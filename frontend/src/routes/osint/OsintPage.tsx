@@ -10,6 +10,7 @@ import ReactFlow, {
   XYPosition,
   useReactFlow,
 } from 'reactflow';
+
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { HotKeys } from 'react-hotkeys';
 import { useLocation, useParams } from 'react-router-dom';
@@ -36,6 +37,7 @@ import { SmtpNode } from './_nodes/SmtpNode';
 import { UsernameNode, UsernameNodeContext } from './_nodes/UsernameNode';
 import { ProfileNode, ProfileNodeContext } from './_nodes/Profile';
 
+import { Terminal } from 'xterm';
 
 const fitViewOptions: FitViewOptions = {
   padding: 50,
@@ -124,6 +126,7 @@ const DnDFlow = ({
       <ReactFlowProvider>
         <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
           <ReactFlow
+          
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -136,8 +139,8 @@ const DnDFlow = ({
             fitView
             fitViewOptions={fitViewOptions}
             nodeTypes={nodeTypes}
+            color="#0F172A"
           >
-            <Controls />
           </ReactFlow>
         </div>
       </ReactFlowProvider>
@@ -172,13 +175,17 @@ export function capitalize(value: string) {
 }
 
 export default function OsintPage() {
+  const xtermRef = useRef<HTMLDivElement>(null);
+
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge[]>(initialEdges);
 
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [nodeId, setNodeId] = useState<number>(0);
-  let setViewport, zoomIn, zoomOut = null;
+  let setViewport,
+    zoomIn,
+    zoomOut = null;
   if (reactFlowInstance) {
     ({ setViewport, zoomIn, zoomOut } = reactFlowInstance);
   }
@@ -228,6 +235,17 @@ export default function OsintPage() {
     TOGGLE_PALETTE: togglePalette,
   };
 
+  useRef(() => {
+    if (xtermRef && xtermRef.current) {
+      const term = new Terminal({
+        
+      });
+      console.log('wtf', term)
+      term.open(xtermRef.current);
+    }
+    return () => xtermRef && xtermRef.current ? xtermRef.current.remove() : null
+  }, [xtermRef]);
+
   return (
     <HotKeys keyMap={keyMap} handlers={handlers}>
       <div className='h-screen flex flex-col w-full'>
@@ -247,6 +265,7 @@ export default function OsintPage() {
             reactFlowInstance={reactFlowInstance}
             setReactFlowInstance={setReactFlowInstance}
           />
+          <div ref={xtermRef} />
         </div>
         <CommandPallet
           toggleShowOptions={toggleShowNodeOptions}

@@ -37,18 +37,18 @@ export const CreateCasesForm: React.FC<{ closeModal: Function }> = ({ closeModal
       >
         <Form className='flex flex-col '>
           <div className='py-2'>
-            <label className='block text-dark-700' htmlFor='name'>
+            <label className='block text-slate-400' htmlFor='name'>
               Case name
             </label>
             <Field
-              className='block w-full py-2 px-3 rounded-md bg-light-100 text-dark-500 border-2 border-dark-100 shadow-sm text-sm focus:border-dark-500 focus:ring-indigo-500'
+              className='block w-full py-2 px-3 rounded-md bg-dark-100 text-slate-400 border-2 border-dark-100 shadow-sm text-sm focus:border-dark-500 focus:ring-indigo-500'
               id='name'
               name='name'
               placeholder='Your name'
             />
           </div>
           <div className='py-2'>
-            <label className='block text-dark-700' htmlFor='description'>
+            <label className='block text-slate-400' htmlFor='description'>
               Case description
             </label>
 
@@ -61,7 +61,7 @@ export const CreateCasesForm: React.FC<{ closeModal: Function }> = ({ closeModal
                     onChange={field.onChange}
                     name='description'
                     id='description'
-                    className='block w-full py-2 px-3 text-sm rounded-md bg-light-100 text-dark-500 border-2 border-dark-100 shadow-sm  '
+                    className='block w-full py-2 px-3 text-sm rounded-md bg-dark-100 text-slate-400 border-2 border-dark-100 shadow-sm  '
                     defaultValue={''}
                     placeholder='Your description'
                   />
@@ -73,7 +73,7 @@ export const CreateCasesForm: React.FC<{ closeModal: Function }> = ({ closeModal
             <button
               type='button'
               onClick={() => closeModal()}
-              className='text-white font-semibold flex bg-danger items-center font-display my-3 hover:text-light-200  py-2 px-4 rounded-md hover:bg-danger-600 transition-colors duration-75 ease-in'
+              className='text-white font-semibold flex bg-danger items-center font-display my-3 hover:text-slate-200  py-2 px-4 rounded-md hover:bg-danger-600 transition-colors duration-75 ease-in'
             >
               Cancel
             </button>
@@ -138,11 +138,11 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
                 to={`/app/osint/${row.original.id}`}
                 state={{ activeCase: row.original }}
                 className={classNames(
-                  'text-primary-600 flex bg-primary items-center  text-sm font-display hover:text-light-200 border-primary border-2 py-2 px-4 rounded-md hover:border-primary-400 transition-colors duration-75 ease-in'
+                  'text-info-200 flex items-center  text-sm font-display hover:text-slate-200 border-info-200 border-2 py-1 rounded-full px-4 bg-info-200 hover:border-info-50 transition-colors duration-75 ease-in'
                 )}
                 replace
               >
-                <span className='text-light-200 mx-2 mr-4 font-display font-medium'>View case</span>{' '}
+                <span className='text-slate-200 mx-2 mr-4 font-display font-medium'>View case</span>{' '}
               </Link>
             </div>
           ),
@@ -160,12 +160,12 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
   return (
     <>
       <table className='min-w-full divide-y divide-light-300' {...getTableProps()}>
-        <thead className='bg-light-300'>
+        <thead className='bg-dark-300'>
           {headerGroups.map((headerGroup: any) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column: any) => (
                 <th
-                  className='first:py-3.5 first:pl-4 px-3 py-3.5 pr-3 text-left text-sm font-semibold text-dark-900 first:sm:pl-6'
+                  className='first:py-3.5 first:pl-4 px-3 py-3.5 pr-3 text-left text-sm font-semibold text-slate-400 first:sm:pl-6'
                   {...column.getHeaderProps()}
                 >
                   {column.render('Header')}
@@ -174,7 +174,7 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
             </tr>
           ))}
         </thead>
-        <tbody className='bg-light-300' {...getTableBodyProps()}>
+        <tbody className='bg-dark-300' {...getTableBodyProps()}>
           {page.map((row: any, i: number) => {
             prepareRow(row);
             return (
@@ -182,7 +182,7 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
                 {row.cells.map((cell: any) => {
                   return (
                     <td
-                      className='whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-dark-400 sm:pl-6'
+                      className='whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-slate-400 sm:pl-6'
                       {...cell.getCellProps()}
                     >
                       {cell.render('Cell')}
@@ -204,7 +204,7 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
         Pagination can be built however you'd like. 
         This is just a very basic UI implementation:
       */}
-      <div className='pagination bg-light-300 py-3'>
+      <div className='pagination bg-dark-300 py-3'>
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {'<<'}
         </button>{' '}
@@ -387,8 +387,8 @@ const CasesCards = ({
       <div className='w-full flex items-center justify-center'>
         {casesData.length === 0 && (
           <>
-            <div className='mt-6 flex flex-col items-center shadow-2xl px-48 bg-light-500 border-primary border-2 rounded-2xl py-20'>
-              <FolderPlusIcon className='h-8 w-8 text-light flex' />
+            <div className='mt-6 flex flex-col items-center shadow-2xl px-48 bg-dark-500 border-primary border-2 rounded-2xl py-20'>
+              <FolderPlusIcon className='h-8 w-8 text-slate flex' />
               <h3 className='mt-2 text-2xl font-medium '>No investigations</h3>
               <p className='mt-1 text-lg'>Get started by creating a new case</p>
               <button

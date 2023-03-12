@@ -8,7 +8,7 @@ export default function BreadcrumbHeader({ activeProject }: { activeProject: str
   ];
   return (
     <nav
-      className='flex justify-between fixed top-0 z-40 border-b border-gray-200 bg-dark-800 w-full'
+      className='flex justify-between fixed top-0 z-40 border-b border-dark-300 bg-dark-700 w-full'
       aria-label='Breadcrumb'
     >
       <ol role='list' className='flex w-full max-w-screen-xl space-x-4 px-4 sm:px-6 lg:px-8'>
