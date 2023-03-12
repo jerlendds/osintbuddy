@@ -27,7 +27,6 @@ import { closeSidebar, isSidebarOpen, setSidebar } from '@/features/settings/set
 const navigation = [
   { name: 'Dashboard', to: '/app/dashboard', icon: ViewfinderCircleIcon },
   { name: 'Dorking', to: '/app/dorking', icon: GoogleIcon },
-  { name: 'Live shell', to: '/app/shell', icon: ShellIcon },
 ];
 
 export default function AppLayout() {
@@ -53,7 +52,7 @@ export default function AppLayout() {
               leaveFrom='opacity-100'
               leaveTo='opacity-0'
             >
-              <div className='fixed inset-0 bg-dark-600 bg-opacity-75' />
+              <div className='fixed inset-0 bg-slate-900 bg-opacity-75' />
             </Transition.Child>
 
             <div className='fixed inset-0 z-40 flex'>
@@ -66,7 +65,7 @@ export default function AppLayout() {
                 leaveFrom='translate-x-0'
                 leaveTo='-translate-x-full'
               >
-                <Dialog.Panel className='relative flex w-full max-w-xs flex-1 flex-col bg-dark-800 pt-5 pb-4'>
+                <Dialog.Panel className='relative flex w-full max-w-xs flex-1 flex-col  bg-dark-700 pt-5 pb-4'>
                   <Transition.Child
                     as={Fragment}
                     enter='ease-in-out duration-300'
@@ -125,14 +124,14 @@ export default function AppLayout() {
 
         <div
           className={classNames(
-            'hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col transition-transform duration-200',
+            'hidden md:fixed md:inset-y-0 md:flex border-r border-dark-300 md:w-64 md:flex-col transition-transform duration-100',
             showSidebar ? 'translate-x-0' : '-translate-x-52'
           )}
         >
-          <div className='flex min-h-0 flex-1 flex-col bg-dark-800 px-1.5'>
+          <div className='flex min-h-0 flex-1 flex-col bg-dark-700 px-1.5'>
             <div
               className={classNames(
-                'flex h-12 flex-shrink-0 items-center bg-dark-800 justify-between',
+                'flex h-12 flex-shrink-0 items-center justify-between',
                 showSidebar ? 'px-3' : 'px-1'
               )}
             >
@@ -149,16 +148,16 @@ export default function AppLayout() {
                     className={({ isActive }) =>
                       classNames(
                         isActive
-                          ? 'bg-dark-500 text-light-400'
-                          : 'text-dark-200 duration-200 hover:bg-dark-700 hover:text-light-400',
+                          ? 'bg-slate-800 text-slate-200'
+                          : 'text-slate-400 duration-100 hover:bg-opacity-90 hover:text-light-400',
                         'group flex items-center px-2 py-2 text-base font-sans font-medium rounded-r-sm'
                       )
                     }
                   >
                     <item.icon
-                      className={classNames(
-                        location.pathname === item.to ? 'text-primary' : 'text-gray-400 group-hover:text-gray-300',
-                        'mr-3 flex-shrink-0 h-6 w-6 transition-transform duration-200',
+                      className={classNames('transition-all',
+                        location.pathname === item.to ? 'text-info-200' : 'text-slate-400 group-hover:text-slate-300',
+                        'mr-3 flex-shrink-0 h-6 w-6 duration-100',
                         showSidebar ? 'translate-x-0' : 'translate-x-[12.7rem]'
                       )}
                       aria-hidden='true'
@@ -173,7 +172,7 @@ export default function AppLayout() {
         <div
           style={{ width: `calc(100% - ${showSidebar ? 16 : 3}rem)` }}
           className={classNames(
-            'flex-shrink transition-all duration-200 relative',
+            'flex-shrink transition-all duration-100 relative  bg-dark-500',
             showSidebar ? 'md:translate-x-64' : 'md:translate-x-12'
           )}
         >

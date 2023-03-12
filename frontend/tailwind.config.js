@@ -3,24 +3,43 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   darkMode: 'class',
   theme: {
+    fontSize: {
+      'xs': ['0.75rem', { lineHeight: '1rem' }],
+      'sm': ['0.875rem', { lineHeight: '1.5rem' }],
+      'base': ['1rem', { lineHeight: '2rem' }],
+      'lg': ['1.125rem', { lineHeight: '1.75rem' }],
+      'xl': ['1.25rem', { lineHeight: '2rem' }],
+      '2xl': ['1.5rem', { lineHeight: '2.5rem' }],
+      '3xl': ['2rem', { lineHeight: '2.5rem' }],
+      '4xl': ['2.5rem', { lineHeight: '3rem' }],
+      '5xl': ['3rem', { lineHeight: '3.5rem' }],
+      '6xl': ['3.75rem', { lineHeight: '1' }],
+      '7xl': ['4.5rem', { lineHeight: '1' }],
+      '8xl': ['6rem', { lineHeight: '1' }],
+      '9xl': ['8rem', { lineHeight: '1' }],
+    },
     fontFamily: {
-      sans: ['Hind', 'Helvetica', 'Arial', 'sans-serif'],
-      display: ['Montserrat', 'Helvetica', 'Arial', 'sans-serif'],
+      sans: ['Inter'],
+      display: ['Lexend'],
     },
     extend: {
+      maxWidth: {
+        '8xl': '88rem',
+      },
       colors: {
+        
         dark: {
-          DEFAULT: '#1C1C1B',
-          50: '#90908C',
-          100: '#84847F',
-          200: '#6A6A66',
-          300: '#50504D',
-          400: '#363634',
-          500: '#1C1C1B',
-          600: '#151514',
-          700: '#10100F',
-          800: '#0A0A0A',
-          900: '#080808',
+  DEFAULT: '#0F172A',
+  50: '#21335D',
+  100: '#1F3057',
+  200: '#1B2A4C',
+  300: '#172341',
+  400: '#131D35',
+  500: '#0F172A',
+  600: '#0E1526',
+  700: '#0C1322',
+  800: '#0B111F',
+  900: '#0A0F1B'
         },
 
         light: {
