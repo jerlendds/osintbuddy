@@ -18,7 +18,7 @@ button {
 
 /* https://gradienta.io/editor */
 body {
-  @apply relative min-h-screen bg-slate-900;
+  @apply relative min-h-screen bg-dark-900;
 }
 #root {
   @apply flex flex-col min-h-screen relative;

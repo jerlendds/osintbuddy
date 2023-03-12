@@ -8,6 +8,7 @@ import { login } from '@/features/auth/authSlice';
 import { useAppDispatch } from '@/app/hooks';
 import OSINTBuddyLogo from '@images/logo.svg'
 import blurCyanImage from '@images/blur-cyan.png'
+import ArchitectureGuide from './posts/architecture-guide.mdx';
 
 export interface LoginFormValues {
   email: string;
@@ -69,7 +70,7 @@ const LoginForm = ({ initialEmail, remembered }: FormProps) => {
             Password
           </label>
           <Field
-            className='block bg-slate-700 w-full  appearance-none rounded-md border border-info-400 focus:border-info-300 active:border-info-300 px-3 py-2 placeholder-slate-400 shadow-sm focus:outline-none focus:ring-info-50 sm:text-sm text-light-200'
+            className='block w-full  appearance-none rounded-md px-3 py-2 placeholder-slate-400 shadow-sm focus:outline-none border border-info-400 focus:border-info-300 active:border-info-300 bg-slate-700 focus:ring-info-50 sm:text-sm text-light-200'
             type='password'
             name='password'
             placeholder='Your password'
@@ -98,7 +99,7 @@ const LoginForm = ({ initialEmail, remembered }: FormProps) => {
           <button
             disabled={isSubmitting}
             type='submit'
-            className='flex relative w-full justify-center rounded-md border border-transparent bg-info-400 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+            className='flex relative w-full justify-center rounded-md border border-transparent bg-info-400 py-2 px-4 text-sm font-medium text-slate-100 shadow-sm hover:bg-info-200 focus:outline-none focus:ring-2 focus:ring-info-200 focus:ring-offset-2'
           >
             Sign in {isSubmitting && <RoundLoader className='absolute right-5' />}
           </button>
