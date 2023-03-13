@@ -150,7 +150,7 @@ export default function AppLayout() {
                         isActive
                           ? 'bg-slate-800 text-slate-200'
                           : 'text-slate-400 duration-100 hover:bg-opacity-90 hover:text-light-400',
-                        'group flex items-center px-2 py-2 text-base font-sans font-medium rounded-r-sm'
+                        'group flex items-center px-2 py-2 text-base font-sans font-medium rounded-sm'
                       )
                     }
                   >

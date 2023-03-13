@@ -10,8 +10,9 @@ import ReactFlow, {
   XYPosition,
   useReactFlow,
 } from 'reactflow';
-
-import { TrashIcon } from '@heroicons/react/24/outline';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { selectToken } from '@/features/auth/authSlice';
+import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { HotKeys } from 'react-hotkeys';
 import { useLocation, useParams } from 'react-router-dom';
 import 'reactflow/dist/style.css';
@@ -36,8 +37,8 @@ import UrlNodeContext, { UrlNode } from './_nodes/UrlNode';
 import { SmtpNode } from './_nodes/SmtpNode';
 import { UsernameNode, UsernameNodeContext } from './_nodes/UsernameNode';
 import { ProfileNode, ProfileNodeContext } from './_nodes/Profile';
-
-import { Terminal } from 'xterm';
+import { XTerm } from 'xterm-for-react';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 const fitViewOptions: FitViewOptions = {
   padding: 50,
@@ -126,7 +127,6 @@ const DnDFlow = ({
       <ReactFlowProvider>
         <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
           <ReactFlow
-          
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -139,9 +139,8 @@ const DnDFlow = ({
             fitView
             fitViewOptions={fitViewOptions}
             nodeTypes={nodeTypes}
-            color="#0F172A"
-          >
-          </ReactFlow>
+            color='#0F172A'
+          ></ReactFlow>
         </div>
       </ReactFlowProvider>
     </div>
@@ -170,13 +169,60 @@ export interface AddEdge {
   type?: string | undefined;
 }
 
+const Terminal = () => {
+  const xtermRef = useRef(null);
+  const [input, setInput] = useState('');
+
+  const token: boolean = useAppSelector((state) => selectToken(state));
+  const [socketUrl, setSocketUrl] = useState(`ws://localhost:5000/api/v1/terminal?token=${token}`);
+  const [messageHistory, setMessageHistory] = useState([]);
+
+  const { sendMessage, lastMessage, readyState, lastJsonMessage } = useWebSocket(socketUrl);
+
+  useEffect(() => {
+    if (lastMessage !== null) {
+      setMessageHistory((prev) => prev.concat(lastMessage));
+    }
+  }, [lastMessage, setMessageHistory]);
+
+  const handleClickChangeSocketUrl = useCallback(() => setSocketUrl('wss://localhost:5000/api/v1/terminal/'), []);
+
+  const handleClickSendMessage = useCallback(() => sendMessage('Hello'), []);
+
+  const connectionStatus = {
+    [ReadyState.CONNECTING]: 'Connecting',
+    [ReadyState.OPEN]: 'Open',
+    [ReadyState.CLOSING]: 'Closing',
+    [ReadyState.CLOSED]: 'Closed',
+    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
+  }[readyState];
+
+  useEffect(() => {
+    console.log('useEffect', input, xtermRef.current.terminal);
+    // You can call any method in XTerm.js by using 'xterm xtermRef.current.terminal.[What you want to call]
+    console.log(input, lastJsonMessage);
+    xtermRef.current.terminal.writeln(lastJsonMessage?.sent || '');
+    xtermRef.current.terminal.writeln(input);
+    sendMessage(input);
+  }, [input]);
+  return (
+    // Create a new terminal and set it's ref.
+    <XTerm
+      onKey={({ key, domEvent }) => {
+        console.log(key, domEvent.currentTarget.value, lastMessage);
+        sendMessage(key);
+      }}
+      className='bottom-0 absolute'
+      ref={xtermRef}
+    />
+  );
+};
+
 export function capitalize(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 export default function OsintPage() {
-  const xtermRef = useRef<HTMLDivElement>(null);
-
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge[]>(initialEdges);
@@ -213,7 +259,7 @@ export default function OsintPage() {
       target,
       sourceHandle: sourceHandle || 'r1',
       targetHandle: targetHandle || 'l1',
-      type: type || 'smoothstep',
+      type: type || 'bezier',
     };
     setEdges((eds) => eds.concat(newEdge));
   }
@@ -235,17 +281,6 @@ export default function OsintPage() {
     TOGGLE_PALETTE: togglePalette,
   };
 
-  useRef(() => {
-    if (xtermRef && xtermRef.current) {
-      const term = new Terminal({
-        
-      });
-      console.log('wtf', term)
-      term.open(xtermRef.current);
-    }
-    return () => xtermRef && xtermRef.current ? xtermRef.current.remove() : null
-  }, [xtermRef]);
-
   return (
     <HotKeys keyMap={keyMap} handlers={handlers}>
       <div className='h-screen flex flex-col w-full'>
@@ -265,7 +300,6 @@ export default function OsintPage() {
             reactFlowInstance={reactFlowInstance}
             setReactFlowInstance={setReactFlowInstance}
           />
-          <div ref={xtermRef} />
         </div>
         <CommandPallet
           toggleShowOptions={toggleShowNodeOptions}
@@ -274,6 +308,9 @@ export default function OsintPage() {
         />
       </div>
       <NodeOptions />
+      {/* <div className='bottom-0 relative h-96 w-96'> */}
+        {/* <Terminal /> */}
+      {/* </div> */}
       <ContextMenu
         menu={({ node }) => {
           let parentId = null;
@@ -291,17 +328,17 @@ export default function OsintPage() {
           return (
             <>
               <div className='relative z-50 inline-block text-left'>
-                <ul className='absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+                <ul className='absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-dark-300 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
                   <div className='py-1'>
                     <div>
                       <div
                         href='#'
                         className={classNames(
-                          false ? 'bg-light-500 text-gray-900' : 'text-gray-700',
+                          false ? 'bg-slate-500 text-slate-400' : 'text-slate-400',
                           'group flex items-center px-4 py-2 text-sm font-display'
                         )}
                       >
-                        <span className='text-dark-900 font-semibold font-display mr-3'>ID: </span>
+                        <span className='text-slate-400 font-semibold font-display mr-3'>ID: </span>
                         {node ? parentId : 'No node selected'}
                         {nodeType && titleNodeType && (
                           <span className='inline-flex ml-auto items-center rounded-full bg-blue-100 px-3 py-0.5 text-sm font-medium text-blue-800'>
@@ -408,47 +445,26 @@ export default function OsintPage() {
                     />
                   )}
                   {nodeType && (
-                    <div className='py-1'>
+                    <div className='node-context'>
                       <div>
-                        <button
-                          onClick={() => deleteNode(parentId)}
-                          type='button'
-                          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
-                        >
-                          <TrashIcon
-                            className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
-                            aria-hidden='true'
-                          />
+                        <button onClick={() => deleteNode(parentId)} type='button'>
+                          <TrashIcon aria-hidden='true' />
                           Delete
                         </button>
                       </div>
                     </div>
                   )}
                   {!nodeType && (
-                    <div className='py-1'>
+                    <div className='node-context'>
                       <div>
-                        <button
-                          onClick={() => zoomIn && zoomIn({ duration: 200 })}
-                          type='button'
-                          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
-                        >
-                          <TrashIcon
-                            className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
-                            aria-hidden='true'
-                          />
+                        <button onClick={() => zoomIn && zoomIn({ duration: 200 })} type='button'>
+                          <MagnifyingGlassPlusIcon aria-hidden='true' />
                           Zoom in
                         </button>
                       </div>
                       <div>
-                        <button
-                          onClick={() => zoomOut && zoomOut({ duration: 200 })}
-                          type='button'
-                          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
-                        >
-                          <TrashIcon
-                            className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
-                            aria-hidden='true'
-                          />
+                        <button onClick={() => zoomOut && zoomOut({ duration: 200 })} type='button'>
+                          <MagnifyingGlassMinusIcon aria-hidden='true' />
                           Zoom out
                         </button>
                       </div>
