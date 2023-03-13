@@ -9,7 +9,6 @@ import SigninPage from '@routes/public/SigninPage';
 import SignupPage from '@routes/public/SignupPage';
 import PublicLayout from './PublicLayout';
 import GoogleDorksPage from './googleDorks/GoogleDorksPage';
-import LiveShellPage from './liveshell/LiveShellPage';
 import OSINTPage from './osint/OsintPage';
 
 export default function AppRoutes(): React.ReactElement {
@@ -25,7 +24,6 @@ export default function AppRoutes(): React.ReactElement {
         <Route path='dashboard' element={<DashboardPage />} />
         <Route path='osint/:caseId' element={<OSINTPage />} />
         <Route path='dorking' element={<GoogleDorksPage />} />
-        <Route path='shell' element={<LiveShellPage />} />
       </Route>
       <Route path='*' element={<NotFound />} />
     </Routes>

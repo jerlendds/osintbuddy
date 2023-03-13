@@ -1,9 +1,15 @@
-from typing import Generator
-
+from typing import Generator, Union
 from neo4j._sync import work
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from fastapi import Depends, HTTPException, status
+from fastapi import (
+    Depends,
+    HTTPException,
+    status,
+    WebSocket,
+    Query,
+)
+from websockets.exceptions import WebSocketException
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from pydantic import ValidationError
@@ -75,6 +81,27 @@ def get_current_active_user(
     if not crud.user.is_active(current_user):
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
+
+
+def get_current_ws_user(
+    websocket: WebSocket,
+    db: Session = Depends(get_db),
+    token: Union[str, None] = Query(default=None)
+) -> models.User:
+    try:
+        payload = jwt.decode(
+            token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
+        )
+        token_data = schemas.TokenPayload(**payload)
+    except (jwt.JWTError, ValidationError):
+        raise WebSocketException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Could not validate credentials",
+        )
+    user = crud.user.get(db, id=token_data.sub)
+    if not user:
+        raise WebSocketException(status_code=404, detail="User not found")
+    return user
 
 
 def get_current_active_superuser(

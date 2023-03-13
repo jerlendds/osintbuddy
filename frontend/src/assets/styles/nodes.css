@@ -1,0 +1,83 @@
+/* Start node */
+.node.container {
+  @apply flex flex-col w-full max-w-sm justify-between rounded-sm transition duration-150 ease-in-out bg-slate-800/95 ring-1 ring-white/10 backdrop-blur active:border-slate-200;
+}
+.node.side-container {
+  @apply flex w-full max-w-sm justify-between rounded-sm transition duration-150 ease-in-out active:bg-slate-800/100  hover:bg-slate-800/95 backdrop-blur-2xl bg-slate-800/95 ring-1 ring-white/10 
+}
+
+.node .highlight {
+  @apply absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r 
+}
+
+.node .side-header {
+  @apply bg-info-300 bg-opacity-40 px-0 py-2 flex-shrink-0 flex flex-col items-center justify-center w-10 text-slate-100 text-sm font-medium rounded-l-sm;
+}
+
+.node .side-header svg {
+  @apply w-5 h-5;
+}
+
+.node .node-wrap {
+  @apply w-full  grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 py-1 rounded-b-sm shadow-sm;
+}
+
+.node .node-wrap li {
+  @apply col-span-full flex  w-full
+}
+.node .node-wrap li > div {
+  @apply flex-1 flex flex-col px-4 pb-2 text-sm
+}
+
+.node .header {
+  @apply flex h-full w-full items-center justify-between rounded-t-sm  text-slate-100 py-2 px-1;
+}
+
+.node .header svg {
+  @apply h-5 w-5;
+}
+
+.node .header .text-container {
+  @apply flex w-full flex-col px-2 font-medium
+}
+
+.node .header .text-container .id {
+  @apply text-[0.4rem] text-slate-400 font-display;
+}
+
+.node .header .text-container .label {
+  @apply text-xs text-slate-400 max-w-xl font-display font-medium
+}
+
+.node-field {
+  @apply mt-1 w-full  flex py-0.5 relative border-opacity-60  text-slate-500 focus:border-opacity-100  text-xs border border-info-400 focus:border-info-300 active:border-info-300 bg-slate-700 focus:ring-info-50 sm:text-sm;
+}
+
+.node-field svg {
+  @apply h-4 w-4 pl-0.5 mt-0.5 absolute top-1 text-gray-50 z-50;
+}
+
+.node-field input {
+  @apply placeholder:text-gray-50 text-slate-100 bg-slate-700 focus:outline-none pl-5 w-full;
+}
+
+p.node-label {
+  @apply text-[0.5rem] font-medium text-slate-400  font-display mt-1;
+}
+/* End node */
+
+/* Start node context menu */
+.node-context {
+  @apply py-1 hover:text-slate-300  text-slate-400;
+}
+
+.node-context button {
+  @apply hover:bg-slate-900   hover:text-slate-300  text-slate-400 flex items-center px-4 py-2 text-sm w-full
+}
+
+.node-context svg {
+  @apply mr-3 h-5 w-5  hover:text-slate-300  text-slate-400;
+}
+/* End node context menu */
+
+

@@ -8,7 +8,6 @@ import { login } from '@/features/auth/authSlice';
 import { useAppDispatch } from '@/app/hooks';
 import OSINTBuddyLogo from '@images/logo.svg'
 import blurCyanImage from '@images/blur-cyan.png'
-import ArchitectureGuide from './posts/architecture-guide.mdx';
 
 export interface LoginFormValues {
   email: string;
