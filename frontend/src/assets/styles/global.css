@@ -34,10 +34,6 @@ svg.icon {
   @apply flex items-center justify-center;
 }
 
-p,
-span {
-  @apply text-dark-400;
-}
 
 h1,
 h2,
@@ -146,3 +142,16 @@ input[type=number] {
     margin: 0; 
 }
 /* end hide number inputs */
+
+
+/* start react flow style overrides */
+.react-flow__controls-button {
+  @apply !border-dark-400 fill-slate-400 hover:!bg-dark-200 !bg-dark-600
+}
+.react-flow__attribution {
+  @apply bg-dark-600;
+}
+.react-flow__attribution a {
+ @apply text-slate-500
+}
+/* end react flow style overrides */

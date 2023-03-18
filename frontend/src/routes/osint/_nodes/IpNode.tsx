@@ -5,6 +5,7 @@ import { NodeContextProps } from '.';
 import api from '@/services/api.service';
 import { GlobeAltIcon, PaperClipIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-toastify';
+import { handleStyle } from './styles';
 
 export function IpNode({ flowData, deleteNode }: any) {
   const [ips, setIps] = useState(flowData.data.ip);
@@ -14,14 +15,15 @@ export function IpNode({ flowData, deleteNode }: any) {
 
   return (
     <>
-      <Handle position={Position.Right} id='r1' key='r1' type='source' />
-      <Handle position={Position.Top} id='t1' key='t1' type='source' />
-      <Handle position={Position.Bottom} id='b1' key='b1' type='source' />
-      <Handle position={Position.Left} id='l1' key='l1' type='target' />
-      <div className=' flex flex-col w-72 max-w-2xl justify-between rounded-sm transition duration-150 ease-in-out hover:bg-light-200 bg-light-100'>
-        <div className='flex h-full w-full items-center justify-between rounded-t-sm bg-warning text-white py-2 px-1'>
-          <GripIcon className='h-5 w-5' />
-          <div className='flex w-full flex-col px-2 font-semibold'>
+      <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
+      <Handle position={Position.Top} id='t1' key='t1' type='source' style={handleStyle} />
+      <Handle position={Position.Bottom} id='b1' key='b1' type='source' style={handleStyle} />
+      <Handle position={Position.Left} id='l1' key='l1' type='target' style={handleStyle} />
+      <div className='node container'>
+        <div className='highlight from-warning-500/0 via-warning-500 to-warning-500/0' />
+        <div className='header bg-warning bg-opacity-60'>
+          <GripIcon />
+          <div className='text-container'>
             <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
               {' '}
               <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
@@ -39,15 +41,14 @@ export function IpNode({ flowData, deleteNode }: any) {
                   IP Address
                 </p>
                 <div className='flex items-center mb-1'>
-                  <div className='mt-1  w-full px-2 flex bg-light-200 py-0.5 border-dark relative border-opacity-60  text-gray-500 border rounded-2xl focus:border-opacity-100  text-xs'>
-                    <IpIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
+                  <div className='node-field'>
+                    <IpIcon />
 
                     <input
                       type='text'
                       data-type='domain'
                       onChange={(event: any) => setIps(event.target.value)}
                       value={ips}
-                      className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
                     />
                   </div>
                 </div>
@@ -71,12 +72,13 @@ export default function IpNodeContext({
   getId,
 }: NodeContextProps) {
   return (
-    <div className='py-1'>
+    <div className='node-context'>
       <div>
         <button
           onClick={() => {
-            const nodeId = `rw${getId()}`;
+            const nodeId = `${getId()}`;
             let rect = node.getBoundingClientRect();
+            toast.info("Fetching A record");
             api.get(`/extract/ip/domain?ip=${nodeData[0].value}`).then((resp) => {
               if (resp.data.length != 0) {
                 addNode(
@@ -94,19 +96,17 @@ export default function IpNodeContext({
               }
             });
           }}
-          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
         >
-          <GlobeAltIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          <GlobeAltIcon />
           To Domain
         </button>
-
       </div>
       <div>
         <button
           onClick={() => {
             let rect = node.getBoundingClientRect();
             api.get(`/extract/ip/subdomains?ip=${nodeData[0].value}`).then((resp) => {
-              if (resp.data) {
+              if (resp.data && !resp.data[0].includes("No DNS A")) {
                 console.log(resp.data);
                 resp.data.forEach((domain: string, idx: number) => {
                   const nodeId = `${getId()}`;
@@ -115,7 +115,7 @@ export default function IpNodeContext({
                     'domain',
                     {
                       x: rect.x + 160 + (idx + 200),
-                      y: rect.y + 40 + (idx * 120),
+                      y: rect.y + 40 + idx * 120,
                     },
                     {
                       domain,
@@ -128,9 +128,8 @@ export default function IpNodeContext({
               }
             });
           }}
-          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
         >
-          <WebsiteIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          <WebsiteIcon />
           To Subdomains
         </button>
       </div>
@@ -152,9 +151,8 @@ export default function IpNodeContext({
               addEdge(parentId, nodeId);
             });
           }}
-          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
         >
-          <IpIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          <IpIcon />
           To Geolocation
         </button>
       </div>
@@ -176,16 +174,15 @@ export default function IpNodeContext({
               addEdge(parentId, nodeId);
             });
           }}
-          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
         >
-          <IpIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          <IpIcon />
           To Traceroute
         </button>
       </div>
       <div>
         <button
           onClick={() => {
-            const nodeId = `us${getId()}`;
+            const nodeId = `${getId()}`;
             let bounds = node.getBoundingClientRect();
             const domain = nodeData[0].value;
             if (domain) {
@@ -203,9 +200,8 @@ export default function IpNodeContext({
               });
             }
           }}
-          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
         >
-          <PaperClipIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          <PaperClipIcon />
           To URL scan
         </button>
       </div>

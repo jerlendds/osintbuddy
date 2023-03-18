@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import { GoogleIcon, GripIcon } from '@/components/Icons';
 import { Handle, Position } from 'reactflow';
 import api from '@/services/api.service';
@@ -6,10 +6,15 @@ import { DocumentIcon, ListBulletIcon, MagnifyingGlassIcon } from '@heroicons/re
 import { NodeContextProps } from '.';
 import { toast } from 'react-toastify';
 import { handleStyle } from './styles';
+import { ResultNode } from './ResultNode';
 
 export function GoogleNode({ flowData }: { flowData: any }) {
   const [queryValue, setQueryValue] = useState<string>('');
   const [pagesValue, setPagesValue] = useState<number>(3);
+
+  function onQueryUpdate(event: ChangeEvent<HTMLInputElement>) {
+    setQueryValue(event.target.value);
+  }
 
   return (
     <>
@@ -18,15 +23,15 @@ export function GoogleNode({ flowData }: { flowData: any }) {
       <Handle position={Position.Bottom} id='b1' key='b1' type='source' style={handleStyle} />
       <Handle position={Position.Left} id='l1' key='l1' type='target' style={handleStyle} />
       <div className='node container'>
-        <div className='highlight from-persian-400/0 via-persian-400 to-persian-400/0' />
+        <div className='highlight from-info-200/0 via-info-200 to-info-200/0' />
         <div className='header bg-info-300 bg-opacity-40'>
           <GripIcon />
           <div className='text-container'>
-            <p className='id'>
-              <span className='id'>ID: </span>
+            <p>
+              <span>ID: </span>
               {flowData.id}
             </p>
-            <p className='label'>Google Search</p>
+            <p>Google Search</p>
           </div>
           <GoogleIcon className='h-5 w-5 mr-2' />
         </div>
@@ -40,7 +45,7 @@ export function GoogleNode({ flowData }: { flowData: any }) {
                   <input
                     data-type='query'
                     type='text'
-                    onChange={(event: any) => setQueryValue(event.target.value)}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => onQueryUpdate(event)}
                     value={queryValue}
                     placeholder='Search...'
                   />
@@ -78,19 +83,22 @@ export function GoogleNodeContext({
   parentId,
   getId,
 }: NodeContextProps) {
+
+
   return (
     <div className='node-context'>
       <div>
         <button
           onClick={() => {
             const bounds = node.getBoundingClientRect();
+            toast.info('Fetching results');
             api
               .get(`/extract/google/search?query=${nodeData[0].value}&pages=${nodeData[1].value}`)
               .then((resp) => {
                 if (resp.data && resp.status === 200) {
-                  toast.success('Fetching results');
                   resp.data.forEach((result: any, rIdx: number) => {
                     const nodeId = getId();
+                    
                     addNode(
                       nodeId,
                       'result',
@@ -103,6 +111,7 @@ export function GoogleNodeContext({
                       }
                     );
                     addEdge(parentId, nodeId);
+                    
                   });
                 } else {
                   toast.error(`No results found`);

@@ -157,12 +157,13 @@ def get_raw_whois(
         return data
 
 
-@router.get('/dns')
+@router.get('/dns', response_model=List[str])
 def get_dns_info(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
     domain: str = ""
 ):
+    # @todo investigate alternative, below breaks application sometimes :/
     data = {
         "NS": None,
         "A": None,
@@ -181,8 +182,8 @@ def get_dns_info(
         try:
             resolved = dns.resolver.resolve(domain, key)
             data[key] = [str(answer) for answer in resolved]
-        except Exception as e:
-            logger.error(e)
+        except Exception:
+            pass
     return data
 
 

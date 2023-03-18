@@ -10,6 +10,7 @@ import SignupPage from '@routes/public/SignupPage';
 import PublicLayout from './PublicLayout';
 import GoogleDorksPage from './googleDorks/GoogleDorksPage';
 import OSINTPage from './osint/OsintPage';
+import SettingsPage from './settings/SettingsPage';
 
 export default function AppRoutes(): React.ReactElement {
   return (
@@ -22,7 +23,8 @@ export default function AppRoutes(): React.ReactElement {
       </Route>
       <Route path='/app' element={<AppLayout />}>
         <Route path='dashboard' element={<DashboardPage />} />
-        <Route path='osint/:caseId' element={<OSINTPage />} />
+        <Route path='settings' element={<SettingsPage />} />
+        <Route path='dashboard/:caseId' element={<OSINTPage />} />
         <Route path='dorking' element={<GoogleDorksPage />} />
       </Route>
       <Route path='*' element={<NotFound />} />

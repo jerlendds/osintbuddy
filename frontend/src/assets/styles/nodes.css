@@ -1,9 +1,9 @@
 /* Start node */
 .node.container {
-  @apply flex flex-col w-full max-w-sm justify-between rounded-sm transition duration-150 ease-in-out bg-slate-800/95 ring-1 ring-white/10 backdrop-blur active:border-slate-200;
+  @apply flex flex-col w-full max-w-sm justify-between rounded-sm transition duration-150 ease-in-out bg-slate-800/90 active:bg-slate-800 ring-1 ring-white/10 backdrop-blur active:border-slate-200;
 }
 .node.side-container {
-  @apply flex w-full max-w-sm justify-between rounded-sm transition duration-150 ease-in-out active:bg-slate-800/100  hover:bg-slate-800/95 backdrop-blur-2xl bg-slate-800/95 ring-1 ring-white/10 
+  @apply flex w-full max-w-sm justify-between rounded-sm transition duration-150 ease-in-out backdrop-blur-2xl active:bg-slate-800/100 hover:bg-slate-800/95  bg-slate-800/90 ring-1 ring-white/10 
 }
 
 .node .highlight {
@@ -11,7 +11,7 @@
 }
 
 .node .side-header {
-  @apply bg-info-300 bg-opacity-40 px-0 py-2 flex-shrink-0 flex flex-col items-center justify-center w-10 text-slate-100 text-sm font-medium rounded-l-sm;
+  @apply px-0 py-2 flex-shrink-0 flex flex-col items-center justify-center w-10 text-slate-100 text-sm font-medium rounded-l-sm;
 }
 
 .node .side-header svg {
@@ -37,16 +37,16 @@
   @apply h-5 w-5;
 }
 
-.node .header .text-container {
+ .text-container {
   @apply flex w-full flex-col px-2 font-medium
 }
 
-.node .header .text-container .id {
+ .text-container p:first-child, .text-container p:first-child > span {
   @apply text-[0.4rem] text-slate-400 font-display;
 }
 
-.node .header .text-container .label {
-  @apply text-xs text-slate-400 max-w-xl font-display font-medium
+ .text-container p:last-child {
+  @apply text-xs text-slate-200 max-w-xl font-display font-medium
 }
 
 .node-field {

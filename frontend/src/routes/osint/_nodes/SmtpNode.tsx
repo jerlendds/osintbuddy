@@ -4,25 +4,27 @@ import { AtSymbolIcon, LockOpenIcon, MagnifyingGlassIcon } from '@heroicons/reac
 import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { NodeContextProps } from '.';
+import { handleStyle } from './styles';
 
 export function SmtpNode({ flowData }: any) {
   const [results, setResults] = useState<Array<string>>(flowData.data.data);
   return (
     <>
-      <Handle position={Position.Right} id='r1' key='r1' type='source' />
-      <Handle position={Position.Top} id='t1' key='t1' type='source' />
-      <Handle position={Position.Bottom} id='b1' key='b1' type='source' />
-      <Handle position={Position.Left} id='l1' key='l1' type='target' />
-      <div className=' flex flex-col w-72 max-w-2xl justify-between rounded-sm transition duration-150 ease-in-out hover:bg-light-200 bg-light-100'>
-        <div className='flex h-full w-full items-center justify-between rounded-t-sm bg-alert-700 text-white py-2 px-1'>
+      <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
+      <Handle position={Position.Top} id='t1' key='t1' type='source' style={handleStyle} />
+      <Handle position={Position.Bottom} id='b1' key='b1' type='source' style={handleStyle} />
+      <Handle position={Position.Left} id='l1' key='l1' type='target' style={handleStyle} />
+      <div className='node container'>
+        <div className='highlight from-alert-700/0 via-alert-700 to-alert-700/0' />
+        <div className='header bg-alert-700 bg-opacity-60'>
           <GripIcon className='h-5 w-5' />
-          <div className='flex w-full flex-col px-2 font-semibold'>
-            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
+          <div className='text-container'>
+            <p className='id'>
               {' '}
-              <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
+              <span className='id'>ID: </span>
               {flowData.id}
             </p>
-            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>SMTP Test</p>
+            <p className='label'>SMTP Test</p>
           </div>
           <WebsiteIcon className='h-5 w-5 mr-2' />
         </div>
@@ -35,7 +37,7 @@ export function SmtpNode({ flowData }: any) {
                   <div className='flex items-center'>
                       <p
                         data-type='domain'
-                        className='placeholder:text-gray-50 rounded-2xl text-xs  focus:outline-none pl-4 w-64 bg-light-200 focus:bg-light-50'
+                        className='text-xs pl-4 w-64 focus:bg-light-50 break-words text-slate-400'
                         placeholder=''
                       >{line}</p>
                   </div>

@@ -10,17 +10,19 @@
     <img src="./docs/assets/logo-watermark.svg" height="200px" alt="OSINT Buddy Logo">
   </a>
 
-  <h1 align="center">Introducing OSINTBuddy 2.0</h1>
+  <h2 align="center">Introducing OSINTBuddy</h2>
 
   <h4 align="center">
     Mine, merge, and map data for novel insights.
   </h4>
+
 </p>
 
-
-
 <details open="open">
-  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+  <summary>
+  
+  ## Table of Contents
+
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
@@ -38,23 +40,22 @@
   </ol>
 </details>
 
+## [↑](#Table-of-Contents) About The Project
 
-## About The Project
-
-Fetch data from different sources and returns the results 
+Fetch data from different sources and returns the results
 as visual entities that you can explore step-by-step!
 
-OSINTBuddy is a work-in-progress OSINT tool, which is distributed 
-for educational and investigative purposes, the person who has bought 
-or uses this tool is responsible for its proper use or actions committed, 
-jerlendds, the developer(s) of OSINTBuddy, are not responsible for the use 
+OSINTBuddy is a work-in-progress OSINT tool, which is distributed
+for educational and investigative purposes, the person who has bought
+or uses this tool is responsible for its proper use or actions committed,
+jerlendds, the developer(s) of OSINTBuddy, are not responsible for the use
 or the scope that people can have through this software.
 
+&nbsp;&nbsp;&nbsp;\> **[OSINTBuddy docs](https://docs-osintbuddy-com.vercel.app/)**
 
-## Getting Started
+## [↑](#-Table-of-Contents) Getting Started
 
 This section is a stub. Updates to this section will come once this project reaches a later stage...
-
 
 To get a local copy up and running follow these simple steps.
 
@@ -64,7 +65,6 @@ To get a local copy up and running follow these simple steps.
    ```sh
    git clone https://github.com/jerlendds/osintbuddy.git
    ```
-   
 2. Install Docker
 
 3. Start the stack with Docker:
@@ -74,6 +74,7 @@ To get a local copy up and running follow these simple steps.
    cp .env.example .env
    docker compose up
    ```
+
 4. Start the frontend:
 
    ```sh
@@ -81,15 +82,15 @@ To get a local copy up and running follow these simple steps.
    yarn && yarn start
    ```
 
- - **URLs**
-    - Frontend: http://localhost:3000
-    - Backend: http://localhost:5000/api/
-    - Documentation: http://localhost:5000/docs -- http://localhost:5000/redoc
-    - Flower: http://localhost:5555
-    - Neo4J: http://localhost:7474/browser/
+- **URLs**
+  - Frontend: http://localhost:3000
+  - Backend: http://localhost:5000/api/
+  - Documentation: http://localhost:5000/docs -- http://localhost:5000/redoc
+  - Flower: http://localhost:5555
+  - Neo4J: http://localhost:7474/browser/
 
-<!-- 
-mk-fg recommendations: 
+<!--
+mk-fg recommendations:
 ssh whoarethey using corpus of pubkeys from github ( https://www.agwa.name/blog/post/whoarethey ),  , , , address' AS BGP info
 moddy recommendations:
 math, map, reduce, filter, zip and zipwith function blocks
@@ -105,15 +106,25 @@ https://os2int.com/toolbox/verifying-and-investigating-email-addresses-with-hole
 https://github.com/kpcyrd/sn0int
 https://github.com/DataSploit/datasploit
 https://github.com/mxrch/ghunt
+https://github.com/mlomb/chat-analytics
+https://www.kali.org/tools/metagoofil/
+https://www.aircrack-ng.org/
+
+fetching favicon: //link[contains(@rel,'icon')]
+https://stackoverflow.com/questions/5119041/how-can-i-get-a-web-sites-favicon
+https://github.com/jivoi/awesome-osint
  -->
 
+## [↑](#-Table-of-Contents) Roadmap
 
-## Roadmap
+
+[osintbuddy-demo](https://user-images.githubusercontent.com/29207058/226115297-1eb069df-c2af-41be-af67-f64174ff9b8c.webm)
+
 
 See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list of proposed features (and known issues).
 
-
 ## Progress Notes
+
 - [x] Domain nodes
   - [x] To IP transformation
   - [x] To WHOIS transformation
@@ -152,13 +163,9 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
   - [ ] To Google Cache
 - [ ] CSE Node
 - [x] Username Node
-    - [x] To Profiles
+  - [x] To Profiles
 
-
-[osintbuddy-demo](https://user-images.githubusercontent.com/29207058/218629002-752322e1-4537-4849-ba1a-76fe4450404d.webm)
-
-
-## Contributing
+## [↑](#-Table-of-Contents) Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -168,16 +175,14 @@ Contributions are what make the open source community such an amazing place to l
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-
-## Contact
+## [↑](#-Table-of-Contents) Contact
 
 Open an issue if you need to get in touch with me
 
 Project Link: [https://github.com/jerlendds/osintbuddy](https://github.com/jerlendds/osintbuddy)
 
-
-
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/jerlendds/osintbuddy.svg?style=for-the-badge
 [contributors-url]: https://github.com/jerlendds/osintbuddy/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/jerlendds/osintbuddy.svg?style=for-the-badge
@@ -186,4 +191,3 @@ Project Link: [https://github.com/jerlendds/osintbuddy](https://github.com/jerle
 [stars-url]: https://github.com/jerlendds/osintbuddy/stargazers
 [issues-shield]: https://img.shields.io/github/issues/jerlendds/osintbuddy.svg?style=for-the-badge
 [issues-url]: https://github.com/jerlendds/osintbuddy/issues
-
