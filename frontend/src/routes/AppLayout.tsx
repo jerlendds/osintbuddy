@@ -31,7 +31,7 @@ import { logout, selectAuthenticated } from '@/features/auth/authSlice';
 const navigation = [
   { name: 'Investigations', to: '/app/dashboard', icon: ViewfinderCircleIcon },
   { name: 'Dorks', to: '/app/dorking', icon: GoogleIcon },
-  { name: 'Bookmarks', to: '/app/bookmarks', icon: BookmarkIcon },
+  // { name: 'Bookmarks', to: '/app/bookmarks', icon: BookmarkIcon },
 ];
 
 export default function AppLayout() {
