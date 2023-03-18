@@ -5,6 +5,7 @@ import { GripIcon, IpIcon } from '@/components/Icons';
 import { NodeContextProps, Result, Welcome } from '.';
 import api from '@/services/api.service';
 import { capitalize } from '../OsintPage';
+import { handleStyle } from './styles';
 
 interface Data extends Welcome {
   domain?: string;
@@ -35,7 +36,7 @@ export function UrlScanNode({ flowData, deleteNode }: any) {
                 {...headerGroup.getHeaderGroupProps()}
               >
                 {headerGroup.headers.map((column) => (
-                  <th className='px-6 py-5 text-left' {...column.getHeaderProps()}>
+                  <th className='px-6 text-slate-400 py-5 text-left' {...column.getHeaderProps()}>
                     {column.render('Header')}
                   </th>
                 ))}
@@ -53,7 +54,7 @@ export function UrlScanNode({ flowData, deleteNode }: any) {
                   {row.cells.map((cell) => {
                     return (
                       <td
-                        className='font-display text-[0.75rem] h-10  w-full align-left break-words pl-6 max-w-sm'
+                        className='font-display text-slate-400 text-[0.75rem] h-10  w-full align-left break-words pl-6 max-w-sm'
                         {...cell.getCellProps()}
                       >
                         {cell.render('Cell')}
@@ -71,20 +72,20 @@ export function UrlScanNode({ flowData, deleteNode }: any) {
 
   return (
     <>
-      <Handle position={Position.Right} id='r1' key='r1' type='source' />
-      <Handle position={Position.Top} id='t1' key='t1' type='source' />
-      <Handle position={Position.Bottom} id='b1' key='b1' type='source' />
-      <Handle position={Position.Left} id='l1' key='l1' type='target' />
-      <div className=' flex flex-col min-w-6xl w-[65rem] justify-between rounded-sm transition duration-150 ease-in-out hover:bg-light-200 bg-light-100'>
-        <div className='flex h-full w-full items-center justify-between rounded-t-sm bg-primary text-white py-2 px-1'>
+      <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
+      <Handle position={Position.Top} id='t1' key='t1' type='source' style={handleStyle} />
+      <Handle position={Position.Bottom} id='b1' key='b1' type='source' style={handleStyle} />
+      <Handle position={Position.Left} id='l1' key='l1' type='target' style={handleStyle} />
+      <div className='node container min-w-[65rem]'>
+        <div className='header bg-primary bg-opacity-60'>
           <GripIcon className='h-5 w-5' />
-          <div className='flex w-full flex-col px-2 font-semibold'>
-            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
+          <div className='text-container'>
+            <p>
               {' '}
-              <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
+              <span>ID: </span>
               {flowData.id}
             </p>
-            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>urlscan.io</p>
+            <p>urlscan.io</p>
           </div>
           <IpIcon className='h-5 w-5 mr-2' />
         </div>
@@ -109,7 +110,7 @@ export function UrlScanNode({ flowData, deleteNode }: any) {
                   />
                 ) : (
                   <>
-                    <p className='text-xs font-display'>No results</p>
+                    <p className='text-xs text-slate-400 font-display'>No results</p>
                   </>
                 )}
               </>

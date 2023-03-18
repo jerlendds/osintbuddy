@@ -1,12 +1,15 @@
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Link, Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
 
 import { Fragment, useState } from 'react';
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
+  ArrowRightOnRectangleIcon,
   Bars3BottomLeftIcon,
   BellIcon,
+  BookmarkIcon,
   CalendarIcon,
   ChartBarIcon,
+  CogIcon,
   FolderIcon,
   HomeIcon,
   InboxIcon,
@@ -23,20 +26,25 @@ import 'react-toastify/dist/ReactToastify.css';
 import ContextMenu from './osint/_components/ContextMenu';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { closeSidebar, isSidebarOpen, setSidebar } from '@/features/settings/settingsSlice';
+import { logout, selectAuthenticated } from '@/features/auth/authSlice';
 
 const navigation = [
-  { name: 'Dashboard', to: '/app/dashboard', icon: ViewfinderCircleIcon },
-  { name: 'Dorking', to: '/app/dorking', icon: GoogleIcon },
+  { name: 'Investigations', to: '/app/dashboard', icon: ViewfinderCircleIcon },
+  { name: 'Dorks', to: '/app/dorking', icon: GoogleIcon },
+  // { name: 'Bookmarks', to: '/app/bookmarks', icon: BookmarkIcon },
 ];
 
 export default function AppLayout() {
   const location = useLocation();
   const dispatch = useAppDispatch();
   const showSidebar: boolean = useAppSelector((state) => isSidebarOpen(state));
+  const isAuthenticated: boolean = useAppSelector((state) => selectAuthenticated(state));
 
   const toggleSidebar = () => {
     dispatch(setSidebar(!showSidebar));
   };
+
+  if (!isAuthenticated) return <Navigate to='/sign-in' replace />
 
   return (
     <>
@@ -87,7 +95,7 @@ export default function AppLayout() {
                     </div>
                   </Transition.Child>
                   <div className='flex flex-shrink-0 items-center px-4'>
-                    <img className='h-8 w-auto' src={OSINTBuddyLogo} alt='Your Company' />
+                    <img className='h-8 w-auto' src={OSINTBuddyLogo} alt='OSINTBuddy' />
                   </div>
                   <div className='mt-5 h-0 flex-1 overflow-y-auto'>
                     <nav className='space-y-1 px-2'>
@@ -116,8 +124,7 @@ export default function AppLayout() {
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
-              <div className='w-14 flex-shrink-0 z-0' aria-hidden='true'>
-              </div>
+              <div className='w-14 flex-shrink-0 z-0' aria-hidden='true'></div>
             </div>
           </Dialog>
         </Transition.Root>
@@ -128,19 +135,22 @@ export default function AppLayout() {
             showSidebar ? 'translate-x-0' : '-translate-x-52'
           )}
         >
-          <div className='flex min-h-0 flex-1 flex-col bg-dark-700 px-1.5'>
+          <div className='flex min-h-0 flex-1 flex-col bg-dark-700'>
             <div
               className={classNames(
                 'flex h-12 flex-shrink-0 items-center justify-between',
                 showSidebar ? 'px-3' : 'px-1'
               )}
             >
-              <img className='h-7 w-auto' src={OSINTBuddyLogo} alt='Your Company' />
-              <HamburgerMenu isOpen={showSidebar} onClick={toggleSidebar} />
+              <Link to='/' replace>
+                <img className='h-7 w-auto' src={OSINTBuddyLogo} alt='OSINTBuddy' />
+              </Link>
+
+              <HamburgerMenu isOpen={showSidebar} className='mx-1.5' onClick={toggleSidebar} />
             </div>
 
             <div className='flex flex-1 flex-col overflow-y-auto'>
-              <nav className={classNames('flex-1 py-4 ')}>
+              <nav className={classNames('flex-1 flex py-4 flex-col')}>
                 {navigation.map((item) => (
                   <NavLink
                     key={item.name}
@@ -149,22 +159,73 @@ export default function AppLayout() {
                       classNames(
                         isActive
                           ? 'bg-slate-800 text-slate-200'
-                          : 'text-slate-400 duration-100 hover:bg-opacity-90 hover:text-light-400',
-                        'group flex items-center px-2 py-2 text-base font-sans font-medium rounded-r-sm'
+                          : 'text-slate-400 duration-100 hover:bg-slate-900 hover:text-light-400 ',
+                        'group flex items-center px-2 mx-2 my-1 py-2 text-base font-sans font-medium rounded-md',
+                        !showSidebar && 'mx-0'
                       )
                     }
                   >
                     <item.icon
-                      className={classNames('transition-all',
-                        location.pathname === item.to ? 'text-info-200' : 'text-slate-400 group-hover:text-slate-300',
+                      className={classNames(
+                        'transition-all',
+                        location.pathname.includes(item.to)
+                          ? 'text-info-200'
+                          : 'text-slate-400 group-hover:text-slate-300',
                         'mr-3 flex-shrink-0 h-6 w-6 duration-100',
-                        showSidebar ? 'translate-x-0' : 'translate-x-[12.7rem]'
+                        showSidebar ? 'translate-x-0' : 'translate-x-[13.16rem]'
                       )}
                       aria-hidden='true'
                     />
                     {item.name}
                   </NavLink>
                 ))}
+                <NavLink
+                  to='/app/settings'
+                  replace
+                  className={({ isActive }) =>
+                      classNames(
+                        isActive
+                          ? 'bg-slate-800 text-slate-200'
+                          : 'text-slate-400 duration-100 hover:bg-slate-900 hover:text-light-400 ',
+                        'group flex items-center mt-auto px-2 mx-2 my-1 py-2 text-base font-sans font-medium rounded-md',
+                        !showSidebar && 'mx-0'
+                      )
+                    }
+                >
+                  <CogIcon
+                    className={classNames(
+                        'transition-all',
+                        location.pathname.includes('settings')
+                          ? 'text-info-200'
+                          : 'text-slate-400 group-hover:text-slate-300',
+                        'mr-3 flex-shrink-0 h-6 w-6 duration-100',
+                        showSidebar ? 'translate-x-0' : 'translate-x-[13.16rem]')}
+                    aria-hidden='true'
+                  />
+                  Settings
+                </NavLink>
+
+                <button
+                onClick={() => {
+                  localStorage.clear()
+                  dispatch(logout())
+                }}
+                  className={classNames(
+                    'text-slate-400 duration-100 relative hover:text-light-400 ',
+                    'group w-full flex items-center px-2 mx-2 my-1 py-2 text-base font-sans font-medium rounded-md',
+                    !showSidebar && 'mx-0'
+                  )}
+                >
+                  <ArrowRightOnRectangleIcon
+                    className={classNames(
+                      'transition-all text-slate-400 group-hover:text-slate-300',
+                      'mr-3 flex-shrink-0 h-6 w-6 duration-100',
+                      showSidebar ? 'translate-x-0' : 'translate-x-[13.16rem]'
+                    )}
+                    aria-hidden='true'
+                  />
+                  Logout
+                </button>
               </nav>
             </div>
           </div>
@@ -172,7 +233,7 @@ export default function AppLayout() {
         <div
           style={{ width: `calc(100% - ${showSidebar ? 16 : 3}rem)` }}
           className={classNames(
-            'flex-shrink transition-all duration-100 relative  bg-dark-500',
+            'flex-shrink transition-all overflow-y-scroll duration-100 relative ',
             showSidebar ? 'md:translate-x-64' : 'md:translate-x-12'
           )}
         >
@@ -189,6 +250,10 @@ export default function AppLayout() {
               draggable
               pauseOnHover
               theme='light'
+              toastStyle={{
+                backgroundColor: 'rgb(23 35 65)',
+                color: 'rgb(148, 163, 184)',
+              }}
             />
           </main>
         </div>

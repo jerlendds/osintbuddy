@@ -164,11 +164,10 @@ export default function PublicNavbar(): React.ReactElement {
       )}
     >
       <div className="mr-6 flex lg:hidden">
-        {/* <MobileNavigation navigation={navigation} /> */}
+        {/* @todo add mobile navigation */}
       </div>
       <div className="relative flex flex-grow basis-0 items-center">
         <Link to="/">
-          {/* <Logomark className="h-9 w-9 lg:hidden" /> */}
           <img  className="hidden h-9 w-auto fill-slate-700 dark:fill-sky-100 lg:block" src={Logo} />
         </Link>
       </div>
@@ -176,7 +175,7 @@ export default function PublicNavbar(): React.ReactElement {
         {/* <Search /> */}
       </div>
       <div className="relative flex basis-0 justify-end gap-6 sm:gap-8 md:flex-grow">
-        <a href="https://github.com" className="group" aria-label="GitHub">
+        <a href="https://github.com/jerlendds/osintbuddy" className="group" aria-label="GitHub">
           <GithubIcon className="h-6 w-6 fill-slate-400 group-hover:fill-slate-500 dark:group-hover:fill-slate-300" />
         </a>
       </div>

@@ -263,8 +263,11 @@ export function CasesTable({ columns, setIsOpen }: { columns: any; setIsOpen: Fu
         .getCases(pageIndex, pageSize)
         .then((resp) => {
           if (resp.data) {
-            setPageCount(Math.ceil(resp.data.dorksCount / pageSize));
-            setData(resp.data);
+            console.log(resp.data);
+            if (resp.data) {
+              setPageCount(Math.ceil(resp.data.dorksCount / pageSize));
+              setData(resp.data);
+            }
             setLoading(false);
           } else {
             setLoading(false);
@@ -298,144 +301,33 @@ export function CasesTable({ columns, setIsOpen }: { columns: any; setIsOpen: Fu
   );
 }
 
-export default function DashboardPage() {
-  let [isOpen, setIsOpen] = useState(false);
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  const [isFirstLoad, setFirstLoad] = useState<boolean>(true);
-  const [casesData, setCasesData] = useState<Array<any>>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const updateCases = (skip: number, limit: number) => {
-    casesService
-      .getCases(limit, skip)
-      .then((resp) => {
-        if (resp.data) setCasesData(resp.data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.warn(error);
-        setIsLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    if (isFirstLoad) {
-      updateCases(10, 0);
-    }
-    setFirstLoad(false);
-  }, [isFirstLoad]);
-  const columns = React.useMemo<Column[]>(
-    () => [
-      {
-        Header: 'ID',
-        accessor: 'id',
-      },
-      {
-        Header: 'Cases',
-        accessor: 'name',
-        Cell: (props): CellValue => props.value || '---',
-      },
-      {
-        Header: 'Description',
-        accessor: 'description',
-        Cell: (props): CellValue => props.value || '---',
-      },
-      {
-        Header: 'Created',
-        accessor: 'created',
-        Cell: (props): CellValue => formatDate(new Date(props.value), 'yyyy MMM Lo'),
-      },
-      //     {
-      //   Header: 'Updated',
-      //   accessor: 'updated',
-      // },
-    ],
-    []
+export const PageHeader = ({ title, header }: any) => {
+  return (
+    <div className='relative mx-auto flex w-full justify-center sm:px-2 lg:px-4 '>
+      <div className='min-w-0 max-w-2xl flex-auto pt-4 lg:max-w-none lg:pr-0 px-2'>
+        <article>
+          <header className=' space-y-1'>
+            <p className='font-display text-sm font-medium text-sky-500'>{title}</p>
+            <h1 className='font-display text-3xl tracking-tight text-slate-200 dark:text-white'>{header}</h1>
+          </header>
+        </article>
+      </div>
+    </div>
   );
+};
+
+export default function SettingsPage() {
   return (
     <>
-      <div className='relative mx-auto flex w-full justify-center sm:px-2 lg:px-4 '>
-        <div className='min-w-0 max-w-2xl flex-auto pt-4 lg:max-w-none lg:pr-0 px-2'>
-          <article>
-            <header className=' space-y-1'>
-              <p className='font-display text-sm font-medium text-sky-500'>Investigations</p>
-              <h1 className='font-display text-3xl tracking-tight text-slate-200 dark:text-white'>All cases</h1>
-            </header>
-          </article>
-        </div>
+      <PageHeader title='Personal Settings' header='Account' />
+       <div className="flex flex-col sm:px-2 lg:px-6 my-2 relative mx-auto w-full justify-center">
+        <p className='text-slate-400'>Update your password or change your username</p>
       </div>
-      {casesData.length === 0 ? (
-        <div className='w-full flex items-center justify-center'>
-          <div className='mt-6 flex flex-col items-center shadow-2xl px-48 bg-dark-300 border border-info-400  rounded-2xl py-20'>
-            <FolderPlusIcon className='h-8 w-8 text-slate-300 flex' />
-            <h3 className='mt-2 text-2xl text-slate-400 font-medium '>No investigations</h3>
-            <p className='mt-1 text-lg text-slate-400'>Get started by creating a new case</p>
-            <button
-              onClick={() => openModal()}
-              type='button'
-              className='mt-5 inline-flex items-center rounded-full border border-transparent bg-info-200 px-6 py-2 font-medium text-white shadow-sm hover:bg-info-300 transition-colors duration-75 ease-in-out focus:outline-none focus:ring-2 focus:ring-info-300 focus:ring-offset-2'
-            >
-              Create case
-            </button>
-          </div>
-        </div>
-      ) : (
-        <>
-          {' '}
-          <div className='flex flex-col'>
-            <CasesTable setIsOpen={setIsOpen} columns={columns} />
-          </div>
-        </>
-      )}
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as='div' className='relative z-10' onClose={() => closeModal()}>
-          <Transition.Child
-            as={Fragment}
-            enter='ease-out duration-300'
-            enterFrom='opacity-0'
-            enterTo='opacity-100'
-            leave='ease-in duration-200'
-            leaveFrom='opacity-100'
-            leaveTo='opacity-0'
-          >
-            <div className='fixed inset-0 bg-black bg-opacity-25' />
-          </Transition.Child>
-
-          <div className='fixed inset-0 overflow-y-auto'>
-            <div className='flex min-h-full items-center justify-center p-2 text-center'>
-              <Transition.Child
-                as={Fragment}
-                enter='ease-out duration-300'
-                enterFrom='opacity-0 scale-95'
-                enterTo='opacity-100 scale-100'
-                leave='ease-in duration-200'
-                leaveFrom='opacity-100 scale-100'
-                leaveTo='opacity-0 scale-95'
-              >
-                <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-md bg-dark-300 px-4 pt-4 text-left align-middle shadow-xl transition-all'>
-                  <Dialog.Title as='h3' className='text-lg font-medium leading-6 text-slate-300'>
-                    Start a new investigation
-                  </Dialog.Title>
-                  <div className='mt-2'>
-                    <p className='text-sm text-slate-400'>
-                      An investigation is composed of many connections between data nodes
-                    </p>
-                  </div>
-                  <CreateCasesForm closeModal={closeModal} />
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
+      <PageHeader title='Anonymization' header='Proxy configuration' />
+      <div className="flex flex-col sm:px-2 lg:px-6 my-2 relative mx-auto w-full justify-center">
+        <p className='text-slate-400'>Adding proxies increases this tools reliability and speed</p>
+      </div>
+      <PageHeader title='Coming soon' header='API keys' />
     </>
   );
 }

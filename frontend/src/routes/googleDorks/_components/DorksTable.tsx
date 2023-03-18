@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { VirusSearchIcon } from '@/components/Icons';
 import RoundLoader from '@/components/Loaders';
 import {
+  BugAntIcon,
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
   ChevronLeftIcon,
@@ -79,14 +80,15 @@ function Table({
             <div className='flex items-center relative z-40'>
               <button
                 className={classNames(
-                  'text-primary-600 flex bg-primary items-center font-light text-sm font-display hover:text-light-200  py-2 px-4 rounded-md transition-colors duration-75 ease-in'
+                  'text-primary-600 flex bg-info-200 items-center font-light text-sm hover:text-light-200  py-1.5 px-4 border border-info-200 hover:border-opacity-20 hover:border-info-50 rounded-full transition-colors duration-75 ease-in'
                 )}
                 onClick={() => {
                   setDork(row.original.dork);
                   setShowCreate(true);
                 }}
               >
-                <span className='text-light-200 mx-2 mr-4 font-sans font-medium'>Start crawl</span>{' '}
+                <span className='text-slate-200 mr-2 font-medium font-display'>Start crawl</span>{' '}
+                <BugAntIcon className='w-5 h-5 text-slate-200' />
               </button>
             </div>
           ),
@@ -103,13 +105,13 @@ function Table({
   // Render the UI for your table
   return (
     <>
-      <table className='min-w-full divide-y divide-gray-300' {...getTableProps()}>
-        <thead className='bg-light-50'>
+      <table className='min-w-full divide-y divide-slate-600 table-fixed' {...getTableProps()}>
+        <thead className='bg-dark-300 relative'>
           {headerGroups.map((headerGroup: any) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr className='first:bg-dark-400' {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column: any) => (
                 <th
-                  className='first:py-3.5 font-display first:pl-4 px-3 py-3.5 pr-3 text-left text-sm font-semibold text-dark-500 first:sm:pl-6 '
+                  className='first:py-3.5 first:pl-4 min-w-min px-3 py-3.5 pr-3 text-left text-sm font-semibold text-slate-200 first:sm:pl-6'
                   {...column.getHeaderProps()}
                 >
                   {column.render('Header')}
@@ -118,7 +120,7 @@ function Table({
             </tr>
           ))}
         </thead>
-        <tbody className='bg-light-200' {...getTableBodyProps()}>
+        <tbody className='bg-dark-300' {...getTableBodyProps()}>
           {page.map((row: any, i: number) => {
             prepareRow(row);
             return (
@@ -126,7 +128,7 @@ function Table({
                 {row.cells.map((cell: any) => {
                   return (
                     <td
-                      className='whitespace-nowrap py-2 pl-4 max-w-sm pr-3 truncate text-sm font-medium text-dark-500 sm:pl-6 first:pl-8'
+                      className='whitespace-nowrap py-2 pl-4 max-w-sm pr-3 truncate text-sm font-medium text-slate-400 sm:pl-6 first:pl-8'
                       {...cell.getCellProps()}
                     >
                       {cell.render('Cell')}
@@ -143,15 +145,15 @@ function Table({
         This is just a very basic UI implementation:
       */}
       <nav
-        className='flex items-center bg-light-200 justify-between border-t border-gray-200 px-4 py-3 sm:px-6'
+        className='flex items-center bg-dark-400 justify-between border-t border-gray-200 px-4 py-3 sm:px-6'
         aria-label='Pagination'
       >
         <div className='hidden sm:block'>
-          <p className='text-sm text-gray-700'>
+          <p className='text-sm text-slate-400'>
             {loading ? (
               // Use our custom loading state to show a loading indicator
-              <td className='text-dark-900 px-6 py-2' colSpan={10000}>
-                <RoundLoader />
+              <td className='text-slate-400 px-6 py-2' colSpan={10000}>
+                <RoundLoader className='text-slate-400' />
               </td>
             ) : (
               <>
@@ -163,16 +165,16 @@ function Table({
         </div>
         <div className='flex flex-1 justify-between sm:justify-end'>
           <button
-            className='flex max-w-xs items-center border border-transparent bg-primary px-4 py-1 h-10 my-auto mr-4 text-sm font-medium text-white shadow-sm hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2'
+            className='text-slate-100 mr-12 flex items-center justify-between text-sm font-display hover:text-slate-200 border-info-200 border-2 py-1 rounded-full px-3 bg-info-200 hover:border-info-50 transition-colors duration-75 ease-in'
             onClick={() => updateGhdb()}
           >
-            Update dorks
+            Fetch dorks
           </button>
           <button
             onClick={() => previousPage()}
             disabled={!canPreviousPage}
             type='button'
-            className='relative inline-flex items-center rounded-md border border-gray-300 bg-light px-4 py-2 text-sm font-medium text-gray-700 hover:bg-light-200'
+            className='text-slate-100 mr-4 flex items-center justify-between text-sm font-display hover:text-slate-200 border-info-200 border-2 py-1 rounded-full px-3 bg-info-200 hover:border-info-50 transition-colors duration-75 ease-in'
           >
             Previous
           </button>
@@ -180,12 +182,13 @@ function Table({
             onClick={() => nextPage()}
             disabled={!canNextPage}
             type='button'
-            className='relative ml-3 mr-3 inline-flex items-center rounded-md border border-gray-300 bg-light px-4 py-2 text-sm font-medium text-gray-700 hover:bg-light-200'
+            className='text-slate-100 flex items-center justify-between text-sm font-display hover:text-slate-200 border-info-200 border-2 py-1 rounded-full px-3 bg-info-200 hover:border-info-50 transition-colors duration-75 ease-in'
           >
             Next
           </button>
         </div>
         <select
+        className='bg-transparent text-slate-400 ml-20'
           value={pageSize}
           onChange={(e) => {
             setPageSize(Number(e.target.value));
@@ -295,7 +298,7 @@ export default function DorksTable({
     <div className=' flex flex-col '>
       <div className=''>
         <div className='flex items-end'>
-          <div className='flex flex-col min-w-[20rem] pb-1 mr-4'>
+          <div className='flex flex-col min-w-[20rem] z-50 pb-1 mr-4'>
             <SelectBoxApi
               setSelected={setSelectedFilter}
               selected={selectedFilter}
