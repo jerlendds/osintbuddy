@@ -5,26 +5,36 @@ import { LS_USER_AUTH_KEY } from './api.service';
 
 class AuthService {
   async loginUser(user: LoginFormValues) {
-    const form = new FormData()
-    form.append('username', user.email)
-    form.append('password', user.password)
+    const form = new FormData();
+    form.append('username', user.email);
+    form.append('password', user.password);
 
     if (user.remembered) {
-      const rememberMe = JSON.stringify({ email: user.email, remembered: true});
-      localStorage.setItem(LS_USER_AUTH_KEY, rememberMe)
+      // @todo
     }
 
     return await api
       .post('/login/access-token/', form)
-      .then((resp) => {
-        localStorage.setItem(LS_USER_AUTH_KEY, JSON.stringify(resp.data));
+      .then(async (resp) => {
         // if login successful, response will have token
+        let user = null;
         if (resp.data && resp.data.token) {
           api.defaults.headers.common['Authorization'] = `Bearer ${resp.data.token}`;
         } else {
           api.defaults.headers.common['Authorization'] = '';
         }
-        return resp;
+        await api
+          .get('/users/me')
+          .then((data) => {
+            user = {
+              fullName: data.data.full_name,
+              ...data.data,
+            };
+          })
+          .catch((error) => console.warn(error));
+        localStorage.setItem(LS_USER_AUTH_KEY, JSON.stringify({ token: resp.data.token, user, isAuthenticated: true }));
+
+        return { ...resp, user };
       })
       .catch((error) => {
         console.warn(error);
@@ -57,9 +67,8 @@ class AuthService {
   }
 
   async confirmEmail(hash: string) {
-    return await api.post('/auth/email/confirm/', { hash })
+    return await api.post('/auth/email/confirm/', { hash });
   }
-
 }
 
 export default new AuthService();

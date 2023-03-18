@@ -1,48 +1,50 @@
-import { GoogleIcon, GripIcon, IpIcon } from '@/components/Icons';
+import { GoogleIcon, GripIcon, IpIcon, WebsiteIcon } from '@/components/Icons';
 import { PaperClipIcon, WindowIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import { toast } from 'react-toastify';
 import { Handle, Position } from 'reactflow';
 import { NodeContextProps } from '.';
-
+import { handleStyle } from './styles';
 
 export function ResultNode({ flowData }: { flowData: any }) {
   return (
     <>
-      <Handle position={Position.Left} id='l1' key='l1' type='target' />
-      <Handle position={Position.Right} id='r1' key='r1' type='source' />
-      <Handle position={Position.Top} id='t1' key='t1' type='target' />
-      <Handle position={Position.Bottom} id='b1' key='b1' type='target' />
-      <div className='min-w-[500px] bg-light-200 max-w-2xl flex'>
-        <div className='bg-info-300 px-0 py-2 flex-shrink-0 flex flex-col items-center justify-center w-10 text-white text-sm font-medium rounded-l-sm'>
-          <GoogleIcon className='w-5 h-5' />
+      <Handle position={Position.Left} id='l1' key='l1' type='target' style={handleStyle} />
+      <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
+      <Handle position={Position.Top} id='t1' key='t1' type='target' style={handleStyle} />
+      <Handle position={Position.Bottom} id='b1' key='b1' type='target' style={handleStyle} />
+      <div className='min-w-[500px]  max-w-2xl flex node side-container'>
+        <div className='node highlight from-info-200/0 via-info-200 to-info-200/0'></div>
+        <div className='side-header bg-info-200 bg-opacity-60 '>
+          <GoogleIcon />
           <div className='flex-1 justify-center -mt-5 flex flex-col'>
-            <GripIcon className='h-5 w-5' />
+            <GripIcon />
           </div>
         </div>
-        <ul
-          role='list'
-          className='w-full grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 py-1 rounded-b-sm shadow-sm'
-        >
-          <li className='col-span-full flex  w-full'>
-            <div className='flex-1 flex flex-col whitespace-wrap px-4 pb-2 text-sm'>
-              <p data-type='title' className='text-lg break-words'>
+        <ul role='list' className='node-wrap'>
+          <li>
+            <div className='text-slate-400'>
+              <p data-type='title' className='hover:cursor-default text-lg text-inherit break-words text-slate-300'>
                 {flowData.data && flowData.data.title && flowData.data.title}
               </p>
-              <p data-type='description' className='text-sm  whitespace-wrap max-w-xl break-words'>
+              <p data-type='description' className='hover:cursor-default text-sm text-inherit max-w-xl break-words'>
                 {flowData.data && flowData.data.description && flowData.data.description}
               </p>
               <div
                 onClick={() => {
-                  navigator.clipboard.writeText(flowData.data.link);
+                  navigator.clipboard.writeText(flowData.data.url);
                   toast.success('The URL has been copied to your clipboard');
                 }}
                 className='flex items-center'
               >
-                <p data-type='link' className='text-sm break-words text-info-200 max-w-xl whitespace-wrap'>
+                <p
+                  title='Click to copy the URL'
+                  data-type='link'
+                  className='text-sm text-inherit break-words text-info-200 max-w-xl'
+                >
                   {flowData.data && flowData.data.url && flowData.data.url}
                 </p>
-                <PaperClipIcon className='w-5 h-5 text-info-200 mx-1' />
+                <PaperClipIcon className='w-5 h-5 text-inherit text-info-200 mx-1' />
               </div>
             </div>
           </li>
@@ -62,28 +64,27 @@ export function ResultNodeContext({
   parentId,
   getId,
 }: NodeContextProps) {
-
   return (
-    <div className='py-1'>
-      <div>
+    <div>
+      <div className='node-context'>
         <button
           onClick={(event) => {
             const url = nodeData[2].innerText;
             // @ts-ignore
             if (url) window?.open(url, '_blank').focus();
           }}
-          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
         >
-          <WindowIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          <WindowIcon aria-hidden='true' />
           Open in new tab
         </button>
       </div>
-      <div>
+      <div className='node-context'>
         <button
           onClick={(event) => {
-            const nodeId = `rw${getId()}`;
+            const nodeId = `${getId()}`;
             let bounds = node.getBoundingClientRect();
             const url = new URL(nodeData[2].innerText);
+            toast.info('Transforming to domain');
             addNode(
               nodeId,
               'domain',
@@ -99,20 +100,18 @@ export function ResultNodeContext({
             );
             addEdge(parentId, nodeId);
           }}
-          className={classNames(
-            'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
-          )}
         >
-          <IpIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          <WebsiteIcon />
           To Domain
         </button>
       </div>
-      <div>
+      <div className='node-context'>
         <button
           onClick={(event) => {
-            const nodeId = `rw${getId()}`;
+            const nodeId = `${getId()}`;
             let bounds = node.getBoundingClientRect();
             const url = nodeData[2].innerText;
+            toast.info('Transforming to URL');
             addNode(
               nodeId,
               'url',
@@ -126,11 +125,8 @@ export function ResultNodeContext({
             );
             addEdge(parentId, nodeId);
           }}
-          className={classNames(
-            'hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
-          )}
         >
-          <IpIcon className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500' aria-hidden='true' />
+          <WebsiteIcon />
           To Url
         </button>
       </div>

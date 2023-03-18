@@ -1,26 +1,30 @@
 // @ts-nocheck
 import { useCallback, useState, useRef, useMemo, useEffect, createRef } from 'react';
 import ReactFlow, {
-  Controls,
   useNodesState,
   ReactFlowProvider,
   useEdgesState,
   Edge,
-  HandleProps,
   XYPosition,
-  useReactFlow,
+  useStore,
+  Node,
+  Elements,
+  Background,
+  Controls,
+  BackgroundVariant,
+  isNode,
+  FitViewOptions,
 } from 'reactflow';
-
-import { TrashIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { HotKeys } from 'react-hotkeys';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import 'reactflow/dist/style.css';
 import classNames from 'classnames';
 import BreadcrumbHeader from './_components/BreadcrumbHeader';
 import NodeOptions from './_components/NodeOptions';
 import CommandPallet from '@/routes/osint/_components/CommandPallet';
 import { GoogleNode, GoogleNodeContext } from './_nodes/GoogleNode';
-import { CseNode } from './_nodes/CseNode';
+import { CseNode, CseNodeContext } from './_nodes/CseNode';
 import { DnsNode } from './_nodes/DnsNode';
 import { DomainNode, DomainNodeContext } from './_nodes/DomainNode';
 import { EmailNode, EmailNodeContext } from './_nodes/EmailNode';
@@ -35,13 +39,8 @@ import { UrlScanNode } from './_nodes/UrlScanNode';
 import UrlNodeContext, { UrlNode } from './_nodes/UrlNode';
 import { SmtpNode } from './_nodes/SmtpNode';
 import { UsernameNode, UsernameNodeContext } from './_nodes/UsernameNode';
-import { ProfileNode, ProfileNodeContext } from './_nodes/Profile';
-
-import { Terminal } from 'xterm';
-
-const fitViewOptions: FitViewOptions = {
-  padding: 50,
-};
+import { ProfileNode, ProfileNodeContext } from './_nodes/ProfileNode';
+import dagre from 'dagre';
 
 export var nodeId = 0;
 
@@ -50,6 +49,42 @@ export const getId = (): NodeId => {
   return `n_${nodeId}`;
 };
 
+const fitViewOptions: FitViewOptions = {
+  padding: 50,
+};
+
+const getLayoutedElements = (nodes, edges, direction = 'LR') => {
+  const dagreGraph = new dagre.graphlib.Graph().setGraph({});
+  const isHorizontal = direction === 'LR';
+  dagreGraph.setGraph({ rankdir: direction });
+
+  nodes.forEach((node) => {
+    dagreGraph.setNode(node.id, { width: node.width, height: node.height });
+  });
+
+  edges.forEach((edge) => {
+    dagreGraph.setEdge(edge.source, edge.target, { label: '' });
+  });
+  console.log('dagreGraph', dagreGraph);
+  dagre.layout(dagreGraph);
+
+  nodes.forEach((node, idx) => {
+    const nodeWithPosition = dagreGraph.node(node.id);
+    node.targetPosition = isHorizontal ? 'left' : 'top';
+    node.sourcePosition = isHorizontal ? 'right' : 'bottom';
+
+    // We are shifting the dagre node position (anchor=center center) to the top left
+    // so it matches the React Flow node anchor point (top left).
+    node.position = {
+      x: nodeWithPosition.x - node.width / 2,
+      y: nodeWithPosition.y - node.height / 2,
+    };
+    console.log('dagre node', node);
+    return node;
+  });
+
+  return { nodes, edges };
+};
 const DnDFlow = ({
   reactFlowWrapper,
   nodes,
@@ -90,7 +125,7 @@ const DnDFlow = ({
         y: event.clientY,
       });
       const newNode = {
-        id: `${type.charAt(0)}${getId()}`,
+        id: `${getId()}`,
         type,
         position,
         data: {},
@@ -121,29 +156,49 @@ const DnDFlow = ({
     };
   }, []);
 
+  //   const size = useStore((s) => {
+  //   const node = s.nodeInternals.get('n_1');
+  //   return {
+  //     width: node?.width,
+  //     height: node?.height,
+  //   };
+  // });
+  // console.log('size', size);
+
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <ReactFlowProvider>
-        <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
-          <ReactFlow
-          
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            onInit={setReactFlowInstance}
-            onDrop={onDrop}
-            onEdgeUpdate={onEdgeUpdate}
-            onDragOver={onDragOver}
-            fitView
-            fitViewOptions={fitViewOptions}
-            nodeTypes={nodeTypes}
-            color="#0F172A"
-          >
-          </ReactFlow>
-        </div>
-      </ReactFlowProvider>
+      {/* <ReactFlowProvider> */}
+      <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
+        <ReactFlow
+          elements={[
+            {
+              id: '1',
+              type: 'input',
+              data: { label: 'input' },
+              position: { x: 0, y: 0 },
+            },
+          ]}
+          minZoom={0.2}
+          maxZoom={2.0}
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onInit={setReactFlowInstance}
+          onDrop={onDrop}
+          onEdgeUpdate={onEdgeUpdate}
+          onDragOver={onDragOver}
+          fitView
+          fitViewOptions={fitViewOptions}
+          nodeTypes={nodeTypes}
+        >
+          {/* <NodeDebug /> */}
+          <Background variant={BackgroundVariant.Lines} color='#0F172A' />
+          <Controls />
+        </ReactFlow>
+      </div>
+      {/* </ReactFlowProvider> */}
     </div>
   );
 };
@@ -175,12 +230,11 @@ export function capitalize(value: string) {
 }
 
 export default function OsintPage() {
-  const xtermRef = useRef<HTMLDivElement>(null);
-
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge[]>(initialEdges);
-
+  console.log('nodes', nodes)
+  console.log('edges', edges)
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [nodeId, setNodeId] = useState<number>(0);
   let setViewport,
@@ -213,7 +267,7 @@ export default function OsintPage() {
       target,
       sourceHandle: sourceHandle || 'r1',
       targetHandle: targetHandle || 'l1',
-      type: type || 'smoothstep',
+      type: type || 'bezier',
     };
     setEdges((eds) => eds.concat(newEdge));
   }
@@ -223,7 +277,7 @@ export default function OsintPage() {
   }
   // https://reactflow.dev/docs/examples/layout/dagre/
   const location = useLocation();
-  const activeCase = location.state.activeCase;
+  const activeCase = location?.state?.activeCase;
 
   const [showNodeOptions, setShowNodeOptions] = useState<boolean>(false);
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
@@ -235,21 +289,21 @@ export default function OsintPage() {
     TOGGLE_PALETTE: togglePalette,
   };
 
-  useRef(() => {
-    if (xtermRef && xtermRef.current) {
-      const term = new Terminal({
-        
-      });
-      console.log('wtf', term)
-      term.open(xtermRef.current);
-    }
-    return () => xtermRef && xtermRef.current ? xtermRef.current.remove() : null
-  }, [xtermRef]);
+  const onLayout = useCallback(
+    (direction) => {
+      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges, direction);
+      console.log('onLayout', nodes, edges, layoutedNodes, layoutedNodes);
+
+      setNodes([...layoutedNodes]);
+      setEdges([...layoutedEdges]);
+    },
+    [nodes, edges]
+  );
 
   return (
     <HotKeys keyMap={keyMap} handlers={handlers}>
       <div className='h-screen flex flex-col w-full'>
-        <BreadcrumbHeader activeProject={activeCase.name} />
+        <BreadcrumbHeader onLayout={onLayout} activeProject={activeCase?.name || 'Unknown'} />
         <div className='flex h-full'>
           <DnDFlow
             addNode={addNode}
@@ -265,7 +319,6 @@ export default function OsintPage() {
             reactFlowInstance={reactFlowInstance}
             setReactFlowInstance={setReactFlowInstance}
           />
-          <div ref={xtermRef} />
         </div>
         <CommandPallet
           toggleShowOptions={toggleShowNodeOptions}
@@ -291,17 +344,17 @@ export default function OsintPage() {
           return (
             <>
               <div className='relative z-50 inline-block text-left'>
-                <ul className='absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+                <ul className='absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-dark-300 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
                   <div className='py-1'>
                     <div>
                       <div
                         href='#'
                         className={classNames(
-                          false ? 'bg-light-500 text-gray-900' : 'text-gray-700',
+                          false ? 'bg-slate-500 text-slate-400' : 'text-slate-400',
                           'group flex items-center px-4 py-2 text-sm font-display'
                         )}
                       >
-                        <span className='text-dark-900 font-semibold font-display mr-3'>ID: </span>
+                        <span className='text-slate-400 font-semibold font-display mr-3'>ID: </span>
                         {node ? parentId : 'No node selected'}
                         {nodeType && titleNodeType && (
                           <span className='inline-flex ml-auto items-center rounded-full bg-blue-100 px-3 py-0.5 text-sm font-medium text-blue-800'>
@@ -325,6 +378,18 @@ export default function OsintPage() {
                   )}
                   {nodeType === 'email' && (
                     <EmailNodeContext
+                      parentId={parentId}
+                      node={node}
+                      nodeData={nodeData}
+                      nodeType={nodeType}
+                      addNode={addNode}
+                      addEdge={addEdge}
+                      getId={getId}
+                      reactFlowInstance={reactFlowInstance}
+                    />
+                  )}
+                     {nodeType === 'cse' && (
+                    <CseNodeContext
                       parentId={parentId}
                       node={node}
                       nodeData={nodeData}
@@ -408,47 +473,26 @@ export default function OsintPage() {
                     />
                   )}
                   {nodeType && (
-                    <div className='py-1'>
+                    <div className='node-context'>
                       <div>
-                        <button
-                          onClick={() => deleteNode(parentId)}
-                          type='button'
-                          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
-                        >
-                          <TrashIcon
-                            className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
-                            aria-hidden='true'
-                          />
+                        <button onClick={() => deleteNode(parentId)} type='button'>
+                          <TrashIcon aria-hidden='true' />
                           Delete
                         </button>
                       </div>
                     </div>
                   )}
                   {!nodeType && (
-                    <div className='py-1'>
+                    <div className='node-context'>
                       <div>
-                        <button
-                          onClick={() => zoomIn && zoomIn({ duration: 200 })}
-                          type='button'
-                          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
-                        >
-                          <TrashIcon
-                            className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
-                            aria-hidden='true'
-                          />
+                        <button onClick={() => zoomIn && zoomIn({ duration: 200 })} type='button'>
+                          <MagnifyingGlassPlusIcon aria-hidden='true' />
                           Zoom in
                         </button>
                       </div>
                       <div>
-                        <button
-                          onClick={() => zoomOut && zoomOut({ duration: 200 })}
-                          type='button'
-                          className='hover:bg-light-500 hover:text-gray-900 text-gray-700 group flex items-center px-4 py-2 text-sm w-full'
-                        >
-                          <TrashIcon
-                            className='mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
-                            aria-hidden='true'
-                          />
+                        <button onClick={() => zoomOut && zoomOut({ duration: 200 })} type='button'>
+                          <MagnifyingGlassMinusIcon aria-hidden='true' />
                           Zoom out
                         </button>
                       </div>

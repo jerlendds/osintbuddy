@@ -11,12 +11,14 @@ from app.api.api_v1.endpoints import (
     email,
     url,
     google,
-    username
+    username,
+    terminal
 )
 
 api_router = APIRouter()
 
 
+api_router.include_router(terminal.router, tags=["Terminal"])
 api_router.include_router(google.router, tags=["Google"])
 api_router.include_router(username.router, tags=["Username Transformations"])
 api_router.include_router(url.router, tags=["URL Node Transformations"])

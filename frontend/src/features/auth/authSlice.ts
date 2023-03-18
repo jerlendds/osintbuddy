@@ -21,13 +21,14 @@ export interface AuthState {
   };
 }
 
-const rememberState = JSON.parse(localStorage.getItem(LS_USER_AUTH_KEY) || '{}');
+const rememberState = JSON.parse(localStorage.getItem(LS_USER_AUTH_KEY) || '[]');
 
 let initialState;
 
-if (rememberState) {
+if (rememberState && rememberState?.token) {
+  console.log(rememberState)
   initialState = {
-    isAuthenticated: true,
+    isAuthenticated: rememberState.isAuthenticated,
     token: rememberState.token,
     user: {
       ...rememberState.user,
@@ -44,16 +45,11 @@ if (rememberState) {
 export const login = createAsyncThunk('auth/login', async (user: LoginFormValues, thunkAPI) => {
   try {
     const response = await AuthService.loginUser(user);
-    if (response.status !== 200) throw Error('status error, authentication failed');
+    if (response.status !== 200) throw Error(response.response.data.detail);
     if (response && response.data && response.data.token) {
-      localStorage.setItem(LS_USER_AUTH_KEY, JSON.stringify(response.data));
-      return response.data;
+      return {...response.data, user: response.user};
     }
   } catch (error) {
-    console.warn(error);
-    if (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
     return thunkAPI.rejectWithValue(error);
   }
 });
@@ -73,6 +69,7 @@ export const authSlice = createSlice({
       const user = action.payload.user;
       state.isAuthenticated = true;
       state.token = action.payload.token;
+      console.log('reducer state.user >> ', state.user)
       state.user = {
         ...user,
       };
@@ -82,6 +79,7 @@ export const authSlice = createSlice({
 
 export const { logout } = authSlice.actions;
 
+export const selectUser = (state: AuthState) => state.auth.user;
 export const selectAuthenticated = (state: AuthState) => state.auth.isAuthenticated;
 export const selectToken = (state: AuthState) => {
   if (state.auth.user) return state.auth.token;

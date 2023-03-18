@@ -7,7 +7,6 @@ import (
 	"log"
 
 	// "net/url"
-
 	// "strconv"
 	"strings"
 	"time"
@@ -16,16 +15,15 @@ import (
 	// "github.com/gocolly/colly/queue"
 )
 
-func CrawlCse(searchQuery string, pages string, cseUrl string)  map[string]interface{} {
+func CrawlCse(searchQuery string, pages string, cseId string) map[string]interface{} {
 	var paginationIndex = 1
 	// totalPages, err := strconv.Atoi(pages)
 	// if err != nil {
 	// panic(err)
 	// }
 	nextPage := ""
-	baseUrl := strings.Split(cseUrl, "//")
-	baseUrl = strings.Split(baseUrl[1], "/")
-	reqUrl := "https://" + baseUrl[0] + "/cse.js?ie=UTF-8&hpg=1&cx=" + strings.Split(cseUrl, "cx=")[1]
+	fmt.Printf("Crawling results for:  %s", cseId)
+	reqUrl := "https://cse.google.com/cse.js?ie=UTF-8&hpg=1&cx=" + cseId
 
 	// Create a new collector
 	c := colly.NewCollector()
@@ -52,7 +50,7 @@ func CrawlCse(searchQuery string, pages string, cseUrl string)  map[string]inter
 		setHeaders(r)
 	})
 	var rawData string
- 	var data map[string]interface{}
+	var data map[string]interface{}
 	c.OnResponse(func(r *colly.Response) {
 
 		urlResp := strings.Split(string(r.Body[:]), "})(")
@@ -83,7 +81,7 @@ func CrawlCse(searchQuery string, pages string, cseUrl string)  map[string]inter
 	return data
 }
 
-func GoogleCSEService(query string, pages string, cseUrl string)  map[string]interface{} {
+func GoogleCSEService(query string, pages string, cseUrl string) map[string]interface{} {
 	crawlData := CrawlCse(query, pages, cseUrl)
 	return crawlData
 }

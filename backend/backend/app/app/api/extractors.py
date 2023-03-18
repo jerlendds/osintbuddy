@@ -24,6 +24,21 @@ def get_google_results(
     pages: int = 3,
     force_search: str = False
 ):
+    """Fetches search results from Google using a specified query string
+
+    Args:
+        gdb (work.Session): _description_
+        query (str): _description_
+        pages (int, optional): _description_. Defaults to 3.
+        force_search (str, optional): _description_. Defaults to False.
+
+    Raises:
+        Exception: _description_
+        Exception: _description_
+
+    Returns:
+        _type_: _description_
+    """
     existing_results = gdb.execute_read(
         get_google_search_results,
         search_query=query,
@@ -91,6 +106,21 @@ def get_google_cache_results(
     pages: int = 3,
     force_search: str = False
 ):
+    """F etches search results from Google cache using a specified query string
+
+    Args:
+        gdb (work.Session): _description_
+        query (str): _description_
+        pages (int, optional): _description_. Defaults to 3.
+        force_search (str, optional): _description_. Defaults to False.
+
+    Raises:
+        Exception: _description_
+        Exception: _description_
+
+    Returns:
+        _type_: _description_
+    """
     existing_results = gdb.execute_read(
         get_google_search_cache_results,
         search_query=query,
