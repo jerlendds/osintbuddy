@@ -14,8 +14,8 @@ export function ResultNode({ flowData }: { flowData: any }) {
       <Handle position={Position.Top} id='t1' key='t1' type='target' style={handleStyle} />
       <Handle position={Position.Bottom} id='b1' key='b1' type='target' style={handleStyle} />
       <div className='min-w-[500px]  max-w-2xl flex node side-container'>
-        <div className='node highlight from-persian-400/0 via-persian-400 to-persian-400/0'></div>
-        <div className='side-header'>
+        <div className='node highlight from-info-200/0 via-info-200 to-info-200/0'></div>
+        <div className='side-header bg-info-200 bg-opacity-60 '>
           <GoogleIcon />
           <div className='flex-1 justify-center -mt-5 flex flex-col'>
             <GripIcon />
@@ -24,20 +24,24 @@ export function ResultNode({ flowData }: { flowData: any }) {
         <ul role='list' className='node-wrap'>
           <li>
             <div className='text-slate-400'>
-              <p data-type='title' className='text-lg text-inherit break-words text-slate-300'>
+              <p data-type='title' className='hover:cursor-default text-lg text-inherit break-words text-slate-300'>
                 {flowData.data && flowData.data.title && flowData.data.title}
               </p>
-              <p data-type='description' className='text-sm text-inherit max-w-xl break-words'>
+              <p data-type='description' className='hover:cursor-default text-sm text-inherit max-w-xl break-words'>
                 {flowData.data && flowData.data.description && flowData.data.description}
               </p>
               <div
                 onClick={() => {
-                  navigator.clipboard.writeText(flowData.data.link);
+                  navigator.clipboard.writeText(flowData.data.url);
                   toast.success('The URL has been copied to your clipboard');
                 }}
                 className='flex items-center'
               >
-                <p data-type='link' className='text-sm text-inherit break-words text-info-200 max-w-xl'>
+                <p
+                  title='Click to copy the URL'
+                  data-type='link'
+                  className='text-sm text-inherit break-words text-info-200 max-w-xl'
+                >
                   {flowData.data && flowData.data.url && flowData.data.url}
                 </p>
                 <PaperClipIcon className='w-5 h-5 text-inherit text-info-200 mx-1' />
@@ -77,9 +81,10 @@ export function ResultNodeContext({
       <div className='node-context'>
         <button
           onClick={(event) => {
-            const nodeId = `rw${getId()}`;
+            const nodeId = `${getId()}`;
             let bounds = node.getBoundingClientRect();
             const url = new URL(nodeData[2].innerText);
+            toast.info('Transforming to domain');
             addNode(
               nodeId,
               'domain',
@@ -103,9 +108,10 @@ export function ResultNodeContext({
       <div className='node-context'>
         <button
           onClick={(event) => {
-            const nodeId = `rw${getId()}`;
+            const nodeId = `${getId()}`;
             let bounds = node.getBoundingClientRect();
             const url = nodeData[2].innerText;
+            toast.info('Transforming to URL');
             addNode(
               nodeId,
               'url',

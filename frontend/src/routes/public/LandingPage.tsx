@@ -11,19 +11,16 @@ import Markdoc from '@markdoc/markdoc';
 import tags from './markdoc/tags';
 import nodes from './markdoc/nodes';
 import { QuickLink, QuickLinks } from './_components/QuickLinks';
-import InstallationDoc from './docs/index.md';
 
 export default function LandingPage(): React.ReactElement {
-  const [text, setText] = useState('');
-  fetch(InstallationDoc)
-    .then((response) => response.text())
-    .then((textContent: string) => {
-      setText(textContent);
-    });
+  const [text, setText] = useState(`
+Click the get started button above to login to your system.
+#### OSINTBuddy v0.2.1
+  `);
+
   const ast = Markdoc.parse(text);
   // @ts-ignore
   const content = Markdoc.transform(ast, { tags, nodes });
-  console.log('InstallationDoc', InstallationDoc);
   console.log(ast, content);
 
   return (
@@ -72,69 +69,22 @@ export default function LandingPage(): React.ReactElement {
                 <img className='absolute -top-64 -right-64' src={blurIndigoImage} alt='' width={530} height={530} />
                 <img className='absolute -bottom-40 -right-44' src={blurIndigoImage} alt='' width={567} height={567} />
                 <div className='absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10 blur-lg' />
-                <div className='absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10' />
-                <div className='relative rounded-2xl bg-[#0A101F]/80 ring-1 ring-white/10 backdrop-blur'>
-                  <div className='absolute -top-px left-20 right-11 h-px bg-gradient-to-r from-sky-300/0 via-sky-300/70 to-sky-300/0' />
-                  <div className='absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-blue-400/0 via-blue-400 to-blue-400/0' />
-                  <div className='pl-4 pt-4'>
-                    <TrafficLightsIcon className='h-2.5 w-auto stroke-slate-500/30' />
-
-                    <div className='mt-6 flex items-start px-1 text-sm'>
-                      <div
-                        aria-hidden='true'
-                        className='select-none border-r border-slate-300/5 pr-4 font-mono text-slate-600'
-                      ></div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className='xl:pl-64 relative mx-auto bg-slate-900 flex w-full justify-center sm:px-2 lg:px-8 xl:px-12'>
-        <nav className='flex flex-col'></nav>
-
-        <div className='min-w-0  max-w-2xl flex-auto px-4 py-4 lg:max-w-none lg:pr-0 lg:pl-8 xl:px-16'>
+      <div className='relative mx-auto bg-slate-900 flex w-full justify-center sm:px-2 lg:px-0 '>
+        <div className='min-w-0  max-w-2xl flex-auto py-4 lg:max-w-none lg:pr-0 2xl:px-64 lg:px-10 px-2'>
           <article>
             <header className='mb-9 space-y-1'>
-              <p className='font-display text-sm font-medium text-sky-500'>Introduction</p>
-              <h1 className='font-display pt-8 text-3xl tracking-tight text-slate-200 dark:text-white'>
-                Getting Started with OSINTBuddy
+              <p className='font-display text-sm font-medium text-sky-500'>Getting started</p>
+              <h1 className='font-display text-3xl tracking-tight text-slate-200 dark:text-white'>
+                Welcome to your OSINT Buddy
               </h1>
             </header>
           </article>
-          <dl className='mt-12 flex border-slate-400 pt-6 dark:border-slate-800'>
-            {false && (
-              <div>
-                <dt className='font-display text-sm font-medium text-slate-900 dark:text-white'>Previous</dt>
-                <dd className='mt-1'>
-                  <Link
-                    to={''}
-                    className='text-base flex items-center font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300'
-                  >
-                    <ChevronLeftIcon className='text-slate-400 h-5 w-5 mr-2' />
-                    {/* Welcome */}
-                  </Link>
-                </dd>
-              </div>
-            )}
-            {false && (
-              <div className='ml-auto text-right'>
-                <dt className='font-display text-sm font-medium text-slate-900 dark:text-white'>Next</dt>
-                <dd className='mt-1'>
-                  <Link
-                    to=''
-                    className='text-base flex items-center font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300'
-                  >
-                    {/* Node Workflow  */}
-                    <ChevronRightIcon className='text-slate-400 h-5 w-5 ml-2' />
-                  </Link>
-                </dd>
-              </div>
-            )}
-          </dl>
           <div className='docs max-w-4xl text-slate-400'>{Markdoc.renderers.react(content, React)}</div>
         </div>
         <div className='hidden xl:sticky xl:top-[4.5rem] xl:-mr-6 xl:block xl:h-[calc(100vh-4.5rem)] xl:flex-none xl:overflow-y-auto xl:py-16 xl:pr-6'>

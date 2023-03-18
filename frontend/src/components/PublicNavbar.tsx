@@ -164,11 +164,10 @@ export default function PublicNavbar(): React.ReactElement {
       )}
     >
       <div className="mr-6 flex lg:hidden">
-        {/* <MobileNavigation navigation={navigation} /> */}
+        {/* @todo add mobile navigation */}
       </div>
       <div className="relative flex flex-grow basis-0 items-center">
         <Link to="/">
-          {/* <Logomark className="h-9 w-9 lg:hidden" /> */}
           <img  className="hidden h-9 w-auto fill-slate-700 dark:fill-sky-100 lg:block" src={Logo} />
         </Link>
       </div>

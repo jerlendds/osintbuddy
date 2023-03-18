@@ -11,19 +11,17 @@ export function ProfileNode({ flowData }: { flowData: any }) {
       <Handle position={Position.Right} id='r1' key='r1' type='source' />
       <Handle position={Position.Top} id='t1' key='t1' type='target' />
       <Handle position={Position.Bottom} id='b1' key='b1' type='target' />
-      <div className='min-w-[500px] bg-light-200 max-w-2xl flex'>
-        <div className='bg-pink-300 px-0 py-2 flex-shrink-0 flex flex-col items-center justify-center w-10 text-white text-sm font-medium rounded-l-sm'>
-          <UserIcon className='w-5 h-5' />
+      <div className='min-w-[500px] node side-container'>
+        <div className='node highlight from-pink-600/0 via-pink-600 to-pink-600/0'></div>
+        <div className='bg-pink-300 side-header bg-opacity-60'>
+          <UserIcon />
           <div className='flex-1 justify-center -mt-5 flex flex-col'>
-            <GripIcon className='h-5 w-5' />
+            <GripIcon />
           </div>
         </div>
-        <ul
-          role='list'
-          className='w-full grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 py-1 rounded-b-sm shadow-sm'
-        >
+        <ul role='list' className='node-wrap'>
           <li className='col-span-full flex  w-full'>
-            <div className='flex-1 flex flex-col whitespace-wrap px-4 pb-2 text-sm'>
+            <div className='flex-1 flex flex-col text-slate-400 px-4 pb-2 text-sm'>
               <p data-type='title' className='text-lg break-words'>
                 {flowData.data && flowData.data.category && flowData.data.category}
               </p>
@@ -60,7 +58,6 @@ export function ProfileNodeContext({
   parentId,
   getId,
 }: NodeContextProps) {
-
   return (
     <div className='py-1'>
       <div>
@@ -79,4 +76,3 @@ export function ProfileNodeContext({
     </div>
   );
 }
-

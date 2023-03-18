@@ -6,9 +6,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import crud, schemas, models
 from app.api import deps
+from app.core.logger import get_logger
 
 router = APIRouter(prefix='/cses')
 
+logger = get_logger(name="/cses")
 
 @router.get('/links')
 def get_cse_links(
@@ -22,7 +24,7 @@ def get_cse_links(
             return resp.json()
         else:
             raise HTTPException(status_code=422, detail="cseFetchError")
-    except Exception:
+    except Exception as e:
         raise HTTPException(status_code=422, detail="cseFetchError")
 
 
@@ -30,17 +32,24 @@ def get_cse_links(
 def crawl_cse_links(
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
-    id: int = 0
+    pages: int = 1,
+    query: str = None,
+    url: str = None
 ):
+    print(query, pages, url)
+    if query is None or url is None:
+        raise HTTPException(status_code=422, detail="queryRequired")
+    
+    parsed_url = urllib.parse.urlparse(url)
+    cse_id = urllib.parse.parse_qs(parsed_url.query)['cx'][0]
+    
+    
     try:
-        resp = requests.get('https://gist.githubusercontent.com/jerlendds/741d110f59a7d2ed2098325d30b00569/raw/dd7ec7584c6c939d97b7c0ace92c28e289a8a959/cses.json') 
-        if resp.status_code == 200:
-            return resp.json()
-        else:
-            raise HTTPException(status_code=422, detail="cseFetchError")
-    except Exception:
+
+        
+        resp = requests.get(f'http://microservice:1323/google-cse?query={query}&pages={pages}&id={cse_id}')
+        return resp.json()
+    
+    except Exception as e:
+        logger.error(e)
         raise HTTPException(status_code=422, detail="cseFetchError")
-
-
-subdomains = 'https://raw.githubusercontent.com/edoardottt/scilla/main/lists/subdomains.txt'
-dirs = 'https://github.com/edoardottt/scilla/blob/main/lists/dirs.txt'

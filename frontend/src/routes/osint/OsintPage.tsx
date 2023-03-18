@@ -1,27 +1,30 @@
 // @ts-nocheck
 import { useCallback, useState, useRef, useMemo, useEffect, createRef } from 'react';
 import ReactFlow, {
-  Controls,
   useNodesState,
   ReactFlowProvider,
   useEdgesState,
   Edge,
-  HandleProps,
   XYPosition,
-  useReactFlow,
+  useStore,
+  Node,
+  Elements,
+  Background,
+  Controls,
+  BackgroundVariant,
+  isNode,
+  FitViewOptions,
 } from 'reactflow';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { selectToken } from '@/features/auth/authSlice';
 import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { HotKeys } from 'react-hotkeys';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import 'reactflow/dist/style.css';
 import classNames from 'classnames';
 import BreadcrumbHeader from './_components/BreadcrumbHeader';
 import NodeOptions from './_components/NodeOptions';
 import CommandPallet from '@/routes/osint/_components/CommandPallet';
 import { GoogleNode, GoogleNodeContext } from './_nodes/GoogleNode';
-import { CseNode } from './_nodes/CseNode';
+import { CseNode, CseNodeContext } from './_nodes/CseNode';
 import { DnsNode } from './_nodes/DnsNode';
 import { DomainNode, DomainNodeContext } from './_nodes/DomainNode';
 import { EmailNode, EmailNodeContext } from './_nodes/EmailNode';
@@ -36,13 +39,8 @@ import { UrlScanNode } from './_nodes/UrlScanNode';
 import UrlNodeContext, { UrlNode } from './_nodes/UrlNode';
 import { SmtpNode } from './_nodes/SmtpNode';
 import { UsernameNode, UsernameNodeContext } from './_nodes/UsernameNode';
-import { ProfileNode, ProfileNodeContext } from './_nodes/Profile';
-import { XTerm } from 'xterm-for-react';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
-
-const fitViewOptions: FitViewOptions = {
-  padding: 50,
-};
+import { ProfileNode, ProfileNodeContext } from './_nodes/ProfileNode';
+import dagre from 'dagre';
 
 export var nodeId = 0;
 
@@ -51,6 +49,42 @@ export const getId = (): NodeId => {
   return `n_${nodeId}`;
 };
 
+const fitViewOptions: FitViewOptions = {
+  padding: 50,
+};
+
+const getLayoutedElements = (nodes, edges, direction = 'LR') => {
+  const dagreGraph = new dagre.graphlib.Graph().setGraph({});
+  const isHorizontal = direction === 'LR';
+  dagreGraph.setGraph({ rankdir: direction });
+
+  nodes.forEach((node) => {
+    dagreGraph.setNode(node.id, { width: node.width, height: node.height });
+  });
+
+  edges.forEach((edge) => {
+    dagreGraph.setEdge(edge.source, edge.target, { label: '' });
+  });
+  console.log('dagreGraph', dagreGraph);
+  dagre.layout(dagreGraph);
+
+  nodes.forEach((node, idx) => {
+    const nodeWithPosition = dagreGraph.node(node.id);
+    node.targetPosition = isHorizontal ? 'left' : 'top';
+    node.sourcePosition = isHorizontal ? 'right' : 'bottom';
+
+    // We are shifting the dagre node position (anchor=center center) to the top left
+    // so it matches the React Flow node anchor point (top left).
+    node.position = {
+      x: nodeWithPosition.x - node.width / 2,
+      y: nodeWithPosition.y - node.height / 2,
+    };
+    console.log('dagre node', node);
+    return node;
+  });
+
+  return { nodes, edges };
+};
 const DnDFlow = ({
   reactFlowWrapper,
   nodes,
@@ -91,7 +125,7 @@ const DnDFlow = ({
         y: event.clientY,
       });
       const newNode = {
-        id: `${type.charAt(0)}${getId()}`,
+        id: `${getId()}`,
         type,
         position,
         data: {},
@@ -122,27 +156,49 @@ const DnDFlow = ({
     };
   }, []);
 
+  //   const size = useStore((s) => {
+  //   const node = s.nodeInternals.get('n_1');
+  //   return {
+  //     width: node?.width,
+  //     height: node?.height,
+  //   };
+  // });
+  // console.log('size', size);
+
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <ReactFlowProvider>
-        <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            onInit={setReactFlowInstance}
-            onDrop={onDrop}
-            onEdgeUpdate={onEdgeUpdate}
-            onDragOver={onDragOver}
-            fitView
-            fitViewOptions={fitViewOptions}
-            nodeTypes={nodeTypes}
-            color='#0F172A'
-          ></ReactFlow>
-        </div>
-      </ReactFlowProvider>
+      {/* <ReactFlowProvider> */}
+      <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
+        <ReactFlow
+          elements={[
+            {
+              id: '1',
+              type: 'input',
+              data: { label: 'input' },
+              position: { x: 0, y: 0 },
+            },
+          ]}
+          minZoom={0.2}
+          maxZoom={2.0}
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onInit={setReactFlowInstance}
+          onDrop={onDrop}
+          onEdgeUpdate={onEdgeUpdate}
+          onDragOver={onDragOver}
+          fitView
+          fitViewOptions={fitViewOptions}
+          nodeTypes={nodeTypes}
+        >
+          {/* <NodeDebug /> */}
+          <Background variant={BackgroundVariant.Lines} color='#0F172A' />
+          <Controls />
+        </ReactFlow>
+      </div>
+      {/* </ReactFlowProvider> */}
     </div>
   );
 };
@@ -169,55 +225,6 @@ export interface AddEdge {
   type?: string | undefined;
 }
 
-const Terminal = () => {
-  const xtermRef = useRef(null);
-  const [input, setInput] = useState('');
-
-  const token: boolean = useAppSelector((state) => selectToken(state));
-  const [socketUrl, setSocketUrl] = useState(`ws://localhost:5000/api/v1/terminal?token=${token}`);
-  const [messageHistory, setMessageHistory] = useState([]);
-
-  const { sendMessage, lastMessage, readyState, lastJsonMessage } = useWebSocket(socketUrl);
-
-  useEffect(() => {
-    if (lastMessage !== null) {
-      setMessageHistory((prev) => prev.concat(lastMessage));
-    }
-  }, [lastMessage, setMessageHistory]);
-
-  const handleClickChangeSocketUrl = useCallback(() => setSocketUrl('wss://localhost:5000/api/v1/terminal/'), []);
-
-  const handleClickSendMessage = useCallback(() => sendMessage('Hello'), []);
-
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: 'Connecting',
-    [ReadyState.OPEN]: 'Open',
-    [ReadyState.CLOSING]: 'Closing',
-    [ReadyState.CLOSED]: 'Closed',
-    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-  }[readyState];
-
-  useEffect(() => {
-    console.log('useEffect', input, xtermRef.current.terminal);
-    // You can call any method in XTerm.js by using 'xterm xtermRef.current.terminal.[What you want to call]
-    console.log(input, lastJsonMessage);
-    xtermRef.current.terminal.writeln(lastJsonMessage?.sent || '');
-    xtermRef.current.terminal.writeln(input);
-    sendMessage(input);
-  }, [input]);
-  return (
-    // Create a new terminal and set it's ref.
-    <XTerm
-      onKey={({ key, domEvent }) => {
-        console.log(key, domEvent.currentTarget.value, lastMessage);
-        sendMessage(key);
-      }}
-      className='bottom-0 absolute'
-      ref={xtermRef}
-    />
-  );
-};
-
 export function capitalize(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
@@ -226,7 +233,8 @@ export default function OsintPage() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge[]>(initialEdges);
-
+  console.log('nodes', nodes)
+  console.log('edges', edges)
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [nodeId, setNodeId] = useState<number>(0);
   let setViewport,
@@ -269,7 +277,7 @@ export default function OsintPage() {
   }
   // https://reactflow.dev/docs/examples/layout/dagre/
   const location = useLocation();
-  const activeCase = location.state.activeCase;
+  const activeCase = location?.state?.activeCase;
 
   const [showNodeOptions, setShowNodeOptions] = useState<boolean>(false);
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
@@ -281,10 +289,21 @@ export default function OsintPage() {
     TOGGLE_PALETTE: togglePalette,
   };
 
+  const onLayout = useCallback(
+    (direction) => {
+      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges, direction);
+      console.log('onLayout', nodes, edges, layoutedNodes, layoutedNodes);
+
+      setNodes([...layoutedNodes]);
+      setEdges([...layoutedEdges]);
+    },
+    [nodes, edges]
+  );
+
   return (
     <HotKeys keyMap={keyMap} handlers={handlers}>
       <div className='h-screen flex flex-col w-full'>
-        <BreadcrumbHeader activeProject={activeCase.name} />
+        <BreadcrumbHeader onLayout={onLayout} activeProject={activeCase?.name || 'Unknown'} />
         <div className='flex h-full'>
           <DnDFlow
             addNode={addNode}
@@ -308,9 +327,6 @@ export default function OsintPage() {
         />
       </div>
       <NodeOptions />
-      {/* <div className='bottom-0 relative h-96 w-96'> */}
-        {/* <Terminal /> */}
-      {/* </div> */}
       <ContextMenu
         menu={({ node }) => {
           let parentId = null;
@@ -362,6 +378,18 @@ export default function OsintPage() {
                   )}
                   {nodeType === 'email' && (
                     <EmailNodeContext
+                      parentId={parentId}
+                      node={node}
+                      nodeData={nodeData}
+                      nodeType={nodeType}
+                      addNode={addNode}
+                      addEdge={addEdge}
+                      getId={getId}
+                      reactFlowInstance={reactFlowInstance}
+                    />
+                  )}
+                     {nodeType === 'cse' && (
+                    <CseNodeContext
                       parentId={parentId}
                       node={node}
                       nodeData={nodeData}

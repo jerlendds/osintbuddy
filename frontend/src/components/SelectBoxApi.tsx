@@ -29,14 +29,14 @@ export default function SelectBoxApi({
     <Listbox value={selected} onChange={(option) => setSelected(option)}>
       {({ open }) => (
         <>
-          <Listbox.Label className='block text-sm font-medium text-gray-700'>{label}</Listbox.Label>
+          <Listbox.Label className='block text-sm font-medium text-slate-400'>{label}</Listbox.Label>
           <div className='relative mt-1'>
-            <Listbox.Button className='max-w-xs relative w-full cursor-default rounded-md border border-gray-50 bg-light-200 py-2.5 pl-3 pr-10 text-left shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:text-xs'>
+            <Listbox.Button className='max-w-xs relative w-full cursor-default rounded-md border border-slate-900 bg-dark-300 py-2.5 pl-3 pr-10 text-left shadow-lg focus:border-info-200 focus:outline-none sm:text-xs text-slate-400'>
               <span className='block truncate font-display'>{selected.name}</span>
               <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2'>
-              {loading && <RoundLoader className='text-dark-900' />}
+              {loading && <RoundLoader className='text-slate-400' />}
 
-                <ChevronUpDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
+                <ChevronUpDownIcon className='h-5 w-5 text-slate-400' aria-hidden='true' />
               </span>
             </Listbox.Button>
 
@@ -47,21 +47,21 @@ export default function SelectBoxApi({
               leaveFrom='opacity-100'
               leaveTo='opacity-0'
             >
-              <Listbox.Options className='w-full max-w-xs  absolute z-10 mt-1 max-h-60  overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-xs '>
+              <Listbox.Options className='w-full max-w-xs  absolute z-10 mt-1 max-h-60  overflow-auto rounded-md bg-dark-400 py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
                 {options.map((selectOption) => (
                   <Listbox.Option
                     key={selectOption.id}
                     className={({ active }) =>
                       classNames(
-                        active ? 'text-white bg-primary' : '',
-                        'relative cursor-default select-none py-2 pl-8 pr-4 '
+                        active ? ' bg-slate-900' : '',
+                        'relative cursor-default select-none py-2 pl-8 pr-4  text-slate-400'
                       )
                     }
                     value={selectOption}
                   >
                     {({ selected, active }) => (
                       <>
-                        <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'block truncate text-inherit font-display')}>
+                        <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'block truncate text-inherit font-display text-slate-400')}>
                           {selectOption.name}
                         </span>
 

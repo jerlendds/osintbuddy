@@ -26,10 +26,16 @@ reusable_oauth2 = OAuth2PasswordBearer(
 
 
 def get_driver() -> Generator:
+    """
+    Obtains a Selenium web driver instance that can be used to automate interactions with a Chrome web browser.
+    The driver is properly closed when it is no longer needed.
+    """
     try:
         options = webdriver.ChromeOptions()
+        # prevent issues that may arise when running Chrome in a Docker container
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
+
         driver: webdriver.Remote = webdriver.Remote(
             "http://selenium:4444/wd/hub",
             desired_capabilities=DesiredCapabilities.CHROME,

@@ -22,12 +22,12 @@ const searchOptions = [
     title: 'Find social accounts and more',
     event: 'email',
   },
-    {
+  {
     name: 'IP',
     title: 'Geolocate an IP and more',
     event: 'ip',
   },
-      {
+  {
     name: 'URL',
     title: 'A URL entity',
     event: 'url',
@@ -46,9 +46,9 @@ export default function NodeOptions() {
   };
 
   return (
-    <Disclosure as='div' className='absolute bg-dark-300 w-44 py-2 left-5 top-16 z-50'>
+    <Disclosure as='div' className='absolute border-dark-300 border bg-dark-600 w-44 py-2 left-5 top-16 z-50'>
       <Disclosure.Button className='text-xl items-center justify-between w-full flex px-4 '>
-        <span className='font-display text-slate-400 font-semibold'>Nodes</span>
+        <span className='font-display text-slate-400 font-semibold'>Entities</span>
         <PlusIcon className='w-4 h-4 text-slate-400' />
       </Disclosure.Button>
 

@@ -7,6 +7,7 @@ import { NodeContextProps } from '.';
 import api from '@/services/api.service';
 import { capitalize } from '../OsintPage';
 import { ReactECharts } from '@/components/ReactEcharts';
+import { handleStyle } from './styles';
 
 export function TracerouteNode({ flowData, deleteNode }: any) {
   const [data, setData] = useState(flowData.data);
@@ -58,7 +59,7 @@ export function TracerouteNode({ flowData, deleteNode }: any) {
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th className='font-display text-xs' {...column.getHeaderProps()}>
+                <th className='font-display text-slate-400 text-xs' {...column.getHeaderProps()}>
                   {column.render('Header')}
                 </th>
               ))}
@@ -72,7 +73,7 @@ export function TracerouteNode({ flowData, deleteNode }: any) {
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
                   return (
-                    <td className='font-display text-[0.75rem]' {...cell.getCellProps()}>
+                    <td className='font-display text-slate-400 text-[0.75rem]' {...cell.getCellProps()}>
                       {cell.render('Cell')}
                     </td>
                   );
@@ -87,20 +88,19 @@ export function TracerouteNode({ flowData, deleteNode }: any) {
   return (
     <>
       {/* <ReactECharts option={option} /> */}
-      <Handle position={Position.Right} id='r1' key='r1' type='source' />
-      <Handle position={Position.Top} id='t1' key='t1' type='source' />
-      <Handle position={Position.Bottom} id='b1' key='b1' type='source' />
-      <Handle position={Position.Left} id='l1' key='l1' type='target' />
-      <div className=' flex flex-col w-[58rem] max-w-4xl justify-between rounded-sm transition duration-150 ease-in-out hover:bg-light-200 bg-light-100'>
-        <div className='flex h-full w-full items-center justify-between rounded-t-sm bg-primary text-white py-2 px-1'>
+      <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
+      <Handle position={Position.Top} id='t1' key='t1' type='source' style={handleStyle} />
+      <Handle position={Position.Bottom} id='b1' key='b1' type='source' style={handleStyle} />
+      <Handle position={Position.Left} id='l1' key='l1' type='target' style={handleStyle} />
+      <div className='node container min-w-[58rem]'>
+        <div className='header bg-primary bg-opacity-60'>
           <GripIcon className='h-5 w-5' />
-          <div className='flex w-full flex-col px-2 font-semibold'>
-            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
-              {' '}
-              <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
+          <div className='text-container'>
+            <p>
+              <span>ID: </span>
               {flowData.id}
             </p>
-            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>Traceroute</p>
+            <p>Traceroute</p>
           </div>
           <IpIcon className='h-5 w-5 mr-2' />
         </div>
@@ -108,18 +108,18 @@ export function TracerouteNode({ flowData, deleteNode }: any) {
           <div className='md:flex-col md:flex w-full md:flex-1  md:justify-between '>
             <form onSubmit={(event) => handleSubmit(event)} className='flex items-start flex-col'>
               <>
-                <p className='text-xs ml-2 mb-3  font-semibold text-gray-400  whitespace-wrap font-display'>
+                <p className='text-xs ml-2 mb-3  font-semibold text-slate-400  whitespace-wrap font-display'>
                   Running traceroute for{' '}
-                  <span className='text-base font-semibold text-gray-400  whitespace-wrap font-display'>
-                    {data.meta.url}
+                  <span className='text-base font-semibold text-slate-400  whitespace-wrap font-display'>
+                    {data?.meta?.url || ''}
                   </span>
                 </p>
                 <div ref={chartRef}></div>
                 <Table
-                  columns={Object.keys(data.data[0]).map((columnName) => {
+                  columns={Object.keys(data?.data[0] || []).map((columnName) => {
                     return { Header: capitalize(columnName), accessor: columnName };
                   })}
-                  data={data.data}
+                  data={data?.data || ''}
                 />
                 {/* {data.data &&
                   data.data.map((hop: {
@@ -136,7 +136,7 @@ export function TracerouteNode({ flowData, deleteNode }: any) {
                   }) => {
                     return (
                       <>
-                        <p className='text-[0.5rem] ml-2 font-semibold text-gray-400  whitespace-wrap font-display'>
+                        <p className='text-[0.5rem] ml-2 font-semibold  text-slate-400  whitespace-wrap font-display'>
                           Testing
                         </p>{' '}
                         <div className='flex items-center mb-1'>

@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
 	"github.com/openinfolabs-org/serp-microservice/google"
 )
 
@@ -32,6 +33,6 @@ func googleSearch(c echo.Context) error {
 }
 
 func cseSearch(c echo.Context) error {
-	var crawlResults = google.GoogleCSEService(c.QueryParam("query"), c.QueryParam("pages"), c.QueryParam("urls"))
+	var crawlResults = google.GoogleCSEService(c.QueryParam("query"), c.QueryParam("pages"), c.QueryParam("id"))
 	return c.JSON(http.StatusOK, crawlResults)
 }
