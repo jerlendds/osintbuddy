@@ -144,7 +144,7 @@ export function TracerouteNode({ flowData, deleteNode }: any) {
                             <IpIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
 
                             <p
-                              data-type='domain'
+                              data-node='domain'
                               className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-40 bg-light-200 focus:bg-light-50'
                             >
                               {}

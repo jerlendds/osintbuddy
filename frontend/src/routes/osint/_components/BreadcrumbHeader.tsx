@@ -7,7 +7,7 @@ import {
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
-export default function BreadcrumbHeader({ activeProject, onLayout }: { activeProject: string; onLayout: any }) {
+export default function BreadcrumbHeader({ activeProject, onLayout, description  }: {  description?: string, activeProject: string; onLayout: any }) {
   const pages = [
     { name: 'Investigations', href: '#', current: false },
     { name: activeProject, href: '#', current: true },
@@ -21,13 +21,13 @@ export default function BreadcrumbHeader({ activeProject, onLayout }: { activePr
       <ol role='list' className='flex relative w-full space-x-4 px-4 sm:px-6 lg:px-4'>
         <li className='flex'>
           <div className='flex items-center'>
-            <Link to='/app/dashboard' replace className='text-slate-400 hover:text-slate-300'>
+            <Link title='View all investigations' to='/app/dashboard' replace className='text-slate-400 hover:text-slate-300'>
               <HomeIcon className='h-5 w-5 flex-shrink-0' aria-hidden='true' />
               <span className='sr-only'>Home</span>
             </Link>
           </div>
         </li>
-        {pages.map((page, idx) => (
+        {pages.map((page) => (
           <li key={page.name} className='flex'>
             <div
               className={classNames(
@@ -50,6 +50,7 @@ export default function BreadcrumbHeader({ activeProject, onLayout }: { activePr
                   'ml-4 text-sm font-medium text-inherit',
                   page.name === 'Investigations' && 'cursor-default'
                 )}
+                title={description && page.name !== 'Investigations' ? description : ''}
                 aria-current={page.current ? 'page' : undefined}
               >
                 {page.name}

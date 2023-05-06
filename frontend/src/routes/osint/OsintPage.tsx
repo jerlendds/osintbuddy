@@ -18,8 +18,10 @@ import ReactFlow, {
 import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { HotKeys } from 'react-hotkeys';
 import { useLocation } from 'react-router-dom';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 import 'reactflow/dist/style.css';
 import classNames from 'classnames';
+
 import BreadcrumbHeader from './_components/BreadcrumbHeader';
 import NodeOptions from './_components/NodeOptions';
 import CommandPallet from '@/routes/osint/_components/CommandPallet';
@@ -40,7 +42,9 @@ import UrlNodeContext, { UrlNode } from './_nodes/UrlNode';
 import { SmtpNode } from './_nodes/SmtpNode';
 import { UsernameNode, UsernameNodeContext } from './_nodes/UsernameNode';
 import { ProfileNode, ProfileNodeContext } from './_nodes/ProfileNode';
-import dagre from 'dagre';
+import { WS_URL } from '@/services/api.service';
+import { getLayoutedElements } from './utils';
+import SimpleNode from './SimpleNode';
 
 export var nodeId = 0;
 
@@ -53,39 +57,8 @@ const fitViewOptions: FitViewOptions = {
   padding: 50,
 };
 
-const getLayoutedElements = (nodes, edges, direction = 'LR') => {
-  const dagreGraph = new dagre.graphlib.Graph().setGraph({});
-  const isHorizontal = direction === 'LR';
-  dagreGraph.setGraph({ rankdir: direction });
 
-  nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, { width: node.width, height: node.height });
-  });
-
-  edges.forEach((edge) => {
-    dagreGraph.setEdge(edge.source, edge.target, { label: '' });
-  });
-  console.log('dagreGraph', dagreGraph);
-  dagre.layout(dagreGraph);
-
-  nodes.forEach((node, idx) => {
-    const nodeWithPosition = dagreGraph.node(node.id);
-    node.targetPosition = isHorizontal ? 'left' : 'top';
-    node.sourcePosition = isHorizontal ? 'right' : 'bottom';
-
-    // We are shifting the dagre node position (anchor=center center) to the top left
-    // so it matches the React Flow node anchor point (top left).
-    node.position = {
-      x: nodeWithPosition.x - node.width / 2,
-      y: nodeWithPosition.y - node.height / 2,
-    };
-    console.log('dagre node', node);
-    return node;
-  });
-
-  return { nodes, edges };
-};
-const DnDFlow = ({
+const InvestigationFlow = ({
   reactFlowWrapper,
   nodes,
   setNodes,
@@ -98,6 +71,7 @@ const DnDFlow = ({
   deleteNode,
   addNode,
   addEdge,
+  sendJsonMessage
 }) => {
   const onConnect = useCallback((connection) => setEdges((eds) => addEdge(connection, edges)), [setEdges]);
 
@@ -110,6 +84,7 @@ const DnDFlow = ({
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
   }, []);
+
 
   const onDrop = useCallback(
     (event) => {
@@ -130,6 +105,8 @@ const DnDFlow = ({
         position,
         data: {},
       };
+      sendJsonMessage({ action: 'create:node', node: newNode})
+
       setNodes((nds) => nds.concat(newNode));
     },
     [reactFlowInstance, nodeId]
@@ -143,7 +120,7 @@ const DnDFlow = ({
       email: (data) => <EmailNode flowData={data} />,
       subdomain: (data) => <SubdomainNode flowData={data} />,
       google: (data) => <GoogleNode flowData={data} />,
-      cse: (data) => <CseNode flowData={data} />,
+      cse: (data) => <CseNode flowData={data} sendJsonMessage={sendJsonMessage} />,
       smtp: (data) => <SmtpNode flowData={data} />,
       whois: (data) => <WhoisNode flowData={data} />,
       ip: (data) => <IpNode flowData={data} />,
@@ -153,6 +130,8 @@ const DnDFlow = ({
       urlscan: (data) => <UrlScanNode flowData={data} />,
       traceroute: (data) => <TracerouteNode flowData={data} />,
       username: (data) => <UsernameNode flowData={data} />,
+      simple: (data) => <SimpleNode flow={data} />,
+
     };
   }, []);
 
@@ -166,18 +145,8 @@ const DnDFlow = ({
   // console.log('size', size);
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      {/* <ReactFlowProvider> */}
       <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
         <ReactFlow
-          elements={[
-            {
-              id: '1',
-              type: 'input',
-              data: { label: 'input' },
-              position: { x: 0, y: 0 },
-            },
-          ]}
           minZoom={0.2}
           maxZoom={2.0}
           nodes={nodes}
@@ -193,13 +162,10 @@ const DnDFlow = ({
           fitViewOptions={fitViewOptions}
           nodeTypes={nodeTypes}
         >
-          {/* <NodeDebug /> */}
           <Background variant={BackgroundVariant.Lines} color='#0F172A' />
           <Controls />
         </ReactFlow>
       </div>
-      {/* </ReactFlowProvider> */}
-    </div>
   );
 };
 
@@ -233,8 +199,36 @@ export default function OsintPage() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge[]>(initialEdges);
-  console.log('nodes', nodes)
-  console.log('edges', edges)
+
+  const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/investigation`);
+  const [messageHistory, setMessageHistory] = useState([]);
+
+  const { sendMessage, lastMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl);
+
+  useEffect(() => {
+    if (lastMessage !== null) {
+      setMessageHistory((prev) => prev.concat(lastMessage));
+      console.log('lastMessage: ', lastMessage)
+    }
+  }, [lastMessage, setMessageHistory]);
+
+  const handleClickSendMessage = useCallback(() => sendJsonMessage({action: 'create', type: 'node'}), []);
+  const connectionStatus = {
+    [ReadyState.CONNECTING]: 'Connecting',
+    [ReadyState.OPEN]: 'Open',
+    [ReadyState.CLOSING]: 'Closing',
+    [ReadyState.CLOSED]: 'Closed',
+    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
+  }[readyState];
+
+
+  useEffect(() => {
+    console.log('connection status: ', connectionStatus)
+    if (connectionStatus === 'Closed') {
+      setSocketUrl(socketUrl)
+    }
+  }, [connectionStatus])
+ 
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [nodeId, setNodeId] = useState<number>(0);
   let setViewport,
@@ -292,7 +286,6 @@ export default function OsintPage() {
   const onLayout = useCallback(
     (direction) => {
       const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges, direction);
-      console.log('onLayout', nodes, edges, layoutedNodes, layoutedNodes);
 
       setNodes([...layoutedNodes]);
       setEdges([...layoutedEdges]);
@@ -300,13 +293,12 @@ export default function OsintPage() {
     [nodes, edges]
   );
 
-
   return (
     <HotKeys keyMap={keyMap} handlers={handlers}>
       <div className='h-screen flex flex-col w-full'>
-        <BreadcrumbHeader onLayout={onLayout} activeProject={activeCase?.name || 'Unknown'} />
+        <BreadcrumbHeader onLayout={onLayout} description={activeCase?.description} activeProject={activeCase?.name || 'Unknown'} />
         <div className='flex h-full'>
-          <DnDFlow
+          <InvestigationFlow
             addNode={addNode}
             deleteNode={deleteNode}
             addEdge={addEdge}
@@ -319,6 +311,7 @@ export default function OsintPage() {
             onEdgesChange={onEdgesChange}
             reactFlowInstance={reactFlowInstance}
             setReactFlowInstance={setReactFlowInstance}
+            sendJsonMessage={sendJsonMessage}
           />
         </div>
         <CommandPallet
@@ -336,11 +329,12 @@ export default function OsintPage() {
           let titleNodeType = null;
 
           if (node) {
-            nodeData = node?.querySelectorAll('[data-type]');
+            nodeData = [...node.querySelectorAll('[data-node]')].map((node) => node?.value ? node.value : node?.textContent);
             parentId = node.getAttribute('data-id');
             nodeType = node.classList[1].split('-');
             nodeType = nodeType[nodeType.length - 1];
             titleNodeType = nodeType && capitalize(nodeType);
+            console.log('node data: ', nodeData)
           }
           return (
             <>
@@ -389,7 +383,7 @@ export default function OsintPage() {
                       reactFlowInstance={reactFlowInstance}
                     />
                   )}
-                     {nodeType === 'cse' && (
+                  {nodeType === 'cse' && (
                     <CseNodeContext
                       parentId={parentId}
                       node={node}

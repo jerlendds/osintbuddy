@@ -34,7 +34,7 @@ export function UsernameNode({ flowData }: any) {
               <div className='flex items-center mb-1'>
                 <div className='node-field'>
                   <MagnifyingGlassIcon />
-                  <input type='text' data-type='query' value={usernameValue} placeholder='Mark Zuckerberg' />
+                  <input type='text' data-node='query' value={usernameValue} placeholder='Mark Zuckerberg' />
                 </div>
               </div>
             </form>

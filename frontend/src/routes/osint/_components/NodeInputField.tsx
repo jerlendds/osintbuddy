@@ -15,7 +15,7 @@ export default function NodeInputField({
       <div className='flex items-center mb-1'>
         <div className='node-field'>
           <input
-            data-type='query'
+            data-node='query'
             type='text'
             onChange={(event: ChangeEvent<HTMLInputElement>) => onValueUpdate(event)}
             value={value}

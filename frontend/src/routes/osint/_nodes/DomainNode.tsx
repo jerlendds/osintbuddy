@@ -48,13 +48,13 @@ export function DomainNode({ flowData }: any) {
                   <MagnifyingGlassIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     onChange={(event: any) => setDomainValue(event.target.value)}
                     value={domainValue}
                     placeholder='www.google.com'
                   />
-                  <input type='text' className='hidden' onChange={() => null} value={origin || ''} data-type='origin' />
-                  <input type='text' onChange={() => null} className='hidden' value={href || ''} data-type='href' />
+                  <input type='text' className='hidden' onChange={() => null} value={origin || ''} data-node='origin' />
+                  <input type='text' onChange={() => null} className='hidden' value={href || ''} data-node='href' />
                 </div>
               </div>
             </form>

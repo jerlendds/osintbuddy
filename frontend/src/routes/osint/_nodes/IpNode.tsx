@@ -46,7 +46,7 @@ export function IpNode({ flowData, deleteNode }: any) {
 
                     <input
                       type='text'
-                      data-type='domain'
+                      data-node='domain'
                       onChange={(event: any) => setIps(event.target.value)}
                       value={ips}
                     />

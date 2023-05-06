@@ -24,10 +24,10 @@ export function ResultNode({ flowData }: { flowData: any }) {
         <ul role='list' className='node-wrap'>
           <li>
             <div className='text-slate-400'>
-              <p data-type='title' className='hover:cursor-default text-lg text-inherit break-words text-slate-300'>
+              <p data-node='title' className='hover:cursor-default text-lg text-inherit break-words text-slate-300'>
                 {flowData.data && flowData.data.title && flowData.data.title}
               </p>
-              <p data-type='description' className='hover:cursor-default text-sm text-inherit max-w-xl break-words'>
+              <p data-node='description' className='hover:cursor-default text-sm text-inherit max-w-xl break-words'>
                 {flowData.data && flowData.data.description && flowData.data.description}
               </p>
               <div
@@ -39,7 +39,7 @@ export function ResultNode({ flowData }: { flowData: any }) {
               >
                 <p
                   title='Click to copy the URL'
-                  data-type='link'
+                  data-node='link'
                   className='text-sm text-inherit break-words text-info-200 max-w-xl'
                 >
                   {flowData.data && flowData.data.url && flowData.data.url}

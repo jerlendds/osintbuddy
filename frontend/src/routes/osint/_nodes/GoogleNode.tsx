@@ -43,7 +43,7 @@ export function GoogleNode({ flowData }: { flowData: any }) {
                 <div className='node-field'>
                   <MagnifyingGlassIcon />
                   <input
-                    data-type='query'
+                    data-node='query'
                     type='text'
                     onChange={(event: ChangeEvent<HTMLInputElement>) => onQueryUpdate(event)}
                     value={queryValue}
@@ -56,7 +56,7 @@ export function GoogleNode({ flowData }: { flowData: any }) {
                 <div className='node-field'>
                   <DocumentIcon />
                   <input
-                    data-type='pages'
+                    data-node='pages'
                     type='number'
                     onChange={(event: any) => setPagesValue(event.target.value)}
                     value={pagesValue}

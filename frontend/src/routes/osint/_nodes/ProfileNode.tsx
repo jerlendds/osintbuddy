@@ -22,10 +22,10 @@ export function ProfileNode({ flowData }: { flowData: any }) {
         <ul role='list' className='node-wrap'>
           <li className='col-span-full flex  w-full'>
             <div className='flex-1 flex flex-col text-slate-400 px-4 pb-2 text-sm'>
-              <p data-type='title' className='text-lg break-words'>
+              <p data-node='title' className='text-lg break-words'>
                 {flowData.data && flowData.data.category && flowData.data.category}
               </p>
-              <p data-type='description' className='text-sm  whitespace-wrap max-w-xl break-words'>
+              <p data-node='description' className='text-sm  whitespace-wrap max-w-xl break-words'>
                 {flowData.data && flowData.data.site && flowData.data.site}
               </p>
               <div
@@ -35,7 +35,7 @@ export function ProfileNode({ flowData }: { flowData: any }) {
                 }}
                 className='flex items-center'
               >
-                <p data-type='link' className='text-sm break-words text-info-200 max-w-xl whitespace-wrap'>
+                <p data-node='link' className='text-sm break-words text-info-200 max-w-xl whitespace-wrap'>
                   {flowData.data && flowData.data.link && flowData.data.link}
                 </p>
                 <PaperClipIcon className='w-5 h-5 text-info-200 mx-1' />

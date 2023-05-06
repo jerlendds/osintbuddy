@@ -76,6 +76,7 @@
     ]
   },
   "devDependencies": {
+    "@types/dagre": "^0.7.48",
     "@types/react-simple-maps": "^3.0.0",
     "@types/react-table": "^7.7.12",
     "autoprefixer": "^10.4.13",

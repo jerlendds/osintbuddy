@@ -35,7 +35,7 @@ export function EmailNode({ flowData }: any) {
               <div className='flex items-center mb-1'>
                 <div className='node-field'>
                   <MagnifyingGlassIcon />
-                  <input type='text' data-type='domain' value={emailValue} placeholder='example@gmail.com' />
+                  <input type='text' data-node='domain' value={emailValue} placeholder='example@gmail.com' />
                 </div>
               </div>
             </form>

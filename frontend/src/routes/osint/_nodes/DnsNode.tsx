@@ -43,7 +43,7 @@ export function DnsNode({ flowData }: any) {
                               <IpIcon />
                               <input
                                 type='text'
-                                data-type='domain'
+                                data-node='domain'
                                 onChange={(event: any) => setDnsData(event.target.value)}
                                 value={dnsRecord}
                               />

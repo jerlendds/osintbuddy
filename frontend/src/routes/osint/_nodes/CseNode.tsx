@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, ChangeEvent } from 'react';
 import { GripIcon, IpIcon } from '@/components/Icons';
 import api from '@/services/api.service';
 import { ChevronUpDownIcon, ListBulletIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import { Handle, Position } from 'reactflow';
 import { handleStyle } from './styles';
 
-export function CseNode({ flowData }: any) {
+export function CseNode({ flowData, sendJsonMessage }: any) {
   const isMounted = useRef(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [query, setQuery] = useState('');
@@ -20,7 +20,7 @@ export function CseNode({ flowData }: any) {
 
   const getCseLinks = useCallback(() => {
     api
-      .get('/cses/links')
+      .get('/ghdb/cses')
       .then((resp) => {
         setCseData(resp.data);
       })
@@ -41,7 +41,10 @@ export function CseNode({ flowData }: any) {
       getCseLinks();
     }
   }, [isMounted]);
-
+  const updateInputField = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+    sendJsonMessage({action: 'update:node', node: { id: flowData.id, type: flowData.type, searchQuery: event.target.value }})
+  };
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
@@ -74,11 +77,7 @@ export function CseNode({ flowData }: any) {
                       <div className='flex items-center mb-1 mr-4'>
                         <div className='node-field'>
                           <MagnifyingGlassIcon />
-                          <input
-                            type='text'
-                            data-type='query'
-                            onChange={(event: any) => setSearchQuery(event.target.value)}
-                          />
+                          <input type='text' data-node='query' onChange={(event: any) => updateInputField(event)} />
                         </div>
                       </div>
                     </div>
@@ -89,7 +88,7 @@ export function CseNode({ flowData }: any) {
                           <MagnifyingGlassIcon />
                           <input
                             type='number'
-                            data-type='pages'
+                            data-node='pages'
                             defaultValue={1}
                             onChange={(event: any) => setPages(event.target.value)}
                           />
@@ -107,7 +106,7 @@ export function CseNode({ flowData }: any) {
                       <Combobox.Input
                         className='node-field pl-2 text-slate-200'
                         onChange={(event) => setQuery(event.target.value)}
-                        displayValue={(person: any) => person?.title}
+                        displayValue={(cse: any) => cse?.title}
                       />
                       <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
                         <ChevronUpDownIcon className='h-5 w-5 text-slate-400' aria-hidden='true' />
@@ -115,12 +114,12 @@ export function CseNode({ flowData }: any) {
 
                       {filteredCseOptions.length > 0 && (
                         <Combobox.Options className='absolute z-10 mt-1 max-h-80 w-full overflow-auto rounded-b-md bg-dark-400 py-1 text-base shadow-lg ring-1 ring-gray-200 ring-opacity-5 focus:outline-none sm:text-sm'>
-                          {filteredCseOptions.map((cseOption: any) => (
+                          {filteredCseOptions.map((cse: any) => (
                             <>
                               <Combobox.Option
                                 // @ts-ignore
-                                key={cseOption.url}
-                                value={cseOption}
+                                key={cse.url}
+                                value={cse}
                                 className={({ active }) =>
                                   classNames(
                                     'relative cursor-default select-none py-2 pl-3 pr-9 ',
@@ -130,12 +129,12 @@ export function CseNode({ flowData }: any) {
                               >
                                 {({ active, selected }) => (
                                   <>
-                                    {cseOption.description !== cseOption.title && (
+                                    {cse.description !== cse.title && (
                                       <span
-                                        title={cseOption.description || 'No description found'}
+                                        title={cse.description || 'No description found'}
                                         className={classNames('block  truncate  pl-3')}
                                       >
-                                        {cseOption.title}
+                                        {cse.title}
                                       </span>
                                     )}
                                   </>
@@ -149,12 +148,11 @@ export function CseNode({ flowData }: any) {
                   </Combobox>
                 </>
               </>
-
               <input
                 type='text'
-                data-type='cse'
+                data-node='cse'
                 onChange={() => null}
-                value={JSON.stringify(activeOption)}
+                value={activeOption?.url}
                 className='hidden invisible'
               />
             </form>
