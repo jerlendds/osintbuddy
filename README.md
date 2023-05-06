@@ -76,7 +76,6 @@ To get a local copy up and running follow these simple steps.
    ```
 
 4. Start the frontend:
-
    ```sh
    cd ../frontend
    yarn && yarn start

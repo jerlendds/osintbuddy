@@ -1,16 +1,11 @@
-import MarkdownPreview from '@uiw/react-markdown-preview';
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
-import Highlight, { defaultProps } from 'prism-react-renderer';
-import { HeroBackground, TrafficLightsIcon, WebsiteIcon } from '@/components/Icons';
+import React, { useState } from 'react';
+import { HeroBackground } from '@/components/Icons';
 import blurCyanImage from '@images/blur-cyan.png';
 import blurIndigoImage from '@images/blur-indigo.png';
-import classNames from 'classnames';
 import { Link } from 'react-router-dom';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import Markdoc from '@markdoc/markdoc';
 import tags from './markdoc/tags';
 import nodes from './markdoc/nodes';
-import { QuickLink, QuickLinks } from './_components/QuickLinks';
 
 export default function LandingPage(): React.ReactElement {
   const [text, setText] = useState(`
@@ -45,7 +40,7 @@ Click the get started button above to login to your system.
                 </p>
                 <div className='mt-8 flex gap-4 md:justify-center lg:justify-start'>
                   <Link
-                    to='/sign-in'
+                    to='/app/dashboard'
                     replace
                     className='rounded-full bg-sky-300 py-2 px-4 text-sm font-semibold text-slate-900 hover:bg-sky-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300/50 active:bg-sky-500'
                   >

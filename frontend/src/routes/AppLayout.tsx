@@ -1,32 +1,20 @@
-import { Link, Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 
-import { Fragment, useState } from 'react';
-import { Dialog, Menu, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
 import {
-  ArrowRightOnRectangleIcon,
-  Bars3BottomLeftIcon,
-  BellIcon,
-  BookmarkIcon,
-  CalendarIcon,
-  ChartBarIcon,
   CogIcon,
-  FolderIcon,
-  HomeIcon,
-  InboxIcon,
-  UsersIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import { MagnifyingGlassIcon, ViewfinderCircleIcon } from '@heroicons/react/20/solid';
+import {  ViewfinderCircleIcon } from '@heroicons/react/20/solid';
 import classNames from 'classnames';
 import OSINTBuddyLogo from '@images/logo.svg';
 import HamburgerMenu from '@/components/HamburgerMenu';
-import { GoogleIcon, ShellIcon } from '@/components/Icons';
+import { GoogleIcon } from '@/components/Icons';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ContextMenu from './osint/_components/ContextMenu';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { closeSidebar, isSidebarOpen, setSidebar } from '@/features/settings/settingsSlice';
-import { logout, selectAuthenticated } from '@/features/auth/authSlice';
+import { isSidebarOpen, setSidebar } from '@/features/settings/settingsSlice';
 
 const navigation = [
   { name: 'Investigations', to: '/app/dashboard', icon: ViewfinderCircleIcon },
@@ -38,13 +26,10 @@ export default function AppLayout() {
   const location = useLocation();
   const dispatch = useAppDispatch();
   const showSidebar: boolean = useAppSelector((state) => isSidebarOpen(state));
-  const isAuthenticated: boolean = useAppSelector((state) => selectAuthenticated(state));
 
   const toggleSidebar = () => {
     dispatch(setSidebar(!showSidebar));
   };
-
-  if (!isAuthenticated) return <Navigate to='/sign-in' replace />
 
   return (
     <>
@@ -204,28 +189,6 @@ export default function AppLayout() {
                   />
                   Settings
                 </NavLink>
-
-                <button
-                onClick={() => {
-                  localStorage.clear()
-                  dispatch(logout())
-                }}
-                  className={classNames(
-                    'text-slate-400 duration-100 relative hover:text-light-400 ',
-                    'group w-full flex items-center px-2 mx-2 my-1 py-2 text-base font-sans font-medium rounded-md',
-                    !showSidebar && 'mx-0'
-                  )}
-                >
-                  <ArrowRightOnRectangleIcon
-                    className={classNames(
-                      'transition-all text-slate-400 group-hover:text-slate-300',
-                      'mr-3 flex-shrink-0 h-6 w-6 duration-100',
-                      showSidebar ? 'translate-x-0' : 'translate-x-[13.16rem]'
-                    )}
-                    aria-hidden='true'
-                  />
-                  Logout
-                </button>
               </nav>
             </div>
           </div>

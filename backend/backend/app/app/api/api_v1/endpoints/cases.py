@@ -8,7 +8,6 @@ router = APIRouter(prefix='/cases')
 
 @router.get('')
 def get_cases(
-    current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
@@ -20,7 +19,6 @@ def get_cases(
         db=db,
         skip=skip,
         limit=limit,
-        owner_id=current_user.id
     )
     obj_out = []
     for case in cases:
@@ -32,13 +30,12 @@ def get_cases(
 @router.post('')
 def create_case(
     name: str,
-    current_user: models.User = Depends(deps.get_current_active_user),
+    
     db: Session = Depends(deps.get_db),
     description: str = "",
 ):
     obj_in = schemas.CasesCreate(
         name=name,
         description=description,
-        owner_id=current_user.id
     )
     return crud.cases.create(db=db, obj_in=obj_in)

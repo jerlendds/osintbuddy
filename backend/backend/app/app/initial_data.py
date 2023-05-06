@@ -1,5 +1,4 @@
 import logging
-from tkinter import E
 
 from app.db.init_db import init_db
 from app.db.session import SessionLocal

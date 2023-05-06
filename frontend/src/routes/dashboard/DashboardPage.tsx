@@ -10,6 +10,7 @@ import { format as formatDate } from 'date-fns';
 
 import { Formik, Form, Field } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
+import { api } from '@/services';
 
 interface MyFormValues {
   name: string;
@@ -360,6 +361,11 @@ export default function DashboardPage() {
     ],
     []
   );
+
+  api.get('/nodes/').then(resp => {
+    console.log('WTF', resp)
+  })
+
   return (
     <>
       <div className='relative mx-auto flex w-full justify-center sm:px-2 lg:px-4 '>

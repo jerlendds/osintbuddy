@@ -300,6 +300,7 @@ export default function OsintPage() {
     [nodes, edges]
   );
 
+
   return (
     <HotKeys keyMap={keyMap} handlers={handlers}>
       <div className='h-screen flex flex-col w-full'>

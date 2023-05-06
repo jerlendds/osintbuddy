@@ -1,11 +1,7 @@
 import re
-import time
 import urllib
 from typing import List
 from pydantic import EmailStr
-import requests
-from fastapi import HTTPException
-from neo4j._sync import work
 from app.core.logger import get_logger
 
 
@@ -25,7 +21,7 @@ def find_emails(value: str) -> List[EmailStr]:
     return list(set(emails))
 
 
-def to_clean_domain(value: str):
+def to_clean_domain(value: str) -> str:
     if "http://" not in value and "https://" not in value: 
         value = "https://" + value
     url = urllib.parse.urlparse(value)

@@ -9,7 +9,6 @@ from pydantic import BaseModel
 class CasesBase(BaseModel):
     name: str
     description: str
-    owner_id: int
 
 
 # Properties to receive via API on creation
@@ -50,7 +49,6 @@ class CasesListInDB(CasesInDB):
 class GoogleSearchBase(BaseModel):
     name: str
     description: str
-    owner_id: int
 
 
 # Properties to receive via API on creation

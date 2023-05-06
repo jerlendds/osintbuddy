@@ -1,15 +1,12 @@
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
-from sqladmin import Admin
 from fastapi_cache import caches, close_caches
 from fastapi_cache.backends.redis import CACHE_KEY, RedisCacheBackend
 
 
-from app.db.session import engine
 from app.api.api_v1.api import api_router
 from app.core.config import settings
-from app.admin import AdminBackend, UserAdmin
 
 
 def redis_cache():
@@ -48,17 +45,18 @@ def app_openapi_schema(app):
         version=settings.API_V1_STR,
         description=settings.PROJECT_DESCRIPTION,
         routes=app.routes,
+        
     )
-    # @todo ...
-    # openapi_schema["info"]["x-logo"] = {
-    # "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
-    # }
+    # @todo upload a .png
+    openapi_schema["info"]["x-logo"] = {
+        "url": "https://raw.githubusercontent.com/jerlendds/osintbuddy/main/docs/assets/logo-watermark.svg"
+    }
     return openapi_schema
 
 
 @app.on_event('startup')
 async def on_startup() -> None:
-    if settings.PROD_ENV:
+    if settings.ENVIRONMENT == 'development':
         rc = RedisCacheBackend(settings.REDIS_URL)
         caches.set(CACHE_KEY, rc)
 
@@ -66,14 +64,7 @@ async def on_startup() -> None:
 @app.on_event('shutdown')
 async def on_shutdown() -> None:
     await close_caches()
+
+
 app.include_router(api_router, prefix=settings.API_V1_STR)
 app.openapi_schema = app_openapi_schema(app)
-
-
-ADMIN_MODELS = [UserAdmin]
-
-admin = Admin(app, engine, authentication_backend=AdminBackend(
-    secret_key=settings.ADMIN_BACKEND_SECRET_KEY
-))
-for model in ADMIN_MODELS:
-    admin.register_model(model)

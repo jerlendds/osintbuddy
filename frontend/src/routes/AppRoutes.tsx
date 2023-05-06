@@ -5,8 +5,6 @@ import AppLayout from './AppLayout';
 import NotFound from './NotFound';
 import AboutPage from '@routes/public/AboutPage';
 import LandingPage from '@routes/public/LandingPage';
-import SigninPage from '@routes/public/SigninPage';
-import SignupPage from '@routes/public/SignupPage';
 import PublicLayout from './PublicLayout';
 import GoogleDorksPage from './googleDorks/GoogleDorksPage';
 import OSINTPage from './osint/OsintPage';
@@ -14,12 +12,10 @@ import SettingsPage from './settings/SettingsPage';
 
 export default function AppRoutes(): React.ReactElement {
   return (
-    <Routes>
+  <Routes>
       <Route path='/' element={<PublicLayout />}>
         <Route index element={<LandingPage />} />
         <Route path='about' element={<AboutPage />} />
-        <Route path='sign-in' element={<SigninPage />} />
-        <Route path='sign-up' element={<SignupPage />} />
       </Route>
       <Route path='/app' element={<AppLayout />}>
         <Route path='dashboard' element={<DashboardPage />} />
