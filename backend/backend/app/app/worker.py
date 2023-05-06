@@ -5,11 +5,7 @@ from app.core.config import settings
 from app.core.logger import get_logger
 
 
-logger = get_logger(
-    name="titan",
-    is_celery=True,
-    is_sentry=bool(settings.SENTRY_DSN)
-)
+logger = get_logger(name="titan")
 
 
 @app.task(acks_late=True)

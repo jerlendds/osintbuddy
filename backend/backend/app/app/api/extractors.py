@@ -5,17 +5,14 @@ from pydantic import EmailStr
 import requests
 from neo4j._sync import work
 from app.core.logger import get_logger
-from app.neomodels.google import (
-    GoogleSearch,
-    GoogleResult,
-    get_google_search_results,
-    get_google_search_cache_results
-)
 from app.api.utils import find_emails, to_clean_domain
 from selenium.webdriver.common.by import By
 
 
 logger = get_logger(name=" app.api.extractors ")
+
+def get_google_search_results(tx):
+    pass
 
 
 def get_google_results(
@@ -152,7 +149,7 @@ def get_google_cache_results(
                 result_stats = result_stats + res
             if related := stat.get('related'):
                 related_searches = related_searches + related
-
+    
     search_node = GoogleSearch(
         search_query=query,
         pages=pages,

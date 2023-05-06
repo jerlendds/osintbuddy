@@ -7,14 +7,12 @@ from sqlalchemy.orm import Session
 from app.crud.base import get_or_create
 from app import crud, schemas, models
 from app.api import deps
-from app.neomodels.google import GoogleResult, GoogleSearch
 
 router = APIRouter(prefix='/ghdb')
 
 
 @router.get('/author')
 def get_author(
-    current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
     id: int = 0
 ):
@@ -23,7 +21,6 @@ def get_author(
 
 @router.get('/category')
 def get_category(
-    current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
     id: int = 0
 ):
@@ -32,7 +29,6 @@ def get_category(
 
 @router.get('/authors')
 def get_authors(
-    current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 0
@@ -44,16 +40,13 @@ def get_authors(
 
 @router.get('/categories', response_model=List[schemas.DorkCategoriesInDBBase])
 def get_categories(
-    current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
-
 ):
     return crud.dork_categories.get_multi(db=db, skip=0, limit=50)
 
 
 @router.get('/dorks/count')
 def get_dorks_count(
-    current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
 ):
     return {
@@ -65,7 +58,6 @@ def get_dorks_count(
 
 @router.get('/dorks')
 def get_dorks(
-    current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 0,
@@ -98,7 +90,6 @@ def get_dorks(
 
 @router.post("/update")
 def update_ghdb_data(
-    current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
 ) -> Any:
     import requests

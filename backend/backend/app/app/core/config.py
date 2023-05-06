@@ -5,7 +5,6 @@ from typing import Any, Dict, List, Optional, Union
 from pydantic import (
     AnyHttpUrl,
     BaseSettings,
-    EmailStr,
     HttpUrl,
     PostgresDsn,
     validator
@@ -60,50 +59,11 @@ class Settings(BaseSettings):
             path=f"/{values.get('POSTGRES_DB') or ''}",
         )
 
-    SMTP_TLS: bool = True
-    SMTP_PORT: Optional[int] = None
-    SMTP_HOST: Optional[str] = None
-    SMTP_USER: Optional[str] = None
-    SMTP_PASSWORD: Optional[str] = None
-    EMAILS_FROM_EMAIL: Optional[EmailStr] = None
-    EMAILS_FROM_NAME: Optional[str] = None
     ENVIRONMENT: str = 'development'
-
-    @validator('PROD_ENV', pre=True)
-    def validate_environment(cls, value):
-        prod_env = 'production'
-        current_env = os.environ.get('MODE', prod_env)
-        if current_env == prod_env:
-            return True
-        return False
-
-    PROD_ENV: bool = True
-    EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
-    EMAIL_TEMPLATES_DIR: str = "/app/app/email-templates/build"
-    EMAILS_ENABLED: bool = False
-
-    @validator("EMAILS_ENABLED", pre=True)
-    def get_emails_enabled(cls, v: bool, values: Dict[str, Any]) -> bool:
-        return bool(
-            values.get("SMTP_HOST")
-            and values.get("SMTP_PORT")
-            and values.get("EMAILS_FROM_EMAIL")
-        )
 
     REDIS_URL: Optional[str] = "redis://queue:6379"
     REDIS_BROKER_URL: Optional[str] = "redis://queue:6379/1"
     REDIS_ENABLE_UTC: bool = True
-
-    EMAIL_TEST_USER: EmailStr = "admin@osintbuddy.com"
-    FIRST_SUPERUSER: EmailStr
-    FIRST_SUPERUSER_FULLNAME: str
-    FIRST_SUPERUSER_PASSWORD: str
-    USERS_OPEN_REGISTRATION: bool = False
-    BASE_URI: str = (
-        f'postgresql://{os.getenv("POSTGRES_USER")}'
-        f':{os.getenv("POSTGRES_PASSWORD")}'
-        f'@{os.getenv("POSTGRES_SERVER")}'
-    )
 
     NEO4J_URI: str
     NEO4J_USER: str
@@ -119,4 +79,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-

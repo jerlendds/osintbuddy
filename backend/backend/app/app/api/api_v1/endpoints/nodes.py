@@ -7,41 +7,60 @@ from sqlalchemy.orm import Session
 from app import crud, schemas, models
 from app.api import deps
 
-router = APIRouter(prefix='/cses')
+router = APIRouter(prefix='/nodes')
+
+CORE_LABELS = [
+    'GoogleSearch',
+    'GoogleCacheSearch',
+    'GoogleResult',
+    'CseSearch',
+    'CseResult',
+    'IpAddress',
+    'Email',
+    'SmtpTest',
+    'Domain',
+    'Subdomain',
+    'URL',
+    'urlscanIO',
+    'Traceroute',
+    'Geolocation',
+    'DNSRecord',
+    'Username',
+    'Profile',
+    'Person',
+    'Pastebin',
+    'Phone',
+    'Telegram',
+    'Business',
+    'ImageSearch',
+    'Image',
+    'VideoSearch',
+    'Video',
+    'News',
+    'RSS',
+    'MalwareCheck',
+    'Malware',
+    'NLP',
+]
 
 
-@router.get('/create-node')
-def create_node(
-    current_user: models.User = Depends(deps.get_current_active_user),
-    db: Session = Depends(deps.get_db),
-    gdb: Session = Depends(deps.get_gdb),
-    id: int = 0
-):
+def get_graph_labels(tx):
+    return [label for sub_list in tx.run("CALL db.labels()").values() for label in sub_list]
+
+
+def create_graph_labels(tx, labels):
     pass
 
-@router.get('/delete-node')
-def delete_node(
-    current_user: models.User = Depends(deps.get_current_active_user),
-    db: Session = Depends(deps.get_db),
-    gdb: Session = Depends(deps.get_gdb),
-    id: int = 0
-):
-    pass
 
-@router.get('/read-node')
-def read_node(
-    current_user: models.User = Depends(deps.get_current_active_user),
-    db: Session = Depends(deps.get_db),
+@router.get('/')
+def get_node_options(
     gdb: Session = Depends(deps.get_gdb),
-    id: int = 0
 ):
-    pass
-
-@router.get('/update-node')
-def update_node(
-    current_user: models.User = Depends(deps.get_current_active_user),
-    db: Session = Depends(deps.get_db),
-    gdb: Session = Depends(deps.get_gdb),
-    id: int = 0
-):
-    pass
+    data = []
+    try:
+        data = gdb.execute_read(get_graph_labels)
+        if len(data) == 0:
+            gdb.execute_write(create_graph_labels)
+    except Exception:
+        raise HTTPException(code=508, detail='unknownError')
+    return data

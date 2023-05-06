@@ -8,9 +8,6 @@ class Cases(Base):
     name = Column(String, nullable=False)
     description = Column(String, nullable=True)
 
-    owner_id = Column(Integer, ForeignKey("user.id"))
-    owner = relationship("User", back_populates="cases")
-
     updated = Column(DateTime, nullable=True)
     created = Column(DateTime, server_default=func.now())
 
