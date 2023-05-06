@@ -62,5 +62,5 @@ def get_node_options(
         if len(data) == 0:
             gdb.execute_write(create_graph_labels)
     except Exception:
-        raise HTTPException(code=508, detail='unknownError')
+        raise HTTPException(status_code=508, detail='unknownError')
     return data
