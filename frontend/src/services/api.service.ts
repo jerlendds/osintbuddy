@@ -3,6 +3,8 @@ import axios from 'axios';
 export const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://osintbuddy.com';
 export const API_PREFIX = '/api/v1';
 
+export const WS_URL = 'localhost:5000' + API_PREFIX
+
 export const LS_USER_AUTH_KEY = 'user-data';
 
 const api = axios.create({

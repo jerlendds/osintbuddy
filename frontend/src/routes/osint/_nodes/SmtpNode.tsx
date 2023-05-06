@@ -36,7 +36,7 @@ export function SmtpNode({ flowData }: any) {
                 return (
                   <div className='flex items-center'>
                       <p
-                        data-type='domain'
+                        data-node='domain'
                         className='text-xs pl-4 w-64 focus:bg-light-50 break-words text-slate-400'
                         placeholder=''
                       >{line}</p>

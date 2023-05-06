@@ -37,7 +37,7 @@ export function GeoNode({ flowData }: any) {
                   <MapPinIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={geoData && geoData.city && geoData.city}
                     
                     placeholder='example@gmail.com'
@@ -52,7 +52,7 @@ export function GeoNode({ flowData }: any) {
                   <MapIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={geoData && geoData.coordinates && geoData.coordinates}
                     
                     placeholder='example@gmail.com'
@@ -65,7 +65,7 @@ export function GeoNode({ flowData }: any) {
                   <MapIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={geoData && geoData.country && geoData.country}
                     
                     placeholder='example@gmail.com'
@@ -78,7 +78,7 @@ export function GeoNode({ flowData }: any) {
                   <MapPinIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={geoData && geoData.postal && geoData.postal}
                     
                     placeholder='example@gmail.com'
@@ -91,7 +91,7 @@ export function GeoNode({ flowData }: any) {
                   <MapIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={geoData && geoData.state && geoData.state}
                     
                     placeholder='example@gmail.com'
@@ -104,7 +104,7 @@ export function GeoNode({ flowData }: any) {
                   <ClockIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={geoData && geoData.timezone && geoData.timezone}
                     
                     placeholder='example@gmail.com'
@@ -121,7 +121,7 @@ export function GeoNode({ flowData }: any) {
                   <MapPinIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={summaryData && summaryData.asn && summaryData.asn}
                     
                     placeholder='example@gmail.com'
@@ -134,7 +134,7 @@ export function GeoNode({ flowData }: any) {
                   <MapIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={summaryData && summaryData.hostname && summaryData.hostname}
                     
                     placeholder='example@gmail.com'
@@ -147,7 +147,7 @@ export function GeoNode({ flowData }: any) {
                   <MapIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={summaryData && summaryData.range && summaryData.range}
                     
                     placeholder='example@gmail.com'
@@ -160,7 +160,7 @@ export function GeoNode({ flowData }: any) {
                   <MapPinIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={summaryData && summaryData.company && summaryData.company}
                     
                     placeholder='example@gmail.com'
@@ -175,7 +175,7 @@ export function GeoNode({ flowData }: any) {
                   <MapIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={summaryData && summaryData.hostedDomains && summaryData.hostedDomains}
                     
                     placeholder='example@gmail.com'
@@ -188,7 +188,7 @@ export function GeoNode({ flowData }: any) {
                   <ClockIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={summaryData && summaryData.privacy && summaryData.privacy}
                     
                     placeholder='example@gmail.com'
@@ -201,7 +201,7 @@ export function GeoNode({ flowData }: any) {
                   <ClockIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={summaryData && summaryData.anycast && summaryData.anycast}
                     
                     placeholder='example@gmail.com'
@@ -214,7 +214,7 @@ export function GeoNode({ flowData }: any) {
                   <ClockIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={summaryData && summaryData.asnType && summaryData.asnType}
                     
                     placeholder='example@gmail.com'
@@ -229,7 +229,7 @@ export function GeoNode({ flowData }: any) {
                   <ClockIcon />
                   <input
                     type='text'
-                    data-type='domain'
+                    data-node='domain'
                     value={summaryData && summaryData.abuseContact && summaryData.abuseContact}
                     
                     placeholder='example@gmail.com'

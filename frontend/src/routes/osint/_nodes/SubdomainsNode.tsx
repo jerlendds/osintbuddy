@@ -69,7 +69,7 @@ export function SubdomainNode({ flowData }: any) {
                   <div className='flex items-center mb-1'>
                     <div className='node-field'>
                       <WebsiteIcon />
-                      <input type='text' data-type='domain' value={subdomain} />
+                      <input type='text' data-node='domain' value={subdomain} />
                     </div>
                   </div>
                 ))}
@@ -78,14 +78,14 @@ export function SubdomainNode({ flowData }: any) {
                 className='hidden'
                 onChange={() => null}
                 value={flowData.data && flowData.data.id}
-                data-type='origin'
+                data-node='origin'
               />
               <input
                 type='text'
                 onChange={() => null}
                 className='hidden'
                 value={flowData.data && flowData.data.status}
-                data-type='href'
+                data-node='href'
               />
             </form>
           </div>

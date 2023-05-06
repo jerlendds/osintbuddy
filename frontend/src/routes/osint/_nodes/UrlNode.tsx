@@ -55,7 +55,7 @@ export function UrlNode({ flowData, deleteNode }: any) {
                         <LinkIcon className='h-3.5 w-3.5 pl-0.5 absolute top-1 text-gray-50 z-50' />
                         <input
                           type='text'
-                          data-type='url'
+                          data-node='url'
                           value={url}
                           onChange={(e) => setUrl(e.currentTarget.value)}
                           className='placeholder:text-gray-50 rounded-2xl  focus:outline-none pl-4 w-96 bg-light-200 focus:bg-light-50'
@@ -65,9 +65,9 @@ export function UrlNode({ flowData, deleteNode }: any) {
                     </div>
                   </form>
                 </div>
-                <input data-type='origin' readOnly value={urlObj?.origin || ''} className='hidden' />
-                <input data-type='href' readOnly value={urlObj?.href || ''} className='hidden' />
-                <input value={urlObj?.host || ''} data-type='host' readOnly className='hidden' />
+                <input data-node='origin' readOnly value={urlObj?.origin || ''} className='hidden' />
+                <input data-node='href' readOnly value={urlObj?.href || ''} className='hidden' />
+                <input value={urlObj?.host || ''} data-node='host' readOnly className='hidden' />
               </>
             </form>
           </div>

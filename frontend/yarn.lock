@@ -2476,6 +2476,11 @@
     "@types/d3-transition" "*"
     "@types/d3-zoom" "*"
 
+"@types/dagre@^0.7.48":
+  version "0.7.48"
+  resolved "https://registry.yarnpkg.com/@types/dagre/-/dagre-0.7.48.tgz#e3ff1962df959c22af44d58d4275d35bd9309043"
+  integrity sha512-rF3yXSwHIrDxEkN6edCE4TXknb5YSEpiXfLaspw1I08grC49ZFuAVGOQCmZGIuLUGoFgcqGlUFBL/XrpgYpQgw==
+
 "@types/debug@^4.0.0":
   version "4.1.7"
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-4.1.7.tgz#7cc0ea761509124709b8b2d1090d8f6c17aadb82"

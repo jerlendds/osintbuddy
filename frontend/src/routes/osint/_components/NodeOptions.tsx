@@ -37,10 +37,16 @@ const searchOptions = [
     title: 'Find accounts by username',
     event: 'username',
   },
+    {
+    name: 'Simple',
+    title: 'Find accounts by username',
+    event: 'simple',
+  },
 ];
 
 export default function NodeOptions() {
   const onDragStart = (event: any, nodeType: any) => {
+    console.log('node type: ', nodeType)
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
   };
