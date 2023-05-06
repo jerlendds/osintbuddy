@@ -1,10 +1,5 @@
-from typing import Any, List
-from datetime import datetime
-import urllib.parse
-import requests
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app import crud, schemas, models
 from app.api import deps
 
 router = APIRouter(prefix='/nodes')
@@ -45,7 +40,8 @@ CORE_LABELS = [
 
 
 def get_graph_labels(tx):
-    return [label for sub_list in tx.run("CALL db.labels()").values() for label in sub_list]
+    return [label for sub_list in tx.run("CALL db.labels()").values()
+            for label in sub_list]
 
 
 def create_graph_labels(tx, labels):

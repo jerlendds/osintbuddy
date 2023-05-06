@@ -1,8 +1,6 @@
 from typing import Any, List
 from datetime import datetime
-import urllib.parse
-import requests
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.crud.base import get_or_create
 from app import crud, schemas, models

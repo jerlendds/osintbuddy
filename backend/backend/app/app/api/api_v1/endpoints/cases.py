@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app import crud, schemas, models
+from app import crud, schemas
 from app.api import deps
 
 router = APIRouter(prefix='/cases')
@@ -30,7 +30,6 @@ def get_cases(
 @router.post('')
 def create_case(
     name: str,
-    
     db: Session = Depends(deps.get_db),
     description: str = "",
 ):
