@@ -2,12 +2,13 @@
 .node.container {
   @apply flex flex-col w-full max-w-sm justify-between rounded-sm transition duration-150 ease-in-out bg-slate-800/90 active:bg-slate-800 ring-1 ring-white/10 backdrop-blur active:border-slate-200;
 }
+
 .node.side-container {
-  @apply flex w-full max-w-sm justify-between rounded-sm transition duration-150 ease-in-out backdrop-blur-2xl active:bg-slate-800/100 hover:bg-slate-800/95  bg-slate-800/90 ring-1 ring-white/10 
+  @apply flex w-full max-w-sm justify-between rounded-sm transition duration-150 ease-in-out backdrop-blur-2xl active:bg-slate-800/100 hover:bg-slate-800/95  bg-slate-800/90 ring-1 ring-white/10;
 }
 
 .node .highlight {
-  @apply absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r 
+  @apply absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-info-300/0 via-info-300 to-info-300/0;
 }
 
 .node .side-header {
@@ -18,39 +19,53 @@
   @apply w-5 h-5;
 }
 
-.node .node-wrap {
-  @apply w-full  grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 py-1 rounded-b-sm shadow-sm;
+.node .node-display {
+  @apply w-full flex flex-col px-2 pb-1;
 }
 
-.node .node-wrap li {
-  @apply col-span-full flex  w-full
+.node .node-display h1 {
+  @apply  leading-3;
 }
-.node .node-wrap li > div {
-  @apply flex-1 flex flex-col px-4 pb-2 text-sm
+
+.node .node-display h2 {
+  @apply leading-4;
+}
+
+.node .node-display h1,
+.node .node-display h2,
+.node .node-display p {
+  @apply text-slate-300 font-medium font-sans break-words text-sm hover:cursor-default;
+}
+.node .node-display p {
+  @apply text-xs font-normal pb-1 pt-1.5;
+}
+.node .node-display h2 {
+  @apply text-xs;
 }
 
 .node .header {
-  @apply flex h-full w-full items-center justify-between rounded-t-sm  text-slate-100 py-2 px-1;
+  @apply flex h-full w-full items-center justify-between rounded-t-sm text-slate-100 py-2 px-1;
 }
 
 .node .header svg {
   @apply h-5 w-5;
 }
 
- .text-container {
-  @apply flex w-full flex-col px-2 font-medium
+.text-container {
+  @apply flex w-full flex-col px-2 font-medium;
 }
 
- .text-container p:first-child, .text-container p:first-child > span {
+.text-container p:first-child,
+.text-container p:first-child > span {
   @apply text-[0.4rem] text-slate-400 font-display;
 }
 
- .text-container p:last-child {
-  @apply text-xs text-slate-200 max-w-xl font-display font-medium
+.text-container p:last-child {
+  @apply text-xs text-slate-200 max-w-xl font-display font-medium;
 }
 
 .node-field {
-  @apply mt-1 w-full  flex py-0.5 relative border-opacity-60  text-slate-500 focus:border-opacity-100  text-xs border border-info-400 focus:border-info-300 active:border-info-300 bg-slate-700 focus:ring-info-50 sm:text-sm;
+  @apply mt-1 w-full flex py-0.5 relative border-opacity-60 text-slate-500  text-xs border border-info-400 bg-slate-700 sm:text-sm max-w-[11.5rem] ;
 }
 
 .node-field svg {
@@ -61,23 +76,42 @@
   @apply placeholder:text-gray-50 text-slate-100 bg-slate-700 focus:outline-none pl-5 w-full;
 }
 
+/* @todo :has is not supported by firefox yet :( */
+.node-field:has(input:focus) {
+  @apply ring-info-50 border-info-300 border-opacity-100;
+}
+
 p.node-label {
-  @apply text-[0.5rem] font-medium text-slate-400  font-display mt-1;
+  @apply text-[0.5rem] font-medium text-slate-400 font-display mt-1;
 }
 /* End node */
 
 /* Start node context menu */
 .node-context {
-  @apply py-1 hover:text-slate-300  text-slate-400;
+  @apply py-1 hover:text-slate-300 text-slate-400;
 }
 
 .node-context button {
-  @apply hover:bg-slate-900   hover:text-slate-300  text-slate-400 flex items-center px-4 py-2 text-sm w-full
+  @apply hover:bg-slate-900 hover:text-slate-300 text-slate-400 flex items-center px-4 py-2 text-sm w-full;
 }
 
 .node-context svg {
-  @apply mr-3 h-5 w-5  hover:text-slate-300  text-slate-400;
+  @apply mr-3 h-5 w-5 hover:text-slate-300 text-slate-400;
 }
 /* End node context menu */
 
+.elements {
+  @apply p-2 grid;
+}
 
+.elements > div.dropdown-input:last-child {
+  grid-column: span 2;
+}
+
+.elements > div:nth-child(even) {
+  @apply mr-0;
+}
+
+.elements:nth-child(even) {
+  @apply bg-slate-800
+}

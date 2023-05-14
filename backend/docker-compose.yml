@@ -57,12 +57,5 @@ services:
     ports:
       - 7474:7474
       - 7687:7687
-  selenium:
-    image: selenium/standalone-chrome
-    ports:
-      - 4444:4444
-    environment:
-      - JAVA_OPTS=-Dwebdriver.chrome.whitelistedIps=
-  
 volumes:
   osintbuddy-db-data:

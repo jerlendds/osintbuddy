@@ -1,55 +1,17 @@
+import { api } from '@/services';
 import { Disclosure, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/24/outline';
+import { useEffect, useState } from 'react';
 
-const searchOptions = [
-  {
-    name: 'Google Search',
-    title: "Search Google using the advanced operators you're used to",
-    event: 'google',
-  },
-  {
-    name: 'CSE Search',
-    title: 'Search by category through Google CSEs',
-    event: 'cse',
-  },
-  {
-    name: 'Domain',
-    title: 'Find SEO data, IPs, and more',
-    event: 'domain',
-  },
-  {
-    name: 'Email',
-    title: 'Find social accounts and more',
-    event: 'email',
-  },
-  {
-    name: 'IP',
-    title: 'Geolocate an IP and more',
-    event: 'ip',
-  },
-  {
-    name: 'URL',
-    title: 'A URL entity',
-    event: 'url',
-  },
-  {
-    name: 'Username',
-    title: 'Find accounts by username',
-    event: 'username',
-  },
-    {
-    name: 'Simple',
-    title: 'Find accounts by username',
-    event: 'simple',
-  },
-];
+export default function NodeOptions({ options }: any) {
+  const [nodeOptions, setNodeOptions] = useState(options);
 
-export default function NodeOptions() {
   const onDragStart = (event: any, nodeType: any) => {
-    console.log('node type: ', nodeType)
+    console.log('node type: ', nodeType);
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
   };
+
 
   return (
     <Disclosure as='div' className='absolute border-dark-300 border bg-dark-600 w-44 py-2 left-5 top-16 z-50'>
@@ -68,16 +30,16 @@ export default function NodeOptions() {
       >
         <Disclosure.Panel className='flex'>
           <ul className='flex flex-col w-full py-2'>
-            {searchOptions.map((searchOption) => (
+            {nodeOptions?.map((node: any) => (
               <li
                 draggable
-                key={searchOption.name}
-                onDragStart={(event) => onDragStart(event, searchOption.event)}
+                key={node.name}
+                onDragStart={(event) => onDragStart(event, node.event)}
                 className='border-l-4 active:border-l-dark-400 py-2 my-1 bg-dark-400 flex items-center px-4 border-l-dark-50'
-                title={searchOption.title}
+                title={node.title}
               >
                 <PlusIcon className='w-3 h-3 mr-1 text-slate-400' />
-                <p className='text-xs font-medium text-slate-400 font-display'>{searchOption.name}</p>
+                <p className='text-xs font-medium text-slate-400 font-display'>{node.name}</p>
               </li>
             ))}
           </ul>

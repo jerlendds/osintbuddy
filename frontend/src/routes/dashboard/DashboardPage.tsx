@@ -362,10 +362,6 @@ export default function DashboardPage() {
     []
   );
 
-  api.get('/nodes/').then(resp => {
-    console.log('WTF', resp)
-  })
-
   return (
     <>
       <div className='relative mx-auto flex w-full justify-center sm:px-2 lg:px-4 '>

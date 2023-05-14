@@ -1,18 +1,14 @@
 // @ts-nocheck
-import { useCallback, useState, useRef, useMemo, useEffect, createRef } from 'react';
+import { useCallback, useState, useRef, useMemo, useEffect } from 'react';
 import ReactFlow, {
   useNodesState,
-  ReactFlowProvider,
   useEdgesState,
   Edge,
   XYPosition,
-  useStore,
   Node,
-  Elements,
   Background,
   Controls,
   BackgroundVariant,
-  isNode,
   FitViewOptions,
 } from 'reactflow';
 import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
@@ -21,30 +17,15 @@ import { useLocation } from 'react-router-dom';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import 'reactflow/dist/style.css';
 import classNames from 'classnames';
-
 import BreadcrumbHeader from './_components/BreadcrumbHeader';
 import NodeOptions from './_components/NodeOptions';
 import CommandPallet from '@/routes/osint/_components/CommandPallet';
-import { GoogleNode, GoogleNodeContext } from './_nodes/GoogleNode';
-import { CseNode, CseNodeContext } from './_nodes/CseNode';
-import { DnsNode } from './_nodes/DnsNode';
-import { DomainNode, DomainNodeContext } from './_nodes/DomainNode';
-import { EmailNode, EmailNodeContext } from './_nodes/EmailNode';
-import IpNodeContext, { IpNode } from './_nodes/IpNode';
-import { ResultNode, ResultNodeContext } from './_nodes/ResultNode';
-import { SubdomainNode } from './_nodes/SubdomainsNode';
-import { WhoisNode } from './_nodes/WhoisNode';
 import ContextMenu from './_components/ContextMenu';
-import { GeoNode } from './_nodes/GeoNode';
-import { TracerouteNode } from './_nodes/TracerouteNode';
-import { UrlScanNode } from './_nodes/UrlScanNode';
-import UrlNodeContext, { UrlNode } from './_nodes/UrlNode';
-import { SmtpNode } from './_nodes/SmtpNode';
-import { UsernameNode, UsernameNodeContext } from './_nodes/UsernameNode';
-import { ProfileNode, ProfileNodeContext } from './_nodes/ProfileNode';
-import { WS_URL } from '@/services/api.service';
+import api, { WS_URL } from '@/services/api.service';
 import { getLayoutedElements } from './utils';
-import SimpleNode from './SimpleNode';
+import BaseNode from './BaseNode';
+import ContextAction from './_components/ContextAction';
+import { toast } from 'react-toastify';
 
 export var nodeId = 0;
 
@@ -56,7 +37,6 @@ export const getId = (): NodeId => {
 const fitViewOptions: FitViewOptions = {
   padding: 50,
 };
-
 
 const InvestigationFlow = ({
   reactFlowWrapper,
@@ -71,7 +51,9 @@ const InvestigationFlow = ({
   deleteNode,
   addNode,
   addEdge,
-  sendJsonMessage
+  sendJsonMessage,
+  messageHistory,
+  lastMessage,
 }) => {
   const onConnect = useCallback((connection) => setEdges((eds) => addEdge(connection, edges)), [setEdges]);
 
@@ -85,12 +67,12 @@ const InvestigationFlow = ({
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
-
   const onDrop = useCallback(
-    (event) => {
+    async (event) => {
       event.preventDefault();
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
+      console.log('type: ', type);
       // check if the dropped element is valid
       if (typeof type === 'undefined' || !type) {
         return;
@@ -99,39 +81,27 @@ const InvestigationFlow = ({
         x: event.clientX,
         y: event.clientY,
       });
-      const newNode = {
-        id: `${getId()}`,
-        type,
-        position,
-        data: {},
-      };
-      sendJsonMessage({ action: 'create:node', node: newNode})
-
-      setNodes((nds) => nds.concat(newNode));
+      const nodeElements = await api.get(`/nodes/type?node_type=${type}`);
+      console.log('nodes:: ', nodeElements);
+      if (nodeElements?.data) {
+        const newNode = {
+          id: `${getId()}`,
+          type: 'base',
+          position,
+          data: {
+            node: nodeElements?.data,
+          },
+        };
+        sendJsonMessage({ action: 'create:node', node: newNode });
+        setNodes((nds) => nds.concat(newNode));
+      }
     },
     [reactFlowInstance, nodeId]
   );
 
   const nodeTypes = useMemo(() => {
     return {
-      url: (data) => <UrlNode flowData={data} />,
-      dns: (data) => <DnsNode flowData={data} />,
-      domain: (data) => <DomainNode flowData={data} />,
-      email: (data) => <EmailNode flowData={data} />,
-      subdomain: (data) => <SubdomainNode flowData={data} />,
-      google: (data) => <GoogleNode flowData={data} />,
-      cse: (data) => <CseNode flowData={data} sendJsonMessage={sendJsonMessage} />,
-      smtp: (data) => <SmtpNode flowData={data} />,
-      whois: (data) => <WhoisNode flowData={data} />,
-      ip: (data) => <IpNode flowData={data} />,
-      result: (data) => <ResultNode addNode={addNode} addEdge={addEdge} flowData={data} />,
-      profile: (data) => <ProfileNode addNode={addNode} addEdge={addEdge} flowData={data} />,
-      geo: (data) => <GeoNode flowData={data} />,
-      urlscan: (data) => <UrlScanNode flowData={data} />,
-      traceroute: (data) => <TracerouteNode flowData={data} />,
-      username: (data) => <UsernameNode flowData={data} />,
-      simple: (data) => <SimpleNode flow={data} />,
-
+      base: (data) => <BaseNode sendJsonMessage={sendJsonMessage} flow={data} />,
     };
   }, []);
 
@@ -145,27 +115,27 @@ const InvestigationFlow = ({
   // console.log('size', size);
 
   return (
-      <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
-        <ReactFlow
-          minZoom={0.2}
-          maxZoom={2.0}
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onInit={setReactFlowInstance}
-          onDrop={onDrop}
-          onEdgeUpdate={onEdgeUpdate}
-          onDragOver={onDragOver}
-          fitView
-          fitViewOptions={fitViewOptions}
-          nodeTypes={nodeTypes}
-        >
-          <Background variant={BackgroundVariant.Lines} color='#0F172A' />
-          <Controls />
-        </ReactFlow>
-      </div>
+    <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
+      <ReactFlow
+        minZoom={0.2}
+        maxZoom={2.0}
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onInit={setReactFlowInstance}
+        onDrop={onDrop}
+        onEdgeUpdate={onEdgeUpdate}
+        onDragOver={onDragOver}
+        fitView
+        fitViewOptions={fitViewOptions}
+        nodeTypes={nodeTypes}
+      >
+        <Background variant={BackgroundVariant.Lines} color='#0F172A' />
+        <Controls />
+      </ReactFlow>
+    </div>
   );
 };
 
@@ -199,38 +169,24 @@ export default function OsintPage() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge[]>(initialEdges);
-
-  const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/investigation`);
-  const [messageHistory, setMessageHistory] = useState([]);
-
-  const { sendMessage, lastMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl);
-
-  useEffect(() => {
-    if (lastMessage !== null) {
-      setMessageHistory((prev) => prev.concat(lastMessage));
-      console.log('lastMessage: ', lastMessage)
-    }
-  }, [lastMessage, setMessageHistory]);
-
-  const handleClickSendMessage = useCallback(() => sendJsonMessage({action: 'create', type: 'node'}), []);
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: 'Connecting',
-    [ReadyState.OPEN]: 'Open',
-    [ReadyState.CLOSING]: 'Closing',
-    [ReadyState.CLOSED]: 'Closed',
-    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-  }[readyState];
-
-
-  useEffect(() => {
-    console.log('connection status: ', connectionStatus)
-    if (connectionStatus === 'Closed') {
-      setSocketUrl(socketUrl)
-    }
-  }, [connectionStatus])
- 
+  const [nodeOptions, setNodeOptions] = useState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [nodeId, setNodeId] = useState<number>(0);
+
+  const [showNodeOptions, setShowNodeOptions] = useState<boolean>(false);
+  const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
+  const location = useLocation();
+  const activeCase = location?.state?.activeCase;
+
+  const [messageHistory, setMessageHistory] = useState([]);
+  const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/investigation`);
+  const { lastMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl, {
+    onOpen: () => console.log('opened'),
+    shouldReconnect: (closeEvent) => {
+      console.log('closeEvent: ', closeEvent);
+      return true;
+    },
+  });
+
   let setViewport,
     zoomIn,
     zoomOut = null;
@@ -238,19 +194,21 @@ export default function OsintPage() {
     ({ setViewport, zoomIn, zoomOut } = reactFlowInstance);
   }
 
-  function addNode(id, type, position, data: AddNode): Node<XYPosition> {
+  function addNode(id, data: AddNode, position): Node<XYPosition> {
     let addPosition = null;
     if (reactFlowInstance) {
       addPosition = reactFlowInstance.project(position);
     } else {
       addPosition = position;
     }
+
     const newNode = {
       id,
-      type,
+      type: 'base',
       data,
       position: addPosition,
     };
+    console.log('ADDING NODE: ', newNode);
     setNodes((nds) => nds.concat(newNode));
     return addPosition;
   }
@@ -269,12 +227,6 @@ export default function OsintPage() {
   function deleteNode(nodeId: NodeId): void {
     setNodes((nds) => nds.filter((node) => node.id !== nodeId));
   }
-  // https://reactflow.dev/docs/examples/layout/dagre/
-  const location = useLocation();
-  const activeCase = location?.state?.activeCase;
-
-  const [showNodeOptions, setShowNodeOptions] = useState<boolean>(false);
-  const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
 
   const togglePalette = () => setShowCommandPalette(!showCommandPalette);
   const toggleShowNodeOptions = () => setShowNodeOptions(!showNodeOptions);
@@ -283,20 +235,102 @@ export default function OsintPage() {
     TOGGLE_PALETTE: togglePalette,
   };
 
+  // https://reactflow.dev/docs/examples/layout/dagre/
   const onLayout = useCallback(
     (direction) => {
       const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges, direction);
-
       setNodes([...layoutedNodes]);
       setEdges([...layoutedEdges]);
     },
     [nodes, edges]
   );
 
+  // const updateNodeOptions = () => {
+  //   setIsRefresh(isRefresh.length > 3 ? "" : isRefresh + "x");
+  // };
+
+  const addNodeAction = (node) => {
+    const newId = getId();
+    const position = node?.position;
+    const parentId = node.parentId;
+    delete node.action;
+    delete node.position;
+    delete node.parentId;
+    addNode(newId, { node }, position);
+    addEdge(parentId, newId);
+  };
+
+  const updateNodeOptions = () => {
+    api.get('/nodes/refresh').then((resp) => {
+      const options =
+        resp?.data?.plugins
+          ?.filter((pluginLabel: any) => pluginLabel)
+          .map((label: string) => {
+            return { event: label, title: label, name: label };
+          }) || [];
+      console.log('options: ', options)
+      return options
+    }).then(options => setNodeOptions(options));
+  };
+
+  const connectionStatus = {
+    [ReadyState.CONNECTING]: 'Connecting',
+    [ReadyState.OPEN]: 'Open',
+    [ReadyState.CLOSING]: 'Closing',
+    [ReadyState.CLOSED]: 'Closed',
+    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
+  }[readyState];
+
+  // websocket updates happen here
+  useEffect(() => {
+    if (lastMessage !== null) {
+      setMessageHistory((prev) => prev.concat(lastMessage));
+      let data = JSON.parse(lastMessage?.data) || lastMessage?.data;
+      console.log('lastMessage: ', data);
+      if (data && !Array.isArray(data)) {
+        if (data?.action === 'addNode') {
+          addNodeAction(data);
+          toast.success(`Found 1 ${node.label}`);
+        }
+        if (data?.action === 'error') {
+          toast.error(`${data.detail}`);
+        }
+        if (data?.action === 'refresh') {
+          toast.info(`Loading plugins...`);
+          updateNodeOptions();
+        }
+      } else if (Array.isArray(data)) {
+        data = data.map((node, idx) => {
+          if (node?.action === 'addNode') {
+            const isOdd = idx % 2 === 0;
+            const pos = node.position;
+            node.position = {
+              x: isOdd ? pos.x + 60 : pos.x + 370,
+              y: isOdd ? (idx - 1) * 70 + pos.y : idx * 70 + pos.y,
+            };
+            addNodeAction(node);
+          }
+        });
+        if (data.length > 0) {
+          toast.success(`Found ${data.length} results`);
+        } else {
+          toast.info('No results found');
+        }
+      }
+    }
+  }, [lastMessage, setMessageHistory]);
+
+
   return (
     <HotKeys keyMap={keyMap} handlers={handlers}>
       <div className='h-screen flex flex-col w-full'>
-        <BreadcrumbHeader onLayout={onLayout} description={activeCase?.description} activeProject={activeCase?.name || 'Unknown'} />
+        <BreadcrumbHeader
+          updateNodeOptions={updateNodeOptions}
+          nodeOptions={nodeOptions}
+          onLayout={onLayout}
+          description={activeCase?.description}
+          activeProject={activeCase?.name || 'Unknown'}
+        />
         <div className='flex h-full'>
           <InvestigationFlow
             addNode={addNode}
@@ -312,6 +346,8 @@ export default function OsintPage() {
             reactFlowInstance={reactFlowInstance}
             setReactFlowInstance={setReactFlowInstance}
             sendJsonMessage={sendJsonMessage}
+            messageHistory={messageHistory}
+            lastMessage={lastMessage}
           />
         </div>
         <CommandPallet
@@ -320,21 +356,19 @@ export default function OsintPage() {
           setOpen={setShowCommandPalette}
         />
       </div>
-      <NodeOptions />
+      <NodeOptions key={nodeOptions.length.toString()} options={nodeOptions} />
       <ContextMenu
         menu={({ node }) => {
           let parentId = null;
           let nodeData = null;
           let nodeType = null;
-          let titleNodeType = null;
 
           if (node) {
-            nodeData = [...node.querySelectorAll('[data-node]')].map((node) => node?.value ? node.value : node?.textContent);
+            nodeData = [...node.querySelectorAll('[data-node]')].map((node) =>
+              node?.value ? node.value : node?.textContent
+            );
             parentId = node.getAttribute('data-id');
-            nodeType = node.classList[1].split('-');
-            nodeType = nodeType[nodeType.length - 1];
-            titleNodeType = nodeType && capitalize(nodeType);
-            console.log('node data: ', nodeData)
+            nodeType = node.querySelector('[data-node-type]').getAttribute('data-node-type');
           }
           return (
             <>
@@ -351,122 +385,24 @@ export default function OsintPage() {
                       >
                         <span className='text-slate-400 font-semibold font-display mr-3'>ID: </span>
                         {node ? parentId : 'No node selected'}
-                        {nodeType && titleNodeType && (
+                        {nodeType && (
                           <span className='inline-flex ml-auto items-center rounded-full bg-blue-100 px-3 py-0.5 text-sm font-medium text-blue-800'>
-                            {titleNodeType}
+                            {nodeType}
                           </span>
                         )}
                       </div>
                     </div>
                   </div>
-                  {nodeType === 'domain' && (
-                    <DomainNodeContext
-                      parentId={parentId}
-                      node={node}
-                      nodeData={nodeData}
-                      nodeType={nodeType}
-                      addNode={addNode}
-                      addEdge={addEdge}
-                      getId={getId}
-                      reactFlowInstance={reactFlowInstance}
-                    />
-                  )}
-                  {nodeType === 'email' && (
-                    <EmailNodeContext
-                      parentId={parentId}
-                      node={node}
-                      nodeData={nodeData}
-                      nodeType={nodeType}
-                      addNode={addNode}
-                      addEdge={addEdge}
-                      getId={getId}
-                      reactFlowInstance={reactFlowInstance}
-                    />
-                  )}
-                  {nodeType === 'cse' && (
-                    <CseNodeContext
-                      parentId={parentId}
-                      node={node}
-                      nodeData={nodeData}
-                      nodeType={nodeType}
-                      addNode={addNode}
-                      addEdge={addEdge}
-                      getId={getId}
-                      reactFlowInstance={reactFlowInstance}
-                    />
-                  )}
-                  {nodeType === 'ip' && (
-                    <IpNodeContext
-                      parentId={parentId}
-                      node={node}
-                      nodeData={nodeData}
-                      nodeType={nodeType}
-                      addNode={addNode}
-                      addEdge={addEdge}
-                      getId={getId}
-                      reactFlowInstance={reactFlowInstance}
-                    />
-                  )}
-                  {nodeType === 'result' && (
-                    <ResultNodeContext
-                      parentId={parentId}
-                      node={node}
-                      nodeData={nodeData}
-                      nodeType={nodeType}
-                      addNode={addNode}
-                      addEdge={addEdge}
-                      getId={getId}
-                      reactFlowInstance={reactFlowInstance}
-                    />
-                  )}
-                  {nodeType === 'google' && (
-                    <GoogleNodeContext
-                      parentId={parentId}
-                      node={node}
-                      nodeData={nodeData}
-                      nodeType={nodeType}
-                      addNode={addNode}
-                      addEdge={addEdge}
-                      getId={getId}
-                      reactFlowInstance={reactFlowInstance}
-                    />
-                  )}
-                  {nodeType === 'url' && (
-                    <UrlNodeContext
-                      parentId={parentId}
-                      node={node}
-                      nodeData={nodeData}
-                      nodeType={nodeType}
-                      addNode={addNode}
-                      addEdge={addEdge}
-                      getId={getId}
-                      reactFlowInstance={reactFlowInstance}
-                    />
-                  )}
-                  {nodeType === 'username' && (
-                    <UsernameNodeContext
-                      parentId={parentId}
-                      node={node}
-                      nodeData={nodeData}
-                      nodeType={nodeType}
-                      addNode={addNode}
-                      addEdge={addEdge}
-                      getId={getId}
-                      reactFlowInstance={reactFlowInstance}
-                    />
-                  )}
-                  {nodeType === 'profile' && (
-                    <ProfileNodeContext
-                      parentId={parentId}
-                      node={node}
-                      nodeData={nodeData}
-                      nodeType={nodeType}
-                      addNode={addNode}
-                      addEdge={addEdge}
-                      getId={getId}
-                      reactFlowInstance={reactFlowInstance}
-                    />
-                  )}
+                  <ContextAction
+                    node={node}
+                    parentId={parentId}
+                    nodeData={nodeData}
+                    nodeType={nodeType}
+                    addEdge={addEdge}
+                    addNode={addNode}
+                    deleteNode={deleteNode}
+                    sendJsonMessage={sendJsonMessage}
+                  />
                   {nodeType && (
                     <div className='node-context'>
                       <div>
