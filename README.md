@@ -40,7 +40,7 @@
   </ol>
 </details>
 
-## [↑](#Table-of-Contents)Introducing the OSINTBuddy Toolbox: A Powerful Tool for Investigators
+## [↑](#Table-of-Contents)Introducing the OSINTBuddy Toolbox
 
 Fetch data from different sources and returns the results
 as visual entities that you can explore step-by-step!
