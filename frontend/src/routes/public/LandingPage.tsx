@@ -10,7 +10,7 @@ import nodes from './markdoc/nodes';
 export default function LandingPage(): React.ReactElement {
   const [text, setText] = useState(`
 Click the get started button above to login to your system.
-#### OSINTBuddy v0.2.1
+#### OSINTBuddy v0.3.0
   `);
 
   const ast = Markdoc.parse(text);

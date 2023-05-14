@@ -41,6 +41,9 @@ class CSESearchPlugin(OBPlugin):
     @transform(label='To cse results', icon='search')
     def transform_to_cse_results(self, node, **kwargs):
         results = []
+        
+        if len(node['data']) != 3:
+            raise OBPluginError("All fields are required. Please try again")
         query = node['data'][0]
         pages = node['data'][1]
         option = json.loads(node['data'][2])
