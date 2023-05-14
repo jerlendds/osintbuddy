@@ -66,7 +66,7 @@ def fetch_node_transforms(plugin_label):
 
 @router.get('/refresh')
 async def refresh_plugins():
-    discover_plugins('/app/app/plugins/')
+    discover_plugins('app/plugins/')
     fetch_node_transforms.cache_clear()
     return {'status': 'success', 'plugins': OBRegistry.ui_labels}
 
