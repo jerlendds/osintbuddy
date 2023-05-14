@@ -135,6 +135,12 @@ Contributions are what make the open source community such an amazing place to l
 4. Push to the Branch (`git push origin feature/add-core-plugin`)
 5. Open a Pull Request
 
+
+## [↑](#-Table-of-Contents)License
+
+[GNU AGPLv3](https://choosealicense.com/licenses/gpl-3.0/)
+
+
 ## [↑](#-Table-of-Contents)Contact
 
 Open an issue if you need to get in touch with me
