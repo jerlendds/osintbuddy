@@ -112,6 +112,12 @@ https://www.aircrack-ng.org/
 fetching favicon: //link[contains(@rel,'icon')]
 https://stackoverflow.com/questions/5119041/how-can-i-get-a-web-sites-favicon
 https://github.com/jivoi/awesome-osint
+
+https://viewdns.info/
+https://www.nerdydata.com/reports/new?search={%22all%22:[{%22type%22:%22code%22,%22value%22:%22ua-251372-24%22}],%22any%22:[],%22none%22:[]}
+https://archive.org/help/wayback_api.php
+https://lookup.icann.org/en/lookup
+https://dnshistory.org/dns-records/republicofkoffee.com
  -->
 
 ## [↑](#-Table-of-Contents) Roadmap

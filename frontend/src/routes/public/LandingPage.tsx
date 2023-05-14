@@ -16,7 +16,6 @@ Click the get started button above to login to your system.
   const ast = Markdoc.parse(text);
   // @ts-ignore
   const content = Markdoc.transform(ast, { tags, nodes });
-  console.log(ast, content);
 
   return (
     <>
@@ -35,6 +34,7 @@ Click the get started button above to login to your system.
                 <p className='inline bg-gradient-to-r from-indigo-200 via-sky-400 to-indigo-200 bg-clip-text font-display text-5xl tracking-tight text-transparent'>
                   Open Source Intelligence
                 </p>
+
                 <p className='mt-3 text-2xl tracking-tight text-slate-400'>
                   Fetch data from different sources and returns the results as visual entities that you can explore.
                 </p>

@@ -10,4 +10,7 @@ module.exports = {
       '@routes': path.resolve(__dirname, 'src/routes'),
     },
   },
+  eslint: {
+    enable: false,
+  },
 };

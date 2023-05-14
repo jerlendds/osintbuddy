@@ -1,9 +1,24 @@
-import json
-from fastapi import APIRouter, Depends, HTTPException, WebSocket
+from typing import List
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    WebSocket,
+    WebSocketException,
+    WebSocketDisconnect
+)
+from websockets.exceptions import ConnectionClosedError
 from sqlalchemy.orm import Session
 from app.api import deps
+from app.core.logger import get_logger
+from app.llm.prompts import get_prompt_transform_options
+from functools import lru_cache
+from osintbuddy.plugins import OBRegistry, discover_plugins
+from osintbuddy.errors import OBPluginError
 
 router = APIRouter(prefix='/nodes')
+
+logger = get_logger(' api_v1.endpoints.nodes ')
 
 CORE_LABELS = [
     'GoogleSearch',
@@ -39,98 +54,127 @@ CORE_LABELS = [
 ]
 
 
-def get_graph_labels(tx):
-    return [label for sub_list in tx.run("CALL db.labels()").values()
-            for label in sub_list]
+@lru_cache(maxsize=128)
+def fetch_node_transforms(plugin_label):
+    plugin = OBRegistry.get_plugin(plugin_label=plugin_label)
+    if plugin is not None:
+        labels = plugin().transform_labels
+    else:
+        labels = []
+    return labels
 
 
-def create_graph_labels(tx, labels):
-    tx.run(f"CREATE (n:{':'.join(labels)})")
+@router.get('/refresh')
+async def refresh_plugins():
+    discover_plugins('/app/app/plugins/')
+    fetch_node_transforms.cache_clear()
+    return {'status': 'success', 'plugins': OBRegistry.ui_labels}
 
 
-@router.get('/')
-async def get_node_options(
-    gdb: Session = Depends(deps.get_gdb),
-):
-    data = []
+@router.get('/transforms')
+async def get_node_transforms(node_type: str):
+    return {
+        'type': node_type,
+        'transforms': fetch_node_transforms(node_type)
+    }
+
+
+@router.get('/type')
+async def get_node_option(node_type: str):
     try:
-        data = gdb.execute_read(get_graph_labels)
-        if len(data) == 0:
-            gdb.execute_write(create_graph_labels, labels=CORE_LABELS)
-            data = CORE_LABELS
-    except Exception:
-        raise HTTPException(status_code=508, detail='unknownError')
-    return data
+        plugin = OBRegistry.get_plugin(plugin_label=node_type)
+        if plugin:
+            node = plugin.blueprint()
+            node['label'] = node_type
+            return node
+    except Exception as e:
+        logger.error(e)
+        raise HTTPException(status_code=422, detail='pluginNotFound')
 
 
-def create_new_node():
-    pass
+def save_transform(results: List[dict]):
+    for node in results:
+        print(node)
 
 
-def update_node_state():
-    pass
+def get_command_type(event):
+    user_event = event['action'].split(':')
+    action = user_event[0]
+    action_type = None
+    if len(user_event) >= 2:
+        action_type = user_event[1]
+    return action, action_type
 
 
-ACTION_WRITE = 'create'
-ACTION_UPDATE = 'update'
-ACTION_REMOVE = 'delete'
-ACTION_READ = 'read'
-ACTION_TRANSFORM = 'transform'
-
-ACTION_TYPE_NODE = 'node'
+async def read_graph(node, action_type, send_json):
+    await send_json(node)
 
 
-def get_plugin(node_type: str):
-    return None
+async def create_nodes(node, action_type, send_json):
+    await send_json(node)
 
 
-def delete_node(tx, node_id):
-    pass
+async def update_nodes(node, action_type, send_json):
+    await send_json(node)
+
+
+async def remove_nodes(node, action_type, send_json):
+    await send_json({'action': 'remove:node', 'node': node})
+
+
+async def transform_nodes(node, action_type, send_json):
+    node_output = {}
+    plugin = OBRegistry.get_plugin(node['type'])
+    if plugin := plugin():
+        transform_type = node['transform']
+        node_output = plugin._get_transform(
+            transform_type=transform_type,
+            node=node,
+            get_driver=deps.get_driver,
+        )
+        if isinstance(node_output, list):
+            for output in node_output:
+                output['action'] = 'addNode'
+                output['position'] = node['position']
+                output['parentId'] = node['parentId']
+        else:
+            node_output['action'] = 'addNode'
+            node_output['position'] = node['position']
+            node_output['parentId'] = node['parentId']
+        await send_json(node_output)
+
+
+async def execute_event(event, send_json):
+    action, action_type = get_command_type(event)
+    if action == 'read':
+        await read_graph(event['node'], action_type, send_json)
+    if action == 'create':
+        await create_nodes(event['node'], action_type, send_json)
+    if action == 'update':
+        await update_nodes(event['node'], action_type, send_json)
+    if action == 'delete':
+        await remove_nodes(event['node'], action_type, send_json)
+    if action == 'transform':
+        await transform_nodes(event['node'], action_type, send_json)
 
 
 @router.websocket('/investigation')
 async def active_investigation(
-    websocket: WebSocket,
-    gdb: Session = Depends(deps.get_gdb),
+    websocket: WebSocket
 ):
     await websocket.accept()
+    await websocket.send_json({'action': 'refresh'})
     while True:
-        raw_command = await websocket.receive_json()
-        command = raw_command['action'].split(':')
-        action = command[0]
-
-        action_type = None
-        if len(command) >= 2:
-            action_type = command[1]
-
-        IS_NODE = action_type == ACTION_TYPE_NODE
-
-        if action == ACTION_READ:
-            if IS_NODE:
-                node = raw_command[ACTION_TYPE_NODE]
-                await websocket.send_json(node)
-        if action == ACTION_WRITE:
-            if IS_NODE:
-                node = raw_command[ACTION_TYPE_NODE]
-                await websocket.send_json(node)
-        if action == ACTION_UPDATE:
-            if IS_NODE:
-                node = raw_command[ACTION_TYPE_NODE]
-                await websocket.send_json(node)
-        if action == ACTION_REMOVE:
-            if IS_NODE:
-                node = raw_command[ACTION_TYPE_NODE]
-                gdb.execute_write(delete_node, node_id=node['id'])
-                await websocket.send_text('pending:update')
-        if action == ACTION_TRANSFORM:
-            if IS_NODE:
-                result_nodes = []
-                node = raw_command[ACTION_TYPE_NODE]
-                plugin = get_plugin(node['type'])
-                if plugin:
-                    transform_type = command[2]
-                    result_nodes = plugin.get_transform(transform_type, node)
-                await websocket.send_json(result_nodes)
-
-        print('command', action, action_type)
-        await websocket.send_text(action)
+        try:
+            event = await websocket.receive_json()
+            await execute_event(
+                event=event,
+                send_json=websocket.send_json
+            )
+        except OBPluginError as e:
+            print(e)
+            await websocket.send_json({'action': 'error', 'detail': f'{e}'})
+        except WebSocketDisconnect as e:
+            logger.info(e)
+        except (WebSocketException, BufferError, ConnectionClosedError) as e:
+            logger.error(e)

@@ -1,13 +1,17 @@
+import { api } from '@/services';
 import {
   ArrowDownOnSquareIcon,
   ArrowRightOnRectangleIcon,
   ArrowTopRightOnSquareIcon,
   HomeIcon,
 } from '@heroicons/react/24/outline';
+// import { IconRefresh } from '@tabler/icons-react';
 import classNames from 'classnames';
+import { update } from 'lodash';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-export default function BreadcrumbHeader({ activeProject, onLayout, description  }: {  description?: string, activeProject: string; onLayout: any }) {
+export default function BreadcrumbHeader({ activeProject, onLayout, description, updateNodeOptions }: {  description?: string, activeProject: string; onLayout: any, updateNodeOptions: Function }) {
   const pages = [
     { name: 'Investigations', href: '#', current: false },
     { name: activeProject, href: '#', current: true },
@@ -47,7 +51,7 @@ export default function BreadcrumbHeader({ activeProject, onLayout, description 
               </svg>
               <button
                 className={classNames(
-                  'ml-4 text-sm font-medium text-inherit',
+                  'ml-4 text-sm font-medium text-inherit whitespace-nowrap',
                   page.name === 'Investigations' && 'cursor-default'
                 )}
                 title={description && page.name !== 'Investigations' ? description : ''}
@@ -59,6 +63,14 @@ export default function BreadcrumbHeader({ activeProject, onLayout, description 
           </li>
         ))}
         <div className='ml-auto w-full relative flex items-center justify-end'>
+           <li className='flex'>
+            <div className='flex items-center'>
+              <button onClick={() => updateNodeOptions()} className='text-slate-400 hover:text-slate-300'>
+                <i className='h-5 w-5 flex-shrink-0' aria-hidden='true' />
+                <span className='sr-only'>Home</span>
+              </button>
+            </div>
+          </li>
           <li className='flex'>
             <div className='flex items-center'>
               <button onClick={() => onLayout('TB')} className='text-slate-400 hover:text-slate-300'>

@@ -3,7 +3,7 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cache import caches, close_caches
 from fastapi_cache.backends.redis import CACHE_KEY, RedisCacheBackend
-
+from osintbuddy.plugins import discover_plugins
 
 from app.api.api_v1.api import api_router
 from app.core.config import settings
@@ -45,7 +45,6 @@ def app_openapi_schema(app):
         version=settings.API_V1_STR,
         description=settings.PROJECT_DESCRIPTION,
         routes=app.routes,
-        
     )
     # @todo upload a .png
     openapi_schema["info"]["x-logo"] = {
@@ -57,13 +56,15 @@ def app_openapi_schema(app):
 @app.on_event('startup')
 async def on_startup() -> None:
     if settings.ENVIRONMENT == 'development':
+        discover_plugins('/plugins.osintbuddy.com/src/osintbuddy/core/')
         rc = RedisCacheBackend(settings.REDIS_URL)
         caches.set(CACHE_KEY, rc)
 
 
 @app.on_event('shutdown')
 async def on_shutdown() -> None:
-    await close_caches()
+    if settings.ENVIRONMENT == 'development':
+        await close_caches()
 
 
 app.include_router(api_router, prefix=settings.API_V1_STR)

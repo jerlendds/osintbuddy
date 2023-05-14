@@ -156,7 +156,7 @@ func CrawlGoogle(searchQuery string, pages string) {
 	c.OnHTML("div.RzdJxc", func(e *colly.HTMLElement) {
 		var videosHeader = e.ChildText("div.fc9yUc.tNxQIb.ynAwRc.OSrXXb")
 		var videosSubheader = e.ChildText("div.FzCfme")
-		var videosLink = e.ChildAttr("div.sI5x9c > a.X5OiLe", "href")
+		var videosLink = e.ChildAttr("div.sI5x9c > a.X5OiLe:last-child", "href")
 		if len(videosLink) > 0 {
 			var jsonObj map[string]interface{}
 			err := json.Unmarshal([]byte("{}"), &jsonObj)
