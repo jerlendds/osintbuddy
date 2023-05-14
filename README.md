@@ -40,24 +40,32 @@
   </ol>
 </details>
 
-## [↑](#Table-of-Contents) About The Project
+## [↑](#Table-of-Contents)Introducing the OSINTBuddy Toolbox: A Powerful Tool for Investigators
 
 Fetch data from different sources and returns the results
 as visual entities that you can explore step-by-step!
 
-OSINTBuddy is a work-in-progress OSINT tool, which is distributed
+OSINTBuddy is an OSINT tool in beta which is distributed
 for educational and investigative purposes, the person who has bought
 or uses this tool is responsible for its proper use or actions committed,
 jerlendds, the developer(s) of OSINTBuddy, are not responsible for the use
 or the scope that people can have through this software.
 
-&nbsp;&nbsp;&nbsp;\> **[OSINTBuddy docs](https://docs-osintbuddy-com.vercel.app/)**
+[OSINTBuddy demo video](https://www.youtube.com/watch?v=XKBusfYGL4M)
 
-## [↑](#-Table-of-Contents) Getting Started
 
-This section is a stub. Updates to this section will come once this project reaches a later stage...
+### Key Features
+- Simplified data fetching from multiple sources
+- Visual representation of fetched data for easy understanding
+- A powerful development platform that is open for contributions
+- New plugin-based system for transforming data, check out the [osintbuddy](https://pypi.org/project/osintbuddy/) package. Documentation is coming soon.
 
-To get a local copy up and running follow these simple steps.
+
+&nbsp;&nbsp;&nbsp;\> **[https://docs.osintbuddy.com](https://docs-osintbuddy-com.vercel.app/)**
+
+## [↑](#-Table-of-Contents)Getting Started
+
+To start using OSINTBuddy, follow these simple installation steps:
 
 ### Installation
 
@@ -87,97 +95,43 @@ To get a local copy up and running follow these simple steps.
   - Documentation: http://localhost:5000/docs -- http://localhost:5000/redoc
   - Flower: http://localhost:5555
   - Neo4J: http://localhost:7474/browser/
-
-<!--
-mk-fg recommendations:
-ssh whoarethey using corpus of pubkeys from github ( https://www.agwa.name/blog/post/whoarethey ),  , , , address' AS BGP info
-moddy recommendations:
-math, map, reduce, filter, zip and zipwith function blocks
-https://github.com/danielmiessler/SecLists/tree/master/Discovery/DNS
-COMB breach @todo add password searching
-magnet:?xt=urn:btih:7ffbcd8cee06aba2ce6561688cf68ce2addca0a3&dn=BreachCompilation&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fglotorrents.pw%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337
-@todo https://nvd.nist.gov/
-@todo https://github.com/JustAnotherArchivist/snscrape
-https://github.com/Greyjedix/Profil3r - Profil3r is an OSINT tool that allows you to find potential profiles of a person on social networks, as well as their email addresses. This program also alerts you to the presence of a data leak for the found emails.
-@todo https://epieos.com/
-@todo https://github.com/megadose/holehe
-https://os2int.com/toolbox/verifying-and-investigating-email-addresses-with-holehe/
-https://github.com/kpcyrd/sn0int
-https://github.com/DataSploit/datasploit
-https://github.com/mxrch/ghunt
-https://github.com/mlomb/chat-analytics
-https://www.kali.org/tools/metagoofil/
-https://www.aircrack-ng.org/
-
-fetching favicon: //link[contains(@rel,'icon')]
-https://stackoverflow.com/questions/5119041/how-can-i-get-a-web-sites-favicon
-https://github.com/jivoi/awesome-osint
-
-https://viewdns.info/
-https://www.nerdydata.com/reports/new?search={%22all%22:[{%22type%22:%22code%22,%22value%22:%22ua-251372-24%22}],%22any%22:[],%22none%22:[]}
-https://archive.org/help/wayback_api.php
-https://lookup.icann.org/en/lookup
-https://dnshistory.org/dns-records/republicofkoffee.com
- -->
+- Access OSINTBuddy through the URLs provided for frontend, backend, documentation, and more.
 
 ## [↑](#-Table-of-Contents) Roadmap
-
-
-[osintbuddy-demo](https://user-images.githubusercontent.com/29207058/226115297-1eb069df-c2af-41be-af67-f64174ff9b8c.webm)
-
 
 See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list of proposed features (and known issues).
 
 ## Progress Notes
 
-- [x] Domain nodes
-  - [x] To IP transformation
-  - [x] To WHOIS transformation
-  - [x] To DNS transformation
-  - [x] To subdomains transformation
-  - [x] To emails transformation
-  - [x] To google
-  - [x] To Traceroute transformation
-  - [x] To URL scan transformation (urlscan.io)
-  - [x] To URLs (extract all urls found on a page)
-  - [ ] To Google Cache
+- [x] Website node
 - [x] Google search node
-- [ ] Google Cache search node
-- [x] Google result node
-  - [x] To domain
-  - [x] To URL
-  - [x] To domain transformation
+- [x] Google cache search node
 - [x] Google dorks
-- [x] DNS Node
-- [x] Email Node
-  - [x] To Google result transformation
-- [x] Url Node
-  - [x] Open in new tab
-  - [x] To URL scan transformation (urlscan.io)
-  - [x] To IP
-  - [x] To Domain
-  - [x] To URLs (extract all urls found on a page)
-  - [x] To emails
-  - [ ] To Google Cache
-- [x] Ip Node
-  - [x] To Domain transformation
-  - [x] To Subdomains transformation
-  - [x] To Geolocation transformation
-  - [x] To Traceroute transformation
-  - [x] To URL scan transformation (urlscan.io)
-  - [ ] To Google Cache
-- [ ] CSE Node
-- [x] Username Node
-  - [x] To Profiles
+- [x] DNS node
+- [x] URL node
+- [x] IP node
+- [x] CSE node
+- [x] Username node
+
+- [x] Added a plugin system
+-  For this update you'll have to rebuild your docker containers. After that long wait you'll be rewarded with a newly released package: [osintbuddy](https://pypi.org/project/osintbuddy/)  
+    The osintbuddy package allows for transforming data through a `@transform` decorator, which is applied to methods in the OBPlugin class.
+- The transform decorator must have a label and, optionally, a [tabler-icons](https://tabler-icons.io/) icon name. You can manage node transformations and node creation easily through the API.
+-  Basically these updates make it easier to create nodes and context menu options for a nodes transform options which are mapped to plugin methods.
+- More documentation is coming soon when I have the time.
+  Here's a video on the new update in the meantime: [Introducing OSINTBuddy: A plugin based Maltego alternative in beta](https://www.youtube.com/watch?v=XKBusfYGL4M)
+  
+
+
 
 ## [↑](#-Table-of-Contents) Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
+2. Create your Feature Branch (`git checkout -b feature/add-core-plugin`)
+3. Commit your Changes (`git commit -m 'feat: add core plugin to osintbuddy app'`)
+4. Push to the Branch (`git push origin feature/add-core-plugin`)
 5. Open a Pull Request
 
 ## [↑](#-Table-of-Contents) Contact
@@ -186,7 +140,6 @@ Open an issue if you need to get in touch with me
 
 Project Link: [https://github.com/jerlendds/osintbuddy](https://github.com/jerlendds/osintbuddy)
 
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [contributors-shield]: https://img.shields.io/github/contributors/jerlendds/osintbuddy.svg?style=for-the-badge
 [contributors-url]: https://github.com/jerlendds/osintbuddy/graphs/contributors

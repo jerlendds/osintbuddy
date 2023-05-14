@@ -8,8 +8,6 @@ from osintbuddy.plugins import OBPlugin, transform
 from osintbuddy.node import TextInput, Text, Title, Empty, CopyText
 from osintbuddy.errors import OBPluginError, NodeMissingValueError
 from osintbuddy.utils import to_camel_case
-# @todo organize this to avoid circular import issues...
-# from app.plugins.google import GoogleResult, GoogleSearchPlugin
 
 
 class WhoisPlugin(OBPlugin):
@@ -369,7 +367,7 @@ class WebsitePlugin(OBPlugin):
 class SubdomainPlugin(OBPlugin):
     label = 'Subdomain'
     name = 'Subdomain'
-    color = '#2181B5'
+    color = '#FFCC33'
     node = [
         TextInput(label='Subdomain', icon='world'),
     ]
