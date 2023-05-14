@@ -7,7 +7,7 @@ from osintbuddy.node import TextInput, DropdownInput, Title, CopyText
 from osintbuddy.errors import OBPluginError
 from app.plugins.url import UrlPlugin
 
-cse_link_options = json.load(open('/app/app/plugins/cses.json'))
+cse_link_options = json.load(open('app/plugins/cses.json'))
 
 
 class CSESearchResultsPlugin(OBPlugin):
