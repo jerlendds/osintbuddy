@@ -59,6 +59,7 @@ or the scope that people can have through this software.
 - Visual representation of fetched data for easy understanding
 - A powerful development platform that is open for contributions
 - New plugin-based system for transforming data, check out the [osintbuddy](https://pypi.org/project/osintbuddy/) package. Documentation is coming soon.
+![osintbuddy-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/c01357a9-9e55-44e3-9734-c84130bd110b)
 
 
 &nbsp;&nbsp;&nbsp;\> **[https://docs.osintbuddy.com](https://docs-osintbuddy-com.vercel.app/)**
@@ -97,11 +98,11 @@ To start using OSINTBuddy, follow these simple installation steps:
   - Neo4J: http://localhost:7474/browser/
 - Access OSINTBuddy through the URLs provided for frontend, backend, documentation, and more.
 
-## [↑](#-Table-of-Contents) Roadmap
+## [↑](#-Table-of-Contents)Roadmap
 
 See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list of proposed features (and known issues).
 
-## Progress Notes
+## [↑](#-Table-of-Contents)Progress Notes
 
 - [x] Website node
 - [x] Google search node
@@ -124,7 +125,7 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 
 
 
-## [↑](#-Table-of-Contents) Contributing
+## [↑](#-Table-of-Contents)Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -134,7 +135,7 @@ Contributions are what make the open source community such an amazing place to l
 4. Push to the Branch (`git push origin feature/add-core-plugin`)
 5. Open a Pull Request
 
-## [↑](#-Table-of-Contents) Contact
+## [↑](#-Table-of-Contents)Contact
 
 Open an issue if you need to get in touch with me
 
