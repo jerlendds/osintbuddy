@@ -1,22 +1,24 @@
+import time
 from selenium.webdriver.common.by import By
-from osintbuddy.node import TextInput
-from osintbuddy.plugins import OBPlugin, transform
+from osintbuddy.elements import TextInput
+import osintbuddy as ob
 
 
-class UsernamePlugin(OBPlugin):
+class UsernamePlugin(ob.Plugin):
     label = 'Username'
     name = 'Username'
     color = '#BF288D'
     node = [
-        TextInput(label='Username', icon='IconUserSearch'),
+        TextInput(label='Username', icon='user-search'),
     ]
 
-    @transform(label='To profile', icon='IconUser')
-    def transform_to_profile(self, node, **kwargs):
+    @ob.transform(label='To profile', icon='user')
+    async def transform_to_profile(self, node, **kwargs):
         with kwargs['get_driver']() as driver:
             driver.get('https://whatsmyname.app/')
             input_field = driver.find_element(by=By.XPATH, value='//*[@id="targetUsername"]')
             input_field.send_keys(node['data'][0])
+            time.sleep(3)
             driver.find_element(
                 by=By.XPATH,
                 value="/html/body/div/div/div[2]/div[2]/div/div[2]/button"
@@ -26,23 +28,24 @@ class UsernamePlugin(OBPlugin):
             data = []
             for elm in elms:
                 tds = elm.find_elements(by=By.CSS_SELECTOR, value='td')
-                blueprint = SocialProfilePlugin.blueprint()
-                blueprint['elements'][0]['value'] = tds[2].text
-                blueprint['elements'][1]['value'] = tds[0].text
-                blueprint['elements'][2]['value'] = tds[3].text
-                blueprint['elements'][3]['value'] = tds[1].text
+                blueprint = SocialProfilePlugin.blueprint(
+                    category=tds[2].text,
+                    site=tds[0].text,
+                    link=tds[3].text,
+                    username=tds[1].text
+                )
                 data.append(blueprint)
             return data
 
 
-class SocialProfilePlugin(OBPlugin):
+class SocialProfilePlugin(ob.Plugin):
     label = 'Profile'
     show_label = False
     name = 'Social Profile'
     color = '#D842A6'
     node = [
-        TextInput(label='Category', icon='IconCategory'),
+        TextInput(label='Category', icon='category'),
         TextInput(label='Site', icon='world'),
-        TextInput(label='Link', icon='IconLink'),
-        TextInput(label='Username', icon='IconUser'),
+        TextInput(label='Link', icon='link'),
+        TextInput(label='Username', icon='user'),
     ]

@@ -2,6 +2,7 @@ import time
 from typing import List
 import validators
 from pydantic import EmailStr
+
 import requests
 from neo4j._sync import work
 from app.core.logger import get_logger

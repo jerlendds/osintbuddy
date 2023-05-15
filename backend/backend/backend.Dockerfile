@@ -11,8 +11,8 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r /app/requirements.txt
-# COPY plugins.osintbuddy.com /plugins.osintbuddy.com/
-# RUN pip install /plugins.osintbuddy.com/
+COPY osintbuddy-plugins /osintbuddy-plugins/
+RUN pip install /osintbuddy-plugins/
 COPY app/ /app/
 
 CMD ["/bin/bash", "-c", "./start.sh"]

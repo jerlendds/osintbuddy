@@ -1,10 +1,10 @@
 from urllib.parse import urlparse
-from osintbuddy.plugins import OBPlugin, transform
-from osintbuddy.node import TextInput
+import osintbuddy as ob
+from osintbuddy.elements import TextInput
 from app.plugins.core import WebsitePlugin
 
 
-class UrlPlugin(OBPlugin):
+class UrlPlugin(ob.Plugin):
     label = 'URL'
     name = 'URL'
     color = '#642CA9'
@@ -12,7 +12,7 @@ class UrlPlugin(OBPlugin):
         TextInput(label='URL', icon='link'),
     ]
 
-    @transform(label='To website', icon='world-www')
-    def transform_to_website(self, node, **kwargs):
+    @ob.transform(label='To website', icon='world-www')
+    async def transform_to_website(self, node, **kwargs):
         domain = urlparse(node['data'][0]).netloc
         return WebsitePlugin.blueprint(domain=domain)

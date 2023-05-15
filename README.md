@@ -116,7 +116,7 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 
 - [x] Added a plugin system
 -  For this update you'll have to rebuild your docker containers. After that long wait you'll be rewarded with a newly released package: [osintbuddy](https://pypi.org/project/osintbuddy/)  
-    The osintbuddy package allows for transforming data through a `@transform` decorator, which is applied to methods in the OBPlugin class.
+    The osintbuddy package allows for transforming data through a `@transform` decorator, which is applied to methods in the Plugin class.
 - The transform decorator must have a label and, optionally, a [tabler-icons](https://tabler-icons.io/) icon name. You can manage node transformations and node creation easily through the API.
 -  Basically these updates make it easier to create nodes and context menu options for a nodes transform options which are mapped to plugin methods.
 - More documentation is coming soon when I have the time.

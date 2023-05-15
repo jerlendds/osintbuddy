@@ -1,44 +1,27 @@
 import json
 import socket
+
 import requests
 from urllib.parse import urlparse
 import dns.resolver
 from selenium.webdriver.common.by import By
-from osintbuddy.plugins import OBPlugin, transform
-from osintbuddy.node import TextInput, Text, Title, Empty, CopyText
+import osintbuddy as ob
+from osintbuddy.elements import TextInput, Text, Title, Empty, CopyText
 from osintbuddy.errors import OBPluginError, NodeMissingValueError
 from osintbuddy.utils import to_camel_case
 
 
-class WhoisPlugin(OBPlugin):
+class WhoisPlugin(ob.Plugin):
     label = 'WHOIS'
     name = 'WHOIS'
     show_label = False
     color = '#F47C00'
     node = [
-        TextInput(label='Raw whois', icon='world'),
+        CopyText(label='Raw whois', icon='world'),
     ]
 
 
-class GoogleResult(OBPlugin):
-    label = 'Google Result'
-    show_label = False
-    name = 'Google result'
-    color = '#308e49'
-    node = [
-        Title(label='result'),
-        CopyText(label='url')
-    ]
-
-    @transform(label='To website', icon='world')
-    def transform_to_website(self, node, **kwargs):
-        blueprint = WebsitePlugin.blueprint(
-            domain=urlparse(node['data'][3]).netloc
-        )
-        return blueprint
-
-
-class GoogleSearchPlugin(OBPlugin):
+class GoogleSearchPlugin(ob.Plugin):
     label = 'Google Search'
     name = 'Google search'
     color = '#3D78D9'
@@ -47,8 +30,8 @@ class GoogleSearchPlugin(OBPlugin):
         TextInput(label='Pages', icon='123', value='3'),
     ]
 
-    @transform(label='To results')
-    def transform_to_google_results(self, node, **kwargs):
+    @ob.transform(label='To results')
+    async def transform_to_google_results(self, node, **kwargs):
         query = node['data'][0]
         pages = node['data'][1]
         results = []
@@ -114,7 +97,7 @@ class GoogleSearchPlugin(OBPlugin):
         return results
 
 
-class GoogleCacheResult(OBPlugin):
+class GoogleCacheResult(ob.Plugin):
     label = 'Cache Result'
     show_label = False
     name = 'Cache result'
@@ -126,14 +109,14 @@ class GoogleCacheResult(OBPlugin):
         ]
     ]
 
-    @transform(label='To website', icon='world-www')
-    def transform_to_website(self, node, **kwargs):
+    @ob.transform(label='To website', icon='world-www')
+    async def transform_to_website(self, node, **kwargs):
         return WebsitePlugin.blueprint(
             domain=urlparse(node['data'][3]).netloc
         )
 
 
-class GoogleCacheSearchPlugin(OBPlugin):
+class GoogleCacheSearchPlugin(ob.Plugin):
     label = 'Cache Search'
     name = 'Google cache search'
     color = '#145070'
@@ -142,8 +125,8 @@ class GoogleCacheSearchPlugin(OBPlugin):
         TextInput(label='Pages', icon='123', default='3')
     ]
 
-    @transform(label='To cache results')
-    def transform_to_google_cache_results(self, node, **kwargs):
+    @ob.transform(label='To cache results')
+    async def transform_to_google_cache_results(self, node, **kwargs):
         query = node['data'][0]
         pages = node['data'][1]
         return self.search_google_cache(query, pages)
@@ -205,7 +188,7 @@ class GoogleCacheSearchPlugin(OBPlugin):
         }
 
 
-class DnsPlugin(OBPlugin):
+class DnsPlugin(ob.Plugin):
     label = 'DNS'
     name = 'DNS'
     color = ''
@@ -215,7 +198,25 @@ class DnsPlugin(OBPlugin):
     ]
 
 
-class WebsitePlugin(OBPlugin):
+class GoogleResult(ob.Plugin):
+    label = 'Google Result'
+    show_label = False
+    name = 'Google result'
+    color = '#308e49'
+    node = [
+        Title(label='result'),
+        CopyText(label='url')
+    ]
+
+    @ob.transform(label='To website', icon='world')
+    async def transform_to_website(self, node, **kwargs):
+        blueprint = WebsitePlugin.blueprint(
+            domain=urlparse(node['data'][3]).netloc
+        )
+        return blueprint
+
+
+class WebsitePlugin(ob.Plugin):
     label = 'Website'
     name = 'Website'
     color = '#1D1DB8'
@@ -224,17 +225,34 @@ class WebsitePlugin(OBPlugin):
         TextInput(label='Domain', icon='world-www'),
     ]
 
-    @transform(label='To IP', icon='building-broadcast-tower')
-    def transform_to_ip(self, node, **kwargs):
+    @ob.transform(label='To IP', icon='building-broadcast-tower')
+    async def transform_to_ip(self, node, **kwargs):
         blueprint = IPAddressPlugin.blueprint(
             ip_address=socket.gethostbyname(node['data'][0])
         )
         return blueprint
 
-    @transform(label='To WHOIS', icon='world')
-    def transform_to_whois(self, node, **kwargs):
+    @ob.transform(label='To google', icon='world')
+    async def transform_to_google(self, node, **kwargs):
+        # @todo
         domain = node['data'][0]
-        blueprint = WhoisPlugin.blueprint()
+        query = f"{domain}"
+        results = []
+        for result in GoogleSearchPlugin().search_google(query=query, pages="3"):
+            blueprint = GoogleResult.blueprint(
+                result={
+                    'title': result.get('title'),
+                    'subtitle': result.get('breadcrumb'),
+                    'text': result.get('description'),
+                },
+                url=result.get('url')
+            )
+            results.append(blueprint)
+        return results
+
+    @ob.transform(label='To WHOIS', icon='world')
+    async def transform_to_whois(self, node, **kwargs):
+        domain = node['data'][0]
         if len(domain.split('.')) > 2:
             domain = domain.split('.')
             domain = domain[len(domain) - 2] + '.' + domain[len(domain) - 1]
@@ -243,10 +261,6 @@ class WebsitePlugin(OBPlugin):
             driver.get(f'https://www.whois.com/whois/{domain}')
             raw_whois = None
             try:
-                domain_info = driver.find_elements(
-                    by=By.CSS_SELECTOR,
-                    value='div.df-block:nth-child(2) > div'
-                )
                 raw_whois = driver.find_element(
                     by=By.TAG_NAME,
                     value='pre'
@@ -254,11 +268,10 @@ class WebsitePlugin(OBPlugin):
             except Exception as e:
                 print(e)
                 raise OBPluginError('Captcha encountered, please try again later.')
-            blueprint['elements'][0]['value'] = '\n'.join(self._parse_whois(raw_whois))
-            return blueprint
+            return WhoisPlugin.blueprint(raw_whois='\n'.join(self._parse_whois(raw_whois)))
 
-    @transform(label='To DNS', icon='world')
-    def transform_to_dns(self, node, **kwargs):
+    @ob.transform(label='To DNS', icon='world')
+    async def transform_to_dns(self, node, **kwargs):
         # @todo
         blueprint = WebsitePlugin.blueprint()
         data = {
@@ -299,41 +312,22 @@ class WebsitePlugin(OBPlugin):
                 results.append(blueprint)
         return results
 
-    # @transform(label='To subdomains', icon='world')
-    # def transform_to_subdomains(self, node, **kwargs):
+    # @ob.transform(label='To subdomains', icon='world')
+    # async def transform_to_subdomains(self, node, **kwargs):
     #     # @todo
     #     return WebsitePlugin.blueprint(
     #         domain=urlparse(node['data'][3]).netloc
     #     )
 
-    # @transform(label='To emails', icon='world')
-    # def transform_to_emails(self, node, **kwargs):
+    # @ob.transform(label='To emails', icon='world')
+    # async def transform_to_emails(self, node, **kwargs):
     #     # @todo
     #     blueprint = WebsitePlugin.blueprint()
     #     website = node['data'][3]
     #     blueprint['elements'][0]['value'] = urlparse(website).netloc
     #     return blueprint
-
-    @transform(label='To google', icon='world')
-    def transform_to_google(self, node, **kwargs):
-        # @todo
-        domain = node['data'][0]
-        query = f"{domain}"
-        results = []
-        for result in GoogleSearchPlugin().search_google(query=query, pages="3"):
-            blueprint = GoogleResult.blueprint(
-                result={
-                    'title': result.get('title'),
-                    'subtitle': result.get('breadcrumb'),
-                    'text': result.get('description'),
-                },
-                url=result.get('url')
-            )
-            results.append(blueprint)
-        return results
-
-    # @transform(label='To urlscan.io', icon='world')
-    # def transform_to_urlscanio(self, node, **kwargs):
+    # @ob.transform(label='To urlscan.io', icon='world')
+    # async def transform_to_urlscanio(self, node, **kwargs):
     #     # @todo
     #     blueprint = WebsitePlugin.blueprint()
     #     domain = node['data'][0]
@@ -346,15 +340,8 @@ class WebsitePlugin(OBPlugin):
     #         res = requests.get('https://urlscan.io/api/v1/search/', params=params)
     #     return blueprint
 
-    # @transform(label='To traceroute', icon='world')
-    # def transform_to_traceroute(self, node, **kwargs):
-    #     # @todo
-    #     blueprint = WebsitePlugin.blueprint()
-    #     website = node['data'][3]
-    #     blueprint['elements'][0]['value'] = urlparse(website).netloc
-    #     return blueprint
-
-    def _parse_whois(self, whois_data):
+    @staticmethod
+    def _parse_whois(whois_data):
         data = []
         for line in whois_data.split('\n'):
             if "DNSSEC" in line:
@@ -364,7 +351,7 @@ class WebsitePlugin(OBPlugin):
         return data
 
 
-class SubdomainPlugin(OBPlugin):
+class SubdomainPlugin(ob.Plugin):
     label = 'Subdomain'
     name = 'Subdomain'
     color = '#FFCC33'
@@ -373,7 +360,7 @@ class SubdomainPlugin(OBPlugin):
     ]
 
 
-class IPGeolocationPlugin(OBPlugin):
+class IPGeolocationPlugin(ob.Plugin):
     label = 'IP Geo'
     show_label = False
 
@@ -426,7 +413,7 @@ class IPGeolocationPlugin(OBPlugin):
     }
 
 
-class IPAddressPlugin(OBPlugin):
+class IPAddressPlugin(ob.Plugin):
     label = 'IP'
     name = 'IP address'
     color = '#F47C00'
@@ -434,8 +421,8 @@ class IPAddressPlugin(OBPlugin):
         TextInput(label='IP Address', icon='map-pin')
     ]
 
-    @transform(label='To website', icon='world', prompt="""""")
-    def transform_to_website(self, node, **kwargs):
+    @ob.transform(label='To website', icon='world', prompt="""""")
+    async def transform_to_website(self, node, **kwargs):
         try:
             resolved = socket.gethostbyaddr(node['data'][0])
             if len(resolved) >= 1:
@@ -446,12 +433,12 @@ class IPAddressPlugin(OBPlugin):
         except (socket.gaierror, socket.herror):
             raise OBPluginError('We ran into a socket error. Please try again')
 
-    # @transform(label='To traceroute', icon='crosshair')
-    # def transform_todo(self, node, **kwargs):
+    # @ob.transform(label='To traceroute', icon='crosshair')
+    # async def transform_todo(self, node, **kwargs):
     #     blueprint = IPGeolocationPlugin.blueprint()
     #     return blueprint
-    @transform(label='To subdomains', icon='world')
-    def transform_to_subdomains(self, node, **kwargs):
+    @ob.transform(label='To subdomains', icon='world')
+    async def transform_to_subdomains(self, node, **kwargs):
         nodes = []
         params = {
             'q': node['data'][0],
@@ -471,8 +458,8 @@ class IPAddressPlugin(OBPlugin):
         except Exception:
             return []
 
-    @transform(label='To geolocation', icon='map-pin')
-    def transform_to_geolocation(self, node, **kwargs):
+    @ob.transform(label='To geolocation', icon='map-pin')
+    async def transform_to_geolocation(self, node, **kwargs):
         summary_rows = ['ASN', 'Hostname', 'Range', 'Company', 'Hosted domains', 'Privacy', 'Anycast', 'ASN type', 'Abuse contact']  # noqa
         geo_rows = ['City', 'State', 'Country', 'Postal', 'Timezone', 'Coordinates']  # noqa
         if len(node['data']) == 0:
