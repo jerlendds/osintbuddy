@@ -8,6 +8,7 @@ astroid==2.15.4
 async-generator==1.10
 async-timeout==4.0.2
 attrs==23.1.0
+httpx==0.24.0
 beautifulsoup4==4.12.2
 billiard==3.6.4.0
 black==23.3.0
@@ -54,7 +55,7 @@ numexpr==2.8.4
 numpy==1.24.3
 openai==0.27.6
 openapi-schema-pydantic==1.2.4
-osintbuddy==0.0.2rc26.post1 
+osintbuddy==0.0.3rc35.post1
 outcome==1.2.0
 packaging==23.1
 pathspec==0.11.1

@@ -3,7 +3,7 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cache import caches, close_caches
 from fastapi_cache.backends.redis import CACHE_KEY, RedisCacheBackend
-from osintbuddy.plugins import discover_plugins
+from osintbuddy import discover_plugins
 
 from app.api.api_v1.api import api_router
 from app.core.config import settings

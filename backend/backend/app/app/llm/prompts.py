@@ -1,5 +1,5 @@
 from langchain import PromptTemplate, FewShotPromptTemplate
-from osintbuddy.plugins import OBRegistry
+from osintbuddy import Registry
 
 template_to_osintbuddy_command = """
 Context: Your name is OSINTBuddy. You are an advanced AI OSINT investigator working on intelligence investigations
@@ -52,10 +52,10 @@ suggest_google_dorks(search_query) -> Set[str]:
   - search_query is a required argument
 """  # noqa
 
-def get_prompt_transform_options():
+async def get_prompt_transform_options():
     data = {}
-    for label in OBRegistry.labels:
-        transforms = OBRegistry.get_plugin(label)(
+    for label in Registry.labels:
+        transforms = await Registry.get_plugin(label)(
             ).__class__.__dict__.values()
         if transforms:
             data[label] = [

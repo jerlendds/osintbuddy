@@ -1,62 +1,26 @@
 from typing import List
 from fastapi import (
     APIRouter,
-    Depends,
-    HTTPException,
     WebSocket,
     WebSocketException,
     WebSocketDisconnect
 )
 from websockets.exceptions import ConnectionClosedError
-from sqlalchemy.orm import Session
 from app.api import deps
 from app.core.logger import get_logger
-from app.llm.prompts import get_prompt_transform_options
+# from app.llm.prompts import get_prompt_transform_options
 from functools import lru_cache
-from osintbuddy.plugins import OBRegistry, discover_plugins
+from osintbuddy import Registry, discover_plugins
 from osintbuddy.errors import OBPluginError
 
 router = APIRouter(prefix='/nodes')
 
 logger = get_logger(' api_v1.endpoints.nodes ')
 
-CORE_LABELS = [
-    'GoogleSearch',
-    'GoogleCacheSearch',
-    'GoogleResult',
-    'CseSearch',
-    'CseResult',
-    'IpAddress',
-    'Email',
-    'SmtpTest',
-    'Domain',
-    'Subdomain',
-    'URL',
-    'urlscanIO',
-    'Traceroute',
-    'Geolocation',
-    'DNSRecord',
-    'Username',
-    'Profile',
-    'Person',
-    'Pastebin',
-    'Phone',
-    'Business',
-    'ImageSearch',
-    'Image',
-    'VideoSearch',
-    'Video',
-    'News',
-    'RSS',
-    'MalwareCheck',
-    'Malware',
-    'NLP',
-]
 
-
-@lru_cache(maxsize=128)
-def fetch_node_transforms(plugin_label):
-    plugin = OBRegistry.get_plugin(plugin_label=plugin_label)
+# @lru_cache(maxsize=128)
+async def fetch_node_transforms(plugin_label):
+    plugin = await Registry.get_plugin(plugin_label=plugin_label)
     if plugin is not None:
         labels = plugin().transform_labels
     else:
@@ -66,30 +30,26 @@ def fetch_node_transforms(plugin_label):
 
 @router.get('/refresh')
 async def refresh_plugins():
+    # fetch_node_transforms.cache_clear()
     discover_plugins('app/plugins/')
-    fetch_node_transforms.cache_clear()
-    return {'status': 'success', 'plugins': OBRegistry.ui_labels}
+    return {'status': 'success', 'plugins': Registry.ui_labels}
 
 
 @router.get('/transforms')
 async def get_node_transforms(node_type: str):
     return {
         'type': node_type,
-        'transforms': fetch_node_transforms(node_type)
+        'transforms': await fetch_node_transforms(node_type)
     }
 
 
 @router.get('/type')
 async def get_node_option(node_type: str):
-    try:
-        plugin = OBRegistry.get_plugin(plugin_label=node_type)
-        if plugin:
-            node = plugin.blueprint()
-            node['label'] = node_type
-            return node
-    except Exception as e:
-        logger.error(e)
-        raise HTTPException(status_code=422, detail='pluginNotFound')
+    plugin = await Registry.get_plugin(plugin_label=node_type)
+    if plugin:
+        node = plugin.blueprint()
+        node['label'] = node_type
+        return node
 
 
 def save_transform(results: List[dict]):
@@ -97,7 +57,7 @@ def save_transform(results: List[dict]):
         print(node)
 
 
-def get_command_type(event):
+async def get_command_type(event):
     user_event = event['action'].split(':')
     action = user_event[0]
     action_type = None
@@ -122,17 +82,19 @@ async def remove_nodes(node, action_type, send_json):
     await send_json({'action': 'remove:node', 'node': node})
 
 
-async def transform_nodes(node, action_type, send_json):
+async def nodes_transform(node, action_type, send_json):
     node_output = {}
-    plugin = OBRegistry.get_plugin(node['type'])
+    plugin = await Registry.get_plugin(node['type'])
+    print('plugin: ', plugin)
     if plugin := plugin():
+        print('plugin instance: ', plugin)
         transform_type = node['transform']
-        node_output = plugin._get_transform(
+        node_output = await plugin._get_transform(
             transform_type=transform_type,
             node=node,
             get_driver=deps.get_driver,
         )
-        if isinstance(node_output, list):
+        if type(node_output) == list:
             for output in node_output:
                 output['action'] = 'addNode'
                 output['position'] = node['position']
@@ -145,7 +107,7 @@ async def transform_nodes(node, action_type, send_json):
 
 
 async def execute_event(event, send_json):
-    action, action_type = get_command_type(event)
+    action, action_type = await get_command_type(event)
     if action == 'read':
         await read_graph(event['node'], action_type, send_json)
     if action == 'create':
@@ -155,7 +117,7 @@ async def execute_event(event, send_json):
     if action == 'delete':
         await remove_nodes(event['node'], action_type, send_json)
     if action == 'transform':
-        await transform_nodes(event['node'], action_type, send_json)
+        await nodes_transform(event['node'], action_type, send_json)
 
 
 @router.websocket('/investigation')
@@ -172,7 +134,6 @@ async def active_investigation(
                 send_json=websocket.send_json
             )
         except OBPluginError as e:
-            print(e)
             await websocket.send_json({'action': 'error', 'detail': f'{e}'})
         except WebSocketDisconnect as e:
             logger.info(e)

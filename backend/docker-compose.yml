@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   backend:
-    # image: openinfolabs/osintbuddy-backend:latest
+    image: openinfolabs/osintbuddy-backend:latest
     command: ['/bin/sh', '-c', './start-reload.sh']
     build:
       context: ./backend
@@ -15,7 +15,7 @@ services:
     env_file:
       - .env
   microservice:
-    # image: openinfolabs/osintbuddy-microservice:latest
+    image: openinfolabs/osintbuddy-microservice:latest
     build:
       context: ./microservice
       dockerfile: Dockerfile
@@ -37,7 +37,7 @@ services:
       - 6379:6379
     command: redis-server
   worker:
-    # image: openinfolabs/osintbuddy-worker:latest
+    image: openinfolabs/osintbuddy-worker:latest
     command: /worker-start.sh
     build:
       context: ./backend
