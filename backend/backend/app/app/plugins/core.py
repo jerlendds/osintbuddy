@@ -1,4 +1,5 @@
 import json
+import re
 import socket
 
 import requests
@@ -197,6 +198,41 @@ class DnsPlugin(ob.Plugin):
         Title(label='record')
     ]
 
+    _items = ["NS", "A", "AAAA", "CNAME", "MX", "SOA", "TXT", "PTR", "SRV", "CERT", "DCHID", "DNAME"]
+
+    @classmethod
+    def data_template(cls):
+        return {k: None for k in cls._items}
+
+    @staticmethod
+    def record(key, data):
+        _data = json.dumps(data).strip("\'\" .")
+        match key:
+            case "MX":
+                matches = re.findall(r"\d+ (.*)", _data)
+                _data = matches[0] if len(matches) else _data
+            case "TXT":
+                _data = _data.strip('\\\"')
+
+        return {
+            'title': '',
+            'subtitle': f'{key} Record',
+            'text': _data,
+            'data': [_data],
+        }
+
+    @ob.transform(label='Extract IP', icon='microscope')
+    async def transform_extract_ip(self, node, **kwargs) -> list:
+        data = node['data'][2]
+        ip_regexp = re.compile("\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}")
+        results = []
+        for ip in ip_regexp.findall(data):
+            blueprint = IPAddressPlugin.blueprint(
+                ip_address=ip
+            )
+            results.append(blueprint)
+        return results
+
 
 class GoogleResult(ob.Plugin):
     label = 'Google Result'
@@ -274,25 +310,18 @@ class WebsitePlugin(ob.Plugin):
     async def transform_to_dns(self, node, **kwargs):
         # @todo
         blueprint = WebsitePlugin.blueprint()
-        data = {
-            "NS": None,
-            "A": None,
-            "AAAA": None,
-            "CNAME": None,
-            "MX": None,
-            "SOA": None,
-            "TXT": None,
-            "PTR": None,
-            "SRV": None,
-            "CERT": None,
-            "DCHID": None,
-            "DNAME": None,
-        }
+        data = DnsPlugin.data_template()
+
         if len(node['data']) == 0:
             raise NodeMissingValueError("A website is required to process dns records")
 
-        website = node['data'][0].split('.')
-        domain = website[len(website) - 2] + '.' + website[len(website) - 1]
+        website = node['data'][0]
+        website_parsed = urlparse(website)
+        if website_parsed.scheme:
+            domain = website_parsed.netloc
+        else:
+            domain = urlparse(f"https://{website}").netloc
+
         for key in data.keys():
             try:
                 resolved = dns.resolver.resolve(domain, key)
@@ -300,14 +329,11 @@ class WebsitePlugin(ob.Plugin):
             except Exception:
                 pass
         results = []
-        for key in data.keys():
-            if data[key] is not None:
+        data_filled = dict((k, v) for k, v in data.items() if v is not None)
+        for key, value in data_filled.items():
+            for entry in value:
                 blueprint = DnsPlugin.blueprint(
-                    record={
-                        'title': '',
-                        'subtitle': f'{key} Record',
-                        'text': json.dumps(data[key])
-                    }
+                    record=DnsPlugin.record(key, entry)
                 )
                 results.append(blueprint)
         return results
