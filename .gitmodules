@@ -1,0 +1,3 @@
+[submodule "osintbuddy-plugins"]
+	path = backend/backend/osintbuddy-plugins
+	url = https://github.com/jerlendds/osintbuddy-plugins.git
