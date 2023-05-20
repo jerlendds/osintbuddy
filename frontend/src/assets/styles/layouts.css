@@ -1,0 +1,12 @@
+.sidebar-link {
+  @apply flex items-center transition-colors duration-75 px-2 mx-2 my-1 py-2 text-base font-sans font-medium rounded-md text-slate-600 hover:bg-dark-800 hover:text-slate-200 ;
+}
+
+.sidebar-link.active {
+  @apply bg-dark-400 text-slate-200;
+}
+
+.sidebar-link.active button {
+  @apply bg-dark-500 hover:bg-dark-600;
+}
+
