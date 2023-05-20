@@ -1,10 +1,12 @@
 import { ChevronUpDownIcon, PaperClipIcon } from '@heroicons/react/24/outline';
 import { Combobox } from '@headlessui/react';
 import classNames from 'classnames';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { Handle, Position } from 'reactflow';
+import { ChangeEvent, Fragment, useEffect, useState } from 'react';
+import { Handle, Position, useStore } from 'reactflow';
 import { GripIcon, Icon } from '@/components/Icons';
 import { toast } from 'react-toastify';
+import { JSONObject } from '@/globals';
+import { useNodeId } from 'reactflow';
 
 export type NodeTypes =
   | 'dropdown'
@@ -52,7 +54,36 @@ const getNodeKey = () => {
 
 const handleStyle = { borderColor: '#60666A' };
 
-export default function BaseNode({ flow, sendJsonMessage }: { flow: any; sendJsonMessage: Function }) {
+import { useNodesInitialized } from 'reactflow';
+
+const options = {
+  includeHiddenNodes: false, // this is the default
+};
+
+function KeyLogger() {
+  const nodesInitialized = useNodesInitialized(options);
+
+  useEffect(() => {
+    if (nodesInitialized) {
+    }
+  }, [nodesInitialized]);
+
+  return null;
+}
+
+export default function BaseNode({
+  flow,
+  sendJsonMessage,
+  updateNode,
+  setEditState,
+}: {
+  flow: any;
+  sendJsonMessage: Function;
+  updateNode: (nodeId: string, nodeData: JSONObject) => void;
+  setEditState: Function;
+}) {
+  const nodeId = useNodeId();
+  console.log('THIS NODES ID', nodeId);
   const node = flow?.data?.node;
   const nodes = node?.elements;
   const icon = node?.icon;
@@ -66,11 +97,13 @@ export default function BaseNode({ flow, sendJsonMessage }: { flow: any; sendJso
       return (
         <DropdownInput
           key={key}
-          sendJsonMessage={sendJsonMessage}
           nodeId={flow.id}
           options={element?.options || []}
           label={element?.label}
           value={element?.value}
+          sendJsonMessage={sendJsonMessage}
+          updateNode={updateNode}
+          setEditState={setEditState}
         />
       );
     }
@@ -83,6 +116,8 @@ export default function BaseNode({ flow, sendJsonMessage }: { flow: any; sendJso
           initialValue={element?.value || ''}
           icon={element?.icon || 'ballpen'}
           sendJsonMessage={sendJsonMessage}
+          updateNode={updateNode}
+          setEditState={setEditState}
         />
       );
     }
@@ -95,6 +130,7 @@ export default function BaseNode({ flow, sendJsonMessage }: { flow: any; sendJso
           initialValue={element?.value || ''}
           icon={element?.icon || 'file-upload'}
           sendJsonMessage={sendJsonMessage}
+          updateNode={updateNode}
         />
       );
     }
@@ -121,17 +157,43 @@ export default function BaseNode({ flow, sendJsonMessage }: { flow: any; sendJso
     }
   };
 
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+    switch (e.detail) {
+      case 1:
+        // @ts-ignore
+        // console.log('node click', e.target, e.target.closest('.react-flow__node'));
+        break;
+      case 2:
+        // @ts-ignore
+        // console.log('node double click', e.target.closest('.react-flow__node'));
+        break;
+      case 3:
+        // @ts-ignore
+        // console.log('node triple click', e.target);
+        break;
+    }
+  };
+
+  // const size = useStore((s: any) => {
+  //   const node = s.nodeInternals.get(nodeId);
+
+  //   return {
+  //     width: node.width,
+  //     height: node.height,
+  //   };
+  // });
+  // console.log('size: ', size);
+
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
       <Handle position={Position.Top} id='t1' key='t1' type='source' style={handleStyle} />
       <Handle position={Position.Bottom} id='b1' key='b1' type='source' style={handleStyle} />
       <Handle position={Position.Left} id='l1' key='l1' type='target' style={handleStyle} />
-      <div data-node-type={label} className='node container' style={style}>
-        <div className='highlight' />
+      <div data-node-type={label} className=' node container' style={style}>
         <div
           style={{
-            backgroundColor: color?.length === 7 ? `${color}80` : color ? color : '#145070',
+            backgroundColor: color?.length === 7 ? `${color}76` : color ? color : '#145070',
           }}
           className='header'
         >
@@ -146,20 +208,21 @@ export default function BaseNode({ flow, sendJsonMessage }: { flow: any; sendJso
           <Icon icon={icon} className='h-5 w-5 mr-2' />
         </div>
         <form
+          onClick={handleClick}
           style={style}
           onSubmit={(event) => event.preventDefault()}
           className={classNames('elements gap-x-1', nodes.length > 2 ? '' : '')}
         >
-          {nodes.map((element: NodeInput) => {
+          {nodes.map((element: NodeInput, i: number) => {
             if (Array.isArray(element))
               return (
-                <>
-                  {element.map((elm) => (
-                    <div key={getNodeKey()} className='flex flex-col mr-2 last:mr-0'>
+                <Fragment key={i.toString()}>
+                  {element.map((elm, i: number) => (
+                    <div key={i.toString()} className='flex flex-col mr-2 last:mr-0'>
                       {getNodeElement(elm, null)}
                     </div>
                   ))}
-                </>
+                </Fragment>
               );
             return getNodeElement(element);
           })}
@@ -176,13 +239,13 @@ export function CopyText({ nodeId, label, value }: { nodeId: string; label: stri
         navigator.clipboard.writeText(value);
         toast.success('Copied to clipboard!');
       }}
-      className='flex items-center max-w-xs'
+      className='flex items-center max-w-xs text-info-300'
     >
       <PaperClipIcon className='w-4 h-4 text-inherit text-info-200 shrink-0' />
       <p
         title='Click to copy'
         data-type='link'
-        className='ml-2 text-xs text-inherit break-keep whitespace-nowrap text-info-300 truncate'
+        className='ml-2 text-xs text-inherit break-keep whitespace-nowrap  truncate'
       >
         {value}
       </p>
@@ -235,12 +298,14 @@ export function UploadFileInput({
   label,
   sendJsonMessage,
   icon,
+  updateNode,
 }: {
   nodeId: string;
   label: string;
   initialValue: string;
   sendJsonMessage: Function;
   icon?: any;
+  updateNode: Function;
 }) {
   const [value, setValue] = useState<File>(initialValue as any);
 
@@ -259,7 +324,7 @@ export function UploadFileInput({
         <div className='node-field'>
           <Icon icon={icon} className='h-6 w-6' />
           <label className={classNames('ml-5 w-52', value?.name && 'text-slate-400')}>
-            <input type='file' data-node onChange={(event: any) => updateValue(event)} />
+            <input data-node type='file' className='nodrag' onChange={(event: any) => updateValue(event)} />
             {value?.name ? value.name : label}
           </label>
         </div>
@@ -274,26 +339,33 @@ export function TextInput({
   label,
   sendJsonMessage,
   icon,
+  setEditState,
+  updateNode,
 }: {
   nodeId: string;
   label: string;
   initialValue: string;
   sendJsonMessage: Function;
   icon?: any;
+  updateNode: Function;
+  setEditState: Function;
 }) {
   const [value, setValue] = useState(initialValue);
 
   const updateValue = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
-    sendJsonMessage({ action: 'update:node', node: { id: nodeId, [label]: event.target.value } });
+    // sendJsonMessage({ action: 'update:node', node: { id: nodeId, [label]: event.target.value } });
+    setEditState({ id: nodeId, data: { [label]: value } });
+
+    // sendJsonMessage({ action: 'update:node', node: { id: nodeId, [label]: event.target.value } });
   };
 
   return (
     <>
       <div className='flex flex-col'>
         <p className='text-[0.5rem] ml-1 text-slate-400 whitespace-wrap font-semibold font-display mt-1'>{label}</p>
-        <div className='flex items-center mb-1'>
-          <div className='node-field'>
+        <div className='flex items-center mb-1 '>
+          <div className='nodrag node-field'>
             <Icon icon={icon} className='h-6 w-6' />
             <input type='text' data-node onChange={(event: any) => updateValue(event)} value={value} />
           </div>
@@ -314,12 +386,16 @@ export function DropdownInput({
   nodeId,
   sendJsonMessage,
   value,
+  updateNode,
+  setEditState,
 }: {
   nodeId: string;
   options: DropdownOption[];
   label: string;
   sendJsonMessage: Function;
   value: JSONObject;
+  setEditState: Function;
+  updateNode: Function;
 }) {
   const [query, setQuery] = useState('');
   const filteredOptions =
@@ -331,26 +407,28 @@ export function DropdownInput({
   const [activeOption, setActiveOption] = useState(value);
 
   useEffect(() => {
-    sendJsonMessage({
-      action: 'update:node',
-      node: { id: nodeId, [label]: activeOption },
-    });
-  }, [activeOption]);
+    // sendJsonMessage({
+    //   action: 'update:node',
+    //   node: { id: nodeId, [label]: activeOption },
+    // });
+    setEditState({ id: nodeId, data: { [label]: activeOption } });
+    console.log('useEffect activeOption: ', activeOption);
+  }, [query, activeOption]);
 
   return (
     <>
-      <Combobox className='w-full z-[999] dropdown-input' as='div' value={activeOption} onChange={setActiveOption}>
+      <Combobox className=' w-full z-[999] dropdown-input' as='div' value={activeOption} onChange={setActiveOption}>
         <Combobox.Label>
           <p className='text-[0.5rem] ml-1 text-slate-400 whitespace-wrap font-semibold font-display mt-1'>{label}</p>
         </Combobox.Label>
-        <div className='relative mt-1'>
+        <div className='relative mt-1 '>
           <Combobox.Input
-            className='mt-1 w-full flex py-0.5 relative border-opacity-60 text-xs border border-info-400 bg-slate-700 sm:text-sm pl-2 -z-10 text-slate-200'
+            className='nodrag  focus:ring-info-400 node-field outline-none pl-2'
             onChange={(event) => setQuery(event.target.value)}
             displayValue={(option: DropdownOption) => option.label}
           />
           <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
-            <ChevronUpDownIcon className='h-5 w-5 text-slate-400' aria-hidden='true' />
+            <ChevronUpDownIcon className='h-5 w-5 text-slate-600' aria-hidden='true' />
           </Combobox.Button>
 
           {filteredOptions.length > 0 && (
@@ -361,7 +439,7 @@ export function DropdownInput({
                   value={option}
                   className={({ active }) =>
                     classNames(
-                      'relative cursor-default select-none py-2 pl-3 pr-9',
+                      'relative nodrag nowheel cursor-default select-none py-2 pl-3 pr-9',
                       active ? 'bg-slate-900 text-slate-300' : 'text-slate-400'
                     )
                   }

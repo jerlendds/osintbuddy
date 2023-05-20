@@ -26,8 +26,6 @@ function SkeletonLoader({ className }: any) {
   );
 }
 
-
-
 export default function Table({
   columns,
   loading,
@@ -251,10 +249,10 @@ export function EmptyTableBody({
             return (
               <Fragment key={i.toString()}>
                 <td className='text-sm text-slate-400 '>
-                 <div className='absolute left-0 z-50 pl-12 invisible hidden min-w-max lg:visible lg:flex flex-col top-40'>
-                      {title && <h3 className='text-2xl text-slate-300  '>{title}</h3>}
-                      {description && <h4 className='mt-1 mb-3 text-lg font-light text-slate-400'>{description}</h4>}
-                    </div>
+                  <div className='absolute left-0 z-50 pl-12 invisible hidden min-w-max lg:visible lg:flex flex-col top-40'>
+                    {title && <h3 className='text-2xl text-slate-300  '>{title}</h3>}
+                    {description && <h4 className='mt-1 mb-3 text-lg font-light text-slate-400'>{description}</h4>}
+                  </div>
                   {/* <div className='flex relative z-50 ml-2'>
                     
                   </div> */}

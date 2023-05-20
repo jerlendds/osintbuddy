@@ -3,12 +3,14 @@ import { Route, Routes } from 'react-router-dom';
 import AppLayout from './AppLayout';
 import NotFound from './NotFound';
 import PublicLayout from './PublicLayout';
-const DashboardPage = lazy(() => import('./dashboard/DashboardPage'));
+const DashboardPage = lazy(() => import('./projects'));
 const AboutPage = lazy(() => import('@routes/public/AboutPage'));
 const LandingPage = lazy(() => import('@routes/public/LandingPage'));
-const GoogleDorksPage = lazy(() => import('./googleDorks/GoogleDorksPage'));
-const OSINTPage = lazy(() => import('./osint/OsintPage'));
-const SettingsPage = lazy(() => import('./settings/SettingsPage'));
+const GoogleDorksPage = lazy(() => import('./dorks'));
+const OSINTPage = lazy(() => import('./osint'));
+const SettingsPage = lazy(() => import('./settings'));
+const IncidentsPage = lazy(() => import('./incidents/index'));
+const ScansPage = lazy(() => import('./scans/index'));
 
 export default function AppRoutes(): ReactElement {
   return (
@@ -61,6 +63,22 @@ export default function AppRoutes(): ReactElement {
           element={
             <Suspense>
               <GoogleDorksPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path='incidents'
+          element={
+            <Suspense>
+              <IncidentsPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path='scans'
+          element={
+            <Suspense>
+              <ScansPage />
             </Suspense>
           }
         />

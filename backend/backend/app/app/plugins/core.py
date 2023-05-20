@@ -193,6 +193,7 @@ class DnsPlugin(ob.Plugin):
     label = 'DNS'
     name = 'DNS'
     color = ''
+    show_label = False
     icon = 'server-2'
     node = [
         Title(label='record')
@@ -380,6 +381,7 @@ class WebsitePlugin(ob.Plugin):
 class SubdomainPlugin(ob.Plugin):
     label = 'Subdomain'
     name = 'Subdomain'
+    show_label = False
     color = '#FFCC33'
     node = [
         TextInput(label='Subdomain', icon='world'),

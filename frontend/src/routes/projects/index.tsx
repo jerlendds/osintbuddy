@@ -5,7 +5,7 @@ import { Combobox, Dialog, Switch, Transition } from '@headlessui/react';
 import React, { Fragment, useState } from 'react';
 import { type Column, type CellValue } from 'react-table';
 import classNames from 'classnames';
-import { Formik, Form, Field } from 'formik';
+import { Formik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import { PageHeader } from '@/components/Headers';
 import { FetchProps, JSONObject } from '@/globals';
@@ -409,7 +409,6 @@ export default function DashboardPage() {
         CustomRow={ActionsRow}
         pageCount={pageCount}
       />
-      {/* <iframe style={{position: 'absolute', width: '100%', height: '80%'}} src='http://127.0.0.1/r?uri=https://www.google.com'></iframe> */}
       <CreateCaseModal
         updateTable={(project: JSONObject) => updateTable(project)}
         cancelCreateRef={cancelCreateRef}
