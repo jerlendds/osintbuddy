@@ -1,3 +1,7 @@
+import httpx
+from starlette.requests import Request
+from starlette.responses import StreamingResponse
+from starlette.background import BackgroundTask
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
@@ -69,3 +73,36 @@ async def on_shutdown() -> None:
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 app.openapi_schema = app_openapi_schema(app)
+
+# client = httpx.AsyncClient(base_url="http://127.0.0.1/") # ?uri=
+
+
+async def _reverse_proxy(request: Request):
+    print(request.url, request.headers.raw, request.url.path[7:])
+    # url = httpx.URL(
+    #     # path='r',
+    #                 # query=request.url.query.encode("utf-8"),
+    # raw_path=f"/r?uri={request.url.path[7:].replace('https://', '').replace('http://', '')}".encode('ascii'))
+    # print('httpx url: ', url)
+    # rp_req = client.build_request(request.method, url,
+    #                               headers=request.headers.raw,
+    #                               content=await request.body())
+    # print('rp_rq', rp_req)
+    # rp_resp = await client.send(rp_req, stream=True)
+    client =  httpx.Client(base_url="http://127.0.0.1/")
+    url = f'/r?uri={request.url.path[7:]}'
+    rp_req = client.build_request(
+        request.method,
+        url,
+        headers=request.headers.raw,
+        content=await request.body()
+    )
+    rp_resp = client.send(rp_req, stream=True)
+    return StreamingResponse(
+        rp_resp.aiter_raw(),
+        status_code=rp_resp.status_code,
+        headers=rp_resp.headers,
+        background=BackgroundTask(rp_resp.aclose),
+    )
+
+app.add_route("/proxy/{path:path}", _reverse_proxy, ["GET", "POST"])

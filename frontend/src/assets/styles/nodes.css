@@ -1,14 +1,6 @@
 /* Start node */
 .node.container {
-  @apply flex flex-col w-full max-w-sm justify-between rounded-sm transition duration-150 ease-in-out bg-slate-800/90 active:bg-slate-800 ring-1 ring-white/10 backdrop-blur active:border-slate-200;
-}
-
-.node.side-container {
-  @apply flex w-full max-w-sm justify-between rounded-sm transition duration-150 ease-in-out backdrop-blur-2xl active:bg-slate-800/100 hover:bg-slate-800/95  bg-slate-800/90 ring-1 ring-white/10;
-}
-
-.node .highlight {
-  @apply absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-info-300/0 via-info-300 to-info-300/0;
+  @apply flex flex-col w-full max-w-sm justify-between rounded-md transition duration-150 ease-in-out bg-dark-900/95 active:bg-dark-600 ring-1 ring-dark-400 backdrop-blur  active:ring-dark-300;
 }
 
 .node .side-header {
@@ -20,11 +12,11 @@
 }
 
 .node .node-display {
-  @apply w-full flex flex-col px-2 pb-1;
+  @apply w-full flex flex-col px-2 pb-1 ;
 }
 
 .node .node-display h1 {
-  @apply  leading-3;
+  @apply leading-3 text-slate-300;
 }
 
 .node .node-display h2 {
@@ -34,7 +26,7 @@
 .node .node-display h1,
 .node .node-display h2,
 .node .node-display p {
-  @apply text-slate-300 font-medium font-sans break-words text-sm hover:cursor-default;
+  @apply font-medium text-slate-400 font-sans break-words text-sm hover:cursor-default;
 }
 .node .node-display p {
   @apply text-xs font-normal pb-1 pt-1.5;
@@ -44,7 +36,7 @@
 }
 
 .node .header {
-  @apply flex h-full w-full items-center justify-between rounded-t-sm text-slate-100 py-2 px-1;
+  @apply flex h-full w-full items-center justify-between rounded-t-md text-slate-100 py-2 px-1;
 }
 
 .node .header svg {
@@ -52,7 +44,7 @@
 }
 
 .text-container {
-  @apply flex w-full flex-col px-2 font-medium;
+  @apply flex w-full flex-col px-2 font-medium ;
 }
 
 .text-container p:first-child,
@@ -65,20 +57,24 @@
 }
 
 .node-field {
-  @apply mt-1 w-full flex py-0.5 relative border-opacity-60 text-slate-500  text-xs border border-info-400 bg-slate-700 sm:text-sm max-w-[11.5rem] ;
+  @apply block mt-1 w-full bg-slate-800 rounded-sm border-0 py-0.5 ring-dark-300 relative text-slate-400 shadow-sm ring-1 sm:text-sm sm:leading-6;
 }
 
 .node-field svg {
-  @apply h-4 w-4 pl-0.5 mt-0.5 absolute top-1 text-gray-50 z-50;
+  @apply h-4 w-4 pl-0.5 mt-0.5 absolute top-1 text-slate-700 z-50;
 }
 
 .node-field input {
-  @apply placeholder:text-gray-50 text-slate-100 bg-slate-700 focus:outline-none pl-5 w-full;
+  @apply placeholder:text-slate-600 text-slate-400 bg-slate-800 focus:outline-none pl-5 w-full;
 }
 
 /* @todo :has is not supported by firefox yet :( */
 .node-field:has(input:focus) {
-  @apply ring-info-50 border-info-300 border-opacity-100;
+  @apply ring-info-400;
+}
+
+.node-field:has(input:focus) svg {
+  @apply text-slate-500;
 }
 
 p.node-label {
@@ -101,7 +97,7 @@ p.node-label {
 /* End node context menu */
 
 .elements {
-  @apply p-2 grid;
+  @apply p-2 grid rounded-b-md;
 }
 
 .elements > div.dropdown-input:last-child {
@@ -113,5 +109,5 @@ p.node-label {
 }
 
 .elements:nth-child(even) {
-  @apply bg-slate-800
+  @apply bg-dark-600;
 }

@@ -85,7 +85,6 @@ async def remove_nodes(node, action_type, send_json):
 async def nodes_transform(node, action_type, send_json):
     node_output = {}
     plugin = await Registry.get_plugin(node['type'])
-    print('plugin: ', plugin)
     if plugin := plugin():
         print('plugin instance: ', plugin)
         transform_type = node['transform']

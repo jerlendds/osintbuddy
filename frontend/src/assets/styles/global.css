@@ -1,12 +1,12 @@
 @import './nodes.css';
 @import './prism.css';
 @import './docs.css';
-
+@import './layouts.css';
 
 *,
 :after,
 :before {
-  @apply box-border font-sans z-[1];
+  @apply box-border font-sans;
 }
 button {
   cursor: pointer;
@@ -19,9 +19,17 @@ button {
   scrollbar-color: #3c3c40 #3c3c40;
 }
 
+::-moz-selection {
+ @apply text-slate-200 bg-info-300
+}
+
+::selection {
+ @apply text-slate-200 bg-info-300
+}
+
 /* https://gradienta.io/editor */
 body {
-  @apply relative min-h-screen bg-dark-900;
+  @apply min-h-screen bg-dark-900;
 }
 #root {
   @apply flex flex-col min-h-screen relative;
@@ -51,17 +59,17 @@ figcaption {
   width: 8px;
 }
 *::-webkit-scrollbar-track {
-  background: #00000063;
+  background: #0A0F1B;
   width: 8px;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: #00000063;
+  background-color: #0F172A;
   border-radius: 0px;
-  border-right: 8px solid #3c3c40;
+  border-right: 8px solid #0F172A;
 }
 * {
-  scrollbar-width: auto;
-  scrollbar-color: #00000063 #00000063;
+  scrollbar-width: 8px;
+  scrollbar-color: #0A0F1B #0F172A;
 }
 /* end Custom Scrollbar Style */
 
@@ -161,3 +169,84 @@ input[type='number'] {
 input[type='file'] {
   display: none;
 }
+
+/* start toastify styles */
+
+:root {
+  --toastify-color-light: #fff;
+  --toastify-color-dark: #121212;
+  --toastify-color-info: #3498db;
+  --toastify-color-success: #07bc0c;
+  --toastify-color-warning: #f1c40f;
+  --toastify-color-error: #e74c3c;
+  --toastify-color-transparent: rgba(255, 255, 255, 0.7);
+
+  --toastify-icon-color-info: var(--toastify-color-info);
+  --toastify-icon-color-success: var(--toastify-color-success);
+  --toastify-icon-color-warning: var(--toastify-color-warning);
+  --toastify-icon-color-error: var(--toastify-color-error);
+
+  --toastify-toast-width: 320px;
+  --toastify-toast-background: #fff;
+  --toastify-toast-min-height: 64px;
+  --toastify-toast-max-height: 800px;
+  --toastify-font-family: sans-serif;
+  --toastify-z-index: 9999;
+
+  --toastify-text-color-light: #757575;
+  --toastify-text-color-dark: #fff;
+
+  /* //Used only for colored theme */
+  --toastify-text-color-info: #fff;
+  --toastify-text-color-success: #fff;
+  --toastify-text-color-warning: #fff;
+  --toastify-text-color-error: #fff;
+
+  --toastify-spinner-color: #616161;
+  --toastify-spinner-color-empty-area: #e0e0e0;
+
+  /* // Used when no type is provided */
+  --toastify-color-progress-light: linear-gradient(to right, #4cd964, #5ac8fa, #007aff, #34aadc, #5856d6, #ff2d55);
+  /* // Used when no type is provided */
+  --toastify-color-progress-dark: #bb86fc;
+  --toastify-color-progress-info: var(--toastify-color-info);
+  --toastify-color-progress-success: var(--toastify-color-success);
+  --toastify-color-progress-warning: var(--toastify-color-warning);
+  --toastify-color-progress-error: var(--toastify-color-error);
+}
+.Toastify__toast-body {
+  @apply items-start;
+}
+.Toastify__close-button.Toastify__close-button--light {
+  @apply w-10 h-8 text-slate-100;
+}
+.Toastify__close-button.Toastify__close-button--light svg {
+  @apply w-5 h-5;
+}
+/* end toastify styles */
+
+/* global table styles */
+.primary-table {
+  @apply min-w-full divide-y-2 rounded-t-lg overflow-hidden divide-dark-800 table-auto;
+}
+
+.primary-table-wrap {
+  @apply overflow-y-scroll max-h-[26rem];
+}
+.primary-table thead tr th {
+  @apply bg-dark-600 text-slate-300 sticky top-0 z-50 first:py-3.5 pr-2 py-3.5 text-left text-sm font-semibold first:sm:pl-8 last:w-96 even:w-52 first:w-20  first:pr-20 whitespace-nowrap truncate;
+}
+.primary-table tbody {
+  @apply bg-dark-500 pb-2 max-h-[26rem] overflow-auto;
+}
+.primary-table-wrap.no-scroll {
+  @apply overflow-hidden;
+}
+.primary-table tbody tr {
+  @apply first:sm:pl-8;
+}
+
+.primary-table tbody tr.empty-body td {
+  @apply last:pt-44 last:mr-4;
+}
+/* end global table styles */

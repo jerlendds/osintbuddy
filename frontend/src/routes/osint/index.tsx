@@ -10,6 +10,7 @@ import ReactFlow, {
   Controls,
   BackgroundVariant,
   FitViewOptions,
+  useStore,
 } from 'reactflow';
 import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { HotKeys } from 'react-hotkeys';
@@ -26,6 +27,7 @@ import { getLayoutedElements } from './utils';
 import BaseNode from './BaseNode';
 import ContextAction from './_components/ContextAction';
 import { toast } from 'react-toastify';
+import { JSONObject } from '@/globals';
 
 export var nodeId = 0;
 
@@ -54,7 +56,9 @@ const InvestigationFlow = ({
   sendJsonMessage,
   messageHistory,
   lastMessage,
-}) => {
+  updateNode,
+  setEditState,
+}: JSONObject) => {
   const onConnect = useCallback((connection) => setEdges((eds) => addEdge(connection, edges)), [setEdges]);
 
   const onEdgeUpdate = useCallback(
@@ -101,23 +105,28 @@ const InvestigationFlow = ({
 
   const nodeTypes = useMemo(() => {
     return {
-      base: (data) => <BaseNode sendJsonMessage={sendJsonMessage} flow={data} />,
+      base: (data) => (
+        <BaseNode setEditState={setEditState} updateNode={updateNode} sendJsonMessage={sendJsonMessage} flow={data} />
+      ),
     };
   }, []);
 
-const handleClick = (e) => {
-  switch (e.detail) {
-    case 1:
-      console.log("click", e.target);
-      break;
-    case 2:
-      console.log("double click", e.target);
-      break;
-    case 3:
-      console.log("triple click", e.target);
-      break;
-  }
-};
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+    switch (e.detail) {
+      case 1:
+        // @ts-ignore
+        // console.log('node click', e.target, e?.target?.closest('.react-flow__node input'));
+        break;
+      case 2:
+        // @ts-ignore
+        // console.log('node double click', e?.target?.closest('.react-flow__node'));
+        break;
+      case 3:
+        // @ts-ignore
+        // console.log('node triple click', e.target);
+        break;
+    }
+  };
 
   return (
     <div onClick={handleClick} style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
@@ -136,8 +145,9 @@ const handleClick = (e) => {
         fitView
         fitViewOptions={fitViewOptions}
         nodeTypes={nodeTypes}
+        panActivationKeyCode='Space'
       >
-        <Background variant={BackgroundVariant.Dots} color='#1F3057' />
+        <Background variant={BackgroundVariant.Dots} className='bg-dark-[rgb(10 15 20)]' color='#1F3057' />
         <Controls />
       </ReactFlow>
     </div>
@@ -178,6 +188,7 @@ export default function OsintPage() {
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   const [showNodeOptions, setShowNodeOptions] = useState<boolean>(false);
+  const [editState, setEditState] = useState<boolean>(false);
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
   const location = useLocation();
   const activeProject = location?.state?.activeProject;
@@ -289,6 +300,32 @@ export default function OsintPage() {
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState];
 
+  const updateNode = (node: JSONObject, data) => {
+    let updatedNode = { ...node };
+    updatedNode.elements = node.data.node.elements.map((elm) => {
+      if (Object.keys(data)[0] === elm.label) {
+        elm.value = data[elm.label];
+      }
+      return elm;
+    });
+    return updatedNode;
+  };
+
+  // user edits updates happen here
+  useEffect(() => {
+    if (editState) {
+      setNodes((nds) =>
+        nds.map((node) => {
+          console.log(node.id, nodeId, editState);
+          if (editState && editState.data && node.id === editState.id) {
+            node = updateNode(node, editState.data);
+          }
+          return node;
+        })
+      );
+    }
+  }, [editState, setNodes]);
+
   // websocket updates happen here
   useEffect(() => {
     if (lastMessage !== null) {
@@ -339,7 +376,8 @@ export default function OsintPage() {
             description={activeProject?.description}
             activeProject={activeProject?.name || 'Unknown'}
           />
-          <div className='flex h-full bg-dark-900'>
+          <div className='flex h-full justify-between bg-dark-900 relative'>
+            <NodeOptions key={nodeOptions.length.toString()} options={nodeOptions} />
             <InvestigationFlow
               addNode={addNode}
               deleteNode={deleteNode}
@@ -356,15 +394,17 @@ export default function OsintPage() {
               sendJsonMessage={sendJsonMessage}
               messageHistory={messageHistory}
               lastMessage={lastMessage}
+              updateNode={updateNode}
+              setEditState={setEditState}
             />
           </div>
-          <CommandPallet
-            toggleShowOptions={toggleShowNodeOptions}
-            isOpen={showCommandPalette}
-            setOpen={setShowCommandPalette}
-          />
         </div>
-        <NodeOptions key={nodeOptions.length.toString()} options={nodeOptions} />
+
+        <CommandPallet
+          toggleShowOptions={toggleShowNodeOptions}
+          isOpen={showCommandPalette}
+          setOpen={setShowCommandPalette}
+        />
         <div
           id='node-options-tour'
           className='absolute top-[3.5rem] w-48 bg-red -z-10 h-20 left-[0.7rem] text-slate-900'

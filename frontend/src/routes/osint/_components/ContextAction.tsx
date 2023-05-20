@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { getId } from '../OsintPage';
+import { getId } from '..';
 import { api } from '@/services';
 import { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import { Icon } from '@components/Icons';
@@ -34,7 +34,7 @@ export default function ContextAction({
       <div className='node-context'>
         {transforms?.map((transform: any) => {
           return (
-            <div>
+            <div key={transform.label}>
               <button
                 className='capitalize'
                 onClick={() =>

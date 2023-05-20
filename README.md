@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="https://github.com/jerlendds/osintbuddy">
-    <img src="./docs/assets/logo-watermark.svg" height="200px" alt="OSINT Buddy Logo">
+    <img src="./docs/logo-watermark.svg" height="200px" alt="OSINT Buddy Logo">
   </a>
 
   <h2 align="center">Introducing OSINTBuddy</h2>

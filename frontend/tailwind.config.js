@@ -238,9 +238,10 @@ module.exports = {
           900: '#26070C',
         },
       },
+      screens: {
+        '4xl': '1890px',
+      },
     },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
+  plugins: [require('@tailwindcss/typography')],
 };

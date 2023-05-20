@@ -50,12 +50,30 @@ services:
       - 5555:5555
     environment:
       - CELERY_BROKER_URL=redis://redis:6379//
-  graphdb:
-    image: neo4j:5.3.0-community
-    environment:
-      NEO4J_AUTH: neo4j/password
-    ports:
-      - 7474:7474
-      - 7687:7687
+  # rya:
+  #   image: ktipp/rya-docker-dev:latest
+  #   ports:
+  #     - 8080:8080
+  #     - 2181:2181
+  #   environment:
+  #     HOSTNAME: 0.0.0.0
+  #     ZOOKEEEPERS: rya
+  #     ZOO_MY_ID: 1
+  #   networks:
+  #     - rya_dev
+  
+  
+  # frontend:
+  #   image: openinfolabs/osintbuddy-frontend
+  #   build:
+  #     context: ./frontend
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - ./frontend/nginx.conf:/etc/nginx/nginx.conf
+
+networks:
+  rya_dev:
+
 volumes:
   osintbuddy-db-data:
