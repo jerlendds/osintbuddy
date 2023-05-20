@@ -68,11 +68,11 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
         <div
           draggable
           onDragStart={(event) => onDragStart(event, entity.name)}
-          className='min-w-0 flex p-2 justify-between bg-dark-400 hover:bg-dark-600 border-transparent border  border-l-info-100 hover:border-info-100 transition-colors duration-150 border-l-[6px] hover:border-l-[6px] rounded-md w-full'
+          className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden bg-dark-400 hover:bg-dark-600 border-transparent border h-[86px] border-l-info-100 hover:border-info-100 transition-colors duration-150 border-l-[6px] hover:border-l-[6px] rounded-md w-full'
         >
           <div className='flex flex-col w-full'>
             <div className='flex items-start justify-between gap-x-3 w-full relative'>
-              <p className='text-sm font-semibold leading-6 text-slate-300'>{entity.name}</p>
+              <p className='text-sm font-semibold leading-6 text-slate-300 whitespace-nowrap'>{entity.name}</p>
               <p
                 className={classNames(
                   statuses[entity.status as string],
@@ -114,8 +114,8 @@ export default function NodeOptions({ options }: any) {
   return (
     <>
       <div
-        style={{  resize: 'both' }}
-        className='overflow-hidden border-dark-300 z-10 border bg-dark-600 min-w-[18rem] h-full py-2 top-11 -right-px'
+        style={{  resize: 'horizontal' }}
+        className='overflow-hidden border-dark-300 z-10 border bg-dark-600  h-full py-2 top-11 -right-px'
       >
         <div className='text-xl items-center justify-between w-full flex px-6 '>
           <span className='font-display text-slate-400 font-semibold'>Entities</span>
