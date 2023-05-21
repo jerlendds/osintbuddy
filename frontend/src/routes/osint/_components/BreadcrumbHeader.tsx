@@ -82,39 +82,47 @@ export default function BreadcrumbHeader({
           </li>
         ))}
         <div className='ml-auto w-full relative flex items-center justify-end'>
-          <li className='flex bg-dark-300 p-2 rounded-md'>
-            <div className='flex items-center'>
-              <button onClick={() => updateNodeOptions()} className='text-slate-400 hover:text-slate-300'>
-                <ArrowPathIcon className='h-5 w-5 flex-shrink-0' aria-hidden='true' />
-                <span className='sr-only'>Home</span>
-              </button>
+          <button
+            type='button'
+            onClick={() => updateNodeOptions()}
+            className='flex bg-dark-400 transition-colors duration-100 ease-in-out hover:bg-dark-200 p-2 rounded-md mr-2'
+          >
+            <div className='flex items-center text-slate-400'>
+              <ArrowPathIcon className='h-5 w-5 flex-shrink-0' aria-hidden='true' />
+              <span className='sr-only'>Home</span>
             </div>
-          </li>
-          <li className='flex'>
-            <div className='flex items-center'>
-              <button onClick={() => onLayout('TB')} className='text-slate-400 hover:text-slate-300'>
-                <ArrowDownOnSquareIcon className='h-5 w-5 flex-shrink-0' aria-hidden='true' />
-                <span className='sr-only'>Layout to bottom</span>
-              </button>
+          </button>
+          <button
+            type='button'
+            onClick={() => onLayout('TB')}
+            className='flex bg-dark-400 transition-colors duration-100 ease-in-out hover:bg-dark-200 p-2 rounded-md mr-2'
+          >
+            <div className='flex items-center text-slate-400'>
+              <ArrowDownOnSquareIcon className='h-5 w-5 flex-shrink-0' aria-hidden='true' />
+              <span className='sr-only'>Layout to bottom</span>
             </div>
-          </li>
-          <li className='flex'>
-            <div className='flex items-center'>
-              <button onClick={() => onLayout('LR')} className='text-slate-400  hover:text-slate-300'>
-                <ArrowDownOnSquareIcon className='h-5 w-5 origin-center -rotate-90 flex-shrink-0' aria-hidden='true' />
-                <span className='sr-only'>Layout to right</span>
-              </button>
+          </button>
+          <button
+            type='button'
+            onClick={() => onLayout('TB')}
+            className='flex bg-dark-400 transition-colors duration-100 ease-in-out hover:bg-dark-200 p-2 rounded-md mr-2'
+          >
+            <div className='flex items-center  origin-center -rotate-90 text-slate-400'>
+              <ArrowDownOnSquareIcon className='h-5 w-5 flex-shrink-0' aria-hidden='true' />
+              <span className='sr-only'>Layout to right</span>
             </div>
-          </li>
-          <li className='flex'>
-            <div className='flex items-center'>
-              <button onClick={() => onLayout('LR')} className='text-slate-400  hover:text-slate-300'>
-                <QueueListIcon className='h-5 w-5  flex-shrink-0' aria-hidden='true' />
-                <span className='sr-only'>Open entities menu</span>
-              </button>
+          </button>
+          <button
+            type='button'
+            className='flex bg-dark-400 transition-colors duration-100 ease-in-out hover:bg-dark-200 p-2 rounded-md mr-2'
+          >
+            <div className='flex items-center text-slate-400'>
+              <QueueListIcon className='h-5 w-5 flex-shrink-0' aria-hidden='true' />
+              <span className='sr-only'>Open entities menu</span>
             </div>
-          </li>
-          <li className='flex'>
+          </button>
+          {/* @todo implement me, a user controlled zoom level */}
+          {/* <li className='flex'>
             <div className='flex items-center'>
               <select
                 className='bg-transparent text-slate-400 ml-4'
@@ -123,14 +131,14 @@ export default function BreadcrumbHeader({
                   setZoomLevel(Number(e.target.value));
                 }}
               >
-                {[10, 20, 30, 40, 50].map((pageSize) => (
+                {[100].map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
-                    Show {pageSize}
+                    Zoom {pageSize}%
                   </option>
                 ))}
               </select>
             </div>
-          </li>
+          </li> */}
         </div>
       </ol>
     </nav>

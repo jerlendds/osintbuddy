@@ -58,9 +58,8 @@ class CSESearchPlugin(ob.Plugin):
                 resp = await client.get(f'http://microservice:1323/google-cse?query={query}&pages={pages}&id={cse_id}', timeout=None)
                 print('resp: ', resp)
                 resp = defaultdict(None, **resp.json())
-        except Exception as e:
-            raise e
-            # raise OBPluginError("There was an error fetching CSE results. Please try again")
+        except Exception:
+            raise OBPluginError("There was an error fetching CSE results. Please try again")
         results = []
         if resp and resp.get('results'):
             for result in resp['results']:
@@ -68,7 +67,7 @@ class CSESearchPlugin(ob.Plugin):
                 blueprint = CSESearchResultsPlugin.blueprint(
                     result={
                         'title': result.get('titleNoFormatting'),
-                        'subtitle': burl.get('host') + ' > '.join(burl.get('crumbs')),
+                        'subtitle': burl.get('host') + str(burl.get('crumbs')),
                         'text': result.get('contentNoFormatting')
                     },
                     url=result.get('unescapedUrl'),
