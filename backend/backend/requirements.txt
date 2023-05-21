@@ -60,6 +60,8 @@ numexpr==2.8.4
 numpy==1.24.3
 openai==0.27.6
 openapi-schema-pydantic==1.2.4
+rdflib==6.3.2
+
 outcome==1.2.0
 packaging==23.1
 pathspec==0.11.1
@@ -115,5 +117,4 @@ wsproto==1.2.0
 yarl==1.9.2
 zope.event==4.6
 zope.interface==6.0
-asonic==2.0.0
 
