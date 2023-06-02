@@ -4,10 +4,10 @@ services:
     image: openinfolabs/osintbuddy-backend:latest
     command: ['/bin/sh', '-c', './start-reload.sh']
     build:
-      context: ./backend
+      context: ./backend/backend
       dockerfile: 'backend.Dockerfile'
     volumes:
-      - ./backend/app:/app/
+      - ./backend/backend/app:/app/
     environment:
       PYTHONDONTWRITEBYTECODE: 1
     ports:
@@ -17,7 +17,7 @@ services:
   microservice:
     image: openinfolabs/osintbuddy-microservice:latest
     build:
-      context: ./microservice
+      context: ./backend/microservice
       dockerfile: Dockerfile
     ports:
       - 1323:1323
@@ -40,7 +40,7 @@ services:
     image: openinfolabs/osintbuddy-worker:latest
     command: /worker-start.sh
     build:
-      context: ./backend
+      context: ./backend/backend
       dockerfile: worker.Dockerfile
     env_file:
       - .env
@@ -56,9 +56,15 @@ services:
       - 3030:3030
     environment:
       ADMIN_PASSWORD: password
-      ENABLE_DATA_WRITE: true
-      ENABLE_UPDATE: true
-      ENABLE_UPLOAD: true
+      ENABLE_DATA_WRITE: "true"
+      ENABLE_UPDATE: "true"
+      ENABLE_UPLOAD: "true"
       QUERY_TIMEOUT: 200000
+  ui:
+    image: openinfolabs/osintbuddy-frontend:latest
+    build:
+      context: ./frontend
+    ports:
+      - 3000:3000
 volumes:
   osintbuddy-db-data:
