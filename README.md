@@ -73,6 +73,7 @@ To start using OSINTBuddy, follow these simple installation steps:
 1. Clone the repo and submodules
    ```sh
    git clone https://github.com/jerlendds/osintbuddy.git
+   cd osintbuddy
    git submodule init
    git submodule update
    ```
@@ -81,15 +82,8 @@ To start using OSINTBuddy, follow these simple installation steps:
 3. Start the stack with Docker:
 
    ```sh
-   cd osintbuddy/backend/
    cp .env.example .env
    docker compose up
-   ```
-
-4. Start the frontend:
-   ```sh
-   cd ../frontend
-   yarn && yarn start
    ```
 
 - **URLs**
