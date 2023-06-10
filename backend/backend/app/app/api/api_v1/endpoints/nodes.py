@@ -112,34 +112,6 @@ async def execute_event(event, send_json):
         await nodes_transform(event["node"], action_type, send_json)
 
 
-from osintbuddy.rdf.utils import FusekiUpdate, rdf_prefix, NameSpace
-from rdflib import Graph, Namespace as ns, RDF, SDO, Literal
-import rdflib.term
-from SPARQLWrapper.SPARQLExceptions import QueryBadFormed
-from SPARQLWrapper import SPARQLWrapper, JSON
-import uuid
-
-base = ns("https://schemas.osintbuddy.org/")
-
-
-def add_to_node(
-    plugin_type="GoogleSearch",
-    values=[
-        {"type": "TextInput", "placeholder": "Search...", "label": "Query"},
-        {"type": "TextInput", "default": "3", "label": "Pages"},
-    ],
-):
-    g = Graph()
-    node = ns("https://schemas.osintbuddy.org/Plugin/")
-    element = ns("https://schemas.osintbuddy.org/Element/")
-    triple = (node[plugin_type], RDF.type, node["Hello"])
-    g.add(triple)
-    g.add((node[f"{plugin_type}"], SDO.Collection, element[values[0].get("type")]))
-    g.add((node[f"{plugin_type}"], SDO.hasPart, element[values[0].get("type")]))
-    
-    print(g.serialize(format="json-ld"))
-    return g
-
 
 @router.websocket("/investigation")
 async def active_investigation(websocket: WebSocket):

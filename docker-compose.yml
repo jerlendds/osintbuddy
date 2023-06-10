@@ -45,12 +45,13 @@ services:
       dockerfile: worker.Dockerfile
     env_file:
       - .env
-  flower:
-    image: mher/flower:1.2
-    ports:
-      - 5555:5555
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379//
+  # @todo Replace with https://github.com/rsalmei/clearly
+  # flower:
+  #   image: mher/flower:1.2
+  #   ports:
+  #     - 5555:5555
+  #   environment:
+  #     - CELERY_BROKER_URL=redis://redis:6379//
   # jena:
   #   image: secoresearch/fuseki:4.8.0
   #   ports:
