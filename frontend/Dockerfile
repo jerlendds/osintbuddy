@@ -1,7 +1,13 @@
-FROM node
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
+FROM node:20-alpine3.17 as build-stage
+WORKDIR /app/
+COPY package.json yarn.lock ./
+RUN yarn
 COPY . .
-EXPOSE 3000
-CMD ["npm", "run", "start"]
+RUN yarn build
+
+
+FROM nginx:1.25.0-alpine
+
+COPY --from=build-stage /app/build/ /usr/share/nginx/html
+COPY --from=build-stage /app/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80

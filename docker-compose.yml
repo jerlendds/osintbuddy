@@ -69,6 +69,6 @@ services:
     volumes:
       - ./frontend/:/app/
     ports:
-      - 3000:3000
+      - 3000:80
 volumes:
   osintbuddy-db-data:
