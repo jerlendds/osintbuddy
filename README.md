@@ -98,8 +98,12 @@ To start using OSINTBuddy, follow these simple installation steps:
 - Access OSINTBuddy through the URLs provided for frontend, backend, documentation, and more.
 
 ## [↑](#Introducing-the-OSINTBuddy-Toolbox)Roadmap
+ 
+See our [trello board](https://trello.com/b/99Q70frX/) 
+for a list of our upcoming features
 
-See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/jerlendds/osintbuddy/issues)
+for a list of requested features (and known issues).
 
 ## [↑](#Introducing-the-OSINTBuddy-Toolbox)Progress Notes
 
