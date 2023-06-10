@@ -9,6 +9,7 @@ services:
     volumes:
       - ./backend/backend/app:/app/
     environment:
+      CLASSPATH: /app/jena-jdbc-driver-bundle-4.8.0.jar
       PYTHONDONTWRITEBYTECODE: 1
     ports:
       - 5000:80

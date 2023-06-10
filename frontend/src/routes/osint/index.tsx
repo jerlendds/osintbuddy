@@ -28,6 +28,9 @@ import BaseNode from './BaseNode';
 import ContextAction from './_components/ContextAction';
 import { toast } from 'react-toastify';
 import { JSONObject } from '@/globals';
+import createGLShell from 'gl-now';
+import createShader from 'gl-shader';
+import createBuffer from 'gl-buffer';
 
 export var nodeId = 0;
 
@@ -127,6 +130,7 @@ const InvestigationFlow = ({
         break;
     }
   };
+
 
   return (
     <div onClick={handleClick} style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
@@ -365,6 +369,7 @@ export default function OsintPage() {
     }
   }, [lastMessage, setMessageHistory]);
 
+
   return (
     <>
       <HotKeys keyMap={keyMap} handlers={handlers}>
@@ -399,6 +404,7 @@ export default function OsintPage() {
             />
           </div>
         </div>
+     
 
         <CommandPallet
           toggleShowOptions={toggleShowNodeOptions}
@@ -425,7 +431,7 @@ export default function OsintPage() {
             return (
               <>
                 <div className='relative z-50 inline-block text-left'>
-                  <ul className='absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-dark-300 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+                  <div className='absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-dark-300 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
                     <div className='py-1'>
                       <div>
                         <div
@@ -481,7 +487,7 @@ export default function OsintPage() {
                         </div>
                       </div>
                     )}
-                  </ul>
+                  </div>
                 </div>
               </>
             );

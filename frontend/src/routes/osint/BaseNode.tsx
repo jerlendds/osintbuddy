@@ -91,7 +91,6 @@ export default function BaseNode({
   const label = node?.label;
   const color = node?.color;
   const style = node?.style || {};
-
   const getNodeElement = (element: NodeInput, key: string | null = getNodeKey()) => {
     if (element.type === 'dropdown') {
       return (

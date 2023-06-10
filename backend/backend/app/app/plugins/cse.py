@@ -54,6 +54,7 @@ class CSESearchPlugin(ob.Plugin):
             raise OBPluginError("All fields are required to search. Please try again")
         cse_id = urllib.parse.parse_qs(parsed_url.query)['cx'][0]
         try:
+  
             async with httpx.AsyncClient() as client:
                 resp = await client.get(f'http://microservice:1323/google-cse?query={query}&pages={pages}&id={cse_id}', timeout=None)
                 print('resp: ', resp)
