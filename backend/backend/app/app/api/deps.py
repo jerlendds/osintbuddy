@@ -1,11 +1,9 @@
 from typing import Generator
 from contextlib import contextmanager
-from neo4j._sync import work
 from sqlalchemy.orm import Session
 from selenium import webdriver
 import undetected_chromedriver as uc
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-import jaydebeapi 
 from app.db.session import SessionLocal
 
 
@@ -37,16 +35,4 @@ def get_db() -> Generator:
     finally:
         db.close()
 
-
-# https://stackoverflow.com/a/55588683
-def get_gdb():
-    try:
-        conn_string = "jdbc:jena:tdb:location=tdb"
-        conn = jaydebeapi.connect("org.apache.jena.jdbc.JenaJDBC", conn_string)
-        cursor = conn.cursor()
-        yield cursor
-    finally:
-        pass
-        # cursor.close()
-        # conn.close()
 
