@@ -1,7 +1,7 @@
 ---
 name: Feature
 about: Suggest an idea for this project
-title: "[FEAT]"
+title: "[FEATURE REQUEST] Your_feature_request_here"
 labels: 'Type: Suggestion'
 assignees: jerlendds
 
