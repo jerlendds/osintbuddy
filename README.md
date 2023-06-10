@@ -5,24 +5,31 @@
 
 <br />
 
-<p align="center">
+
+<p>
   <a href="https://github.com/jerlendds/osintbuddy">
-    <img src="./docs/logo-watermark.svg" height="200px" alt="OSINT Buddy Logo">
+    <img src="./docs/watermark.svg" height="130px" alt="OSINT Buddy Logo">
   </a>
 
-  <h2 align="center">Introducing OSINTBuddy</h2>
+  > *I have no data yet. It is a capital mistake to theorize before one has data. Insensibly
+  > one begins to twist facts to suit theories, instead of theories to suit facts.*
 
-  <h4 align="center">
-    Mine, merge, and map data for novel insights.
+  <h2><b>Introducing OSINTBuddy</b></h2>
+  <h4>
+    Mine, merge, and map data for novel insights. Fetch data from different sources
+    and returns the results as visual entities that you can explore step-by-step!
   </h4>
+<br/>
 
+![osintbuddy-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/c01357a9-9e55-44e3-9734-c84130bd110b)
+
+  <br />
 </p>
 
 <details open="open">
-  <summary>
-  
-  ## Table of Contents
-
+<summary> 
+<b>Table of Contents</b>
+</summary>
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
@@ -40,12 +47,11 @@
   </ol>
 </details>
 
-## [↑](#Table-of-Contents)Introducing the OSINTBuddy Toolbox
+## Introducing the OSINTBuddy Toolbox
 
-Fetch data from different sources and returns the results
-as visual entities that you can explore step-by-step!
 
-OSINTBuddy is an OSINT tool in beta which is distributed
+
+OSINTBuddy is an OSINT tool in a very early beta which is distributed
 for educational and investigative purposes, the person who has bought
 or uses this tool is responsible for its proper use or actions committed,
 jerlendds, the developer(s) of OSINTBuddy, are not responsible for the use
@@ -59,12 +65,11 @@ or the scope that people can have through this software.
 - Visual representation of fetched data for easy understanding
 - A powerful development platform that is open for contributions
 - New plugin-based system for transforming data, check out the [osintbuddy](https://pypi.org/project/osintbuddy/) package. Documentation is coming soon.
-![osintbuddy-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/c01357a9-9e55-44e3-9734-c84130bd110b)
 
 
 &nbsp;&nbsp;&nbsp;\> **[https://docs.osintbuddy.com](https://docs-osintbuddy-com.vercel.app/)**
 
-## [↑](#-Table-of-Contents)Getting Started
+## [↑](#Introducing-the-OSINTBuddy-Toolbox)Getting Started
 
 To start using OSINTBuddy, follow these simple installation steps:
 
@@ -94,11 +99,11 @@ To start using OSINTBuddy, follow these simple installation steps:
   - Neo4J: http://localhost:7474/browser/
 - Access OSINTBuddy through the URLs provided for frontend, backend, documentation, and more.
 
-## [↑](#-Table-of-Contents)Roadmap
+## [↑](#Introducing-the-OSINTBuddy-Toolbox)Roadmap
 
 See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list of proposed features (and known issues).
 
-## [↑](#-Table-of-Contents)Progress Notes
+## [↑](#Introducing-the-OSINTBuddy-Toolbox)Progress Notes
 
 - [x] Website node
 - [x] Google search node
@@ -121,7 +126,7 @@ See the [open issues](https://github.com/jerlendds/osintbuddy/issues) for a list
 
 
 
-## [↑](#-Table-of-Contents)Contributing
+## [↑](#Introducing-the-OSINTBuddy-Toolbox)Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -132,12 +137,17 @@ Contributions are what make the open source community such an amazing place to l
 5. Open a Pull Request
 
 
-## [↑](#-Table-of-Contents)License
+## [↑](#Introducing-the-OSINTBuddy-Toolbox)License
 
 [GNU AGPLv3](https://choosealicense.com/licenses/gpl-3.0/)
 
+*Note, the [OSINTBuddy plugins package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*
 
-## [↑](#-Table-of-Contents)Contact
+[![Total Downloads](https://static.pepy.tech/badge/osintbuddy)](https://pepy.tech/project/osintbuddy)
+[![Downloads](https://static.pepy.tech/badge/osintbuddy/week)](https://pepy.tech/project/osintbuddy)
+
+
+## [↑](#Introducing-the-OSINTBuddy-Toolbox)Contact
 
 Open an issue if you need to get in touch with me
 
