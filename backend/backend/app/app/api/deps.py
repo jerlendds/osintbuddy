@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 from selenium import webdriver
 import undetected_chromedriver as uc
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-
-from app.db.session import SessionLocal, graph_driver
+import jaydebeapi 
+from app.db.session import SessionLocal
 
 
 @contextmanager
@@ -38,9 +38,15 @@ def get_db() -> Generator:
         db.close()
 
 
-def get_gdb() -> Generator[work.Session, None, None]:
+# https://stackoverflow.com/a/55588683
+def get_gdb():
     try:
-        with graph_driver.session(database='neo4j') as session:
-            yield session
+        conn_string = "jdbc:jena:tdb:location=tdb"
+        conn = jaydebeapi.connect("org.apache.jena.jdbc.JenaJDBC", conn_string)
+        cursor = conn.cursor()
+        yield cursor
     finally:
-        graph_driver.close()
+        pass
+        # cursor.close()
+        # conn.close()
+

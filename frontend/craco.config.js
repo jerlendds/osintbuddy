@@ -9,6 +9,12 @@ module.exports = {
       '@components': path.resolve(__dirname, 'src/components'),
       '@routes': path.resolve(__dirname, 'src/routes'),
     },
+    resolve: {
+      fallback: {
+        util: require.resolve('util/'),
+        buffer: require.resolve('buffer/'),
+      }
+    }
   },
   eslint: {
     enable: false,

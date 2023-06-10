@@ -42,6 +42,8 @@ idna==3.4
 iniconfig==2.0.0
 isodate==0.6.1
 isort==5.12.0
+JayDeBeApi==1.2.3
+JPype1==1.4.1
 jsbeautifier==1.14.7
 kombu==5.2.4
 langchain==0.0.165
@@ -92,6 +94,7 @@ sniffio==1.3.0
 snowballstemmer==2.2.0
 sortedcontainers==2.4.0
 soupsieve==2.4.1
+SPARQLWrapper==2.0.0
 SQLAlchemy==2.0.12
 starlette==0.26.1
 tenacity==8.2.2
