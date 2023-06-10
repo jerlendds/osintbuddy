@@ -15,10 +15,10 @@
   > one begins to twist facts to suit theories, instead of theories to suit facts.*
 
   <h2><b>Introducing OSINTBuddy</b></h2>
-  <h4>
+  <p>
     Mine, merge, and map data for novel insights. Fetch data from different sources
     and returns the results as visual entities that you can explore step-by-step!
-  </h4>
+  </p>
 <br/>
 
 ![osintbuddy-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/5640a430-50f7-45df-9f75-8dd473dcdd1b)
