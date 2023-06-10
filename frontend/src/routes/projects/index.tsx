@@ -60,7 +60,9 @@ export function NewCaseForm({ closeModal, updateTable }: JSONObject) {
           .catch((err) => {
             console.log(err)
             if (err.code === 'ERR_NETWORK') {
-              toast.warn('We ran into an error fetching your projects. Is the backend running?')
+              toast.warn('We ran into an error fetching your projects. Is the backend running and are you connected on localhost? (update the BACKEND_CORS_ORIGINS in your .env if you\'re on an interface that\'s not localhost)', {
+                autoClose: 10000
+              })
             } else {
               toast.error(`Error: ${err}`)
             }
