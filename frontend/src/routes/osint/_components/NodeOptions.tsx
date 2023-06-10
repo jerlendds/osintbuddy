@@ -30,7 +30,6 @@ export const useResize = ({ minWidth }: UseResizeProps): UseResizeReturn => {
 
   const resize = useCallback(
     (e: MouseEvent) => {
-      console.log('wtf', e);
       if (isResizing) {
         const newWidth = e.clientX; // You may want to add some offset here from props
         if (newWidth >= minWidth) {
@@ -44,7 +43,6 @@ export const useResize = ({ minWidth }: UseResizeProps): UseResizeReturn => {
   useEffect(() => {
     document.addEventListener('mousemove', resize);
     document.addEventListener('mouseup', disableResize);
-    console.log('wtf effect');
 
     return () => {
       document.removeEventListener('mousemove', resize);
@@ -106,7 +104,6 @@ let isResizing: any = null;
 
 export default function NodeOptions({ options }: any) {
   const onDragStart = (event: any, nodeType: any) => {
-    console.log('node type: ', nodeType);
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
   };

@@ -12,7 +12,6 @@ export const getLayoutedElements = (nodes: any, edges: any, direction = 'LR') =>
   edges.forEach((edge: any) => {
     dagreGraph.setEdge(edge.source, edge.target, { label: '' });
   });
-  console.log('dagreGraph', dagreGraph);
   dagre.layout(dagreGraph);
 
   nodes.forEach((node: any) => {
@@ -26,7 +25,6 @@ export const getLayoutedElements = (nodes: any, edges: any, direction = 'LR') =>
       x: nodeWithPosition.x - node.width / 2,
       y: nodeWithPosition.y - node.height / 2,
     };
-    console.log('dagre node', node);
     return node;
   });
 

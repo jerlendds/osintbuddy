@@ -57,9 +57,7 @@ export function DorkStats() {
       setLoading(true);
       api.get('/ghdb/dorks/count')
         .then((resp) => {
-          console.log(resp);
           if (resp.data) {
-            console.log(resp.data.dorksCount);
             if (resp.data.dorksCount) setDorksCount(resp.data.dorksCount);
             if (resp.data.authorsCount) setAuthorsCount(resp.data.authorsCount);
             if (resp.data.categoriesCount) setCategoriesCount(resp.data.categoriesCount);

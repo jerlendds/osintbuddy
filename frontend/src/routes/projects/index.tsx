@@ -43,7 +43,6 @@ export function NewCaseForm({ closeModal, updateTable }: JSONObject) {
       onSubmit={(values, { setSubmitting }) => {
         // @todo implement tags on the backend
         const newProjectData = { values, tags: tags.map((t: JSONObject) => t.label) };
-        console.log(values);
         projects
           .createProject({ name: values.name, description: values.description })
           .then((resp) => {
@@ -58,7 +57,6 @@ export function NewCaseForm({ closeModal, updateTable }: JSONObject) {
             }
           })
           .catch((err) => {
-            console.log(err)
             if (err.code === 'ERR_NETWORK') {
               toast.warn('We ran into an error fetching your projects. Is the backend running and are you connected on localhost? (update the BACKEND_CORS_ORIGINS in your .env if you\'re on an interface that\'s not localhost)', {
                 autoClose: 10000
@@ -377,7 +375,6 @@ export default function DashboardPage() {
               .getProjects(pageSize * pageIndex, pageSize)
               .then((resp) => {
                 if (resp?.data) {
-                  console.log(resp.data.count, Math.ceil(resp.data?.count / pageSize));
                   setPageCount(Math.ceil(resp.data?.count / pageSize));
                   setProjectsData(resp.data.projects);
                   setLoadingProjects(false);

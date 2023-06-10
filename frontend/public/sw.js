@@ -1,6 +1,5 @@
 // @ts-nocheck
 self.addEventListener('xhr', function(event) {
-  console.log(';event', event)
   event.respondWith(
     fetchWithParamAddedToRequestBody(event.request)
   );
