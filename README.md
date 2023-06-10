@@ -95,8 +95,6 @@ To start using OSINTBuddy, follow these simple installation steps:
   - Frontend: http://localhost:3000
   - Backend: http://localhost:5000/api/
   - Documentation: http://localhost:5000/docs -- http://localhost:5000/redoc
-  - Flower: http://localhost:5555
-  - Neo4J: http://localhost:7474/browser/
 - Access OSINTBuddy through the URLs provided for frontend, backend, documentation, and more.
 
 ## [↑](#Introducing-the-OSINTBuddy-Toolbox)Roadmap
