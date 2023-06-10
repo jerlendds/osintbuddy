@@ -2,6 +2,8 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
+[![Total Downloads](https://static.pepy.tech/badge/osintbuddy)](https://pepy.tech/project/osintbuddy)
+[![Downloads](https://static.pepy.tech/badge/osintbuddy/week)](https://pepy.tech/project/osintbuddy)
 
 <br />
 
@@ -32,7 +34,7 @@
 </summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
+      <a href="#about-the-project">What is OSINTBuddy</a>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
@@ -47,15 +49,31 @@
   </ol>
 </details>
 
-## Introducing the OSINTBuddy Toolbox
+### What is <a referrerpolicy="unsafe-url" target="_blank" href="https://osintbuddy.com">osintbuddy.com</a>?
 
 
+Not much, yet.
 
-OSINTBuddy is an OSINT tool in a very early beta which is distributed
-for educational and investigative purposes, the person who has bought
-or uses this tool is responsible for its proper use or actions committed,
-jerlendds, the developer(s) of OSINTBuddy, are not responsible for the use
-or the scope that people can have through this software.
+
+But here's the concept:
+
+
+An almost incomprehensible amount of data is created every day. And each year, figures are growing at an ever-increasing rate. These data sources can be divided up into six different categories of information flow:
+
+
+- Public government data
+- Media *(newspapers, magazines, radio)*
+- Internet *(blogs, discussion groups, citizen media, etc)*
+- Professional and academic publications *(budgets, hearings, telephone directories, websites, etc)*
+- Commercial data *(commercial imagery, financial assessments, databases, etc)*
+- Grey literature *(technical reports, preprints, patents, business documents, etc)*
+
+
+Some of the main hindrances to practical OSINT is the volume of information it has to deal with [(information explosion)](https://en.wikipedia.org/wiki/Information_explosion) and the issue of low quality data. With the majority of this data being unstructured, there's many challenges to analyzing it and producing actionable intelligence since most data analytics databases are designed for structured data.
+
+
+We've decided to do something about it. The rapid developments in technologies such as AI and Big Data Analytics have opened new horizons for OSINT which weren't previously available. We want our information quick and to the point, that's why we're building an open-source OSINT tool that's free. Free to use, free to modify, free to do with as you wish, and built with plain old web technologies anyone can learn. But this isn't really the project. This is a free new community. A community for OSINT enthusiast around the world and we need your help to design it, to program it, and to build it. We want to hear your suggestions, your ideas, and we're going to build it right in front of your eyes. The notion of a “needle in a haystack” is taken to the extreme on the internet. Let's build a magnet
+
 
 [OSINTBuddy demo video](https://www.youtube.com/watch?v=XKBusfYGL4M)
 
@@ -67,7 +85,6 @@ or the scope that people can have through this software.
 - New plugin-based system for transforming data, check out the [osintbuddy](https://pypi.org/project/osintbuddy/) package. Documentation is coming soon.
 
 
-&nbsp;&nbsp;&nbsp;\> **[https://docs.osintbuddy.com](https://docs-osintbuddy-com.vercel.app/)**
 
 ## [↑](#Introducing-the-OSINTBuddy-Toolbox)Getting Started
 
@@ -143,8 +160,6 @@ Contributions are what make the open source community such an amazing place to l
 
 *Note, the [OSINTBuddy plugins package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*
 
-[![Total Downloads](https://static.pepy.tech/badge/osintbuddy)](https://pepy.tech/project/osintbuddy)
-[![Downloads](https://static.pepy.tech/badge/osintbuddy/week)](https://pepy.tech/project/osintbuddy)
 
 
 ## [↑](#Introducing-the-OSINTBuddy-Toolbox)Contact
