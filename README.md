@@ -21,7 +21,7 @@
   </h4>
 <br/>
 
-![osintbuddy-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/c01357a9-9e55-44e3-9734-c84130bd110b)
+![osintbuddy-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/5640a430-50f7-45df-9f75-8dd473dcdd1b)
 
   <br />
 </p>
