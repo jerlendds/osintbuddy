@@ -20,11 +20,9 @@ export const CreateCasesForm: React.FC<{ closeModal: Function }> = ({ closeModal
       <Formik
         initialValues={initialValues}
         onSubmit={(values, actions) => {
-          console.log({ values, actions });
           casesService
             .createProject({ ...values })
             .then((resp) => {
-              console.log(resp.data);
             })
             .catch((error) => console.warn(error));
           actions.setSubmitting(false);
@@ -183,7 +181,7 @@ function Table({ columns, data, fetchData, loading, pageCount: controlledPageCou
                 <th>
                   <button
                     type='button'
-                    onClick={() => console.log('hello', setIsOpen(true))}
+                    onClick={() => setIsOpen(true)}
                     className='px-1 my-3.5 pr-3 text-left text-sm font-semibold text-info-100 hover:text-info-200 first:sm:pl-6 flex items-center'
                   >
                     <PlusIcon className='mr-2 w-5 h-5 ' /> Create case
@@ -259,7 +257,6 @@ export function CasesTable({ columns, setIsOpen }: { columns: any; setIsOpen: Fu
         .getProjects(pageIndex, pageSize)
         .then((resp) => {
           if (resp.data) {
-            console.log(resp.data);
             if (resp.data) {
               setPageCount(Math.ceil(resp.data.dorksCount / pageSize));
               setData(resp.data);

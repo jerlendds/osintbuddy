@@ -79,7 +79,6 @@ const InvestigationFlow = ({
       event.preventDefault();
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
-      console.log('type: ', type);
       // check if the dropped element is valid
       if (typeof type === 'undefined' || !type) {
         return;
@@ -89,7 +88,6 @@ const InvestigationFlow = ({
         y: event.clientY,
       });
       const nodeElements = await api.get(`/nodes/type?node_type=${type}`);
-      console.log('nodes:: ', nodeElements);
       if (nodeElements?.data) {
         const newNode = {
           id: `${getId()}`,
@@ -202,7 +200,6 @@ export default function OsintPage() {
   const { lastMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl, {
     onOpen: () => console.log('opened'),
     shouldReconnect: (closeEvent) => {
-      console.log('closeEvent: ', closeEvent);
       return true;
     },
   });
@@ -228,7 +225,6 @@ export default function OsintPage() {
       data,
       position: addPosition,
     };
-    console.log('ADDING NODE: ', newNode);
     setNodes((nds) => nds.concat(newNode));
     return addPosition;
   }
@@ -290,7 +286,6 @@ export default function OsintPage() {
             .map((label: string) => {
               return { event: label, title: label, name: label };
             }) || [];
-        console.log('options: ', options);
         return options;
       })
       .then((options) => setNodeOptions(options));
@@ -320,7 +315,6 @@ export default function OsintPage() {
     if (editState) {
       setNodes((nds) =>
         nds.map((node) => {
-          console.log(node.id, nodeId, editState);
           if (editState && editState.data && node.id === editState.id) {
             node = updateNode(node, editState.data);
           }
@@ -335,7 +329,6 @@ export default function OsintPage() {
     if (lastMessage !== null) {
       setMessageHistory((prev) => prev.concat(lastMessage));
       let data = JSON.parse(lastMessage?.data) || lastMessage?.data;
-      console.log('lastMessage: ', data);
       if (data && !Array.isArray(data)) {
         if (data?.action === 'addNode') {
           addNodeAction(data);

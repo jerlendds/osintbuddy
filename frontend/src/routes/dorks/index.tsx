@@ -27,7 +27,6 @@ export const DorkSearchForm: React.FC<{ dorkQuery: any }> = ({ dorkQuery }) => {
   const [queryField, setQueryField] = useState(dorkQuery);
   const [errorMessage, setErrorMessage] = useState('');
   const initialValues = { query: dorkQuery, pages: '' };
-  console.log(initialValues);
   const isValid = (values: DorkInputValues) => {
     if (values.query === '') {
       return false;
@@ -45,7 +44,6 @@ export const DorkSearchForm: React.FC<{ dorkQuery: any }> = ({ dorkQuery }) => {
       <Formik
         initialValues={initialValues}
         onSubmit={(values, actions) => {
-          console.log({ values, actions });
           if (isValid(values)) {
             actions.setSubmitting(false);
           }
@@ -112,7 +110,6 @@ export default function GoogleDorksPage() {
     dorksService
       .updateDorks()
       .then((resp) => {
-        console.log(resp);
       })
       .catch((error) => console.warn(error));
   };

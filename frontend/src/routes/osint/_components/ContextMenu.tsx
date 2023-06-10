@@ -12,7 +12,6 @@ const useContextMenu = () => {
       e.preventDefault();
       // @todo implement support for when multiple nodes are selected
       if (e.target.closest('.react-flow__nodesselection-rect')) {
-        console.log('selected nodes: ', document.querySelectorAll('.react-flow__node.selected'))
       }
       setXPos(`${e.pageX}px`);
       setYPos(`${e.pageY}px`);

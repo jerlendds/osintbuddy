@@ -83,7 +83,6 @@ export default function BaseNode({
   setEditState: Function;
 }) {
   const nodeId = useNodeId();
-  console.log('THIS NODES ID', nodeId);
   const node = flow?.data?.node;
   const nodes = node?.elements;
   const icon = node?.icon;
@@ -411,7 +410,6 @@ export function DropdownInput({
     //   node: { id: nodeId, [label]: activeOption },
     // });
     setEditState({ id: nodeId, data: { [label]: activeOption } });
-    console.log('useEffect activeOption: ', activeOption);
   }, [query, activeOption]);
 
   return (
