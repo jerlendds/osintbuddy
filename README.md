@@ -34,7 +34,7 @@
 </summary>
   <ol>
     <li>
-      <a href="#about-the-project">What is OSINTBuddy</a>
+      <a href="#what-is-osintbuddycom">What is OSINTBuddy</a>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
@@ -86,7 +86,7 @@ We've decided to do something about it. The rapid developments in technologies s
 
 
 
-## [↑](#Introducing-the-OSINTBuddy-Toolbox)Getting Started
+## [↑](#what-is-osintbuddycom)Getting Started
 
 To start using OSINTBuddy, follow these simple installation steps:
 
@@ -112,7 +112,7 @@ To start using OSINTBuddy, follow these simple installation steps:
   - Documentation: http://localhost:5000/docs -- http://localhost:5000/redoc
 - Access OSINTBuddy through the URLs provided for frontend, backend, documentation, and more.
 
-## [↑](#Introducing-the-OSINTBuddy-Toolbox)Roadmap
+## [↑](#what-is-osintbuddycom)Roadmap
  
 See our [trello board](https://trello.com/b/99Q70frX/) 
 for a list of our upcoming features
@@ -120,7 +120,7 @@ for a list of our upcoming features
 See the [open issues](https://github.com/jerlendds/osintbuddy/issues)
 for a list of requested features (and known issues).
 
-## [↑](#Introducing-the-OSINTBuddy-Toolbox)Progress Notes
+## [↑](#what-is-osintbuddycom)Progress Notes
 
 - [x] Website node
 - [x] Google search node
@@ -143,7 +143,7 @@ for a list of requested features (and known issues).
 
 
 
-## [↑](#Introducing-the-OSINTBuddy-Toolbox)Contributing
+## [↑](#what-is-osintbuddycom)Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -154,7 +154,7 @@ Contributions are what make the open source community such an amazing place to l
 5. Open a Pull Request
 
 
-## [↑](#Introducing-the-OSINTBuddy-Toolbox)License
+## [↑](#what-is-osintbuddycom)License
 
 [GNU AGPLv3](https://choosealicense.com/licenses/gpl-3.0/)
 
@@ -162,7 +162,7 @@ Contributions are what make the open source community such an amazing place to l
 
 
 
-## [↑](#Introducing-the-OSINTBuddy-Toolbox)Contact
+## [↑](#what-is-osintbuddycom)Contact
 
 Open an issue if you need to get in touch with me
 
