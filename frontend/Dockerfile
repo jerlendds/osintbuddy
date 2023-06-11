@@ -1,9 +1,9 @@
 FROM node:20-alpine3.17 as build-stage
 WORKDIR /app/
 COPY package.json yarn.lock ./
-RUN yarn
+RUN npm install
 COPY . .
-RUN yarn build
+RUN npm run build
 
 
 FROM nginx:1.25.0-alpine
