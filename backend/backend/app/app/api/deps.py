@@ -14,15 +14,20 @@ def get_driver() -> Generator[Session, None, None]:
     The driver is properly closed when it is no longer needed.
     """
     options = webdriver.ChromeOptions()
+    options.binary_location = "/usr/bin/chromium"
     # prevent issues that may arise when running Chrome in a Docker container
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--headless')
+
     try:
         driver: uc.Chrome = uc.Chrome(
+            driver_executable_path="/usr/bin/chromedriver",
+            version_main=114,
             desired_capabilities=DesiredCapabilities.CHROME,
             options=options
         )
+
         yield driver
     finally:
         driver.quit()
