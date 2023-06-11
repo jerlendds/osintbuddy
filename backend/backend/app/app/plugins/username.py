@@ -18,16 +18,19 @@ class UsernamePlugin(ob.Plugin):
             driver.get('https://whatsmyname.app/')
             input_field = driver.find_element(by=By.XPATH, value='//*[@id="targetUsername"]')
             input_field.send_keys(node['data'][0])
-            time.sleep(3)
+            time.sleep(10)
             driver.find_element(
                 by=By.XPATH,
                 value="/html/body/div/div/div[2]/div[2]/div/div[2]/button"
             ).click()
             table = driver.find_element(by=By.XPATH, value='//*[@id="collectiontable"]')
             elms = table.find_elements(by=By.CSS_SELECTOR, value="tbody tr")
+            
+            
             data = []
             for elm in elms:
                 tds = elm.find_elements(by=By.CSS_SELECTOR, value='td')
+
                 blueprint = SocialProfilePlugin.blueprint(
                     category=tds[2].text,
                     site=tds[0].text,
