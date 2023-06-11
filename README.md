@@ -108,8 +108,8 @@ To start using OSINTBuddy, follow these simple installation steps:
 
 - **URLs**
   - Frontend: http://localhost:3000
-  - Backend: http://localhost:5000/api/
-  - Documentation: http://localhost:5000/docs -- http://localhost:5000/redoc
+  - Backend: http://localhost:8000/api/
+  - Documentation: http://localhost:8000/docs -- http://localhost:8000/redoc
 - Access OSINTBuddy through the URLs provided for frontend, backend, documentation, and more.
 
 ## [↑](#what-is-osintbuddycom)Roadmap
