@@ -18,8 +18,10 @@
 
   <h2><b>Introducing OSINTBuddy</b></h2>
   <p>
-    Mine, merge, and map data for novel insights. Fetch data from different sources
-    and returns the results as visual entities that you can explore step-by-step!
+      Welcome to the OSINTBuddy project where you can connect, combine,
+      and get insights from unstructured and public data as results that
+      can be explored step-by-step. An easy-to-use plugin system allows any
+      Python developer to quickly integrate new data sources.
   </p>
 <br/>
 
