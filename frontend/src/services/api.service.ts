@@ -1,14 +1,14 @@
 import axios from 'axios';
 
-export const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'http://localhost:5000'  // 'https://osintbuddy.com';
+export const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'http://localhost:8000'  // 'https://osintbuddy.com';
 export const API_PREFIX = '/api/v1';
 
-export const WS_URL = 'localhost:5000' + API_PREFIX
+export const WS_URL = process.env.NODE_ENV === 'development' ? 'localhost:8000' + API_PREFIX : 'localhost:8000' + API_PREFIX
 
 export const LS_USER_AUTH_KEY = 'user-data';
 
 const api = axios.create({
-  baseURL: BASE_URL + API_PREFIX,
+  baseURL: BASE_URL + API_PREFIX
 });
 
 export const setHeader = () => {
