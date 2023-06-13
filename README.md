@@ -97,7 +97,7 @@ We've decided to do something about it. The rapid developments in technologies s
 To start using OSINTBuddy, follow these simple installation steps:
 
 ### Installation
-1. Open your termina
+1. Open your terminal
    - *Note: for windows users I recommend using [tabby](https://tabby.sh/) configured with a git bash profile)*  
 2. Clone the repo and submodules
    ```sh
