@@ -13,9 +13,7 @@
     <img src="./docs/watermark.svg" height="130px" alt="OSINT Buddy Logo">
   </a>
 
-[Discord](https://discord.gg/gsbbYHA3K3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [osintbuddy.com](https://osintbuddy.com)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  [osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins) 
-
----
+&nbsp;&nbsp;[Discord](https://discord.gg/gsbbYHA3K3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [osintbuddy.com](https://osintbuddy.com)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  [osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins) 
 
   > *I have no data yet. It is a capital mistake to theorize before one has data. Insensibly
   > one begins to twist facts to suit theories, instead of theories to suit facts.*
@@ -97,21 +95,20 @@ We've decided to do something about it. The rapid developments in technologies s
 To start using OSINTBuddy, follow these simple installation steps:
 
 ### Installation
-
-1. Clone the repo and submodules
+1. Open your termina
+   - *Note: for windows users I recommend using [tabby](https://tabby.sh/) configured with a git bash profile)*  
+2. Clone the repo and submodules
    ```sh
    git clone --recurse-submodules https://github.com/jerlendds/osintbuddy.git
    cd osintbuddy
    ```
-2. Install Docker
-    - Learn how to [install Docker on Mac](https://docs.docker.com/desktop/install/mac-install/)
-    - Learn how to [install Docker on Windows](https://docs.docker.com/desktop/install/windows-install/)
-    - Learn how to [install Docker on Linux](https://docs.docker.com/desktop/install/linux-install/)
-3. Start the stack with Docker:
+3. Install Docker
+    - [Learn how to install Docker on Mac](https://docs.docker.com/desktop/install/mac-install/)
+    - [Learn how to install Docker on Windows](https://docs.docker.com/desktop/install/windows-install/)
+    - [Learn how to install Docker on Linux](https://docs.docker.com/desktop/install/linux-install/)
+4. Start the stack with Docker *(if the `cp` command doesn't work on your OS, copy and rename the `.env.example` file to `.env`)*: 
    ```sh
-    # If the following command doesn't work on windows, you can rename the .env.example file to .env
    cp .env.example .env
-   # Start the OSINTBuddy app
    docker compose up
    ```
 
