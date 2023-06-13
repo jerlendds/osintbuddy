@@ -96,9 +96,14 @@ We've decided to do something about it. The rapid developments in technologies s
 
 To start using OSINTBuddy, follow these simple installation steps:
 
+<!-- @todo make this easier for windows users...
+https://willi.am/blog/2016/08/11/docker-for-windows-dealing-with-windows-line-endings/
+ -->
+
 ### Installation
 1. Open your terminal
-   - *Note: for windows users I recommend using [tabby](https://tabby.sh/) configured with a git bash profile*  
+   - *Note for Windows: I recommend using [tabby](https://tabby.sh/) configured with a git bash profile*
+   - *Note for Windows: For this project to work you need unix line endings. Before cloning, run `git config --global core.autocrlf false` ([a](https://stackoverflow.com/a/13154031))* 
 2. Clone the repo and submodules
    ```sh
    git clone --recurse-submodules https://github.com/jerlendds/osintbuddy.git
