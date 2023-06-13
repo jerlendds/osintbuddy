@@ -13,6 +13,10 @@
     <img src="./docs/watermark.svg" height="130px" alt="OSINT Buddy Logo">
   </a>
 
+[Discord](https://discord.gg/gsbbYHA3K3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [osintbuddy.com](https://osintbuddy.com)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  [osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins) 
+
+---
+
   > *I have no data yet. It is a capital mistake to theorize before one has data. Insensibly
   > one begins to twist facts to suit theories, instead of theories to suit facts.*
 
@@ -27,7 +31,7 @@
 
 ![osintbuddy-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/5640a430-50f7-45df-9f75-8dd473dcdd1b)
 
-  <br />
+  ---
 </p>
 
 <details open="open">
@@ -100,11 +104,14 @@ To start using OSINTBuddy, follow these simple installation steps:
    cd osintbuddy
    ```
 2. Install Docker
-
+    - Learn how to [install Docker on Mac](https://docs.docker.com/desktop/install/mac-install/)
+    - Learn how to [install Docker on Windows](https://docs.docker.com/desktop/install/windows-install/)
+    - Learn how to [install Docker on Linux](https://docs.docker.com/desktop/install/linux-install/)
 3. Start the stack with Docker:
-
    ```sh
+    # If the following command doesn't work on windows, you can rename the .env.example file to .env
    cp .env.example .env
+   # Start the OSINTBuddy app
    docker compose up
    ```
 

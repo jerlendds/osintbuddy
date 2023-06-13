@@ -93,3 +93,6 @@ wsproto==1.2.0
 yarl==1.9.2
 zope.event==4.6
 zope.interface==6.0
+colorama==0.4.6
+pyfiglet==0.8.post1
+termcolor==2.3.0
