@@ -98,7 +98,7 @@ To start using OSINTBuddy, follow these simple installation steps:
 
 ### Installation
 1. Open your terminal
-   - *Note: for windows users I recommend using [tabby](https://tabby.sh/) configured with a git bash profile)*  
+   - *Note: for windows users I recommend using [tabby](https://tabby.sh/) configured with a git bash profile*  
 2. Clone the repo and submodules
    ```sh
    git clone --recurse-submodules https://github.com/jerlendds/osintbuddy.git
@@ -118,7 +118,7 @@ To start using OSINTBuddy, follow these simple installation steps:
   - Frontend: http://localhost:3000
   - Backend: http://localhost:8000/api/
   - Documentation: http://localhost:8000/docs -- http://localhost:8000/redoc
-- Access OSINTBuddy through the URLs provided for frontend, backend, documentation, and more.
+- Access OSINTBuddy through the URLs provided for frontend, backend, and documentation.
 
 ## [↑](#what-is-osintbuddycom)Roadmap
  
