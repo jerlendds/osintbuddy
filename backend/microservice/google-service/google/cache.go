@@ -74,7 +74,7 @@ func CrawlGoogleCache(searchQuery string, pages string) {
 	)
 
 	c.OnRequest(func(r *colly.Request) {
-		setHeaders(r)
+		setGoogleHeaders(r)
 	})
 
 	c.OnResponse(func(r *colly.Response) {
@@ -119,7 +119,7 @@ func CrawlGoogleCache(searchQuery string, pages string) {
 			storiesResult := &StoriesResult{
 				Description: storiesDesc,
 				Link:        storiesLink,
-				Index:				resultIndex,
+				Index:       resultIndex,
 			}
 			cacheSerpResults.Stories = append(cacheSerpResults.Stories, *storiesResult)
 		}
@@ -142,7 +142,7 @@ func CrawlGoogleCache(searchQuery string, pages string) {
 				Title:       videosHeader,
 				Description: videosSubheader,
 				Link:        videosLink,
-				Index:				resultIndex,
+				Index:       resultIndex,
 			}
 			cacheSerpResults.Videos = append(cacheSerpResults.Videos, *videoResult)
 		}
