@@ -4,7 +4,7 @@
 https://www.exploit-db.com/google-hacking-database -->
 
 ## About the Project
-  The core of the backend is a FastAPI app running on Python 3.11.3. Since we're using an undetected version of Selenium to provide plugin authors access to a browser instance the container also has chromium installed. You can find the [backend dockerfile here](backend/backend.Dockerfile) and the [selenium provider here](backend/app/app/api/deps.py) among a few other things.
+  The core of the backend is a FastAPI app running on Python 3.11.4. Since we're using an undetected version of Selenium to provide plugin authors access to a browser instance the container also has chromium installed. You can find the [backend dockerfile here](backend/backend.Dockerfile) and the [selenium provider here](backend/app/app/api/deps.py) among a few other things.
 
 # Dependencies
 #### **General purpose:**
