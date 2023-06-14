@@ -52,16 +52,6 @@ services:
   #     - 5555:5555
   #   environment:
   #     - CELERY_BROKER_URL=redis://redis:6379//
-  # jena:
-  #   image: secoresearch/fuseki:4.8.0
-  #   ports:
-  #     - 3030:3030
-  #   environment:
-  #     ADMIN_PASSWORD: password
-  #     ENABLE_DATA_WRITE: "true"
-  #     ENABLE_UPDATE: "true"
-  #     ENABLE_UPLOAD: "true"
-  #     QUERY_TIMEOUT: 200000
   ui:
     # image: openinfolabs/osintbuddy-frontend:latest
     build:
