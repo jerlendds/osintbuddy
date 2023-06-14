@@ -40,49 +40,27 @@ https://www.exploit-db.com/google-hacking-database -->
 
 
 # Getting Started
-  1. Setup your SSH key for access to the repos through your Github connected org account 
 
-  2. Clone the repo
+  1. Clone the repo
       ```bash
-      git clone git@github.com:jerlendds/osintbuddy.git
+      # git clone https://github.com/jerlendds/osintbuddy.git
+      git clone git@github.com:jerlendds/osintbuddy.git 
       cd osintbuddy
       ```
 
-  3. Setup your `venv` and install the dependencies. From the `osintbuddy` directory run:
+  2. Setup your `venv` and install the dependencies. From the `osintbuddy` directory run:
       ```bash
       python3 -m venv venv
       source ./venv/bin/activate
       pip3 install requirements-dev.txt
       ```
 
-  4. Start the stack
+  3. Start the stack
       ```bash
       docker compose up
       ```
       - Backend: [http://localhost:8000/](http://localhost:8000/)
       - Frontend [http://localhost:3000](http://localhost:3000)
-
-
-## Dependencies
-  - 
-  - [fastapi-cache](https://github.com/comeuplater/fastapi_cache)
-  - [Docker Documentation](https://docs.docker.com/)
-  - [SQLAlchemy Documentation](https://docs.sqlalchemy.org/en/14/)
-  - [Alembic Documentation](https://alembic.sqlalchemy.org/en/latest/)
-  - [Celery Documentation](https://docs.celeryq.dev/en/stable/)
-  - [SQLAdmin Documentation](https://aminalaee.dev/sqladmin/)
-
-
-#### Linting & Testing
-  - We're using [pylama](https://github.com/klen/pylama) as our linter and  for testing
-    we are using pytest, to run the tests inside the container you can run a bash script 
-      (theres some other useful scripts, feel free to look)
-      ```bash
-      docker compose exec backend ./scripts/test.sh
-       ```
-  - [pylama](https://klen.github.io/pylama/)
-  - [pytest](https://docs.pytest.org/en/7.1.x/contents.html)
-
 
 ## CI/CD
 *@todo implement semver release process, use githooks and actions*
