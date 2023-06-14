@@ -1,10 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.api_v1.endpoints import (
-    dorks,
-    nodes,
-    projects
-)
+from app.api.api_v1.endpoints import dorks, nodes, projects
 
 api_router = APIRouter()
 
