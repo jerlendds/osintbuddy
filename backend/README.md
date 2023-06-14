@@ -52,7 +52,7 @@ https://www.exploit-db.com/google-hacking-database -->
       ```bash
       python3 -m venv venv
       source ./venv/bin/activate
-      pip3 install requirements-dev.txt
+      pip3 install -r backend/backend/dev-requirements.txt
       ```
 
   3. Start the stack
