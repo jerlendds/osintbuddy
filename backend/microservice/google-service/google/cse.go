@@ -61,7 +61,6 @@ func CrawlCse(searchQuery string, pages string, cseId string) map[string]interfa
 		if len(urlResp) > 1 {
 			paginationIndex += 1
 			fmt.Println("Parsing CSE auth response for token...")
-			fmt.Println(urlResp)
 
 			cseAuthString := strings.Split(urlResp[1], ");")[0]
 			var authValues map[string]string
