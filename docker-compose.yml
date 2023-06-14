@@ -37,14 +37,14 @@ services:
     ports:
       - 6379:6379
     command: redis-server
-  worker:
-    # image: openinfolabs/osintbuddy-worker:latest
-    command: /worker-start.sh
-    build:
-      context: ./backend/backend
-      dockerfile: worker.Dockerfile
-    env_file:
-      - .env
+  # worker:
+  #   # image: openinfolabs/osintbuddy-worker:latest
+  #   command: /worker-start.sh
+  #   build:
+  #     context: ./backend/backend
+  #     dockerfile: worker.Dockerfile
+  #   env_file:
+  #     - .env
   # @todo Replace with https://github.com/rsalmei/clearly
   # flower:
   #   image: mher/flower:1.2
