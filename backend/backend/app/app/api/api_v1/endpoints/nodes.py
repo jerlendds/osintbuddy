@@ -55,7 +55,7 @@ async def get_node_option(node_type: str):
 
 def save_transform(results: List[dict]):
     for node in results:
-        print(node)
+        pass
 
 
 async def get_command_type(event):
@@ -87,7 +87,6 @@ async def nodes_transform(node, action_type, send_json):
     node_output = {}
     plugin = await Registry.get_plugin(node["type"])
     if plugin := plugin():
-        print("plugin instance: ", plugin)
         transform_type = node["transform"]
         node_output = await plugin._get_transform(
             transform_type=transform_type,

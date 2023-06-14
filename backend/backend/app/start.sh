@@ -25,8 +25,5 @@ if [ -f $PRE_START_PATH ] ; then
 else
     echo "There is no script $PRE_START_PATH"
 fi
-# Start Gunicorn
-aws s3 cp s3://oil-dev-secrets/.prod.env .prod.env | sed 's/^/export /' >> .env
-source .env
 
 exec gunicorn -k "$WORKER_CLASS" -c "$GUNICORN_CONF" "$APP_MODULE"
