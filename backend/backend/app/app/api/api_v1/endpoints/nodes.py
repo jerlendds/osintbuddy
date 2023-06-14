@@ -1,5 +1,10 @@
 from typing import List
-from fastapi import APIRouter, WebSocket, WebSocketException, WebSocketDisconnect
+from fastapi import (
+    APIRouter,
+    WebSocket,
+    WebSocketException,
+    WebSocketDisconnect,
+)
 from websockets.exceptions import ConnectionClosedError
 from app.api import deps
 from app.core.logger import get_logger
@@ -33,7 +38,10 @@ async def refresh_plugins():
 
 @router.get("/transforms")
 async def get_node_transforms(node_type: str):
-    return {"type": node_type, "transforms": await fetch_node_transforms(node_type)}
+    return {
+        "type": node_type,
+        "transforms": await fetch_node_transforms(node_type),
+    }
 
 
 @router.get("/type")
@@ -110,7 +118,6 @@ async def execute_event(event, send_json):
         await remove_nodes(event["node"], action_type, send_json)
     if action == "transform":
         await nodes_transform(event["node"], action_type, send_json)
-
 
 
 @router.websocket("/investigation")

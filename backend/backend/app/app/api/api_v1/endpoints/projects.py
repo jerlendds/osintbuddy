@@ -1,13 +1,12 @@
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import crud, schemas
 from app.api import deps
 
-router = APIRouter(prefix='/cases')
+router = APIRouter(prefix="/cases")
 
 
-@router.get('')
+@router.get("")
 def get_cases(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
@@ -24,13 +23,10 @@ def get_cases(
     obj_out = []
     for case in cases:
         obj_out.append(case.__dict__)
-    return {
-        'projects': obj_out,
-        'count': crud.cases.count_all(db)[0][0]
-    }
+    return {"projects": obj_out, "count": crud.cases.count_all(db)[0][0]}
 
 
-@router.post('')
+@router.post("")
 def create_case(
     name: str,
     db: Session = Depends(deps.get_db),
@@ -43,7 +39,7 @@ def create_case(
     return crud.cases.create(db=db, obj_in=obj_in)
 
 
-@router.delete('')
+@router.delete("")
 def delete_project(
     id: int,
     db: Session = Depends(deps.get_db),
@@ -51,6 +47,4 @@ def delete_project(
     if id:
         return crud.cases.remove(db=db, id=id)
     else:
-        raise HTTPException(status_code=422, detail='ID is a required field')
-
-
+        raise HTTPException(status_code=422, detail="ID is a required field")
