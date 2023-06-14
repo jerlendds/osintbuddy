@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+. .env
+
+
+format_python() {
+    brunette $1 --config=backend/setup.cfg --target-version py310;
+}
+
+format_all_python() {
+    format_python backend/backend/app/app/**/*;
+    echo -e "\033[32;1m[SUCCESS]\033[0m Formatted backend/backend/app/app/**/* files"
+}
+
+[[ "$VIRTUAL_ENV" == "" ]]; INVENV=$?
+
+if [[ "$INVENV" == "1" ]]
+then
+    format_all_python
+    exit 0
+else
+    echo -e "\033[93;1m[WARNING]\033[0m We have detected that the Python virtual environment is not activated."
+    echo -e "\033[34;1m[INFO]\033[0m Attempting to activate: $VENV_PATH/activate";
+    . "$VENV_PATH/activate";
+    echo -e "\033[32;1m[SUCCESS]\033[0m Virtual environment successfully activated"
+fi
+
+[[ "$VIRTUAL_ENV" == "" ]]; INVENV=$?
+
+
+if [[ "$INVENV" == "1" ]]
+then
+    format_all_python
+else
+    echo -e "\033[31;1m[ERROR]\033[0m Failed to activate the venv: \033[31;1m$VENV_PATH/activate\033[0m. Is your .env VENV_PATH correct?";
+    exit 1;
+fi
