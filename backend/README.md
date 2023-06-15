@@ -10,7 +10,6 @@ https://www.exploit-db.com/google-hacking-database -->
 #### **General purpose:**
 - [fastapi](https://pypi.org/project/fastapi/0.97.0/)
 - [fastapi-cache](https://pypi.org/project/fastapi-cache/0.1.0/)
-- [pymongo](https://pypi.org/project/pymongo/4.3.3/)
 - [SQLAlchemy](https://pypi.org/project/SQLAlchemy/2.0.16/)
 - [selenium](https://pypi.org/project/selenium/4.10.0/)
 - [beautifulsoup4](https://pypi.org/project/beautifulsoup4/4.12.2/)
