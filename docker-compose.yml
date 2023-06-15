@@ -1,5 +1,15 @@
 version: '3.9'
 services:
+  ui:
+    # image: openinfolabs/osintbuddy-frontend:latest
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend/:/app/
+    ports:
+      - "${FRONTEND_PORT-.env FRONTEND_PORT needs to be set}:80"
+    env_file:
+      - .env
   backend:
     # image: openinfolabs/osintbuddy-backend:latest
     command: ['/bin/sh', '-c', './start-reload.sh']
@@ -12,31 +22,87 @@ services:
       CLASSPATH: /app/jena-jdbc-driver-bundle-4.8.0.jar
       PYTHONDONTWRITEBYTECODE: 1
     ports:
-      - 8000:80
+      - "${BACKEND_PORT-.env BACKEND_PORT needs to be set}:80"
     env_file:
       - .env
+  redis:
+    image: redis:latest
+    ports:
+      - "${REDIS_PORT-.env REDIS_PORT needs to be set}:6379"
+    command: redis-server
   microservice:
     # image: openinfolabs/osintbuddy-microservice:latest
     build:
       context: ./backend/microservice
       dockerfile: Dockerfile
     ports:
-      - 1323:1323
+      - "${MICROSERVICE_PORT-.env MICROSERVICE_PORT needs to be set}:1323"
     env_file:
       - '.env'
   db:
-    image: postgres:14.2
+    image: "${POSTGRES_IMAGE-.env POSTGRES_IMAGE needs to be set}"
     volumes:
-      - osintbuddy-db-data:/var/lib/postgresql/data/pgdata
+      - "osintbuddy-db-data:${PGDATA-.env PGDATA needs to be set}"
     env_file:
       - .env
     ports:
-      - 5432:5432
-  redis:
-    image: redis:latest
-    ports:
-      - 6379:6379
-    command: redis-server
+      - "${POSTGRES_PORT-.env POSTGRES_PORT needs to be set}:5432"
+
+volumes:
+  osintbuddy-db-data:
+  # es-data:
+  # sdb-data:
+  # index-data:
+
+  # @todo uncomment for release 0.0.4 (saving investigation graphs)
+  # sdb:
+  #   image: scylladb/scylla:5.1
+  #   ports:
+  #    - "${SDB_REST_PORT-.env SDB_REST_PORT needs to be set}:10000"
+  #    - "${CQL_PORT-.env CQL_PORT needs to be set}:9042"
+  #    - "${THRIFT_PORT-.env THRIFT_PORT needs to be set}:9160"
+  #    - "${INTERNODE_PORT-.env INTERNODE_PORT needs to be set}:7000"
+  #    - "${INTERNODE_ONE_PORT-.env INTERNODE_ONE_PORT needs to be set}:7001"
+  #    - "${JMX_PORT-.env JMX_PORT needs to be set}:7199"
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #    - sdb-data:${SCYLLADATA-.env SCYLLADATA needs to be set}
+  # @todo uncomment for release 0.0.4 (saving investigation graphs)
+  # janus:
+  #   image: "${JANUS_IMAGE-.env JANUS_IMAGE needs to be set}"
+  #   environment:
+  #     storage.backend: "cql"
+  #     storage.hostname: sdb:9042
+  # @todo uncomment for release 0.0.4 (saving investigation graphs)
+  # index:
+  #   image: "${ELASTIC_IMAGE-.env ELASTIC_IMAGE needs to be set}"
+  #   environment:
+  #     - http.host=0.0.0.0
+  #     - transport.host=127.0.0.1
+  #     - node.name=es
+  #     - cluster.initial_master_nodes=es
+  #     - cluster.name=osintbuddy-es
+  #     - bootstrap.memory_lock=true
+  #     - xpack.security.enabled=false
+  #     - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #     nofile:
+  #       soft: 262144
+  #       hard: 262144
+  #   ports:
+  #    - "${ELASTIC_PORT-.env ELASTIC_PORT needs to be set}:9200"
+  #   env_file:
+  #     - .env
+  #   user: "1000"
+  #   volumes:
+  #     - type: volume
+  #       source: es-data
+  #       target: /usr/share/elasticsearch/data
+  # @todo uncomment for WARC release
   # worker:
   #   # image: openinfolabs/osintbuddy-worker:latest
   #   command: /worker-start.sh
@@ -52,13 +118,3 @@ services:
   #     - 5555:5555
   #   environment:
   #     - CELERY_BROKER_URL=redis://redis:6379//
-  ui:
-    # image: openinfolabs/osintbuddy-frontend:latest
-    build:
-      context: ./frontend
-    volumes:
-      - ./frontend/:/app/
-    ports:
-      - 3000:80
-volumes:
-  osintbuddy-db-data:

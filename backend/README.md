@@ -17,6 +17,8 @@ https://www.exploit-db.com/google-hacking-database -->
 - [tenacity](https://pypi.org/project/tenacity/)
 - [jsbeautifier](https://pypi.org/project/jsbeautifier/1.14.8/)
 - [python3-nmap](https://pypi.org/project/python3-nmap/1.6.0/)
+- [gremlinpython](https://pypi.org/project/gremlinpython/3.6.4/)
+- [elasticsearch](https://pypi.org/project/elasticsearch/8.8.0/)
 
 #### **For creating and saving WARC files we're planning to use:**
 - [selenium-wire](https://pypi.org/project/selenium-wire/5.1.0/)
@@ -51,8 +53,9 @@ https://www.exploit-db.com/google-hacking-database -->
   2. Setup your `venv` and install the dependencies. From the `osintbuddy` directory run:
       ```bash
       python3 -m venv venv
-      source ./venv/bin/activate
+      source venv/bin/activate
       pip3 install -r backend/backend/dev-requirements.txt
+      pip3 install backend/backend/osintbuddy-plugins
       ```
 
   3. Start the stack
