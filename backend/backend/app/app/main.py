@@ -8,9 +8,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cache import caches, close_caches
 from fastapi_cache.backends.redis import CACHE_KEY, RedisCacheBackend
 from osintbuddy import discover_plugins
+import sentry_sdk
 
 from app.api.api_v1.api import api_router
 from app.core.config import settings
+
+
+if settings.SENTRY_DSN:
+    sentry_sdk.init(
+        dsn="https://c5f217ca357c468cbb7cfe663318018f@o567628.ingest.sentry.io/4505363615711232",
+        traces_sample_rate=1.0,  # capture 100%
+    )
 
 
 def redis_cache():
@@ -59,50 +67,22 @@ def app_openapi_schema(app):
 
 @app.on_event('startup')
 async def on_startup() -> None:
-    if settings.ENVIRONMENT == 'development':
+    if 'dev' in settings.ENVIRONMENT:
         discover_plugins('/plugins.osintbuddy.com/src/osintbuddy/core/')
-        rc = RedisCacheBackend(settings.REDIS_URL)
-        caches.set(CACHE_KEY, rc)
+    rc = RedisCacheBackend(settings.REDIS_URL)
+    caches.set(CACHE_KEY, rc)
 
 
 @app.on_event('shutdown')
 async def on_shutdown() -> None:
-    if settings.ENVIRONMENT == 'development':
-        await close_caches()
+    await close_caches()
 
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 app.openapi_schema = app_openapi_schema(app)
 
-# client = httpx.AsyncClient(base_url="http://127.0.0.1/") # ?uri=
 
-
-async def _reverse_proxy(request: Request):
-    print(request.url, request.headers.raw, request.url.path[7:])
-    # url = httpx.URL(
-    #     # path='r',
-    #                 # query=request.url.query.encode("utf-8"),
-    # raw_path=f"/r?uri={request.url.path[7:].replace('https://', '').replace('http://', '')}".encode('ascii'))
-    # print('httpx url: ', url)
-    # rp_req = client.build_request(request.method, url,
-    #                               headers=request.headers.raw,
-    #                               content=await request.body())
-    # print('rp_rq', rp_req)
-    # rp_resp = await client.send(rp_req, stream=True)
-    client =  httpx.Client(base_url="http://127.0.0.1/")
-    url = f'/r?uri={request.url.path[7:]}'
-    rp_req = client.build_request(
-        request.method,
-        url,
-        headers=request.headers.raw,
-        content=await request.body()
-    )
-    rp_resp = client.send(rp_req, stream=True)
-    return StreamingResponse(
-        rp_resp.aiter_raw(),
-        status_code=rp_resp.status_code,
-        headers=rp_resp.headers,
-        background=BackgroundTask(rp_resp.aclose),
-    )
-
-app.add_route("/proxy/{path:path}", _reverse_proxy, ["GET", "POST"])
+# @app.get("/sentry-debug")
+# async def trigger_error():
+#     division_by_zero = 1 / 0
+#     return division_by_zero
