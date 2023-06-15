@@ -1,9 +1,9 @@
-FROM node:20.2.0-alpine3.18 as build-stage
+FROM node:18.16-slim as build-stage
 WORKDIR /app/
 COPY package.json yarn.lock ./
-RUN npm install
+RUN yarn
 COPY . .
-RUN npm run build
+RUN yarn build
 
 
 FROM nginx:1.25.0-alpine
