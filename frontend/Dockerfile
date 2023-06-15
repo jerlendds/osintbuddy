@@ -1,4 +1,4 @@
-FROM node:20-alpine3.17 as build-stage
+FROM node:20.2.0-alpine3.18 as build-stage
 WORKDIR /app/
 COPY package.json yarn.lock ./
 RUN npm install

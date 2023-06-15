@@ -66,7 +66,6 @@ But here's the concept:
 
 An almost incomprehensible amount of data is created every day. And each year, figures are growing at an ever-increasing rate. These data sources can be divided up into six different categories of information flow:
 
-
 - Public government data
 - Media *(newspapers, magazines, radio)*
 - Internet *(blogs, discussion groups, citizen media, etc)*
@@ -103,17 +102,19 @@ https://willi.am/blog/2016/08/11/docker-for-windows-dealing-with-windows-line-en
 ### Installation
 1. Open your terminal
    - *Note for Windows: I recommend using [tabby](https://tabby.sh/) configured with a git bash profile*
-   - *Note for Windows: For this project to work you need unix line endings. Before cloning, run `git config --global core.autocrlf false` ([a](https://stackoverflow.com/a/13154031))* 
-2. Clone the repo and submodules
+   - *Note for Windows: For this project to work you need unix line endings ([context](https://stackoverflow.com/a/13154031)). Before cloning, run:*
+      
+      *`git config --global core.autocrlf false`*
+1. Clone the repo and submodules
    ```sh
    git clone --recurse-submodules https://github.com/jerlendds/osintbuddy.git
    cd osintbuddy
    ```
-3. Install Docker
+2. Install Docker
     - [Learn how to install Docker on Mac](https://docs.docker.com/desktop/install/mac-install/)
     - [Learn how to install Docker on Windows](https://docs.docker.com/desktop/install/windows-install/)
     - [Learn how to install Docker on Linux](https://docs.docker.com/desktop/install/linux-install/)
-4. Start the stack with Docker *(if the `cp` command doesn't work on your OS, copy and rename the `.env.example` file to `.env`)*: 
+3. Start the stack with Docker *(if the `cp` command doesn't work on your OS, copy and rename the `.env.example` file to `.env`)*: 
    ```sh
    cp .env.example .env
    docker compose up
