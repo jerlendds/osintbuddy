@@ -48,7 +48,6 @@ class CSESearchPlugin(ob.Plugin):
         if pages == "" or pages:
             # @todo implement support in golang CSE crawler for n pages
             pages = "1"
-        print("UGHGHGHGnb ", option, node)
         if option.get("url") and query != "":
             parsed_url = urllib.parse.urlparse(option["url"])
         else:
@@ -57,7 +56,6 @@ class CSESearchPlugin(ob.Plugin):
         try:
             async with httpx.AsyncClient() as client:
                 resp = await client.get(f'http://microservice:1323/google-cse?query={query}&pages={pages}&id={cse_id}', timeout=None)
-                print('resp: ', resp)
                 resp = defaultdict(None, **resp.json())
         except Exception:
             raise OBPluginError(
