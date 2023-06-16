@@ -91,8 +91,8 @@ class GoogleSearchPlugin(ob.Plugin):
                 google_results = google_resp.json()
         except OBPluginError:
             raise OBPluginError((
-                    "There was an error crawling Google. Please try again."
-                    "If you keep encountering this error please open an issue on Github."
+                "There was an error crawling Google. Please try again."
+                "If you keep encountering this error please open an issue on Github."
             ))
 
         results = self._parse_google_data(google_results)["results"]
@@ -137,7 +137,10 @@ class GoogleCacheSearchPlugin(ob.Plugin):
             raise NodeMissingValueError("Query is a required field")
         try:
             async with httpx.AsyncClient() as client:
-                google_resp = await client.get(f'http://microservice:1323/google-cache?query={query}&pages={pages}', timeout=None)
+                google_resp = await client.get(
+                    f'http://microservice:1323/google-cache?query={query}&pages={pages}',
+                    timeout=None
+                )
                 cache_results = google_resp.json()
         except OBPluginError:
             raise OBPluginError(

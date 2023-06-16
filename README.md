@@ -187,13 +187,12 @@ limitations under the License.
 
 [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
 
-*Note, the [OSINTBuddy pypi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*.
-
+*Note, the [OSINTBuddy PyPi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*.
 
 
 ## [↑](#what-is-osintbuddycom)Contact
 
-[Open an issue](https://github.com/jerlendds/osintbuddy/issues/new?assignees=jerlendds&labels=Type%3A+Suggestion&projects=&template=feature.md&title=%5BFEATURE+REQUEST%5D+Your_feature_request_here) if you need to get in touch with me or send an email to `theosintbuddyproject@openinfolabs.com`.
+[Open an issue](https://github.com/jerlendds/osintbuddy/issues/new?assignees=jerlendds&labels=Type%3A+Suggestion&projects=&template=feature.md&title=%5BFEATURE+REQUEST%5D+Your_feature_request_here) if you need to get in touch with me or send an email to <a href="mailto:theosintbuddyproject@openinfolabs.com">theosintbuddyproject@openinfolabs.com</a>
 
 - Project Link: [https://github.com/jerlendds/osintbuddy](https://github.com/jerlendds/osintbuddy)
 - Plugins Package Link: [https://github.com/jerlendds/osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins)

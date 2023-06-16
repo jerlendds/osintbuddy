@@ -3,3 +3,5 @@
 venv
 .venv
 docs.osintbuddy.com
+data
+elastic
