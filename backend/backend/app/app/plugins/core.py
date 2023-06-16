@@ -2,7 +2,7 @@ import json
 import re
 import socket
 
-import requests
+import httpx
 from urllib.parse import urlparse
 import dns.resolver
 from selenium.webdriver.common.by import By
@@ -36,7 +36,7 @@ class GoogleSearchPlugin(ob.Plugin):
         query = node["data"][0]
         pages = node["data"][1]
         results = []
-        for result in self.search_google(query, pages):
+        for result in await self.search_google(query, pages):
             blueprint = GoogleResult.blueprint(
                 result={
                     "title": result.get("title"),
@@ -79,24 +79,21 @@ class GoogleSearchPlugin(ob.Plugin):
             "results": output,
         }
 
-    def search_google(self, query, pages):
+    async def search_google(self, query, pages):
         if not query:
             raise NodeMissingValueError("Query is a required field")
         try:
-            google_resp = requests.get(
-                (
-                    "http://microservice:1323/google?"
-                    f"query={query}&pages={pages}"
+            async with httpx.AsyncClient() as client:
+                google_resp = await client.get(
+                    f'http://microservice:1323/google?query={query}&pages={pages}',
+                    timeout=None
                 )
-            )
-            google_results = google_resp.json()
+                google_results = google_resp.json()
         except OBPluginError:
-            raise OBPluginError(
-                (
+            raise OBPluginError((
                     "There was an error crawling Google. Please try again."
                     "If you keep encountering this error please open an issue on Github."
-                )
-            )
+            ))
 
         results = self._parse_google_data(google_results)["results"]
         return results
@@ -132,26 +129,24 @@ class GoogleCacheSearchPlugin(ob.Plugin):
     async def transform_to_google_cache_results(self, node, **kwargs):
         query = node["data"][0]
         pages = node["data"][1]
-        return self.search_google_cache(query, pages)
+        return await self.search_google_cache(query, pages)
 
-    def search_google_cache(self, query, pages):
+    async def search_google_cache(self, query, pages):
+        cache_results = []
         if not query:
             raise NodeMissingValueError("Query is a required field")
-        cache_results = None
         try:
-            google_resp = requests.get(
-                (
-                    "http://microservice:1323/google-cache?"
-                    f"query={query}&pages={pages}"
-                )
-            )
-            cache_results = google_resp.json()
+            async with httpx.AsyncClient() as client:
+                google_resp = await client.get(f'http://microservice:1323/google-cache?query={query}&pages={pages}', timeout=None)
+                cache_results = google_resp.json()
         except OBPluginError:
             raise OBPluginError(
                 "We ran into an error crawling googles cache. Please try again."
             )
         results = []
-        for result in self._parse_cache_results(cache_results).get("results"):
+        for result in self._parse_cache_results(
+            cache_results
+        ).get("results"):
             blueprint = GoogleCacheResult.blueprint(
                 result={
                     "title": result.get("title"),
@@ -487,17 +482,19 @@ class IPAddressPlugin(ob.Plugin):
             "q": node["data"][0],
         }
         try:
-            response = requests.post(
-                "https://api.hackertarget.com/reverseiplookup",
-                params=params,
-            )
-            data = response.content.decode("utf8").split("\n")
-            for subdomain in data:
-                blueprint = SubdomainPlugin.blueprint(subdomain=subdomain)
-                nodes.append(blueprint)
-            return nodes
-        except Exception:
-            return []
+            async with httpx.AsyncClient() as client:
+                response = await client.get(
+                    'https://api.hackertarget.com/reverseiplookup',
+                    params=params,
+                    timeout=None
+                )
+                data = response.content.decode("utf8").split("\n")
+        except Exception as e:
+            raise OBPluginError(e)
+        for subdomain in data:
+            blueprint = SubdomainPlugin.blueprint(subdomain=subdomain)
+            nodes.append(blueprint)
+        return nodes
 
     @ob.transform(label="To geolocation", icon="map-pin")
     async def transform_to_geolocation(self, node, **kwargs):
