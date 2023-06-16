@@ -12,7 +12,6 @@ import (
 	"github.com/gocolly/colly/queue"
 )
 
-
 var serpResults = new(SerpResults)
 
 func CrawlGoogle(searchQuery string, pages string) {
@@ -59,13 +58,13 @@ func CrawlGoogle(searchQuery string, pages string) {
 		}
 	})
 	resultStats := new(StatsResult)
-	
+
 	// parse related searches
 	c.OnHTML("div.s75CSd.OhScic.AB4Wff", func(e *colly.HTMLElement) {
 		relatedSearch := e.Text
 		resultStats.Related = append(resultStats.Related, relatedSearch)
 	})
-	
+
 	// parse about stats at top of page e.g. 'About 83,000,000 results (0.22 seconds) '
 	c.OnHTML("#result-stats", func(e *colly.HTMLElement) {
 		result := e.Text

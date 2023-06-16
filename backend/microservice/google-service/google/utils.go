@@ -1,6 +1,9 @@
 package google
 
 import (
+	"log"
+	"net/url"
+
 	"github.com/gocolly/colly"
 )
 
@@ -54,4 +57,30 @@ func setGoogleHeaders(r *colly.Request) {
 	r.Headers.Set("Sec-Fetch-Mode", "navigate")
 	r.Headers.Set("Sec-Fetch-Site", "same-site")
 	r.Headers.Set("TE", "trailers")
+}
+
+func getCseDataUrl(searchQuery string, authValues map[string]string) string {
+	var u, err = url.Parse("https://cse.google.com/cse/element/v1")
+	if err != nil {
+		log.Fatal(err)
+	}
+	cseParams := u.Query()
+	cseParams.Set("rsz", "filtered_cse")
+	cseParams.Set("num", "100") // total results returned, can return up to 100
+	cseParams.Set("hl", "en")   // @todo make this configurable on the frontend
+	cseParams.Set("source", "gcsc")
+	cseParams.Set("gss", ".com")
+	cseParams.Set("cselibv", authValues["cselibVersion"])
+	cseParams.Set("cx", authValues["cx"])
+	cseParams.Set("safe", "off")
+	cseParams.Set("q", searchQuery)
+	cseParams.Set("oq", searchQuery)
+	cseParams.Set("cse_tok", authValues["cse_token"])
+	cseParams.Set("gss", ".com")
+	cseParams.Set("callback", "1984")
+	cseParams.Set("sort", "")
+	cseParams.Set("exp", "")
+	cseParams.Set("cseclient", "hosted-page-client")
+	u.RawQuery = cseParams.Encode()
+	return u.String()
 }
