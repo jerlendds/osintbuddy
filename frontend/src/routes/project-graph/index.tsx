@@ -20,7 +20,7 @@ import 'reactflow/dist/style.css';
 import classNames from 'classnames';
 import BreadcrumbHeader from './_components/BreadcrumbHeader';
 import NodeOptions from './_components/NodeOptions';
-import CommandPallet from '@/routes/osint/_components/CommandPallet';
+import CommandPallet from '@/routes/project-graph/_components/CommandPallet';
 import ContextMenu from './_components/ContextMenu';
 import api, { WS_URL } from '@/services/api.service';
 import { getLayoutedElements } from './utils';

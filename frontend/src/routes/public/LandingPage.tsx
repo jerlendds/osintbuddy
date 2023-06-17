@@ -3,19 +3,9 @@ import { HeroBackground } from '@/components/Icons';
 import blurCyanImage from '@images/blur-cyan.png';
 import blurIndigoImage from '@images/blur-indigo.png';
 import { Link } from 'react-router-dom';
-import Markdoc from '@markdoc/markdoc';
-import tags from './markdoc/tags';
-import nodes from './markdoc/nodes';
+
 
 export default function LandingPage(): React.ReactElement {
-  const [text, setText] = useState(`
-Click the get started button above to login to your system.
-#### OSINTBuddy v0.3.0
-  `);
-
-  const ast = Markdoc.parse(text);
-  // @ts-ignore
-  const content = Markdoc.transform(ast, { tags, nodes });
 
   return (
     <>
@@ -80,7 +70,7 @@ Click the get started button above to login to your system.
               </h1>
             </header>
           </article>
-          <div className='docs max-w-4xl text-slate-400'>{Markdoc.renderers.react(content, React)}</div>
+          <div className='docs max-w-4xl text-slate-400'>v0.0.3</div>
         </div>
         <div className='hidden xl:sticky xl:top-[4.5rem] xl:-mr-6 xl:block xl:h-[calc(100vh-4.5rem)] xl:flex-none xl:overflow-y-auto xl:py-16 xl:pr-6'>
           <nav aria-labelledby='on-this-page-title' className='w-56'></nav>
