@@ -39,7 +39,6 @@ iniconfig==2.0.0
 isodate==0.6.1
 jsbeautifier==1.14.7
 kombu==5.2.4
-langchain==0.0.165
 langdetect==1.0.9
 Mako==1.2.4
 MarkupSafe==2.1.2
