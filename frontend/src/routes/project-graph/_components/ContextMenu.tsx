@@ -1,22 +1,42 @@
 import { useAppSelector } from '@/app/hooks';
 import { isSidebarOpen } from '@/features/settings/settingsSlice';
-import React, { useCallback, useEffect, useState } from 'react';
+import { api } from '@/services';
+import { useCallback, useEffect, useState } from 'react';
 
-const useContextMenu = () => {
+const useContextMenu = (setTransforms: Function) => {
   const [xPos, setXPos] = useState('0px');
   const [yPos, setYPos] = useState('0px');
   const [showMenu, setShowMenu] = useState(false);
-  const [targetNode, setTargetNode] = useState(null);
+  const [targetNode, setTargetNode] = useState<HTMLElement | null>(null);
+  const [nodeType, setNodeType] = useState<string | null | undefined>(null);
+
   const handleContextMenu = useCallback(
-    (e: any) => {
-      e.preventDefault();
-      // @todo implement support for when multiple nodes are selected
-      if (e.target.closest('.react-flow__nodesselection-rect')) {
+    (event: MouseEvent) => {
+      event.preventDefault();
+      setTransforms([]);
+
+      if (event.target instanceof HTMLElement) {
+        // @todo implement support for transforming when multiple nodes are selected
+        // const multiSelect = event.target.closest('.react-flow__nodesselection-rect') as HTMLDivElement
+        // if (multiSelect) {}
+        console.log('1');
+        const singleSelect = event.target.closest('.react-flow__node') as HTMLDivElement;
+        if (singleSelect) {
+          setTargetNode(singleSelect);
+          const type = singleSelect.querySelector('[data-node-type]')?.getAttribute('data-node-type');
+          if (type) {
+            api.get(`/nodes/transforms?node_type=${type}`).then((resp) => {
+              if (resp?.data?.transforms) {
+                setTransforms(resp?.data?.transforms);
+              }
+            });
+            setNodeType(type);
+          }
+        }
+        setXPos(`${event.pageX}px`);
+        setYPos(`${event.pageY - 20}px`);
       }
-      setXPos(`${e.pageX}px`);
-      setYPos(`${e.pageY}px`);
       setShowMenu(true);
-      setTargetNode(e.target.closest('.react-flow__node'));
     },
     [setXPos, setYPos]
   );
@@ -35,24 +55,40 @@ const useContextMenu = () => {
     };
   });
 
-  return { xPos, yPos, showMenu, targetNode };
+  return { xPos, yPos, showMenu, setYPos, targetNode, nodeType };
 };
 
 const ContextMenu = ({ menu }: any) => {
-  const { xPos, yPos, showMenu, targetNode } = useContextMenu();
+  const [transforms, setTransforms] = useState<string[]>([]);
+  const { xPos, yPos, setYPos, showMenu, targetNode, nodeType } = useContextMenu(setTransforms);
+
   const showSidebar = useAppSelector((state) => isSidebarOpen(state));
+
+  let data: Array<string | null> = [];
+  if (targetNode)
+    data = [...targetNode.querySelectorAll<HTMLInputElement | HTMLElement>('[data-node]')].map((node) =>
+      node instanceof HTMLInputElement ? node.value : node?.textContent
+    );
+
   return (
     <>
       {showMenu ? (
         <div
+          id='context-menu'
+          className='z-[999] absolute'
           style={{
-            zIndex: 999,
             top: yPos,
             left: `calc(${xPos} - ${showSidebar ? 16 : 3}rem)`,
-            position: 'absolute',
           }}
         >
-          {menu({ node: targetNode })}
+          {menu({
+            data,
+            transforms,
+            node: targetNode,
+            bounds: targetNode?.getBoundingClientRect(),
+            parentId: targetNode?.getAttribute('data-id'),
+            nodeType: nodeType,
+          })}
         </div>
       ) : (
         <></>

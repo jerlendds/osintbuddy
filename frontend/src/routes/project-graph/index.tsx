@@ -129,7 +129,6 @@ const InvestigationFlow = ({
     }
   };
 
-
   return (
     <div onClick={handleClick} style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
       <ReactFlow
@@ -362,7 +361,6 @@ export default function OsintPage() {
     }
   }, [lastMessage, setMessageHistory]);
 
-
   return (
     <>
       <HotKeys keyMap={keyMap} handlers={handlers}>
@@ -397,7 +395,6 @@ export default function OsintPage() {
             />
           </div>
         </div>
-     
 
         <CommandPallet
           toggleShowOptions={toggleShowNodeOptions}
@@ -409,18 +406,7 @@ export default function OsintPage() {
           className='absolute top-[3.5rem] w-48 bg-red -z-10 h-20 left-[0.7rem] text-slate-900'
         ></div>
         <ContextMenu
-          menu={({ node }) => {
-            let parentId = null;
-            let nodeData = null;
-            let nodeType = null;
-
-            if (node) {
-              nodeData = [...node.querySelectorAll('[data-node]')].map((node) =>
-                node?.value ? node.value : node?.textContent
-              );
-              parentId = node.getAttribute('data-id');
-              nodeType = node.querySelector('[data-node-type]').getAttribute('data-node-type');
-            }
+          menu={({ node, parentId, data, nodeType, transforms, bounds }) => {
             return (
               <>
                 <div className='relative z-50 inline-block text-left'>
@@ -444,16 +430,16 @@ export default function OsintPage() {
                         </div>
                       </div>
                     </div>
-                    <ContextAction
-                      node={node}
-                      parentId={parentId}
-                      nodeData={nodeData}
-                      nodeType={nodeType}
-                      addEdge={addEdge}
-                      addNode={addNode}
-                      deleteNode={deleteNode}
-                      sendJsonMessage={sendJsonMessage}
-                    />
+                    {transforms && (
+                      <ContextAction
+                        nodeType={nodeType}
+                        data={data}
+                        sendJsonMessage={sendJsonMessage}
+                        parentId={parentId}
+                        transforms={transforms}
+                        bounds={bounds}
+                      />
+                    )}
                     {nodeType && (
                       <div className='node-context'>
                         <div>

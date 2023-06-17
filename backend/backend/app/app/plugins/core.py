@@ -127,6 +127,8 @@ class GoogleCacheSearchPlugin(ob.Plugin):
 
     @ob.transform(label="To cache results")
     async def transform_to_google_cache_results(self, node, **kwargs):
+        
+        
         query = node["data"][0]
         pages = node["data"][1]
         return await self.search_google_cache(query, pages)
