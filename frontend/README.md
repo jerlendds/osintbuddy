@@ -30,6 +30,7 @@
   2. Install the dependencies. From the `osintbuddy` directory run:
       ```bash
       cd frontend
+      yarn
       yarn start
       ```
 
