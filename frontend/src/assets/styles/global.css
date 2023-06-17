@@ -165,9 +165,17 @@ input[type='number'] {
   stroke: #60666a !important;
 }
 .react-flow__edge {
-  cursor: grab;
-  pointer-events: none;
+  cursor: grab !important;
+  pointer-events: none !important;
 }
+/* .react-flow__pane, .react-flow__renderer {
+  top: 13rem !important;
+  bottom: 0;
+} */
+/* .react-flow__background {
+  bottom: 0;
+  top: none !important;
+} */
 /* end react flow style overrides */
 
 input[type='file'] {
