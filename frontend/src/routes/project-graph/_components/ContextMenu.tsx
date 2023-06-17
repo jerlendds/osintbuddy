@@ -19,7 +19,6 @@ const useContextMenu = (setTransforms: Function) => {
         // @todo implement support for transforming when multiple nodes are selected
         // const multiSelect = event.target.closest('.react-flow__nodesselection-rect') as HTMLDivElement
         // if (multiSelect) {}
-        console.log('1');
         const singleSelect = event.target.closest('.react-flow__node') as HTMLDivElement;
         if (singleSelect) {
           setTargetNode(singleSelect);
