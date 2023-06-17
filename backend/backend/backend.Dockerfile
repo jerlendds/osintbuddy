@@ -4,14 +4,14 @@ LABEL maintainer="jerlendds <jerlendds@openinfolabs.com>"
 WORKDIR /app/
 ENV PYTHONPATH=/app/
 
-RUN apt-get -y update && apt-get -y install apt-transport-https nmap wget gnupg curl chromium chromium-driver && \
+RUN apt-get -y update && apt-get -y install apt-transport-https nmap git wget gnupg curl chromium chromium-driver && \
     apt-get clean;
 COPY requirements.txt /app/requirements.txt
 RUN pip3 install --no-cache-dir --upgrade pip && \
   pip3 install --no-cache-dir -r /app/requirements.txt
 COPY osintbuddy-plugins /osintbuddy-plugins/
-# @todo change to PyPi package for release 0.0.5 and remove gitmodules
 RUN pip3 install /osintbuddy-plugins/
+# @todo change to PyPi package for release 0.0.5 and remove gitmodules
 COPY app/ /app/
 
 CMD ["/bin/bash", "-c", "./start.sh"]
