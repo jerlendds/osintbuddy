@@ -5,22 +5,13 @@
   "dependencies": {
     "@headlessui/react": "^1.7.7",
     "@heroicons/react": "^2.0.13",
-    "@highlight-run/react": "^3.2.0",
     "@locker/near-membrane-dom": "^0.12.14",
-    "@markdoc/markdoc": "^0.2.2",
     "@reactour/tour": "^3.4.0",
     "@reduxjs/toolkit": "^1.9.1",
-    "@uiw/react-markdown-preview": "^4.1.10",
     "axios": "^1.2.1",
     "classnames": "^2.3.2",
-    "cron-schedule": "^3.0.6",
     "dagre": "^0.8.5",
     "formik": "^2.2.9",
-    "gl-buffer": "^2.1.2",
-    "gl-now": "^1.4.0",
-    "gl-shader": "^4.3.1",
-    "highlight.run": "^6.4.2",
-    "prism-react-renderer": "^1.3.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hotkeys": "^2.0.0",
@@ -31,9 +22,7 @@
     "react-toastify": "^9.1.1",
     "react-use-websocket": "^4.3.1",
     "reactflow": "^11.5.3",
-    "typescript": "^4.9.4",
-    "util": "^0.12.5",
-    "web-vitals": "^2.1.4",
+    "redux-observable": "^2.0.0",
     "yup": "^0.32.11"
   },
   "scripts": {
@@ -80,6 +69,9 @@
     "buffer": "^6.0.3",
     "craco-swc": "^0.5.1",
     "postcss": "^8.4.20",
-    "tailwindcss": "^3.2.4"
+    "tailwindcss": "^3.2.4",
+    "typescript": "^4.9.4",
+    "util": "^0.12.5",
+    "web-vitals": "^2.1.4"
   }
 }

@@ -7,10 +7,10 @@ const DashboardPage = lazy(() => import('./projects'));
 const AboutPage = lazy(() => import('@routes/public/AboutPage'));
 const LandingPage = lazy(() => import('@routes/public/LandingPage'));
 const GoogleDorksPage = lazy(() => import('./dorks'));
-const OSINTPage = lazy(() => import('./osint'));
+const OSINTPage = lazy(() => import('./project-graph'));
 const SettingsPage = lazy(() => import('./settings'));
-const IncidentsPage = lazy(() => import('./incidents/index'));
-const ScansPage = lazy(() => import('./scans/index'));
+const IncidentsPage = lazy(() => import('./incidents'));
+const ScansPage = lazy(() => import('./scans'));
 
 export default function AppRoutes(): ReactElement {
   return (
