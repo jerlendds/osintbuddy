@@ -164,6 +164,10 @@ input[type='number'] {
 .react-flow__edge-path:active {
   stroke: #60666a !important;
 }
+.react-flow__edge {
+  cursor: grab;
+  pointer-events: none;
+}
 /* end react flow style overrides */
 
 input[type='file'] {
