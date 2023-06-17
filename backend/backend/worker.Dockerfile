@@ -1,5 +1,5 @@
 FROM python:3.9.6-buster
-LABEL maintainer="jerlendds <jerlendsdev@proton.me>"
+LABEL maintainer="jerlendds <jerlendds@openinfolabs.com>"
 
 WORKDIR /app/
 ENV PYTHONPATH=/app/

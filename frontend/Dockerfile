@@ -1,4 +1,6 @@
 FROM node:18-alpine as build-stage
+LABEL maintainer="jerlendds <jerlendds@openinfolabs.com>"
+
 WORKDIR /app/
 COPY package.json yarn.lock ./
 RUN yarn

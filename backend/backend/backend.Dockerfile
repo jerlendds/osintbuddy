@@ -1,5 +1,5 @@
 FROM python:3.11.4-slim-bullseye
-LABEL maintainer="jerlendds <jerlendsdev@proton.me>"
+LABEL maintainer="jerlendds <jerlendds@openinfolabs.com>"
 
 WORKDIR /app/
 ENV PYTHONPATH=/app/
