@@ -16,7 +16,7 @@ https://www.exploit-db.com/google-hacking-database -->
 - [tenacity](https://pypi.org/project/tenacity/)
 - [jsbeautifier](https://pypi.org/project/jsbeautifier/1.14.8/)
 - [python3-nmap](https://pypi.org/project/python3-nmap/1.6.0/)
-- [gremlinpython](https://pypi.org/project/gremlinpython/3.6.4/)
+- [gremlinpy](https://github.com/jerlendds/gremlinpy)
 - [elasticsearch](https://pypi.org/project/elasticsearch/8.8.0/)
 
 #### **For creating and saving WARC files we're planning to use:**

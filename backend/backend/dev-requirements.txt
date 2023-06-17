@@ -10,6 +10,7 @@ attrs==23.1.0
 beautifulsoup4==4.12.2
 billiard==3.6.4.0
 black==23.3.0
+ujson==5.8.0
 bs4==0.0.1
 celery==5.2.7
 charset-normalizer==3.1.0
@@ -99,7 +100,6 @@ elasticsearch==8.8.0
 urllib3==1.26.16
 yarl==1.9.2
 aenum==3.1.12
-gremlinpython==3.6.4
 sentry-sdk==1.25.1
 pylama==8.4.1
 pylint==2.17.4
@@ -109,3 +109,4 @@ vulture==2.7
 eradicate==2.3.0
 mypy==1.3.0
 mypy-extensions==1.0.0
+gremlinpy @ git+https://github.com/jerlendds/gremlinpy@fc43af2b9f2d43afcd48490594d074ff1fd23c5c
