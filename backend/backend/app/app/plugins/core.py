@@ -285,7 +285,7 @@ class WebsitePlugin(ob.Plugin):
         domain = node["data"][0]
         query = f"{domain}"
         results = []
-        for result in GoogleSearchPlugin().search_google(
+        for result in await GoogleSearchPlugin().search_google(
             query=query, pages="3"
         ):
             blueprint = GoogleResult.blueprint(
