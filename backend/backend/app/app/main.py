@@ -1,18 +1,15 @@
-import httpx
-from starlette.requests import Request
-from starlette.responses import StreamingResponse
-from starlette.background import BackgroundTask
+import uuid
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.responses import UJSONResponse
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cache import caches, close_caches
 from fastapi_cache.backends.redis import CACHE_KEY, RedisCacheBackend
-from osintbuddy import discover_plugins
 import sentry_sdk
-
+from osintbuddy import discover_plugins
 from app.api.api_v1.api import api_router
 from app.core.config import settings
-
 
 if settings.SENTRY_DSN:
     sentry_sdk.init(
@@ -20,14 +17,29 @@ if settings.SENTRY_DSN:
         traces_sample_rate=1.0,  # capture 100%
     )
 
-
 def redis_cache():
     return caches.get(CACHE_KEY)
 
 
 app = FastAPI(
-    title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    title=settings.PROJECT_NAME,
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    default_response_class=UJSONResponse,
 )
+
+@app.on_event('shutdown')
+async def on_shutdown() -> None:
+    await close_caches()
+    import sys
+    sys.exit()
+
+@app.on_event('startup')
+async def on_startup() -> None:
+    if 'dev' in settings.ENVIRONMENT:
+        discover_plugins('/plugins.osintbuddy.com/src/osintbuddy/core/')
+    rc = RedisCacheBackend(settings.REDIS_URL)
+    caches.set(CACHE_KEY, rc)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -44,9 +56,8 @@ app.add_middleware(
     ],
     expose_headers=[
         "X-OSINTBuddy-UserError"
-    ]
+    ],
 )
-
 
 def app_openapi_schema(app):
     """Return openapi_schema. cached."""
@@ -65,22 +76,8 @@ def app_openapi_schema(app):
     return openapi_schema
 
 
-@app.on_event('startup')
-async def on_startup() -> None:
-    if 'dev' in settings.ENVIRONMENT:
-        discover_plugins('/plugins.osintbuddy.com/src/osintbuddy/core/')
-    rc = RedisCacheBackend(settings.REDIS_URL)
-    caches.set(CACHE_KEY, rc)
-
-
-@app.on_event('shutdown')
-async def on_shutdown() -> None:
-    await close_caches()
-
-
 app.include_router(api_router, prefix=settings.API_V1_STR)
 app.openapi_schema = app_openapi_schema(app)
-
 
 # @app.get("/sentry-debug")
 # async def trigger_error():
