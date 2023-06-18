@@ -99,5 +99,5 @@ elasticsearch==8.8.0
 urllib3==1.26.16
 yarl==1.9.2
 aenum==3.1.12
+gremlinpy @ git+https://github.com/jerlendds/gremlinpy.git@7d3033e6a55ed9cb1f982ec3b58ca233e01c58e3
 sentry-sdk==1.25.1
-gremlinpy @ git+https://github.com/jerlendds/gremlinpy.git@86225ab9ecc11d0d4c1d788d5e861aeccf29c5bf

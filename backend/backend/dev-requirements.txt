@@ -107,5 +107,5 @@ toml==0.10.2
 vulture==2.7
 eradicate==2.3.0
 mypy==1.3.0
+gremlinpy @ git+https://github.com/jerlendds/gremlinpy.git@7d3033e6a55ed9cb1f982ec3b58ca233e01c58e3
 mypy-extensions==1.0.0
-gremlinpy @ git+https://github.com/jerlendds/gremlinpy.git@86225ab9ecc11d0d4c1d788d5e861aeccf29c5bf
