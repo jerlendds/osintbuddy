@@ -108,4 +108,4 @@ vulture==2.7
 eradicate==2.3.0
 mypy==1.3.0
 mypy-extensions==1.0.0
-gremlinpy @ git+https://github.com/jerlendds/gremlinpy@fc43af2b9f2d43afcd48490594d074ff1fd23c5c
+gremlinpy @ git+https://github.com/jerlendds/gremlinpy.git@811b8f841373d48af4e33d1d2b142fd3076d0e2b
