@@ -170,22 +170,10 @@ Contributions are what make the open source community such an amazing place to l
 
 ## [↑](#what-is-osintbuddycom)License
 
+Licensed under the GNU Affero General Public License v3.0.
 
-Copyright 2023 jerlendds
+Copyright 2023 jerlendds. After more consideration I have changed the license from Apache 2.0 to [GNU AGPL v3](https://choosealicense.com/licenses/apache-2.0/).
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the LICENSE for the specific language governing permissions and
-limitations under the License.
-
-[Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
 
 *Note, the [OSINTBuddy PyPi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*.
 
@@ -194,8 +182,11 @@ limitations under the License.
 
 [Open an issue](https://github.com/jerlendds/osintbuddy/issues/new?assignees=jerlendds&labels=Type%3A+Suggestion&projects=&template=feature.md&title=%5BFEATURE+REQUEST%5D+Your_feature_request_here) if you need to get in touch with me or send an email to <a href="mailto:theosintbuddyproject@openinfolabs.com">theosintbuddyproject@openinfolabs.com</a>
 
+You can find my personal blog where I'll be documenting the journey of building OSINTBuddy at [studium.dev](https://studium.dev)
+
 - Project Link: [https://github.com/jerlendds/osintbuddy](https://github.com/jerlendds/osintbuddy)
 - Plugins Package Link: [https://github.com/jerlendds/osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins)
+- Patched `aiogremlin` Link: https://github.com/jerlendds/gremlinpy/
 
 [contributors-shield]: https://img.shields.io/github/contributors/jerlendds/osintbuddy.svg?style=for-the-badge
 [contributors-url]: https://github.com/jerlendds/osintbuddy/graphs/contributors
