@@ -4,6 +4,8 @@
 [![Issues][issues-shield]][issues-url]
 [![Total Downloads](https://static.pepy.tech/badge/osintbuddy)](https://pepy.tech/project/osintbuddy)
 [![Downloads](https://static.pepy.tech/badge/osintbuddy/week)](https://pepy.tech/project/osintbuddy)
+[![OpenCollective Backers](https://badgen.net/opencollective/backers/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
+
 
 <br />
 
@@ -52,6 +54,7 @@
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
+    <li><a href="#sponsor-osintbuddy">Sponsor OSINTBuddy</a></li>
   </ol>
 </details>
 
@@ -187,6 +190,13 @@ You can find my personal blog where I'll be documenting the journey of building 
 - Project Link: [https://github.com/jerlendds/osintbuddy](https://github.com/jerlendds/osintbuddy)
 - Plugins Package Link: [https://github.com/jerlendds/osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins)
 - Patched `aiogremlin` Link: https://github.com/jerlendds/gremlinpy/
+
+## [↑](#what-is-osintbuddycom)Sponsor OSINTBuddy 
+Help us keep the OSINTBuddy project free and maintained forever.
+Sponsor the OSINTBuddy project for unique benefits. Learn more on the [OSINTBuddy OpenCollective project page](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
+
+[![Yearly OpenCollective Income](https://badgen.net/opencollective/yearly/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
+[![OpenCollective Backers](https://badgen.net/opencollective/backers/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
 
 [contributors-shield]: https://img.shields.io/github/contributors/jerlendds/osintbuddy.svg?style=for-the-badge
 [contributors-url]: https://github.com/jerlendds/osintbuddy/graphs/contributors
