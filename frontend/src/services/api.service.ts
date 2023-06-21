@@ -1,17 +1,22 @@
 import axios from 'axios';
 
-export const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'http://localhost:8000'  // 'https://osintbuddy.com';
-export const API_PREFIX = '/api/v1';
+const DOMAIN = process.env.REACT_APP_BASE_URL?.replace('https://', '').replace('http://', '')
+const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : process.env.REACT_APP_BASE_URL;
 
-export const WS_URL = process.env.NODE_ENV === 'development' ? 'localhost:8000' + API_PREFIX : 'localhost:8000' + API_PREFIX
+const API_PREFIX = '/api/v1';
 
-export const LS_USER_AUTH_KEY = 'user-data';
+const WS_URL =
+  process.env.NODE_ENV === 'development'
+    ? 'localhost:8000' + API_PREFIX
+    : DOMAIN + API_PREFIX;
+
+const LS_USER_AUTH_KEY = 'user-data';
 
 const api = axios.create({
-  baseURL: BASE_URL + API_PREFIX
+  baseURL: BASE_URL + API_PREFIX,
 });
 
-export const setHeader = () => {
+const setHeader = () => {
   const user = JSON.parse(localStorage.getItem(LS_USER_AUTH_KEY) || '{}');
   if (user && user.token) {
     api.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
@@ -22,4 +27,5 @@ export const setHeader = () => {
 
 setHeader();
 
+export { BASE_URL, LS_USER_AUTH_KEY, WS_URL, API_PREFIX, setHeader };
 export default api;

@@ -4,6 +4,8 @@ services:
     # image: openinfolabs/osintbuddy-frontend:latest
     build:
       context: ./frontend
+      args:
+        REACT_APP_BASE_URL: "${BASE_URL}"
     volumes:
       - ./frontend/:/app/
     ports:
@@ -19,7 +21,6 @@ services:
     volumes:
       - ./backend/backend/app:/app/
     environment:
-      CLASSPATH: /app/jena-jdbc-driver-bundle-4.8.0.jar
       PYTHONDONTWRITEBYTECODE: 1
     ports:
       - "${BACKEND_PORT-.env BACKEND_PORT needs to be set}:80"
@@ -50,11 +51,6 @@ services:
 
 volumes:
   osintbuddy-db-data:
-  # es-data:
-  # sdb-data:
-  # index-data:
-
-  # @todo uncomment for release 0.0.4 (saving investigation graphs)
   # sdb:
   #   image: scylladb/scylla:5.1
   #   ports:
@@ -64,17 +60,22 @@ volumes:
   #    - "${INTERNODE_PORT-.env INTERNODE_PORT needs to be set}:7000"
   #    - "${INTERNODE_ONE_PORT-.env INTERNODE_ONE_PORT needs to be set}:7001"
   #    - "${JMX_PORT-.env JMX_PORT needs to be set}:7199"
+  #   environment:
+  #     --default-log-level: warn
   #   env_file:
   #     - .env
   #   volumes:
   #    - sdb-data:${SCYLLADATA-.env SCYLLADATA needs to be set}
-  # @todo uncomment for release 0.0.4 (saving investigation graphs)
   # janus:
   #   image: "${JANUS_IMAGE-.env JANUS_IMAGE needs to be set}"
+  #   ports:
+  #     - "8182:8182"
   #   environment:
   #     storage.backend: "cql"
   #     storage.hostname: sdb:9042
-  # @todo uncomment for release 0.0.4 (saving investigation graphs)
+  #     index.search.backend: elasticsearch
+  #     index.search.hostname: "index:${ELASTIC_PORT-.env ELASTIC_PORT needs to be set}"
+  #     janusgraph.set-vertex-id: true
   # index:
   #   image: "${ELASTIC_IMAGE-.env ELASTIC_IMAGE needs to be set}"
   #   environment:
@@ -86,6 +87,7 @@ volumes:
   #     - bootstrap.memory_lock=true
   #     - xpack.security.enabled=false
   #     - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+  #     - "-Des.logger.level=WARN"
   #   ulimits:
   #     memlock:
   #       soft: -1
@@ -102,6 +104,12 @@ volumes:
   #     - type: volume
   #       source: es-data
   #       target: /usr/share/elasticsearch/data
+
+
+  # es-data:
+  # sdb-data:
+  # index-data:
+
   # @todo uncomment for WARC release
   # worker:
   #   # image: openinfolabs/osintbuddy-worker:latest

@@ -28,7 +28,6 @@
   "scripts": {
     "start": "DISABLE_ESLINT_PLUGIN=true; TSC_COMPILE_ON_ERROR=true; craco start",
     "build": "craco build",
-    "start:prod": "yarn build && npx serve -s build/",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
@@ -51,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@craco/craco": "^7.1.0",
     "@swc/helpers": "^0.5.1",
     "@tailwindcss/typography": "^0.5.9",
