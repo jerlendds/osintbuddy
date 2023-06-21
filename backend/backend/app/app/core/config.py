@@ -33,14 +33,6 @@ class Settings(BaseSettings):
             return v
         raise ValueError(v)
 
-    SENTRY_DSN: Optional[HttpUrl] = None
-
-    @validator("SENTRY_DSN", pre=True)
-    def sentry_dsn_can_be_blank(cls, v: str) -> Optional[str]:
-        if len(v) == 0:
-            return None
-        return v
-
     POSTGRES_PORT: str = "5432"
     POSTGRES_SERVER: str
     POSTGRES_USER: str
