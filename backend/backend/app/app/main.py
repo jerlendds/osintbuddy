@@ -6,16 +6,20 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cache import caches, close_caches
 from fastapi_cache.backends.redis import CACHE_KEY, RedisCacheBackend
-import sentry_sdk
+# import sentry_sdk
 from osintbuddy import discover_plugins
 from app.api.api_v1.api import api_router
 from app.core.config import settings
 
-if settings.SENTRY_DSN:
-    sentry_sdk.init(
-        dsn="https://c5f217ca357c468cbb7cfe663318018f@o567628.ingest.sentry.io/4505363615711232",
-        traces_sample_rate=1.0,  # capture 100%
-    )
+
+
+# if settings.SENTRY_DSN:
+#    # @todo find alternative to sentry...
+#     https://github.com/getsentry/sentry-python/issues/1950#issuecomment-1526099852
+#     sentry_sdk.init(
+#         dsn="https://c5f217ca357c468cbb7cfe663318018f@o567628.ingest.sentry.io/4505363615711232",
+#         traces_sample_rate=1.0,  # capture 100%
+#     )
 
 def redis_cache():
     return caches.get(CACHE_KEY)
@@ -26,6 +30,7 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     default_response_class=UJSONResponse,
 )
+
 
 @app.on_event('shutdown')
 async def on_shutdown() -> None:
