@@ -5,6 +5,8 @@ WORKDIR /app/
 COPY package.json yarn.lock ./
 RUN yarn
 COPY . .
+ARG REACT_APP_BASE_URL=localhost:8000
+ENV REACT_APP_BASE_URL=${REACT_APP_BASE_URL}
 RUN yarn build
 
 

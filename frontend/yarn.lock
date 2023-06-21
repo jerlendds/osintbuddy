@@ -599,7 +599,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-private-property-in-object@npm:^7.16.0":
+"@babel/plugin-proposal-private-property-in-object@npm:^7.16.0, @babel/plugin-proposal-private-property-in-object@npm:^7.21.11":
   version: 7.21.11
   resolution: "@babel/plugin-proposal-private-property-in-object@npm:7.21.11"
   dependencies:
@@ -1818,16 +1818,6 @@ __metadata:
   peerDependencies:
     react: ">= 16"
   checksum: 597e8668818623d568a302e343ef06b69f62ce297c14b88c2ebbfed0c0f00cd85ec44fae33ec8a249931b4e7dcf145743ae3198095a9f4682108de5155f5f4c3
-  languageName: node
-  linkType: hard
-
-"@highlight-run/react@npm:^3.2.0":
-  version: 3.2.0
-  resolution: "@highlight-run/react@npm:3.2.0"
-  peerDependencies:
-    react: ">=16"
-    react-dom: ">=16"
-  checksum: baf2b82b7aaa3d29ddab0f0253de9e3d2234e86ad89f353ac51f789e1f9e09ded426f1fa162cd883de41e8e89739ef3f1f8f204de3a516163a57c44e535ae1f0
   languageName: node
   linkType: hard
 
@@ -7481,10 +7471,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "frontend@workspace:."
   dependencies:
+    "@babel/plugin-proposal-private-property-in-object": ^7.21.11
     "@craco/craco": ^7.1.0
     "@headlessui/react": ^1.7.7
     "@heroicons/react": ^2.0.13
-    "@highlight-run/react": ^3.2.0
     "@locker/near-membrane-dom": ^0.12.14
     "@reactour/tour": ^3.4.0
     "@reduxjs/toolkit": ^1.9.1
