@@ -1,4 +1,3 @@
-import { JSONObject } from '@/globals';
 import api from './api.service';
 import { XYPosition } from 'reactflow';
 

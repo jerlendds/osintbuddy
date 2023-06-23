@@ -28,7 +28,6 @@ import {
   PlusIcon,
 } from '@heroicons/react/24/outline';
 import { UnderConstruction } from '@/components/Loaders';
-import { JSONObject } from '@/globals';
 
 const items = [
   {
