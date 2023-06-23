@@ -72,31 +72,31 @@ function KeyLogger() {
 }
 
 export default function BaseNode({
-  flow,
+  node,
   sendJsonMessage,
   updateNode,
   setEditState,
 }: {
-  flow: any;
+  node: any;
   sendJsonMessage: Function;
   updateNode: (nodeId: string, nodeData: JSONObject) => void;
   setEditState: Function;
 }) {
   const nodeId = useNodeId();
-  const node = flow?.data;
-  const nodes = node.elements;
-  const icon = node.icon;
-  const name = node.name;
-  const label = node.label;
-  const color = node.color;
-  const style = node.style || {};
+  const myNode = node?.data;
+  const nodes = myNode.elements;
+  const icon = myNode.icon;
+  const name = myNode.name;
+  const label = myNode.label;
+  const color = myNode.color;
+  const style = myNode.style || {};
 
   const getNodeElement = (element: NodeInput, key: string | null = getNodeKey()) => {
     if (element.type === 'dropdown') {
       return (
         <DropdownInput
           key={key}
-          nodeId={flow.id}
+          nodeId={node.id}
           options={element?.options || []}
           label={element?.label}
           value={element?.value}
@@ -110,7 +110,7 @@ export default function BaseNode({
       return (
         <TextInput
           key={key}
-          nodeId={flow.id}
+          nodeId={node.id}
           label={element?.label}
           initialValue={element?.value || ''}
           icon={element?.icon || 'ballpen'}
@@ -124,7 +124,7 @@ export default function BaseNode({
       return (
         <UploadFileInput
           key={key}
-          nodeId={flow.id}
+          nodeId={node.id}
           label={element?.label}
           initialValue={element?.value || ''}
           icon={element?.icon || 'file-upload'}
@@ -137,7 +137,7 @@ export default function BaseNode({
       return (
         <Title
           key={key}
-          nodeId={flow.id}
+          nodeId={node.id}
           label={element?.label}
           title={element?.title || ''}
           subtitle={element?.subtitle || ''}
@@ -146,10 +146,10 @@ export default function BaseNode({
       );
     }
     if (element.type === 'section') {
-      return <Text key={key} nodeId={flow.id} label={element?.label} value={element?.value || ''} />;
+      return <Text key={key} nodeId={node.id} label={element?.label} value={element?.value || ''} />;
     }
     if (element.type === 'copy-text') {
-      return <CopyText key={key} nodeId={flow.id} label={element?.label} value={element?.value || ''} />;
+      return <CopyText key={key} nodeId={node.id} label={element?.label} value={element?.value || ''} />;
     }
     if (element.type === 'empty') {
       return <div className='hidden' />;
@@ -189,7 +189,7 @@ export default function BaseNode({
       <Handle position={Position.Top} id='t1' key='t1' type='source' style={handleStyle} />
       <Handle position={Position.Bottom} id='b1' key='b1' type='source' style={handleStyle} />
       <Handle position={Position.Left} id='l1' key='l1' type='target' style={handleStyle} />
-      <div data-node-type={label} className=' node container' style={node.style}>
+      <div data-label-type={label} className=' node container' style={myNode.style}>
         <div
           style={{
             backgroundColor: color?.length === 7 ? `${color}76` : color ? color : '#145070',
@@ -200,7 +200,7 @@ export default function BaseNode({
           <div className='text-container'>
             <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
               <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
-              {flow.id}
+              {node.id}
             </p>
             <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>{name}</p>
           </div>
@@ -248,7 +248,7 @@ export function CopyText({ nodeId, label, value }: { nodeId: string; label: stri
       >
         {value}
       </p>
-      <input type='text' className='hidden' data-node value={value} readOnly />
+      <input type='text' className='hidden' data-label={label} value={value} readOnly />
     </div>
   );
 }
@@ -260,7 +260,7 @@ export function Text({ nodeId, label, value, icon }: { nodeId: string; label: st
       <div className=' w-full flex relative text-slate-500 text-xs sm:text-sm'>
         {icon && <Icon icon={icon} className='h-6 w-6' />}
         <p className='text-xs text-slate-400 truncate'>{value}</p>
-        <input data-node className='hidden' readOnly value={value} />
+        <input data-label className='hidden' readOnly value={value} />
       </div>
     </div>
   );
@@ -284,9 +284,9 @@ export function Title({
       {title && <h1 data-type='title'>{title}</h1>}
       {subtitle && <h2 data-type='subtitle'>{subtitle}</h2>}
       {text && <p data-type='text'>{text}</p>}
-      <input className='hidden' readOnly data-node value={title} />
-      <input className='hidden' readOnly data-node value={subtitle} />
-      <input className='hidden' readOnly data-node value={text} />
+      <input className='hidden' readOnly data-label value={title} />
+      <input className='hidden' readOnly data-label value={subtitle} />
+      <input className='hidden' readOnly data-label value={text} />
     </div>
   );
 }
@@ -323,7 +323,7 @@ export function UploadFileInput({
         <div className='node-field'>
           <Icon icon={icon} className='h-6 w-6' />
           <label className={classNames('ml-5 w-52', value?.name && 'text-slate-400')}>
-            <input data-node type='file' className='nodrag' onChange={(event: any) => updateValue(event)} />
+            <input data-label type='file' className='nodrag' onChange={(event: any) => updateValue(event)} />
             {value?.name ? value.name : label}
           </label>
         </div>
@@ -366,7 +366,7 @@ export function TextInput({
         <div className='flex items-center mb-1 '>
           <div className='nodrag node-field'>
             <Icon icon={icon} className='h-6 w-6' />
-            <input type='text' data-node onChange={(event: any) => updateValue(event)} value={value} />
+            <input type='text' data-label onChange={(event: any) => updateValue(event)} value={value} />
           </div>
         </div>
       </div>
@@ -455,7 +455,7 @@ export function DropdownInput({
             </Combobox.Options>
           )}
         </div>
-        <input data-node readOnly value={JSON.stringify(activeOption)} className='hidden invisible' />
+        <input data-label readOnly value={JSON.stringify(activeOption)} className='hidden invisible' />
       </Combobox>
     </>
   );

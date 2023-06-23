@@ -273,7 +273,7 @@ export default function IncidentCard({ closeModal }: JSONObject) {
             defaultValue={''}
           >
             Click here to upload your files
-            <input type='file' data-node onChange={(event: any) => event.preventDefault()} />
+            <input type='file' data-label onChange={(event: any) => event.preventDefault()} />
           </label>
         </div>
       </div> */}

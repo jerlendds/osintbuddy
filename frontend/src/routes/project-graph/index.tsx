@@ -39,7 +39,7 @@ const fitViewOptions: FitViewOptions = {
 
 const onNodeDragStop = (_: MouseEvent, node: Node) => console.log('@todo drag stop update position', node);
 
-const InvestigationFlow = ({
+const ProjectGraph = ({
   reactFlowWrapper,
   nodes,
   setNodes,
@@ -53,6 +53,7 @@ const InvestigationFlow = ({
   addNode,
   addEdge,
   sendJsonMessage,
+  onNodeContextMenu,
   messageHistory,
   lastMessage,
   updateNode,
@@ -108,7 +109,7 @@ const InvestigationFlow = ({
   const nodeTypes = useMemo(() => {
     return {
       base: (data) => (
-        <BaseNode setEditState={setEditState} updateNode={updateNode} sendJsonMessage={sendJsonMessage} flow={data} />
+        <BaseNode node={data} setEditState={setEditState} updateNode={updateNode} sendJsonMessage={sendJsonMessage} />
       ),
     };
   }, []);
@@ -120,13 +121,14 @@ const InvestigationFlow = ({
         maxZoom={2.0}
         nodes={nodes}
         edges={edges}
+        onDrop={onDrop}
+        onConnect={onConnect}
+        onDragOver={onDragOver}
+        onEdgeUpdate={onEdgeUpdate}
+        onInit={setReactFlowInstance}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onInit={setReactFlowInstance}
-        onDrop={onDrop}
-        onEdgeUpdate={onEdgeUpdate}
-        onDragOver={onDragOver}
+        onNodeContextMenu={onNodeContextMenu}
         fitView
         fitViewOptions={fitViewOptions}
         nodeTypes={nodeTypes}
@@ -307,7 +309,7 @@ export default function OsintPage() {
       if (lastJsonMessage && !Array.isArray(lastJsonMessage)) {
         if (lastJsonMessage?.action === 'addNode') {
           addNodeAction(lastJsonMessage);
-          toast.success(`Found 1 ${node.label}`);
+          toast.success(`Found 1 ${label.label}`);
         }
         if (lastJsonMessage?.action === 'error') {
           toast.error(`${lastJsonMessage.detail}`);
@@ -337,6 +339,27 @@ export default function OsintPage() {
     }
   }, [lastMessage, setMessageHistory]);
 
+  const [ctxPosition, setCtxPosition] = useState<number>({ x: 0, y: 0 });
+  const [showMenu, setShowMenu] = useState(false);
+  const [transforms, setTransforms] = useState<string[]>([]);
+  const [nodeContext, setNodeContext] = useState<JSONObject>(null);
+
+  const onNodeContextMenu = (event: MouseEvent, node: Node) => {
+    event.preventDefault();
+    setNodeContext(node);
+
+    nodesService
+      .getTransforms({ label: node.data.label })
+      .then((data) => {
+        setTransforms(data.transforms);
+      })
+      .catch((error) => {
+        toast.error(`Error: ${error}`);
+        setTransforms([]);
+      });
+    setShowMenu(true);
+  };
+
   return (
     <>
       <HotKeys keyMap={keyMap} handlers={handlers}>
@@ -350,7 +373,8 @@ export default function OsintPage() {
           />
           <div className='flex h-full justify-between bg-dark-900 relative'>
             <NodeOptions key={nodeOptions.length.toString()} options={nodeOptions} />
-            <InvestigationFlow
+            <ProjectGraph
+              onNodeContextMenu={onNodeContextMenu}
               addNode={addNode}
               deleteNode={deleteNode}
               addEdge={addEdge}
@@ -381,8 +405,19 @@ export default function OsintPage() {
           id='node-options-tour'
           className='absolute top-[3.5rem] w-48 bg-red -z-10 h-20 left-[0.7rem] text-slate-900'
         ></div>
+
         <ContextMenu
-          menu={({ node, parentId, data, label, transforms, bounds }) => (
+          transforms={transforms}
+          node={nodeContext}
+          position={ctxPosition}
+          showMenu={showMenu}
+          setShowMenu={setShowMenu}
+          setCtxPosition={setCtxPosition}
+          clearCtx={() => {
+            setNodeContext(null);
+            setTransforms(null);
+          }}
+          menu={({ ctx, transforms }) => (
             <>
               <div className='relative z-50 inline-block text-left'>
                 <div className='absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-dark-300 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
@@ -396,10 +431,10 @@ export default function OsintPage() {
                         )}
                       >
                         <span className='pl-2 text-slate-400 font-semibold font-display mr-3'>ID: </span>
-                        {node ? parentId : 'No node selected'}
-                        {label && (
+                        {ctx?.id ? ctx.id : 'No node selected'}
+                        {ctx?.label && (
                           <span className='inline-flex ml-auto items-center rounded-full whitespace-nowrap truncate bg-dark-400 px-1.5 py-0.5 text-sm font-medium text-blue-800 mr-1'>
-                            {label}
+                            {ctx.label}
                           </span>
                         )}
                       </div>
@@ -407,18 +442,15 @@ export default function OsintPage() {
                   </div>
                   {transforms && (
                     <ContextAction
-                      nodeType={label}
-                      data={data}
+                      nodeContext={nodeContext}
                       sendJsonMessage={sendJsonMessage}
-                      parentId={parentId}
                       transforms={transforms}
-                      bounds={bounds}
                     />
                   )}
-                  {label ? (
+                  {ctx?.label ? (
                     <div className='node-context'>
                       <div>
-                        <button onClick={() => deleteNode(parentId)} type='button'>
+                        <button onClick={() => deleteNode(ctx?.id)} type='button'>
                           <TrashIcon aria-hidden='true' />
                           Delete
                         </button>

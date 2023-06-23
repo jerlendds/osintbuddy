@@ -1,58 +1,49 @@
 import { useAppSelector } from '@/app/hooks';
 import { isSidebarOpen } from '@/features/settings/settingsSlice';
+import { JSONObject } from '@/globals';
 import { api, nodesService } from '@/services';
-import { useCallback, useEffect, useState } from 'react';
+import { JSXElementConstructor, memo, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { XYPosition } from 'reactflow';
 
-const useContextMenu = (setTransforms: Function) => {
-  const [xPos, setXPos] = useState('0px');
-  const [yPos, setYPos] = useState('0px');
-  const [showMenu, setShowMenu] = useState(false);
-  const [node, setNode] = useState<HTMLElement | null>(null);
-  const [label, setNodeLabel] = useState<string | null | undefined>(null);
+const useMultiselectContext = ({
+  setCtxPosition,
+  setShowMenu,
+  clearCtx,
+  hasSelection,
+}: {
+  clearCtx: Function;
+  setCtxPosition: Function;
+  setShowMenu: Function;
+  hasSelection: boolean;
+}) => {
+  const [nodes, setNodes] = useState<HTMLElement | null>(null);
 
   const handleContextMenu = useCallback(
     (event: MouseEvent) => {
       event.preventDefault();
-
+      setShowMenu(true);
+      setCtxPosition({
+        y: event.clientY - 20,
+        x: event.clientX - 20,
+      });
+      if (!hasSelection) {
+        clearCtx();
+        return;
+      }
       if (event.target instanceof HTMLElement) {
-        setXPos(`${event.pageX}px`);
-        setYPos(`${event.pageY - 20}px`);
         // @todo implement support for transforming when multiple nodes are selected
-        // const multiSelect = event.target.closest('.react-flow__nodesselection-rect') as HTMLDivElement
-        // if (multiSelect) {}
-
-        const singleSelect = event.target.closest('.react-flow__node') as HTMLDivElement;
-        if (singleSelect) {
-          setNode(singleSelect);
-          const label = singleSelect.querySelector('[data-node-type]')?.getAttribute('data-node-type');
-          if (label)
-            nodesService
-              .getTransforms({ label })
-              .then((data) => {
-                setTransforms(data.transforms);
-                setNodeLabel(label);
-              })
-              .catch((error) => {
-                toast.error(`Error: ${error}`);
-                setTransforms([]);
-                setNodeLabel(label);
-              });
-        } else {
-          setNode(null);
-          setTransforms([]);
-          setNodeLabel(null);
-          return;
+        const multiSelect = event.target.closest('.react-flow__nodesselection-rect') as HTMLDivElement;
+        if (multiSelect) {
         }
       }
-      setShowMenu(true);
     },
-    [setXPos, setYPos]
+    [setCtxPosition]
   );
 
   const handleClick = useCallback(() => {
-    showMenu && setShowMenu(false);
-  }, [showMenu]);
+    setShowMenu(false);
+  }, [setShowMenu]);
 
   useEffect(() => {
     document.addEventListener('click', handleClick);
@@ -64,44 +55,70 @@ const useContextMenu = (setTransforms: Function) => {
     };
   });
 
-  return { xPos, yPos, showMenu, node, label };
+  return { nodes };
 };
 
-const ContextMenu = ({ menu }: any) => {
-  const [transforms, setTransforms] = useState<string[]>([]);
-  const { xPos, yPos, showMenu, node, label } = useContextMenu(setTransforms);
+interface NodeMenu {
+  id: string;
+  node: HTMLElement;
+  data: JSONObject;
+  label: string;
+  transforms: string[];
+  bounds: DOMRect;
+}
 
-  const showSidebar = useAppSelector((state) => isSidebarOpen(state));
-
-  let data: Array<string | null> = [];
-  if (node)
-    data = [...node.querySelectorAll<HTMLInputElement | HTMLElement>('[data-node]')].map((node) =>
-      node instanceof HTMLInputElement ? node.value : node?.textContent
-    );
+const ContextMenu = ({
+  menu,
+  position,
+  showMenu,
+  transforms,
+  node,
+  setShowMenu,
+  setCtxPosition,
+  clearCtx,
+}: {
+  setTransforms: Function;
+  transforms: string[];
+  setShowMenu: Function;
+  label: string;
+  menu: Function;
+  position: XYPosition;
+  showMenu: boolean;
+  node: JSONObject;
+  setCtxPosition: Function;
+  clearCtx: Function;
+}) => {
+  // @todo implement support for multi-select transforms?
+  // let data: Array<JSONObject> = [];
+  // if (nodes) {
+  //   data = [...nodes.querySelectorAll<HTMLInputElement | HTMLElement>('[data-label]')].map((n) =>
+  //     n instanceof HTMLInputElement ? n.value : n.textContent
+  //   );
+  // }
+  const { nodes } = useMultiselectContext({
+    clearCtx,
+    setCtxPosition,
+    setShowMenu,
+    hasSelection: node,
+  });
+  // const showSidebar = useAppSelector((state) => isSidebarOpen(state));
 
   return (
     <>
-      {showMenu ? (
-        <div
-          id='context-menu'
-          className='z-[999] absolute'
-          style={{
-            top: yPos,
-            left: `calc(${xPos} - ${showSidebar ? 16 : 3}rem)`,
-          }}
-        >
-          {menu({
-            node,
-            data,
-            label,
+      <div
+        id='context-menu'
+        className='z-[999] absolute'
+        style={{
+          top: position.y,
+          left: position.x,
+        }}
+      >
+        {showMenu &&
+          menu({
+            ctx: node,
             transforms,
-            bounds: node?.getBoundingClientRect(),
-            parentId: node?.getAttribute('data-id'),
           })}
-        </div>
-      ) : (
-        <></>
-      )}
+      </div>
     </>
   );
 };
