@@ -14,10 +14,10 @@ services:
       - .env
   backend:
     # image: openinfolabs/osintbuddy-backend:latest
-    command: ['/bin/sh', '-c', './start-reload.sh']
+    command: ["/bin/sh", "-c", "./start-reload.sh"]
     build:
       context: ./backend/backend
-      dockerfile: 'backend.Dockerfile'
+      dockerfile: backend.Dockerfile
     volumes:
       - ./backend/backend/app:/app/
     environment:
@@ -39,7 +39,7 @@ services:
     ports:
       - "${MICROSERVICE_PORT-.env MICROSERVICE_PORT needs to be set}:1323"
     env_file:
-      - '.env'
+      - .env
   db:
     image: "${POSTGRES_IMAGE-.env POSTGRES_IMAGE needs to be set}"
     volumes:
@@ -48,67 +48,65 @@ services:
       - .env
     ports:
       - "${POSTGRES_PORT-.env POSTGRES_PORT needs to be set}:5432"
+  sdb:
+    image: scylladb/scylla:5.1
+    ports:
+     - "${SDB_REST_PORT-.env SDB_REST_PORT needs to be set}:10000"
+     - "${CQL_PORT-.env CQL_PORT needs to be set}:9042"
+     - "${THRIFT_PORT-.env THRIFT_PORT needs to be set}:9160"
+     - "${INTERNODE_PORT-.env INTERNODE_PORT needs to be set}:7000"
+     - "${INTERNODE_ONE_PORT-.env INTERNODE_ONE_PORT needs to be set}:7001"
+     - "${JMX_PORT-.env JMX_PORT needs to be set}:7199"
+    environment:
+      --default-log-level: warn
+    env_file:
+      - .env
+    volumes:
+     - sdb-data:${SCYLLADATA-.env SCYLLADATA needs to be set}
+  janus:
+    image: "${JANUS_IMAGE-.env JANUS_IMAGE needs to be set}"
+    ports:
+      - "8182:8182"
+    environment:
+      storage.backend: "cql"
+      storage.hostname: sdb:9042
+      index.search.backend: elasticsearch
+      index.search.hostname: "index:${ELASTIC_PORT-.env ELASTIC_PORT needs to be set}"
+      janusgraph.set-vertex-id: true
+  index:
+    image: "${ELASTIC_IMAGE-.env ELASTIC_IMAGE needs to be set}"
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=127.0.0.1
+      - node.name=es
+      - cluster.initial_master_nodes=es
+      - cluster.name=osintbuddy-es
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+      - "-Des.logger.level=WARN"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 262144
+        hard: 262144
+    ports:
+     - "${ELASTIC_PORT-.env ELASTIC_PORT needs to be set}:9200"
+    env_file:
+      - .env
+    user: "1000"
+    volumes:
+      - type: volume
+        source: es-data
+        target: /usr/share/elasticsearch/data
 
 volumes:
   osintbuddy-db-data:
-  # sdb:
-  #   image: scylladb/scylla:5.1
-  #   ports:
-  #    - "${SDB_REST_PORT-.env SDB_REST_PORT needs to be set}:10000"
-  #    - "${CQL_PORT-.env CQL_PORT needs to be set}:9042"
-  #    - "${THRIFT_PORT-.env THRIFT_PORT needs to be set}:9160"
-  #    - "${INTERNODE_PORT-.env INTERNODE_PORT needs to be set}:7000"
-  #    - "${INTERNODE_ONE_PORT-.env INTERNODE_ONE_PORT needs to be set}:7001"
-  #    - "${JMX_PORT-.env JMX_PORT needs to be set}:7199"
-  #   environment:
-  #     --default-log-level: warn
-  #   env_file:
-  #     - .env
-  #   volumes:
-  #    - sdb-data:${SCYLLADATA-.env SCYLLADATA needs to be set}
-  # janus:
-  #   image: "${JANUS_IMAGE-.env JANUS_IMAGE needs to be set}"
-  #   ports:
-  #     - "8182:8182"
-  #   environment:
-  #     storage.backend: "cql"
-  #     storage.hostname: sdb:9042
-  #     index.search.backend: elasticsearch
-  #     index.search.hostname: "index:${ELASTIC_PORT-.env ELASTIC_PORT needs to be set}"
-  #     janusgraph.set-vertex-id: true
-  # index:
-  #   image: "${ELASTIC_IMAGE-.env ELASTIC_IMAGE needs to be set}"
-  #   environment:
-  #     - http.host=0.0.0.0
-  #     - transport.host=127.0.0.1
-  #     - node.name=es
-  #     - cluster.initial_master_nodes=es
-  #     - cluster.name=osintbuddy-es
-  #     - bootstrap.memory_lock=true
-  #     - xpack.security.enabled=false
-  #     - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
-  #     - "-Des.logger.level=WARN"
-  #   ulimits:
-  #     memlock:
-  #       soft: -1
-  #       hard: -1
-  #     nofile:
-  #       soft: 262144
-  #       hard: 262144
-  #   ports:
-  #    - "${ELASTIC_PORT-.env ELASTIC_PORT needs to be set}:9200"
-  #   env_file:
-  #     - .env
-  #   user: "1000"
-  #   volumes:
-  #     - type: volume
-  #       source: es-data
-  #       target: /usr/share/elasticsearch/data
-
-
-  # es-data:
-  # sdb-data:
-  # index-data:
+  es-data:
+  sdb-data:
+  index-data:
 
   # @todo uncomment for WARC release
   # worker:

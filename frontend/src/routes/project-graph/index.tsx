@@ -31,17 +31,13 @@ import { JSONObject } from '@/globals';
 import createGLShell from 'gl-now';
 import createShader from 'gl-shader';
 import createBuffer from 'gl-buffer';
-
-export var nodeId = 0;
-
-export const getId = (): NodeId => {
-  nodeId++;
-  return `n_${nodeId}`;
-};
+import { nodesService } from '@/services';
 
 const fitViewOptions: FitViewOptions = {
   padding: 50,
 };
+
+const onNodeDragStop = (_: MouseEvent, node: Node) => console.log('@todo drag stop update position', node);
 
 const InvestigationFlow = ({
   reactFlowWrapper,
@@ -77,31 +73,36 @@ const InvestigationFlow = ({
   const onDrop = useCallback(
     async (event) => {
       event.preventDefault();
-      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-      const type = event.dataTransfer.getData('application/reactflow');
-      // check if the dropped element is valid
-      if (typeof type === 'undefined' || !type) {
+      const flowBounds = reactFlowWrapper.current.getBoundingClientRect();
+      const label = event.dataTransfer.getData('application/reactflow');
+      if (typeof label === 'undefined' || !label) {
         return;
       }
       const position = reactFlowInstance.project({
-        x: event.clientX,
-        y: event.clientY,
+        x: event.clientX - flowBounds.left,
+        y: event.clientY - flowBounds.top,
       });
-      const nodeElements = await api.get(`/nodes/type?node_type=${type}`);
-      if (nodeElements?.data) {
-        const newNode = {
-          id: `${getId()}`,
-          type: 'base',
+      nodesService
+        .createNode({
+          label,
           position,
-          data: {
-            node: nodeElements?.data,
-          },
-        };
-        sendJsonMessage({ action: 'create:node', node: newNode });
-        setNodes((nds) => nds.concat(newNode));
-      }
+        })
+        .then((data) => {
+          const id = data.id.toString();
+          delete data.id;
+          delete data.position;
+          setNodes((nds) =>
+            nds.concat({
+              id,
+              data,
+              position,
+              type: 'base',
+            })
+          );
+        })
+        .catch((error) => toast.error(`Error: ${error}`));
     },
-    [reactFlowInstance, nodeId]
+    [reactFlowInstance]
   );
 
   const nodeTypes = useMemo(() => {
@@ -112,25 +113,8 @@ const InvestigationFlow = ({
     };
   }, []);
 
-  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
-    switch (e.detail) {
-      case 1:
-        // @ts-ignore
-        // console.log('node click', e.target, e?.target?.closest('.react-flow__node input'));
-        break;
-      case 2:
-        // @ts-ignore
-        // console.log('node double click', e?.target?.closest('.react-flow__node'));
-        break;
-      case 3:
-        // @ts-ignore
-        // console.log('node triple click', e.target);
-        break;
-    }
-  };
-
   return (
-    <div onClick={handleClick} style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
+    <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
       <ReactFlow
         minZoom={0.2}
         maxZoom={2.0}
@@ -147,6 +131,7 @@ const InvestigationFlow = ({
         fitViewOptions={fitViewOptions}
         nodeTypes={nodeTypes}
         panActivationKeyCode='Space'
+        onNodeDragStop={onNodeDragStop}
       >
         <Background variant={BackgroundVariant.Dots} className='bg-dark-[rgb(10 15 20)]' color='#1F3057' />
         <Controls />
@@ -196,36 +181,28 @@ export default function OsintPage() {
 
   const [messageHistory, setMessageHistory] = useState([]);
   const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/investigation`);
-  const { lastMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl, {
+  const { lastMessage, lastJsonMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl, {
     onOpen: () => console.log('opened'),
     shouldReconnect: (closeEvent) => {
       return true;
     },
   });
 
-  let setViewport,
-    zoomIn,
+  let zoomIn,
     zoomOut = null;
   if (reactFlowInstance) {
-    ({ setViewport, zoomIn, zoomOut } = reactFlowInstance);
+    ({ zoomIn, zoomOut } = reactFlowInstance);
   }
 
-  function addNode(id, data: AddNode, position): Node<XYPosition> {
-    let addPosition = null;
-    if (reactFlowInstance) {
-      addPosition = reactFlowInstance.project(position);
-    } else {
-      addPosition = position;
-    }
-
-    const newNode = {
-      id,
-      type: 'base',
-      data,
-      position: addPosition,
-    };
-    setNodes((nds) => nds.concat(newNode));
-    return addPosition;
+  function addNode(id, data: AddNode, position): void {
+    setNodes((nds) =>
+      nds.concat({
+        id,
+        type: 'base',
+        data,
+        position: reactFlowInstance.project(position),
+      })
+    );
   }
 
   function addEdge(source, target, sourceHandle, targetHandle, type: AddEdge): void {
@@ -281,7 +258,7 @@ export default function OsintPage() {
       .then((resp) => {
         const options =
           resp?.data?.plugins
-            ?.filter((pluginLabel: any) => pluginLabel)
+            ?.filter((label: any) => label)
             .map((label: string) => {
               return { event: label, title: label, name: label };
             }) || [];
@@ -300,7 +277,7 @@ export default function OsintPage() {
 
   const updateNode = (node: JSONObject, data) => {
     let updatedNode = { ...node };
-    updatedNode.elements = node.data.node.elements.map((elm) => {
+    updatedNode.elements = node.data.elements.map((elm) => {
       if (Object.keys(data)[0] === elm.label) {
         elm.value = data[elm.label];
       }
@@ -325,23 +302,18 @@ export default function OsintPage() {
 
   // websocket updates happen here
   useEffect(() => {
-    if (lastMessage !== null) {
-      setMessageHistory((prev) => prev.concat(lastMessage));
-      let data = JSON.parse(lastMessage?.data) || lastMessage?.data;
-      if (data && !Array.isArray(data)) {
-        if (data?.action === 'addNode') {
-          addNodeAction(data);
+    if (lastJsonMessage !== null) {
+      setMessageHistory((prev) => prev.concat(lastJsonMessage));
+      if (lastJsonMessage && !Array.isArray(lastJsonMessage)) {
+        if (lastJsonMessage?.action === 'addNode') {
+          addNodeAction(lastJsonMessage);
           toast.success(`Found 1 ${node.label}`);
         }
-        if (data?.action === 'error') {
-          toast.error(`${data.detail}`);
+        if (lastJsonMessage?.action === 'error') {
+          toast.error(`${lastJsonMessage.detail}`);
         }
-        if (data?.action === 'refresh') {
-          toast.info(`Loading plugins...`);
-          updateNodeOptions();
-        }
-      } else if (Array.isArray(data)) {
-        data = data.map((node, idx) => {
+      } else if (Array.isArray(lastJsonMessage)) {
+        lastJsonMessage.map((node, idx) => {
           if (node?.action === 'addNode') {
             const isOdd = idx % 2 === 0;
             const pos = node.position;
@@ -352,11 +324,15 @@ export default function OsintPage() {
             addNodeAction(node);
           }
         });
-        if (data.length > 0) {
-          toast.success(`Found ${data.length} results`);
+        if (lastJsonMessage.length > 0) {
+          toast.success(`Found ${lastJsonMessage.length} results`);
         } else {
           toast.info('No results found');
         }
+      }
+      if (lastJsonMessage.action === 'refresh') {
+        toast.info(`Loading plugins...`);
+        updateNodeOptions();
       }
     }
   }, [lastMessage, setMessageHistory]);
@@ -406,71 +382,68 @@ export default function OsintPage() {
           className='absolute top-[3.5rem] w-48 bg-red -z-10 h-20 left-[0.7rem] text-slate-900'
         ></div>
         <ContextMenu
-          menu={({ node, parentId, data, nodeType, transforms, bounds }) => {
-            return (
-              <>
-                <div className='relative z-50 inline-block text-left'>
-                  <div className='absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-dark-300 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
-                    <div className='py-1'>
-                      <div>
-                        <div
-                          href='#'
-                          className={classNames(
-                            false ? 'bg-slate-500 text-slate-400' : 'text-slate-400',
-                            'group flex items-center px-4 py-2 text-sm font-display'
-                          )}
-                        >
-                          <span className='text-slate-400 font-semibold font-display mr-3'>ID: </span>
-                          {node ? parentId : 'No node selected'}
-                          {nodeType && (
-                            <span className='inline-flex ml-auto items-center rounded-full bg-blue-100 px-3 py-0.5 text-sm font-medium text-blue-800'>
-                              {nodeType}
-                            </span>
-                          )}
-                        </div>
+          menu={({ node, parentId, data, label, transforms, bounds }) => (
+            <>
+              <div className='relative z-50 inline-block text-left'>
+                <div className='absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-dark-300 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+                  <div className='py-1'>
+                    <div>
+                      <div
+                        href='#'
+                        className={classNames(
+                          false ? 'bg-slate-500 text-slate-400' : 'text-slate-400',
+                          'group flex items-center py-2 text-sm font-display'
+                        )}
+                      >
+                        <span className='pl-2 text-slate-400 font-semibold font-display mr-3'>ID: </span>
+                        {node ? parentId : 'No node selected'}
+                        {label && (
+                          <span className='inline-flex ml-auto items-center rounded-full whitespace-nowrap truncate bg-dark-400 px-1.5 py-0.5 text-sm font-medium text-blue-800 mr-1'>
+                            {label}
+                          </span>
+                        )}
                       </div>
                     </div>
-                    {transforms && (
-                      <ContextAction
-                        nodeType={nodeType}
-                        data={data}
-                        sendJsonMessage={sendJsonMessage}
-                        parentId={parentId}
-                        transforms={transforms}
-                        bounds={bounds}
-                      />
-                    )}
-                    {nodeType && (
-                      <div className='node-context'>
-                        <div>
-                          <button onClick={() => deleteNode(parentId)} type='button'>
-                            <TrashIcon aria-hidden='true' />
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                    {!nodeType && (
-                      <div className='node-context'>
-                        <div>
-                          <button onClick={() => zoomIn && zoomIn({ duration: 200 })} type='button'>
-                            <MagnifyingGlassPlusIcon aria-hidden='true' />
-                            Zoom in
-                          </button>
-                        </div>
-                        <div>
-                          <button onClick={() => zoomOut && zoomOut({ duration: 200 })} type='button'>
-                            <MagnifyingGlassMinusIcon aria-hidden='true' />
-                            Zoom out
-                          </button>
-                        </div>
-                      </div>
-                    )}
                   </div>
+                  {transforms && (
+                    <ContextAction
+                      nodeType={label}
+                      data={data}
+                      sendJsonMessage={sendJsonMessage}
+                      parentId={parentId}
+                      transforms={transforms}
+                      bounds={bounds}
+                    />
+                  )}
+                  {label ? (
+                    <div className='node-context'>
+                      <div>
+                        <button onClick={() => deleteNode(parentId)} type='button'>
+                          <TrashIcon aria-hidden='true' />
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className='node-context'>
+                      <div>
+                        <button onClick={() => zoomIn && zoomIn({ duration: 200 })} type='button'>
+                          <MagnifyingGlassPlusIcon aria-hidden='true' />
+                          Zoom in
+                        </button>
+                      </div>
+                      <div>
+                        <button onClick={() => zoomOut && zoomOut({ duration: 200 })} type='button'>
+                          <MagnifyingGlassMinusIcon aria-hidden='true' />
+                          Zoom out
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </>
-            );
-          }}
+              </div>
+            </>
+          )}
         />
       </HotKeys>
     </>

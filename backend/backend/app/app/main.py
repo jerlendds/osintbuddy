@@ -1,4 +1,3 @@
-import uuid
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.responses import UJSONResponse
@@ -10,7 +9,6 @@ from fastapi_cache.backends.redis import CACHE_KEY, RedisCacheBackend
 from osintbuddy import discover_plugins
 from app.api.api_v1.api import api_router
 from app.core.config import settings
-
 
 
 # if settings.SENTRY_DSN:
@@ -31,21 +29,6 @@ app = FastAPI(
     default_response_class=UJSONResponse,
 )
 
-
-@app.on_event('shutdown')
-async def on_shutdown() -> None:
-    await close_caches()
-    import sys
-    sys.exit()
-
-@app.on_event('startup')
-async def on_startup() -> None:
-    if 'dev' in settings.ENVIRONMENT:
-        discover_plugins('/plugins.osintbuddy.com/src/osintbuddy/core/')
-    rc = RedisCacheBackend(settings.REDIS_URL)
-    caches.set(CACHE_KEY, rc)
-
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.BACKEND_CORS_ORIGINS,
@@ -60,9 +43,11 @@ app.add_middleware(
         "Access-Control-Allow-Origin"
     ],
     expose_headers=[
-        "X-OSINTBuddy-UserError"
+        "x-osintbuddy-user",
+        "x-osintbuddy-error"
     ],
 )
+
 
 def app_openapi_schema(app):
     """Return openapi_schema. cached."""
@@ -83,6 +68,23 @@ def app_openapi_schema(app):
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 app.openapi_schema = app_openapi_schema(app)
+
+
+@app.on_event('shutdown')
+async def on_shutdown() -> None:
+    await close_caches()
+    import sys
+    sys.exit()
+
+
+@app.on_event('startup')
+async def on_startup() -> None:
+    if 'dev' in settings.ENVIRONMENT:
+        discover_plugins('/plugins.osintbuddy.com/src/osintbuddy/core/')
+    rc = RedisCacheBackend(settings.REDIS_URL)
+    caches.set(CACHE_KEY, rc)
+
+
 
 # @app.get("/sentry-debug")
 # async def trigger_error():

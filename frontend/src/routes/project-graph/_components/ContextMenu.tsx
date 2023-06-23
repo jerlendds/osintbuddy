@@ -1,39 +1,49 @@
 import { useAppSelector } from '@/app/hooks';
 import { isSidebarOpen } from '@/features/settings/settingsSlice';
-import { api } from '@/services';
+import { api, nodesService } from '@/services';
 import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const useContextMenu = (setTransforms: Function) => {
   const [xPos, setXPos] = useState('0px');
   const [yPos, setYPos] = useState('0px');
   const [showMenu, setShowMenu] = useState(false);
   const [targetNode, setTargetNode] = useState<HTMLElement | null>(null);
-  const [nodeType, setNodeType] = useState<string | null | undefined>(null);
+  const [label, setNodeLabel] = useState<string | null | undefined>(null);
 
   const handleContextMenu = useCallback(
     (event: MouseEvent) => {
       event.preventDefault();
-      setTransforms([]);
 
       if (event.target instanceof HTMLElement) {
+        setXPos(`${event.pageX}px`);
+        setYPos(`${event.pageY - 20}px`);
         // @todo implement support for transforming when multiple nodes are selected
         // const multiSelect = event.target.closest('.react-flow__nodesselection-rect') as HTMLDivElement
         // if (multiSelect) {}
+
         const singleSelect = event.target.closest('.react-flow__node') as HTMLDivElement;
         if (singleSelect) {
           setTargetNode(singleSelect);
-          const type = singleSelect.querySelector('[data-node-type]')?.getAttribute('data-node-type');
-          if (type) {
-            api.get(`/nodes/transforms?node_type=${type}`).then((resp) => {
-              if (resp?.data?.transforms) {
-                setTransforms(resp?.data?.transforms);
-              }
-            });
-            setNodeType(type);
-          }
+          const label = singleSelect.querySelector('[data-node-type]')?.getAttribute('data-node-type');
+          if (label)
+            nodesService
+              .getTransforms({ label })
+              .then((data) => {
+                setTransforms(data.transforms);
+                setNodeLabel(label);
+              })
+              .catch((error) => {
+                toast.error(`Error: ${error}`);
+                setTransforms([]);
+                setNodeLabel(label);
+              });
+        } else {
+          setTargetNode(null);
+          setTransforms([]);
+          setNodeLabel(null);
+          return;
         }
-        setXPos(`${event.pageX}px`);
-        setYPos(`${event.pageY - 20}px`);
       }
       setShowMenu(true);
     },
@@ -54,12 +64,12 @@ const useContextMenu = (setTransforms: Function) => {
     };
   });
 
-  return { xPos, yPos, showMenu, setYPos, targetNode, nodeType };
+  return { xPos, yPos, showMenu, targetNode, nodeType: label };
 };
 
 const ContextMenu = ({ menu }: any) => {
   const [transforms, setTransforms] = useState<string[]>([]);
-  const { xPos, yPos, setYPos, showMenu, targetNode, nodeType } = useContextMenu(setTransforms);
+  const { xPos, yPos, showMenu, targetNode, nodeType: label } = useContextMenu(setTransforms);
 
   const showSidebar = useAppSelector((state) => isSidebarOpen(state));
 
@@ -81,12 +91,12 @@ const ContextMenu = ({ menu }: any) => {
           }}
         >
           {menu({
+            label,
             data,
             transforms,
             node: targetNode,
             bounds: targetNode?.getBoundingClientRect(),
             parentId: targetNode?.getAttribute('data-id'),
-            nodeType: nodeType,
           })}
         </div>
       ) : (
