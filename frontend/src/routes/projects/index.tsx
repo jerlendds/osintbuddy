@@ -169,7 +169,7 @@ export function NewCaseForm({ closeModal, updateTable }: JSONObject) {
                   </Combobox.Options>
                 </div>
                 <input
-                  data-node
+                  data-label
                   readOnly
                   value={JSON.stringify(tags.map((t: JSONObject) => t.label))}
                   className='hidden invisible'
