@@ -8,7 +8,7 @@ const useContextMenu = (setTransforms: Function) => {
   const [xPos, setXPos] = useState('0px');
   const [yPos, setYPos] = useState('0px');
   const [showMenu, setShowMenu] = useState(false);
-  const [targetNode, setTargetNode] = useState<HTMLElement | null>(null);
+  const [node, setNode] = useState<HTMLElement | null>(null);
   const [label, setNodeLabel] = useState<string | null | undefined>(null);
 
   const handleContextMenu = useCallback(
@@ -24,7 +24,7 @@ const useContextMenu = (setTransforms: Function) => {
 
         const singleSelect = event.target.closest('.react-flow__node') as HTMLDivElement;
         if (singleSelect) {
-          setTargetNode(singleSelect);
+          setNode(singleSelect);
           const label = singleSelect.querySelector('[data-node-type]')?.getAttribute('data-node-type');
           if (label)
             nodesService
@@ -39,7 +39,7 @@ const useContextMenu = (setTransforms: Function) => {
                 setNodeLabel(label);
               });
         } else {
-          setTargetNode(null);
+          setNode(null);
           setTransforms([]);
           setNodeLabel(null);
           return;
@@ -64,18 +64,18 @@ const useContextMenu = (setTransforms: Function) => {
     };
   });
 
-  return { xPos, yPos, showMenu, targetNode, label };
+  return { xPos, yPos, showMenu, node, label };
 };
 
 const ContextMenu = ({ menu }: any) => {
   const [transforms, setTransforms] = useState<string[]>([]);
-  const { xPos, yPos, showMenu, targetNode, label } = useContextMenu(setTransforms);
+  const { xPos, yPos, showMenu, node, label } = useContextMenu(setTransforms);
 
   const showSidebar = useAppSelector((state) => isSidebarOpen(state));
 
   let data: Array<string | null> = [];
-  if (targetNode)
-    data = [...targetNode.querySelectorAll<HTMLInputElement | HTMLElement>('[data-node]')].map((node) =>
+  if (node)
+    data = [...node.querySelectorAll<HTMLInputElement | HTMLElement>('[data-node]')].map((node) =>
       node instanceof HTMLInputElement ? node.value : node?.textContent
     );
 
@@ -91,12 +91,12 @@ const ContextMenu = ({ menu }: any) => {
           }}
         >
           {menu({
-            label,
+            node,
             data,
+            label,
             transforms,
-            node: targetNode,
-            bounds: targetNode?.getBoundingClientRect(),
-            parentId: targetNode?.getAttribute('data-id'),
+            bounds: node?.getBoundingClientRect(),
+            parentId: node?.getAttribute('data-id'),
           })}
         </div>
       ) : (
