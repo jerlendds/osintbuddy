@@ -8,7 +8,6 @@ import classNames from 'classnames';
 import { Formik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import { PageHeader } from '@/components/Headers';
-import { FetchProps, JSONObject } from '@/globals';
 import Table from '@/components/Table';
 import { toast } from 'react-toastify';
 import { api } from '@/services';

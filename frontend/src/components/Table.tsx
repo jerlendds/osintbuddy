@@ -1,4 +1,3 @@
-import { FetchProps, JSONObject } from '@/globals';
 import { casesService } from '@/services';
 import { ChevronLeftIcon, ChevronRightIcon, EyeIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';

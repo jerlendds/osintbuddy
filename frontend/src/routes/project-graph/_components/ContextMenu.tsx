@@ -1,32 +1,37 @@
 import { useAppSelector } from '@/app/hooks';
 import { isSidebarOpen } from '@/features/settings/settingsSlice';
-import { JSONObject } from '@/globals';
 import { api, nodesService } from '@/services';
 import { JSXElementConstructor, memo, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { XYPosition } from 'reactflow';
 
 const useMultiselectContext = ({
-  setCtxPosition,
+  ctxPosition,
   setShowMenu,
-  clearCtx,
+  setCtx: clearCtx,
   hasSelection,
+  showMenu,
+  setCtxPosition,
 }: {
-  clearCtx: Function;
-  setCtxPosition: Function;
   setShowMenu: Function;
+  setCtx: Function;
+  ctxPosition: XYPosition;
   hasSelection: boolean;
+  showMenu: boolean;
+  setCtxPosition: Function;
 }) => {
   const [nodes, setNodes] = useState<HTMLElement | null>(null);
 
-  const handleContextMenu = useCallback(
+  const handleMultiSelectMenu = useCallback(
     (event: MouseEvent) => {
       event.preventDefault();
       setShowMenu(true);
+      console.log('!hasSelection', ctxPosition, !hasSelection);
       setCtxPosition({
         y: event.clientY - 20,
         x: event.clientX - 20,
       });
+      console.log('!hasSelection', !hasSelection)
       if (!hasSelection) {
         clearCtx();
         return;
@@ -38,55 +43,47 @@ const useMultiselectContext = ({
         }
       }
     },
-    [setCtxPosition]
+    [hasSelection, ctxPosition.x, ctxPosition.y]
   );
 
   const handleClick = useCallback(() => {
-    setShowMenu(false);
+    console.log('setShowMenu(false)');
+    clearCtx() || setShowMenu(false);
   }, [setShowMenu]);
 
   useEffect(() => {
     document.addEventListener('click', handleClick);
-    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('contextmenu', handleMultiSelectMenu);
 
     return () => {
       document.addEventListener('click', handleClick);
-      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('contextmenu', handleMultiSelectMenu);
     };
   });
 
   return { nodes };
 };
 
-interface NodeMenu {
-  id: string;
-  node: HTMLElement;
-  data: JSONObject;
-  label: string;
-  transforms: string[];
-  bounds: DOMRect;
-}
-
 const ContextMenu = ({
   menu,
-  position,
   showMenu,
   transforms,
   node,
   setShowMenu,
-  setCtxPosition,
   clearCtx,
+  ctxPosition,
+  setCtxPosition,
 }: {
   setTransforms: Function;
   transforms: string[];
   setShowMenu: Function;
   label: string;
   menu: Function;
-  position: XYPosition;
   showMenu: boolean;
   node: JSONObject;
-  setCtxPosition: Function;
+  ctxPosition: XYPosition;
   clearCtx: Function;
+  setCtxPosition: Function;
 }) => {
   // @todo implement support for multi-select transforms?
   // let data: Array<JSONObject> = [];
@@ -95,22 +92,24 @@ const ContextMenu = ({
   //     n instanceof HTMLInputElement ? n.value : n.textContent
   //   );
   // }
+  console.log('before useMultiselectContext', ctxPosition, node);
   const { nodes } = useMultiselectContext({
-    clearCtx,
-    setCtxPosition,
+    ctxPosition,
+    setCtx: clearCtx,
     setShowMenu,
-    hasSelection: node,
+    showMenu,
+    hasSelection: !!node,
+    setCtxPosition,
   });
   // const showSidebar = useAppSelector((state) => isSidebarOpen(state));
-
   return (
     <>
       <div
         id='context-menu'
         className='z-[999] absolute'
         style={{
-          top: position.y,
-          left: position.x,
+          top: ctxPosition.y,
+          left: ctxPosition.x,
         }}
       >
         {showMenu &&

@@ -1,17 +1,15 @@
-import { JSONObject } from '@/globals';
 import { Icon } from '@components/Icons';
 import { XYPosition } from 'reactflow';
 
 export default function ContextAction({
-  nodeContext: nodeCtx,
+  nodeCtx: ctx,
   transforms,
   sendJsonMessage,
 }: {
-  nodeContext: JSONObject
+  nodeCtx: JSONObject
   transforms: string[]
   sendJsonMessage: Function
 }) {
-  console.log('nodeContext', nodeCtx, transforms)
   return (
     <>
       <div className='node-context'>
@@ -24,11 +22,11 @@ export default function ContextAction({
                   sendJsonMessage({
                     action: 'transform:node',
                     node: {
-                      id: nodeCtx.id,
-                      position: nodeCtx.position,
+                      id: ctx.id,
+                      type: ctx.label,
+                      data: ctx.data,
+                      position: ctx.position,
                       transform: transform.label,
-                      type: nodeCtx.label,
-                      data: nodeCtx.data,
                     },
                   })
                 }

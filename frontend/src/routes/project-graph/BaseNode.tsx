@@ -5,7 +5,6 @@ import { ChangeEvent, Fragment, useEffect, useState } from 'react';
 import { Handle, Position, useStore } from 'reactflow';
 import { GripIcon, Icon } from '@/components/Icons';
 import { toast } from 'react-toastify';
-import { JSONObject } from '@/globals';
 import { useNodeId } from 'reactflow';
 
 export type NodeTypes =
@@ -72,18 +71,18 @@ function KeyLogger() {
 }
 
 export default function BaseNode({
-  node,
+  node: ctx,
   sendJsonMessage,
   updateNode,
   setEditState,
 }: {
-  node: any;
+  node: JSONObject;
   sendJsonMessage: Function;
   updateNode: (nodeId: string, nodeData: JSONObject) => void;
   setEditState: Function;
 }) {
   const nodeId = useNodeId();
-  const myNode = node?.data;
+  const myNode = ctx?.data;
   const nodes = myNode.elements;
   const icon = myNode.icon;
   const name = myNode.name;
@@ -96,10 +95,10 @@ export default function BaseNode({
       return (
         <DropdownInput
           key={key}
-          nodeId={node.id}
-          options={element?.options || []}
-          label={element?.label}
-          value={element?.value}
+          nodeId={ctx.id}
+          options={element.options || []}
+          label={element.label}
+          value={element.value as string}
           sendJsonMessage={sendJsonMessage}
           updateNode={updateNode}
           setEditState={setEditState}
@@ -110,7 +109,7 @@ export default function BaseNode({
       return (
         <TextInput
           key={key}
-          nodeId={node.id}
+          nodeId={ctx.id}
           label={element?.label}
           initialValue={element?.value || ''}
           icon={element?.icon || 'ballpen'}
@@ -124,7 +123,7 @@ export default function BaseNode({
       return (
         <UploadFileInput
           key={key}
-          nodeId={node.id}
+          nodeId={ctx.id}
           label={element?.label}
           initialValue={element?.value || ''}
           icon={element?.icon || 'file-upload'}
@@ -137,7 +136,7 @@ export default function BaseNode({
       return (
         <Title
           key={key}
-          nodeId={node.id}
+          nodeId={ctx.id}
           label={element?.label}
           title={element?.title || ''}
           subtitle={element?.subtitle || ''}
@@ -146,32 +145,16 @@ export default function BaseNode({
       );
     }
     if (element.type === 'section') {
-      return <Text key={key} nodeId={node.id} label={element?.label} value={element?.value || ''} />;
+      return <Text key={key} nodeId={ctx.id} label={element?.label} value={element?.value || ''} />;
     }
     if (element.type === 'copy-text') {
-      return <CopyText key={key} nodeId={node.id} label={element?.label} value={element?.value || ''} />;
+      return <CopyText key={key} nodeId={ctx.id} label={element?.label} value={element?.value || ''} />;
     }
     if (element.type === 'empty') {
       return <div className='hidden' />;
     }
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
-    switch (e.detail) {
-      case 1:
-        // @ts-ignore
-        // console.log('node click', e.target, e.target.closest('.react-flow__node'));
-        break;
-      case 2:
-        // @ts-ignore
-        // console.log('node double click', e.target.closest('.react-flow__node'));
-        break;
-      case 3:
-        // @ts-ignore
-        // console.log('node triple click', e.target);
-        break;
-    }
-  };
 
   // const size = useStore((s: any) => {
   //   const node = s.nodeInternals.get(nodeId);
@@ -182,7 +165,7 @@ export default function BaseNode({
   //   };
   // });
   // console.log('size: ', size);
-
+  console.log('node!!!!', ctx)
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
@@ -200,17 +183,16 @@ export default function BaseNode({
           <div className='text-container'>
             <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
               <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
-              {node.id}
+              {ctx.id}
             </p>
             <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>{name}</p>
           </div>
           <Icon icon={icon} className='h-5 w-5 mr-2' />
         </div>
         <form
-          onClick={handleClick}
           style={style}
           onSubmit={(event) => event.preventDefault()}
-          className={classNames('elements gap-x-1', nodes.length > 2 ? '' : '')}
+          className='elements gap-x-1'
         >
           {nodes.map((element: NodeInput, i: number) => {
             if (Array.isArray(element))
@@ -392,7 +374,7 @@ export function DropdownInput({
   options: DropdownOption[];
   label: string;
   sendJsonMessage: Function;
-  value: JSONObject;
+  value: string;
   setEditState: Function;
   updateNode: Function;
 }) {

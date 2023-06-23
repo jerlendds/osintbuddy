@@ -27,7 +27,6 @@ import { getLayoutedElements } from './utils';
 import BaseNode from './BaseNode';
 import ContextAction from './_components/ContextAction';
 import { toast } from 'react-toastify';
-import { JSONObject } from '@/globals';
 import createGLShell from 'gl-now';
 import createShader from 'gl-shader';
 import createBuffer from 'gl-buffer';
@@ -339,15 +338,16 @@ export default function OsintPage() {
     }
   }, [lastMessage, setMessageHistory]);
 
-  const [ctxPosition, setCtxPosition] = useState<number>({ x: 0, y: 0 });
+  const [ctxPosition, setCtxPosition] = useState<XYPosition>({ x: 0, y: 0 });
+  const [nodeCtx, setNodeCtx] = useState<JSONObject>(null);
   const [showMenu, setShowMenu] = useState(false);
   const [transforms, setTransforms] = useState<string[]>([]);
-  const [nodeContext, setNodeContext] = useState<JSONObject>(null);
 
   const onNodeContextMenu = (event: MouseEvent, node: Node) => {
     event.preventDefault();
-    setNodeContext(node);
+    setNodeCtx(node);
 
+    console.log('setNodeCtx', node);
     nodesService
       .getTransforms({ label: node.data.label })
       .then((data) => {
@@ -357,7 +357,6 @@ export default function OsintPage() {
         toast.error(`Error: ${error}`);
         setTransforms([]);
       });
-    setShowMenu(true);
   };
 
   return (
@@ -408,74 +407,75 @@ export default function OsintPage() {
 
         <ContextMenu
           transforms={transforms}
-          node={nodeContext}
+          node={nodeCtx}
           position={ctxPosition}
           showMenu={showMenu}
           setShowMenu={setShowMenu}
+          ctxPosition={ctxPosition}
           setCtxPosition={setCtxPosition}
           clearCtx={() => {
-            setNodeContext(null);
+            console.log('CLEARING CONTEXT')
             setTransforms(null);
+            setNodeCtx(null)
           }}
-          menu={({ ctx, transforms }) => (
-            <>
-              <div className='relative z-50 inline-block text-left'>
-                <div className='absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-dark-300 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
-                  <div className='py-1'>
-                    <div>
-                      <div
-                        href='#'
-                        className={classNames(
-                          false ? 'bg-slate-500 text-slate-400' : 'text-slate-400',
-                          'group flex items-center py-2 text-sm font-display'
-                        )}
-                      >
-                        <span className='pl-2 text-slate-400 font-semibold font-display mr-3'>ID: </span>
-                        {ctx?.id ? ctx.id : 'No node selected'}
-                        {ctx?.label && (
-                          <span className='inline-flex ml-auto items-center rounded-full whitespace-nowrap truncate bg-dark-400 px-1.5 py-0.5 text-sm font-medium text-blue-800 mr-1'>
-                            {ctx.label}
-                          </span>
-                        )}
+          menu={({ ctx, transforms }) => {
+            console.log('ctx???? ', ctx, transforms);
+            return (
+              <>
+                <div className='relative z-50 inline-block text-left'>
+                  <div className='absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-dark-300 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+                    <div className='py-1'>
+                      <div>
+                        <div
+                          href='#'
+                          className={classNames(
+                            false ? 'bg-slate-500 text-slate-400' : 'text-slate-400',
+                            'group flex items-center py-2 text-sm font-display'
+                          )}
+                        >
+                          <span className='pl-2 text-slate-400 font-semibold font-display mr-3'>ID: </span>
+                          {ctx?.id ? ctx.id : 'No node selected'}
+                          {ctx?.label && (
+                            <span className='inline-flex ml-auto items-center rounded-full whitespace-nowrap truncate bg-dark-400 px-1.5 py-0.5 text-sm font-medium text-blue-800 mr-1'>
+                              {ctx.label}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
+                    {transforms && (
+                      <ContextAction nodeCtx={ctx} sendJsonMessage={sendJsonMessage} transforms={transforms} />
+                    )}
+                    {ctx?.label ? (
+                      <div className='node-context'>
+                        <div>
+                          <button onClick={() => deleteNode(ctx?.id)} type='button'>
+                            <TrashIcon aria-hidden='true' />
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className='node-context'>
+                        <div>
+                          <button onClick={() => zoomIn && zoomIn({ duration: 200 })} type='button'>
+                            <MagnifyingGlassPlusIcon aria-hidden='true' />
+                            Zoom in
+                          </button>
+                        </div>
+                        <div>
+                          <button onClick={() => zoomOut && zoomOut({ duration: 200 })} type='button'>
+                            <MagnifyingGlassMinusIcon aria-hidden='true' />
+                            Zoom out
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  {transforms && (
-                    <ContextAction
-                      nodeContext={nodeContext}
-                      sendJsonMessage={sendJsonMessage}
-                      transforms={transforms}
-                    />
-                  )}
-                  {ctx?.label ? (
-                    <div className='node-context'>
-                      <div>
-                        <button onClick={() => deleteNode(ctx?.id)} type='button'>
-                          <TrashIcon aria-hidden='true' />
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className='node-context'>
-                      <div>
-                        <button onClick={() => zoomIn && zoomIn({ duration: 200 })} type='button'>
-                          <MagnifyingGlassPlusIcon aria-hidden='true' />
-                          Zoom in
-                        </button>
-                      </div>
-                      <div>
-                        <button onClick={() => zoomOut && zoomOut({ duration: 200 })} type='button'>
-                          <MagnifyingGlassMinusIcon aria-hidden='true' />
-                          Zoom out
-                        </button>
-                      </div>
-                    </div>
-                  )}
                 </div>
-              </div>
-            </>
-          )}
+              </>
+            );
+          }}
         />
       </HotKeys>
     </>

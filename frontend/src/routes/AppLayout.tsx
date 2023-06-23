@@ -21,7 +21,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { isSidebarOpen, setSidebar } from '@/features/settings/settingsSlice';
 import IncidentCard from '@/components/IncidentCard';
-import { JSONObject } from '@/globals';
 
 const navigation = [
   { name: 'Projects', to: '/app/dashboard', icon: InboxIcon },
@@ -72,9 +71,9 @@ export default function AppLayout() {
               className='flex px-2 py-2 hover:ring-2 focus:ring-1 focus:ring-inset outline-none items-center text-slate-400 hover:text-slate-200 rounded-md ring-1 '
               onClick={() => {
                 if (first) {
-                  setCurrentStep((s: JSONObject) => steps.length - 1);
+                  setCurrentStep((s: number) => steps.length - 1);
                 } else {
-                  setCurrentStep((s: JSONObject) => s - 1);
+                  setCurrentStep((s: number) => s - 1);
                 }
               }}
             >
@@ -91,7 +90,7 @@ export default function AppLayout() {
                 if (last) {
                   setIsOpen(false);
                 } else {
-                  setCurrentStep((s: JSONObject) => (s === steps?.length - 1 ? 0 : s + 1));
+                  setCurrentStep((s: number) => (s === steps?.length - 1 ? 0 : s + 1));
                 }
               }}
               className='flex px-2 py-2 hover:ring-2 focus:ring-1 focus:ring-inset outline-none items-center text-slate-400 hover:text-slate-200 rounded-md ring-1 '

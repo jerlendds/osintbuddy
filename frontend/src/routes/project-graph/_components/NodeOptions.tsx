@@ -4,7 +4,6 @@ import React, { useRef, useState, MutableRefObject, useEffect, useCallback } fro
 import { Fragment } from 'react';
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
 import classNames from 'classnames';
-import { JSONObject } from '@/globals';
 import { GripIcon } from '@/components/Icons';
 
 type UseResizeProps = {
