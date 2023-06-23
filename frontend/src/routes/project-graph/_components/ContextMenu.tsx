@@ -64,12 +64,12 @@ const useContextMenu = (setTransforms: Function) => {
     };
   });
 
-  return { xPos, yPos, showMenu, targetNode, nodeType: label };
+  return { xPos, yPos, showMenu, targetNode, label };
 };
 
 const ContextMenu = ({ menu }: any) => {
   const [transforms, setTransforms] = useState<string[]>([]);
-  const { xPos, yPos, showMenu, targetNode, nodeType: label } = useContextMenu(setTransforms);
+  const { xPos, yPos, showMenu, targetNode, label } = useContextMenu(setTransforms);
 
   const showSidebar = useAppSelector((state) => isSidebarOpen(state));
 
