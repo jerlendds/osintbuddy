@@ -100,7 +100,6 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
   );
 }
 
-let isResizing: any = null;
 
 export default function NodeOptions({ options }: any) {
   const onDragStart = (event: any, nodeType: any) => {
@@ -111,7 +110,7 @@ export default function NodeOptions({ options }: any) {
   return (
     <>
       <div
-        style={{  resize: 'horizontal' }}
+        style={{ resize: 'horizontal' }}
         className='overflow-hidden border-dark-300 z-10 border bg-dark-600  h-full py-2 top-11 -right-px'
       >
         <div className='text-xl items-center justify-between w-full flex px-6 '>

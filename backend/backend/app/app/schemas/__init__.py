@@ -26,3 +26,7 @@ from .search import (  # noqa
     CasesListInDB,
     CasesInDB,
 )
+
+from .node import (  # noqa
+    CreateNode
+)

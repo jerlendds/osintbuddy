@@ -83,13 +83,14 @@ export default function BaseNode({
   setEditState: Function;
 }) {
   const nodeId = useNodeId();
-  const node = flow?.data?.node;
-  const nodes = node?.elements;
-  const icon = node?.icon;
-  const name = node?.name;
-  const label = node?.label;
-  const color = node?.color;
-  const style = node?.style || {};
+  const node = flow?.data;
+  const nodes = node.elements;
+  const icon = node.icon;
+  const name = node.name;
+  const label = node.label;
+  const color = node.color;
+  const style = node.style || {};
+
   const getNodeElement = (element: NodeInput, key: string | null = getNodeKey()) => {
     if (element.type === 'dropdown') {
       return (
@@ -188,7 +189,7 @@ export default function BaseNode({
       <Handle position={Position.Top} id='t1' key='t1' type='source' style={handleStyle} />
       <Handle position={Position.Bottom} id='b1' key='b1' type='source' style={handleStyle} />
       <Handle position={Position.Left} id='l1' key='l1' type='target' style={handleStyle} />
-      <div data-node-type={label} className=' node container' style={style}>
+      <div data-node-type={label} className=' node container' style={node.style}>
         <div
           style={{
             backgroundColor: color?.length === 7 ? `${color}76` : color ? color : '#145070',
