@@ -12,6 +12,7 @@ import ReactFlow, {
   FitViewOptions,
   useStore,
   useOnSelectionChange,
+  applyNodeChanges,
 } from 'reactflow';
 import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { HotKeys } from 'react-hotkeys';
@@ -21,6 +22,8 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import BaseNode from './BaseNode';
 import { nodesService } from '@/services';
 import 'reactflow/dist/style.css';
+import { saveNewNode, updateNodeFlow } from '@/features/graph/graphSlice';
+import { useAppDispatch } from '@/app/hooks';
 
 const viewOptions: FitViewOptions = {
   padding: 50,
@@ -47,8 +50,9 @@ export default function ProjectGraph({
   onSelectionCtxMenu,
   onMultiSelectionCtxMenu,
 }: JSONObject) {
+  const dispatch = useAppDispatch();
   const onConnect = useCallback((connection) => setEdges((eds) => addEdge(connection, edges)), [setEdges]);
-
+  const [isSavingNewNode, setSavingNewNode] = useState(false);
   const onEdgeUpdate = useCallback(
     (oldEdge, newConnection) => setEdges((els) => updateEdge(oldEdge, newConnection, els)),
     []
@@ -62,6 +66,7 @@ export default function ProjectGraph({
   const onDrop = useCallback(
     async (event) => {
       event.preventDefault();
+      setSavingNewNode(true);
       const label = event.dataTransfer.getData('application/reactflow');
       if (typeof label === 'undefined' || !label) return;
 
@@ -70,25 +75,19 @@ export default function ProjectGraph({
         x: event.clientX - graphBounds.left,
         y: event.clientY - graphBounds.top,
       });
-      nodesService
-        .createNode({
-          label,
-          position,
-        })
-        .then((data) => {
-          const id = data.id.toString();
-          delete data.id;
-          delete data.position;
-          setNodes((nds) =>
-            nds.concat({
-              id,
-              data,
-              position,
-              type: 'base',
-            })
-          );
-        })
-        .catch((error) => toast.error(`Error: ${error}`));
+      try {
+        await dispatch(
+          saveNewNode({
+            label,
+            position,
+          })
+        ).unwrap();
+      } catch (error) {
+        toast.info(error.message);
+      } finally {
+        setSavingNewNode(false);
+      }
+
     },
     [graphInstance]
   );
@@ -113,7 +112,9 @@ export default function ProjectGraph({
       onDragOver={onDragOver}
       onEdgeUpdate={onEdgeUpdate}
       onInit={setGraphInstance}
-      onNodesChange={onNodesChange}
+      onNodesChange={(changes) => {
+        dispatch(updateNodeFlow(changes))
+      }}
       onEdgesChange={onEdgesChange}
       fitView
       fitViewOptions={viewOptions}
