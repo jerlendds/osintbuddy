@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '@/app/store';
-import { XYPosition, type Edge, type Node, applyNodeChanges, NodeChange } from 'reactflow';
+import { XYPosition, type Edge, type Node, applyNodeChanges, NodeChange, updateEdge } from 'reactflow';
 import { nodesService } from '@/services';
 
 export interface Graph {
@@ -72,6 +72,10 @@ export const graphSlice = createSlice({
       });
       state.nodes.push(action.payload);
     },
+
+    updateEdgeEvent: (state, action) => {
+        state.edges = updateEdge(action.payload.oldEdge, action.payload.newConnection, state.edges)
+    }
   },
   extraReducers(builder) {
     builder.addCase(saveNewNode.fulfilled, (state, action) => {
@@ -81,7 +85,7 @@ export const graphSlice = createSlice({
   },
 });
 
-export const { createNode, deleteNode, updateNodeFlow, updateNode } = graphSlice.actions;
+export const { createNode, deleteNode, updateNodeFlow, updateNode, updateEdgeEvent } = graphSlice.actions;
 
 export const graphNodes = (state: RootState) => state.graph.nodes;
 export const graphEdges = (state: RootState) => state.graph.nodes;

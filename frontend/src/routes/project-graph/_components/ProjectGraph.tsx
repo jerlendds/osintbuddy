@@ -1,41 +1,27 @@
-// @ts-nocheck
-import { useCallback, useState, useRef, useMemo, useEffect } from 'react';
+import { useCallback, useState, useRef, useMemo, useEffect, DragEventHandler } from 'react';
 import ReactFlow, {
-  useNodesState,
-  useEdgesState,
   Edge,
-  XYPosition,
-  Node,
   Background,
   Controls,
   BackgroundVariant,
   FitViewOptions,
-  useStore,
-  useOnSelectionChange,
-  applyNodeChanges,
+  NodeDragHandler,
+  Connection,
 } from 'reactflow';
-import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { HotKeys } from 'react-hotkeys';
-import { useLocation } from 'react-router-dom';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
-
 import BaseNode from './BaseNode';
-import { nodesService } from '@/services';
-import 'reactflow/dist/style.css';
-import { saveNewNode, updateNodeFlow } from '@/features/graph/graphSlice';
+import { saveNewNode, updateEdgeEvent, updateNodeFlow } from '@/features/graph/graphSlice';
 import { useAppDispatch } from '@/app/hooks';
+import { toast } from 'react-toastify';
 
 const viewOptions: FitViewOptions = {
   padding: 50,
 };
 
-const onNodeDragStop = (_: MouseEvent, node: Node) => console.log('@todo drag stop update position', node);
+const onNodeDragStop: NodeDragHandler = (_, node) => console.log('@todo on drag stop, update position', node);
 
 export default function ProjectGraph({
   graphRef,
   nodes,
-  setNodes,
-  onNodesChange,
   edges,
   setEdges,
   onEdgesChange,
@@ -51,23 +37,26 @@ export default function ProjectGraph({
   onMultiSelectionCtxMenu,
 }: JSONObject) {
   const dispatch = useAppDispatch();
-  const onConnect = useCallback((connection) => setEdges((eds) => addEdge(connection, edges)), [setEdges]);
+  const onConnect = useCallback(
+    (connection: Connection) => setEdges((eds: Edge[]) => addEdge(connection, edges)),
+    [setEdges]
+  );
   const [isSavingNewNode, setSavingNewNode] = useState(false);
   const onEdgeUpdate = useCallback(
-    (oldEdge, newConnection) => setEdges((els) => updateEdge(oldEdge, newConnection, els)),
+    (oldEdge: Edge, newConnection: Connection) => dispatch(updateEdgeEvent({ oldEdge, newConnection })),
     []
   );
 
-  const onDragOver = useCallback((event) => {
+  const onDragOver: DragEventHandler<HTMLDivElement> = useCallback((event) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
+    if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
   }, []);
 
-  const onDrop = useCallback(
+  const onDrop: DragEventHandler<HTMLDivElement> = useCallback(
     async (event) => {
       event.preventDefault();
       setSavingNewNode(true);
-      const label = event.dataTransfer.getData('application/reactflow');
+      const label = event.dataTransfer && event.dataTransfer.getData('application/reactflow');
       if (typeof label === 'undefined' || !label) return;
 
       const graphBounds = graphRef.current.getBoundingClientRect();
@@ -83,18 +72,17 @@ export default function ProjectGraph({
           })
         ).unwrap();
       } catch (error) {
-        toast.info(error.message);
+        toast.info(<>{error}</>);
       } finally {
         setSavingNewNode(false);
       }
-
     },
     [graphInstance]
   );
 
   const nodeTypes = useMemo(
     () => ({
-      base: (data) => (
+      base: (data: JSONObject) => (
         <BaseNode node={data} setEditState={setEditState} updateNode={updateNode} sendJsonMessage={sendJsonMessage} />
       ),
     }),
@@ -113,7 +101,7 @@ export default function ProjectGraph({
       onEdgeUpdate={onEdgeUpdate}
       onInit={setGraphInstance}
       onNodesChange={(changes) => {
-        dispatch(updateNodeFlow(changes))
+        dispatch(updateNodeFlow(changes));
       }}
       onEdgesChange={onEdgesChange}
       fitView
