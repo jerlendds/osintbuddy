@@ -1,1 +1,4 @@
-// @todo type API responses
+interface FetchProps {
+  pageSize: number;
+  pageIndex: number;
+}
