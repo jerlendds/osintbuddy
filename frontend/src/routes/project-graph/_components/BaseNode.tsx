@@ -7,37 +7,6 @@ import { GripIcon, Icon } from '@/components/Icons';
 import { toast } from 'react-toastify';
 import { useNodeId } from 'reactflow';
 
-
-export type NodeTypes =
-  | 'dropdown'
-  | 'text'
-  | 'number'
-  | 'decimal'
-  | 'upload'
-  | 'title'
-  | 'section'
-  | 'image'
-  | 'video'
-  | 'json'
-  | 'list'
-  | 'table'
-  | 'copy-text'
-  | 'copy-code'
-  | 'empty';
-
-export interface NodeInput {
-  type: NodeTypes;
-  label: string;
-  style: React.CSSProperties;
-  placeholder: string;
-  options?: DropdownOption[];
-  value?: string;
-  icon?: any;
-  title?: string;
-  subtitle?: string;
-  text?: string;
-}
-
 var dropdownKey = 0;
 
 const getKey = () => {
@@ -82,6 +51,8 @@ export default function BaseNode({
   updateNode: (nodeId: string, nodeData: JSONObject) => void;
   setEditState: Function;
 }) {
+  console.log('ctx', ctx);
+
   const nodeId = useNodeId();
   const myNode = ctx?.data;
   const nodes = myNode.elements;
@@ -92,80 +63,68 @@ export default function BaseNode({
   const style = myNode.style || {};
 
   const getNodeElement = (element: NodeInput, key: string | null = getNodeKey()) => {
-    if (element.type === 'dropdown') {
-      return (
-        <DropdownInput
-          key={key}
-          nodeId={ctx.id}
-          options={element.options || []}
-          label={element.label}
-          value={element.value as string}
-          sendJsonMessage={sendJsonMessage}
-          updateNode={updateNode}
-          setEditState={setEditState}
-        />
-      );
-    }
-    if (element.type === 'text') {
-      return (
-        <TextInput
-          key={key}
-          nodeId={ctx.id}
-          label={element?.label}
-          initialValue={element?.value || ''}
-          icon={element?.icon || 'ballpen'}
-          sendJsonMessage={sendJsonMessage}
-          updateNode={updateNode}
-          setEditState={setEditState}
-        />
-      );
-    }
-    if (element.type === 'upload') {
-      return (
-        <UploadFileInput
-          key={key}
-          nodeId={ctx.id}
-          label={element?.label}
-          initialValue={element?.value || ''}
-          icon={element?.icon || 'file-upload'}
-          sendJsonMessage={sendJsonMessage}
-          updateNode={updateNode}
-        />
-      );
-    }
-    if (element.type === 'title') {
-      return (
-        <Title
-          key={key}
-          nodeId={ctx.id}
-          label={element?.label}
-          title={element?.title || ''}
-          subtitle={element?.subtitle || ''}
-          text={element?.text || ''}
-        />
-      );
-    }
-    if (element.type === 'section') {
-      return <Text key={key} nodeId={ctx.id} label={element?.label} value={element?.value || ''} />;
-    }
-    if (element.type === 'copy-text') {
-      return <CopyText key={key} nodeId={ctx.id} label={element?.label} value={element?.value || ''} />;
-    }
-    if (element.type === 'empty') {
-      return <div className='hidden' />;
+    switch (element.type) {
+      case 'dropdown':
+        return (
+          <DropdownInput
+            key={key}
+            nodeId={ctx.id}
+            options={element.options || []}
+            label={element.label}
+            value={element.value as string}
+            sendJsonMessage={sendJsonMessage}
+            updateNode={updateNode}
+            setEditState={setEditState}
+          />
+        );
+
+      case 'text':
+        return (
+          <TextInput
+            key={key}
+            nodeId={ctx.id}
+            label={element?.label}
+            initialValue={element?.value || ''}
+            icon={element?.icon || 'ballpen'}
+            sendJsonMessage={sendJsonMessage}
+            updateNode={updateNode}
+            setEditState={setEditState}
+          />
+        );
+
+      case 'upload':
+        return (
+          <UploadFileInput
+            key={key}
+            nodeId={ctx.id}
+            label={element?.label}
+            initialValue={element?.value || ''}
+            icon={element?.icon || 'file-upload'}
+            sendJsonMessage={sendJsonMessage}
+            updateNode={updateNode}
+          />
+        );
+      case 'title':
+        return (
+          <Title
+            key={key}
+            nodeId={ctx.id}
+            label={element?.label}
+            title={element?.title || ''}
+            subtitle={element?.subtitle || ''}
+            text={element?.text || ''}
+          />
+        );
+
+      case 'section':
+        return <Text key={key} nodeId={ctx.id} label={element?.label} value={element?.value || ''} />;
+      case 'copy-text':
+        return <CopyText key={key} nodeId={ctx.id} label={element?.label} value={element?.value || ''} />;
+      case 'empty':
+        return <div className='hidden' />;
     }
   };
 
-
-  // const size = useStore((s: any) => {
-  //   const node = s.nodeInternals.get(nodeId);
-
-  //   return {
-  //     width: node.width,
-  //     height: node.height,
-  //   };
-  // });
-  // console.log('size: ', size);
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
@@ -189,11 +148,7 @@ export default function BaseNode({
           </div>
           <Icon icon={icon} className='h-5 w-5 mr-2' />
         </div>
-        <form
-          style={style}
-          onSubmit={(event) => event.preventDefault()}
-          className='elements gap-x-1'
-        >
+        <form style={style} onSubmit={(event) => event.preventDefault()} className='elements gap-x-1'>
           {nodes.map((element: NodeInput, i: number) => {
             if (Array.isArray(element))
               return (
@@ -354,11 +309,6 @@ export function TextInput({
       </div>
     </>
   );
-}
-
-export interface DropdownOption {
-  label: string;
-  tooltip: string;
 }
 
 export function DropdownInput({

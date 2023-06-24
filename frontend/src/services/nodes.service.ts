@@ -2,7 +2,8 @@ import api from './api.service';
 import { XYPosition } from 'reactflow';
 
 class NodesService {
-  async getCases(caseId: number) {
+  async getProjects(caseId: number) {
+    // @todo refactor me to be more consistent like below...
     return await api.get(`/nodes?case_id=${caseId}`);
   }
 
@@ -11,7 +12,7 @@ class NodesService {
       label,
       ...position,
     });
-    return result.data as JSONObject;
+    return result.data as ApiNode;
   }
 
   async getTransforms({ label }: { label: string }) {
@@ -20,7 +21,7 @@ class NodesService {
         label,
       },
     });
-    return result.data as JSONObject
+    return result.data as ApiTransforms;
   }
 }
 

@@ -18,6 +18,9 @@ import ContextAction from './_components/ContextAction';
 import { toast } from 'react-toastify';
 import { nodesService } from '@/services';
 import ProjectGraph from './_components/ProjectGraph';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { graphEdges, graphNodes } from '@/features/graph/graphSlice';
+import { createNode } from '@/features/graph/graphSlice';
 
 const fitViewOptions: FitViewOptions = {
   padding: 50,
@@ -25,36 +28,20 @@ const fitViewOptions: FitViewOptions = {
 
 const onNodeDragStop = (_: MouseEvent, node: Node) => console.log('@todo drag stop update position', node);
 
-const initialEdges = [];
-const initialNodes = [];
 
 const keyMap = {
   TOGGLE_PALETTE: ['shift+p'],
 };
 
-export interface AddNode {
-  id: number;
-  type: string;
-  position: XYPosition;
-  data: any;
-}
-
-export interface AddEdge {
-  source: string;
-  target: string;
-  sourceHandle?: string | undefined;
-  targetHandle?: string | undefined;
-  type?: string | undefined;
-}
-
-export function capitalize(value: string) {
-  return value.charAt(0).toUpperCase() + value.slice(1);
-}
 
 export default function OsintPage() {
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const activeProject = location?.state?.activeProject;
   
+  const initialNodes = useAppSelector((state) => graphNodes(state))
+  const initialEdges = useAppSelector((state) => graphEdges(state))
+
   const graphRef = useRef<HTMLDivElement>(null);
   const [graphInstance, setGraphInstance] = useState(null);
   
@@ -98,9 +85,6 @@ export default function OsintPage() {
     setEdges((eds) => eds.concat(newEdge));
   }
 
-  function deleteNode(nodeId: NodeId): void {
-    setNodes((nds) => nds.filter((node) => node.id !== nodeId));
-  }
 
   const togglePalette = () => setShowCommandPalette(!showCommandPalette);
   const toggleShowNodeOptions = () => setShowNodeOptions(!showNodeOptions);
@@ -112,11 +96,11 @@ export default function OsintPage() {
   // @todo ... https://reactflow.dev/docs/examples/layout/dagre/
   const onLayout = useCallback(
     (direction) => {
-      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges, direction);
+      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(initialNodes, initialEdges, direction);
       setNodes([...layoutedNodes]);
       setEdges([...layoutedEdges]);
     },
-    [nodes, edges]
+    [initialNodes, initialEdges]
   );
 
   const addNodeAction = (node) => {
@@ -265,6 +249,8 @@ export default function OsintPage() {
     setCtxSelection(null);
   };
 
+
+
   return (
     <>
       <HotKeys keyMap={keyMap} handlers={handlers}>
@@ -286,10 +272,10 @@ export default function OsintPage() {
                 onPaneClick={onPaneClick}
                 addEdge={addEdge}
                 graphRef={graphRef}
-                nodes={nodes}
+                nodes={initialNodes}
                 setNodes={setNodes}
                 onNodesChange={onNodesChange}
-                edges={edges}
+                edges={initialEdges}
                 setEdges={setEdges}
                 onEdgesChange={onEdgesChange}
                 graphInstance={graphInstance}
@@ -317,7 +303,6 @@ export default function OsintPage() {
           ctxSelection={ctxSelection}
           showMenu={showMenu}
           ctxPosition={ctxPosition}
-          deleteNode={deleteNode}
           closeMenu={() => setShowMenu(false)}
         />
       </HotKeys>

@@ -3,6 +3,8 @@ import { XYPosition } from 'reactflow';
 import ContextAction from './ContextAction';
 import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
+import { useAppDispatch } from '@/app/hooks';
+import { deleteNode } from '@/features/graph/graphSlice';
 
 export default function ContextMenu({
   closeMenu,
@@ -12,7 +14,6 @@ export default function ContextMenu({
   transforms,
   zoomIn,
   zoomOut,
-  deleteNode,
   sendJsonMessage,
 }: {
   transforms: string[] | null;
@@ -21,10 +22,11 @@ export default function ContextMenu({
   ctxSelection: JSONObject;
   zoomIn: Function;
   zoomOut: Function;
-  deleteNode: Function;
   closeMenu: Function;
   sendJsonMessage: Function;
 }) {
+  const dispatch = useAppDispatch()
+
   const ctxStyle = {
     top: ctxPosition.y,
     left: ctxPosition.x,
@@ -68,7 +70,7 @@ export default function ContextMenu({
                     <button
                       onClick={() => {
                         closeMenu();
-                        deleteNode(ctxSelection?.id);
+                        dispatch(deleteNode(ctxSelection?.id))
                       }}
                       type='button'
                     >
