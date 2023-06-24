@@ -1,17 +1,6 @@
 // @ts-nocheck
 import { useCallback, useState, useRef, useMemo, useEffect } from 'react';
-import ReactFlow, {
-  useNodesState,
-  useEdgesState,
-  Edge,
-  XYPosition,
-  Node,
-  Background,
-  Controls,
-  BackgroundVariant,
-  FitViewOptions,
-  useStore,
-} from 'reactflow';
+import ReactFlow, { useNodesState, useEdgesState, Edge, XYPosition, Node, FitViewOptions } from 'reactflow';
 import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { HotKeys } from 'react-hotkeys';
 import { useLocation } from 'react-router-dom';
@@ -27,119 +16,14 @@ import { getLayoutedElements } from './utils';
 import BaseNode from './BaseNode';
 import ContextAction from './_components/ContextAction';
 import { toast } from 'react-toastify';
-import createGLShell from 'gl-now';
-import createShader from 'gl-shader';
-import createBuffer from 'gl-buffer';
 import { nodesService } from '@/services';
+import ProjectGraph from './_components/ProjectGraph';
 
 const fitViewOptions: FitViewOptions = {
   padding: 50,
 };
 
 const onNodeDragStop = (_: MouseEvent, node: Node) => console.log('@todo drag stop update position', node);
-
-const ProjectGraph = ({
-  reactFlowWrapper,
-  nodes,
-  setNodes,
-  onNodesChange,
-  edges,
-  setEdges,
-  onEdgesChange,
-  reactFlowInstance,
-  setReactFlowInstance,
-  deleteNode,
-  addNode,
-  addEdge,
-  sendJsonMessage,
-  onNodeContextMenu,
-  messageHistory,
-  lastMessage,
-  updateNode,
-  setEditState,
-}: JSONObject) => {
-  const onConnect = useCallback((connection) => setEdges((eds) => addEdge(connection, edges)), [setEdges]);
-
-  const onEdgeUpdate = useCallback(
-    (oldEdge, newConnection) => setEdges((els) => updateEdge(oldEdge, newConnection, els)),
-    []
-  );
-
-  const onDragOver = useCallback((event) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
-  }, []);
-
-  const onDrop = useCallback(
-    async (event) => {
-      event.preventDefault();
-      const flowBounds = reactFlowWrapper.current.getBoundingClientRect();
-      const label = event.dataTransfer.getData('application/reactflow');
-      if (typeof label === 'undefined' || !label) {
-        return;
-      }
-      const position = reactFlowInstance.project({
-        x: event.clientX - flowBounds.left,
-        y: event.clientY - flowBounds.top,
-      });
-      nodesService
-        .createNode({
-          label,
-          position,
-        })
-        .then((data) => {
-          const id = data.id.toString();
-          delete data.id;
-          delete data.position;
-          setNodes((nds) =>
-            nds.concat({
-              id,
-              data,
-              position,
-              type: 'base',
-            })
-          );
-        })
-        .catch((error) => toast.error(`Error: ${error}`));
-    },
-    [reactFlowInstance]
-  );
-
-  const nodeTypes = useMemo(() => {
-    return {
-      base: (data) => (
-        <BaseNode node={data} setEditState={setEditState} updateNode={updateNode} sendJsonMessage={sendJsonMessage} />
-      ),
-    };
-  }, []);
-
-  return (
-    <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
-      <ReactFlow
-        minZoom={0.2}
-        maxZoom={2.0}
-        nodes={nodes}
-        edges={edges}
-        onDrop={onDrop}
-        onConnect={onConnect}
-        onDragOver={onDragOver}
-        onEdgeUpdate={onEdgeUpdate}
-        onInit={setReactFlowInstance}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onNodeContextMenu={onNodeContextMenu}
-        fitView
-        fitViewOptions={fitViewOptions}
-        nodeTypes={nodeTypes}
-        panActivationKeyCode='Space'
-        onNodeDragStop={onNodeDragStop}
-      >
-        <Background variant={BackgroundVariant.Dots} className='bg-dark-[rgb(10 15 20)]' color='#1F3057' />
-        <Controls />
-      </ReactFlow>
-    </div>
-  );
-};
 
 const initialEdges = [];
 const initialNodes = [];
@@ -168,17 +52,19 @@ export function capitalize(value: string) {
 }
 
 export default function OsintPage() {
-  const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+  const activeProject = location?.state?.activeProject;
+  
+  const graphRef = useRef<HTMLDivElement>(null);
+  const [graphInstance, setGraphInstance] = useState(null);
+  
   const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge[]>(initialEdges);
   const [nodeOptions, setNodeOptions] = useState([]);
-  const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   const [showNodeOptions, setShowNodeOptions] = useState<boolean>(false);
   const [editState, setEditState] = useState<boolean>(false);
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
-  const location = useLocation();
-  const activeProject = location?.state?.activeProject;
 
   const [messageHistory, setMessageHistory] = useState([]);
   const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/investigation`);
@@ -189,11 +75,6 @@ export default function OsintPage() {
     },
   });
 
-  let zoomIn,
-    zoomOut = null;
-  if (reactFlowInstance) {
-    ({ zoomIn, zoomOut } = reactFlowInstance);
-  }
 
   function addNode(id, data: AddNode, position): void {
     setNodes((nds) =>
@@ -201,7 +82,7 @@ export default function OsintPage() {
         id,
         type: 'base',
         data,
-        position: reactFlowInstance.project(position),
+        position: graphInstance.project(position),
       })
     );
   }
@@ -228,7 +109,7 @@ export default function OsintPage() {
     TOGGLE_PALETTE: togglePalette,
   };
 
-  // https://reactflow.dev/docs/examples/layout/dagre/
+  // @todo ... https://reactflow.dev/docs/examples/layout/dagre/
   const onLayout = useCallback(
     (direction) => {
       const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges, direction);
@@ -237,10 +118,6 @@ export default function OsintPage() {
     },
     [nodes, edges]
   );
-
-  // const updateNodeOptions = () => {
-  //   setIsRefresh(isRefresh.length > 3 ? "" : isRefresh + "x");
-  // };
 
   const addNodeAction = (node) => {
     const newId = getId();
@@ -339,24 +216,53 @@ export default function OsintPage() {
   }, [lastMessage, setMessageHistory]);
 
   const [ctxPosition, setCtxPosition] = useState<XYPosition>({ x: 0, y: 0 });
-  const [nodeCtx, setNodeCtx] = useState<JSONObject>(null);
+  const [ctxSelection, setCtxSelection] = useState<JSONObject>(null);
   const [showMenu, setShowMenu] = useState(false);
   const [transforms, setTransforms] = useState<string[]>([]);
 
-  const onNodeContextMenu = (event: MouseEvent, node: Node) => {
+  // @todo implement support for multi-select transforms -
+  // hm, actually, how will the transforms work if different plugin types/nodes are in the selection?
+  const onMultiSelectionCtxMenu = (event: MouseEvent, nodes: Node[]) => {
     event.preventDefault();
-    setNodeCtx(node);
+  };
 
-    console.log('setNodeCtx', node);
+  const onSelectionCtxMenu = (event: MouseEvent, node: Node) => {
+    event.preventDefault();
+    setCtxPosition({
+      y: event.clientY - 20,
+      x: event.clientX - 20,
+    });
+    setCtxSelection(node);
     nodesService
       .getTransforms({ label: node.data.label })
       .then((data) => {
         setTransforms(data.transforms);
       })
       .catch((error) => {
-        toast.error(`Error: ${error}`);
+        toast.error(
+          `We ran into an error loading transforms from the plugin ${node.data.label}. Please file a bug with the plugin author.`
+        );
         setTransforms([]);
       });
+    setShowMenu(true);
+  };
+
+  const onPaneCtxMenu = (event: MouseEvent) => {
+    console.log('onPaneCtxMenu');
+    event.preventDefault();
+    setCtxSelection(null);
+    setTransforms(null);
+    setShowMenu(true);
+    setCtxPosition({
+      x: event.clientX - 25,
+      y: event.clientY - 25,
+    });
+  };
+
+  const onPaneClick = () => {
+    setShowMenu(false);
+    setTransforms(null);
+    setCtxSelection(null);
   };
 
   return (
@@ -372,26 +278,28 @@ export default function OsintPage() {
           />
           <div className='flex h-full justify-between bg-dark-900 relative'>
             <NodeOptions key={nodeOptions.length.toString()} options={nodeOptions} />
-            <ProjectGraph
-              onNodeContextMenu={onNodeContextMenu}
-              addNode={addNode}
-              deleteNode={deleteNode}
-              addEdge={addEdge}
-              reactFlowWrapper={reactFlowWrapper}
-              nodes={nodes}
-              setNodes={setNodes}
-              onNodesChange={onNodesChange}
-              edges={edges}
-              setEdges={setEdges}
-              onEdgesChange={onEdgesChange}
-              reactFlowInstance={reactFlowInstance}
-              setReactFlowInstance={setReactFlowInstance}
-              sendJsonMessage={sendJsonMessage}
-              messageHistory={messageHistory}
-              lastMessage={lastMessage}
-              updateNode={updateNode}
-              setEditState={setEditState}
-            />
+            <div style={{ width: '100%', height: '100%' }} ref={graphRef}>
+              <ProjectGraph
+                onSelectionCtxMenu={onSelectionCtxMenu}
+                onMultiSelectionCtxMenu={onMultiSelectionCtxMenu}
+                onPaneCtxMenu={onPaneCtxMenu}
+                onPaneClick={onPaneClick}
+                addEdge={addEdge}
+                graphRef={graphRef}
+                nodes={nodes}
+                setNodes={setNodes}
+                onNodesChange={onNodesChange}
+                edges={edges}
+                setEdges={setEdges}
+                onEdgesChange={onEdgesChange}
+                graphInstance={graphInstance}
+                setGraphInstance={setGraphInstance}
+                sendJsonMessage={sendJsonMessage}
+                lastMessage={lastMessage}
+                updateNode={updateNode}
+                setEditState={setEditState}
+              />
+            </div>
           </div>
         </div>
 
@@ -403,79 +311,14 @@ export default function OsintPage() {
         <div
           id='node-options-tour'
           className='absolute top-[3.5rem] w-48 bg-red -z-10 h-20 left-[0.7rem] text-slate-900'
-        ></div>
-
+        />
         <ContextMenu
           transforms={transforms}
-          node={nodeCtx}
-          position={ctxPosition}
+          ctxSelection={ctxSelection}
           showMenu={showMenu}
-          setShowMenu={setShowMenu}
           ctxPosition={ctxPosition}
-          setCtxPosition={setCtxPosition}
-          clearCtx={() => {
-            console.log('CLEARING CONTEXT')
-            setTransforms(null);
-            setNodeCtx(null)
-          }}
-          menu={({ ctx, transforms }) => {
-            console.log('ctx???? ', ctx, transforms);
-            return (
-              <>
-                <div className='relative z-50 inline-block text-left'>
-                  <div className='absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-dark-300 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
-                    <div className='py-1'>
-                      <div>
-                        <div
-                          href='#'
-                          className={classNames(
-                            false ? 'bg-slate-500 text-slate-400' : 'text-slate-400',
-                            'group flex items-center py-2 text-sm font-display'
-                          )}
-                        >
-                          <span className='pl-2 text-slate-400 font-semibold font-display mr-3'>ID: </span>
-                          {ctx?.id ? ctx.id : 'No node selected'}
-                          {ctx?.label && (
-                            <span className='inline-flex ml-auto items-center rounded-full whitespace-nowrap truncate bg-dark-400 px-1.5 py-0.5 text-sm font-medium text-blue-800 mr-1'>
-                              {ctx.label}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    {transforms && (
-                      <ContextAction nodeCtx={ctx} sendJsonMessage={sendJsonMessage} transforms={transforms} />
-                    )}
-                    {ctx?.label ? (
-                      <div className='node-context'>
-                        <div>
-                          <button onClick={() => deleteNode(ctx?.id)} type='button'>
-                            <TrashIcon aria-hidden='true' />
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className='node-context'>
-                        <div>
-                          <button onClick={() => zoomIn && zoomIn({ duration: 200 })} type='button'>
-                            <MagnifyingGlassPlusIcon aria-hidden='true' />
-                            Zoom in
-                          </button>
-                        </div>
-                        <div>
-                          <button onClick={() => zoomOut && zoomOut({ duration: 200 })} type='button'>
-                            <MagnifyingGlassMinusIcon aria-hidden='true' />
-                            Zoom out
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </>
-            );
-          }}
+          deleteNode={deleteNode}
+          closeMenu={() => setShowMenu(false)}
         />
       </HotKeys>
     </>

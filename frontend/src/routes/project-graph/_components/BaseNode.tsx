@@ -7,6 +7,7 @@ import { GripIcon, Icon } from '@/components/Icons';
 import { toast } from 'react-toastify';
 import { useNodeId } from 'reactflow';
 
+
 export type NodeTypes =
   | 'dropdown'
   | 'text'
@@ -165,7 +166,6 @@ export default function BaseNode({
   //   };
   // });
   // console.log('size: ', size);
-  console.log('node!!!!', ctx)
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
