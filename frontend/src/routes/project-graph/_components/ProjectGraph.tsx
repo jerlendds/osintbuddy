@@ -71,8 +71,8 @@ export default function ProjectGraph({
             position,
           })
         ).unwrap();
-      } catch (error) {
-        toast.info(<>{error}</>);
+      } catch (error: unknown) {
+         if (error instanceof Error) toast.info(error.message);
       } finally {
         setSavingNewNode(false);
       }

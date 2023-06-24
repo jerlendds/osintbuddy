@@ -1,4 +1,3 @@
-import { type ReactNode, useCallback, useEffect, useState } from 'react';
 import { XYPosition } from 'reactflow';
 import ContextAction from './ContextAction';
 import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
@@ -9,7 +8,7 @@ import { deleteNode } from '@/features/graph/graphSlice';
 export default function ContextMenu({
   closeMenu,
   showMenu,
-  ctxPosition,
+  ctxPosition: position,
   ctxSelection,
   transforms,
   zoomIn,
@@ -27,14 +26,14 @@ export default function ContextMenu({
 }) {
   const dispatch = useAppDispatch()
 
-  const ctxStyle = {
-    top: ctxPosition.y,
-    left: ctxPosition.x,
+  const ctxPosition = {
+    top: position.y,
+    left: position.x,
   };
 
   return (
     <>
-      <div id='context-menu' className='z-[999] absolute' style={ctxStyle}>
+      <div id='context-menu' className='z-[999] absolute' style={ctxPosition}>
         {showMenu && (
           <div className='relative z-50 inline-block text-left'>
             <div className='absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-dark-300 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
