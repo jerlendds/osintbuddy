@@ -5,10 +5,12 @@ export default function ContextAction({
   nodeCtx: ctx,
   transforms,
   sendJsonMessage,
+  closeMenu
 }: {
   nodeCtx: JSONObject
   transforms: string[]
   sendJsonMessage: Function
+  closeMenu: Function
 }) {
   return (
     <>
@@ -18,7 +20,8 @@ export default function ContextAction({
             <div key={transform.label}>
               <button
                 className='capitalize'
-                onClick={() =>
+                onClick={() =>{
+                  closeMenu()
                   sendJsonMessage({
                     action: 'transform:node',
                     node: {
@@ -29,7 +32,7 @@ export default function ContextAction({
                       transform: transform.label,
                     },
                   })
-                }
+                }}
               >
                 <Icon icon={transform.icon}></Icon>
                 {transform.label}
