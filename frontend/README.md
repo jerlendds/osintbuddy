@@ -15,7 +15,6 @@
 - [typescript](https://www.typescriptlang.org/)
 - [react-use-websocket](https://github.com/robtaussig/react-use-websocket)
 - [react-router-dom](https://reactrouter.com/en/main)
-- [redux-observable](https://redux-observable.js.org/)
 - [react-toastify](https://www.npmjs.com/package/react-toastify)
 
 # Getting Started

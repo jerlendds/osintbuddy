@@ -1,12 +1,16 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import settingsReducer from '@/features/settings/settingsSlice'
-import graphReducer from '@/features/graph/graphSlice';
+import { configureStore, ThunkAction, Action, combineReducers,  } from '@reduxjs/toolkit';
+import settings from '@/features/settings/settingsSlice'
+import graph from '@/features/graph/graphSlice';
+
+const reducer = combineReducers({
+  settings,
+  graph
+})
 
 export const store = configureStore({
-  reducer: {
-    settings: settingsReducer,
-    graph: graphReducer
-  }
+  reducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware()
 });
 
 export type AppDispatch = typeof store.dispatch;

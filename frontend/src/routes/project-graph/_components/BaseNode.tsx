@@ -1,11 +1,24 @@
+// @ts-nocheck
 import { ChevronUpDownIcon, PaperClipIcon } from '@heroicons/react/24/outline';
 import { Combobox } from '@headlessui/react';
 import classNames from 'classnames';
-import { ChangeEvent, Fragment, useEffect, useState } from 'react';
-import { Handle, Position, useStore } from 'reactflow';
+import { ChangeEvent, Dispatch, Fragment, useEffect, useState } from 'react';
+import { Handle, Position } from 'reactflow';
 import { GripIcon, Icon } from '@/components/Icons';
 import { toast } from 'react-toastify';
-import { useNodeId } from 'reactflow';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { type ThunkDispatch } from 'redux-thunk';
+import {
+  setEditState,
+  type Graph,
+  EditState,
+  setEditLabel,
+  setEditValue,
+  setEditId,
+  saveUserEdits,
+  selectNodeValue,
+} from '@/features/graph/graphSlice';
+import { AnyAction } from 'redux';
 
 var dropdownKey = 0;
 
@@ -23,45 +36,30 @@ const getNodeKey = () => {
 
 const handleStyle = { borderColor: '#60666A' };
 
-import { useNodesInitialized } from 'reactflow';
 
-const options = {
-  includeHiddenNodes: false, // this is the default
+type NodeElement = NodeInput & {
+  nodeId: string;
+  editState: EditState;
+  dispatch: ThunkDispatch<{ settings: { showSidebar: boolean }; graph: Graph }, undefined, AnyAction> &
+    Dispatch<AnyAction>;
 };
 
-function KeyLogger() {
-  const nodesInitialized = useNodesInitialized(options);
-
-  useEffect(() => {
-    if (nodesInitialized) {
-    }
-  }, [nodesInitialized]);
-
-  return null;
-}
-
-export default function BaseNode({
-  node: ctx,
-  sendJsonMessage,
-  updateNode,
-  setEditState,
-}: {
-  node: JSONObject;
-  sendJsonMessage: Function;
-  updateNode: (nodeId: string, nodeData: JSONObject) => void;
-  setEditState: Function;
-}) {
-  console.log('ctx', ctx);
-
-  const nodeId = useNodeId();
-  const myNode = ctx?.data;
-  const nodes = myNode.elements;
-  const icon = myNode.icon;
-  const name = myNode.name;
-  const label = myNode.label;
-  const color = myNode.color;
-  const style = myNode.style || {};
-
+export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject, sendJsonMessage: () => void }) {
+  const node = ctx.data;
+  const nodeColorStyle = {
+    backgroundColor: node.color.length === 7 ? `${node.color}76` : node.color ? node.color : '#145070',
+  };
+  const dispatch = useAppDispatch();
+  const updateValue = (event: ChangeEvent<HTMLInputElement>, label) => {
+    // sendJsonMessage({ action: 'update:node', node: { id: nodeId, [label]: event.target.value } });
+    // event.preventDefault();
+    console.log('before Update', event, event.target);
+    // setFieldValue(event.target.value);
+    dispatch(setEditValue({ label, value: event.target.value }));
+    dispatch(saveUserEdits());
+    // console.log('after update', event.target, inputRef.current?.focus());
+    // sendJsonMessage({ action: 'update:node', node: { id: nodeId, [label]: event.target.value } });
+  };
   const getNodeElement = (element: NodeInput, key: string | null = getNodeKey()) => {
     switch (element.type) {
       case 'dropdown':
@@ -73,22 +71,21 @@ export default function BaseNode({
             label={element.label}
             value={element.value as string}
             sendJsonMessage={sendJsonMessage}
-            updateNode={updateNode}
-            setEditState={setEditState}
+            dispatch={dispatch}
           />
         );
 
       case 'text':
         return (
           <TextInput
+          updateValue={updateValue}
             key={key}
             nodeId={ctx.id}
             label={element?.label}
-            initialValue={element?.value || ''}
+            value={element?.value || ''}
             icon={element?.icon || 'ballpen'}
             sendJsonMessage={sendJsonMessage}
-            updateNode={updateNode}
-            setEditState={setEditState}
+            dispatch={dispatch}
           />
         );
 
@@ -101,7 +98,7 @@ export default function BaseNode({
             initialValue={element?.value || ''}
             icon={element?.icon || 'file-upload'}
             sendJsonMessage={sendJsonMessage}
-            updateNode={updateNode}
+            dispatch={dispatch}
           />
         );
       case 'title':
@@ -113,13 +110,18 @@ export default function BaseNode({
             title={element?.title || ''}
             subtitle={element?.subtitle || ''}
             text={element?.text || ''}
+            dispatch={dispatch}
           />
         );
 
       case 'section':
-        return <Text key={key} nodeId={ctx.id} label={element?.label} value={element?.value || ''} />;
+        return (
+          <Text key={key} nodeId={ctx.id} label={element?.label} value={element?.value || ''} dispatch={dispatch} />
+        );
       case 'copy-text':
-        return <CopyText key={key} nodeId={ctx.id} label={element?.label} value={element?.value || ''} />;
+        return (
+          <CopyText key={key} nodeId={ctx.id} label={element?.label} value={element?.value || ''} dispatch={dispatch} />
+        );
       case 'empty':
         return <div className='hidden' />;
     }
@@ -131,25 +133,20 @@ export default function BaseNode({
       <Handle position={Position.Top} id='t1' key='t1' type='source' style={handleStyle} />
       <Handle position={Position.Bottom} id='b1' key='b1' type='source' style={handleStyle} />
       <Handle position={Position.Left} id='l1' key='l1' type='target' style={handleStyle} />
-      <div data-label-type={label} className=' node container' style={myNode.style}>
-        <div
-          style={{
-            backgroundColor: color?.length === 7 ? `${color}76` : color ? color : '#145070',
-          }}
-          className='header'
-        >
-          <GripIcon />
-          <div className='text-container'>
+      <div data-label-type={node.label} className=' node container' style={node.style}>
+        <div style={nodeColorStyle} className='header'>
+          <GripIcon className='cursor-grab focus:cursor-grabbing' />
+          <div className='text-container nodrag'>
             <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
               <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
               {ctx.id}
             </p>
-            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>{name}</p>
+            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>{node.label}</p>
           </div>
-          <Icon icon={icon} className='h-5 w-5 mr-2' />
+          <Icon icon={node.icon} className='h-5 w-5 mr-2 cursor-grab focus:cursor-grabbing' />
         </div>
-        <form style={style} onSubmit={(event) => event.preventDefault()} className='elements gap-x-1'>
-          {nodes.map((element: NodeInput, i: number) => {
+        <form style={node.style} onSubmit={(event) => event.preventDefault()} className='nodrag elements gap-x-1'>
+          {node.elements.map((element: NodeInput, i: number) => {
             if (Array.isArray(element))
               return (
                 <Fragment key={i.toString()}>
@@ -234,14 +231,12 @@ export function UploadFileInput({
   label,
   sendJsonMessage,
   icon,
-  updateNode,
 }: {
   nodeId: string;
   label: string;
   initialValue: string;
   sendJsonMessage: Function;
   icon?: any;
-  updateNode: Function;
 }) {
   const [value, setValue] = useState<File>(initialValue as any);
 
@@ -269,32 +264,19 @@ export function UploadFileInput({
   );
 }
 
-export function TextInput({
-  nodeId,
-  initialValue,
-  label,
-  sendJsonMessage,
-  icon,
-  setEditState,
-  updateNode,
-}: {
-  nodeId: string;
-  label: string;
-  initialValue: string;
-  sendJsonMessage: Function;
-  icon?: any;
-  updateNode: Function;
-  setEditState: Function;
-}) {
-  const [value, setValue] = useState(initialValue);
 
-  const updateValue = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-    // sendJsonMessage({ action: 'update:node', node: { id: nodeId, [label]: event.target.value } });
-    setEditState({ id: nodeId, data: { [label]: value } });
 
-    // sendJsonMessage({ action: 'update:node', node: { id: nodeId, [label]: event.target.value } });
-  };
+export function TextInput({ nodeId, value, label, updateValue, sendJsonMessage, icon, dispatch, editState }: NodeElement) {
+
+
+  const [fieldValue, setFieldValue] = useState( useAppSelector((state) => selectNodeValue(state, nodeId, label)));
+
+
+  // useEffect(() => {
+  //   document.addEventListener('keyup', keyDownHandler);
+
+  //   return () => document.removeEventListener('keyup', keyDownHandler);
+  // }, []);
 
   return (
     <>
@@ -303,7 +285,22 @@ export function TextInput({
         <div className='flex items-center mb-1 '>
           <div className='nodrag node-field'>
             <Icon icon={icon} className='h-6 w-6' />
-            <input type='text' data-label onChange={(event: any) => updateValue(event)} value={value} />
+              <input
+                onFocus={() => {
+                  dispatch(setEditId(nodeId));
+                  dispatch(setEditLabel(label));
+                }}
+                onBlurCapture={() => {
+                  // dispatch(setEditId(''));
+                  // dispatch(setEditLabel(''));
+                }}
+                onBlur={(event) => dispatch(saveUserEdits(event.target.value))}
+                type='text'
+                data-label={label}
+                value={fieldValue}
+                onChange={(event: InputEvent) => setFieldValue(event.target.value)} // updateValue(event)
+                // value={fieldValue}
+              />
           </div>
         </div>
       </div>
@@ -311,23 +308,7 @@ export function TextInput({
   );
 }
 
-export function DropdownInput({
-  options,
-  label,
-  nodeId,
-  sendJsonMessage,
-  value,
-  updateNode,
-  setEditState,
-}: {
-  nodeId: string;
-  options: DropdownOption[];
-  label: string;
-  sendJsonMessage: Function;
-  value: string;
-  setEditState: Function;
-  updateNode: Function;
-}) {
+export function DropdownInput({ options, label, nodeId, sendJsonMessage, value }: NodeElement) {
   const [query, setQuery] = useState('');
   const filteredOptions =
     query === ''
@@ -342,7 +323,7 @@ export function DropdownInput({
     //   action: 'update:node',
     //   node: { id: nodeId, [label]: activeOption },
     // });
-    setEditState({ id: nodeId, data: { [label]: activeOption } });
+    // setEditState({ id: nodeId, data: { [label]: activeOption } });
   }, [query, activeOption]);
 
   return (

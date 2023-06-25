@@ -21,6 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { isSidebarOpen, setSidebar } from '@/features/settings/settingsSlice';
 import IncidentCard from '@/components/IncidentCard';
+import { Subscribe } from '@react-rxjs/core';
 
 const navigation = [
   { name: 'Projects', to: '/app/dashboard', icon: InboxIcon },
@@ -226,7 +227,9 @@ export default function AppLayout() {
             )}
           >
             <main className='flex-1 block h-screen relative w-full'>
-              <Outlet />{' '}
+              <Subscribe>
+                <Outlet />
+              </Subscribe>
             </main>
           </div>
         </div>

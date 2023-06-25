@@ -7,9 +7,10 @@ import ReactFlow, {
   FitViewOptions,
   NodeDragHandler,
   Connection,
+  Node,
 } from 'reactflow';
 import BaseNode from './BaseNode';
-import { saveNewNode, updateEdgeEvent, updateNodeFlow } from '@/features/graph/graphSlice';
+import { fetchNodeBlueprint, onEdgeConnect, saveUserEdits, updateEdgeEvent, updateNodeData, updateNodeFlow } from '@/features/graph/graphSlice';
 import { useAppDispatch } from '@/app/hooks';
 import { toast } from 'react-toastify';
 
@@ -23,24 +24,17 @@ export default function ProjectGraph({
   graphRef,
   nodes,
   edges,
-  setEdges,
-  onEdgesChange,
   graphInstance,
   setGraphInstance,
   addEdge,
   sendJsonMessage,
-  updateNode,
-  setEditState,
   onPaneClick,
   onPaneCtxMenu,
   onSelectionCtxMenu,
   onMultiSelectionCtxMenu,
 }: JSONObject) {
   const dispatch = useAppDispatch();
-  const onConnect = useCallback(
-    (connection: Connection) => setEdges((eds: Edge[]) => addEdge(connection, edges)),
-    [setEdges]
-  );
+
   const [isSavingNewNode, setSavingNewNode] = useState(false);
   const onEdgeUpdate = useCallback(
     (oldEdge: Edge, newConnection: Connection) => dispatch(updateEdgeEvent({ oldEdge, newConnection })),
@@ -66,13 +60,13 @@ export default function ProjectGraph({
       });
       try {
         await dispatch(
-          saveNewNode({
+          fetchNodeBlueprint({
             label,
             position,
           })
         ).unwrap();
       } catch (error: unknown) {
-         if (error instanceof Error) toast.info(error.message);
+        if (error instanceof Error) toast.info(error.message);
       } finally {
         setSavingNewNode(false);
       }
@@ -82,13 +76,12 @@ export default function ProjectGraph({
 
   const nodeTypes = useMemo(
     () => ({
-      base: (data: JSONObject) => (
-        <BaseNode node={data} setEditState={setEditState} updateNode={updateNode} sendJsonMessage={sendJsonMessage} />
-      ),
+      base: (data: JSONObject) => <BaseNode ctx={data} sendJsonMessage={sendJsonMessage} />,
     }),
     []
   );
 
+  console.log('ProjectGraph');
   return (
     <ReactFlow
       minZoom={0.2}
@@ -96,14 +89,18 @@ export default function ProjectGraph({
       nodes={nodes}
       edges={edges}
       onDrop={onDrop}
-      onConnect={onConnect}
+      onConnect={(connection) => {
+        dispatch(onEdgeConnect(connection))
+      }}
       onDragOver={onDragOver}
       onEdgeUpdate={onEdgeUpdate}
       onInit={setGraphInstance}
       onNodesChange={(changes) => {
+        console.log('changes', changes)
+        // dispatch(saveUserEdits())
         dispatch(updateNodeFlow(changes));
       }}
-      onEdgesChange={onEdgesChange}
+      // onEdgesChange={onEdgesChange}
       fitView
       fitViewOptions={viewOptions}
       nodeTypes={nodeTypes}

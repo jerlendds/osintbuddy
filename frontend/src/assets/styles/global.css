@@ -168,6 +168,9 @@ input[type='number'] {
   cursor: grab !important;
   pointer-events: none !important;
 }
+.react-flow__node {
+  cursor: default !important;
+}
 /* .react-flow__pane, .react-flow__renderer {
   top: 13rem !important;
   bottom: 0;

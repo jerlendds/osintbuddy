@@ -58,6 +58,8 @@ interface NodeInput {
   title?: string;
   subtitle?: string;
   text?: string;
+  dispatch: () => void
+  sendJsonMessage: () => void
 }
 
 
@@ -65,3 +67,5 @@ interface DropdownOption {
   label: string;
   tooltip: string;
 }
+
+

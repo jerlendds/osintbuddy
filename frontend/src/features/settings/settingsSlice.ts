@@ -10,7 +10,7 @@ const initialState = {
   showSidebar: true,
 };
 
-export const settingsSlice = createSlice({
+export const settings = createSlice({
   name: 'settings',
   initialState,
   reducers: {
@@ -26,8 +26,8 @@ export const settingsSlice = createSlice({
   },
 });
 
-export const { closeSidebar, openSidebar, setSidebar } = settingsSlice.actions;
+export const { closeSidebar, openSidebar, setSidebar } = settings.actions;
 
 export const isSidebarOpen = (state: RootState) => state.settings.showSidebar;
 
-export default settingsSlice.reducer;
+export default settings.reducer;

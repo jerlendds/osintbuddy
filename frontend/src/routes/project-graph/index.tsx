@@ -19,8 +19,7 @@ import { toast } from 'react-toastify';
 import { nodesService } from '@/services';
 import ProjectGraph from './_components/ProjectGraph';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { graphEdges, graphNodes } from '@/features/graph/graphSlice';
-import { createNode } from '@/features/graph/graphSlice';
+import { createNode, graphEdges, graphNodes, saveUserEdits, updateNode, updateNodeData } from '@/features/graph/graphSlice';
 
 const fitViewOptions: FitViewOptions = {
   padding: 50,
@@ -28,29 +27,26 @@ const fitViewOptions: FitViewOptions = {
 
 const onNodeDragStop = (_: MouseEvent, node: Node) => console.log('@todo drag stop update position', node);
 
-
 const keyMap = {
   TOGGLE_PALETTE: ['shift+p'],
 };
-
 
 export default function OsintPage() {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const activeProject = location?.state?.activeProject;
-  
-  const initialNodes = useAppSelector((state) => graphNodes(state))
-  const initialEdges = useAppSelector((state) => graphEdges(state))
+
+  const initialNodes = useAppSelector((state) => graphNodes(state));
+  const initialEdges = useAppSelector((state) => graphEdges(state));
 
   const graphRef = useRef<HTMLDivElement>(null);
   const [graphInstance, setGraphInstance] = useState(null);
-  
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge[]>(initialEdges);
-  const [nodeOptions, setNodeOptions] = useState([]);
 
+  const [nodes, setNodes] = useState<Node[]>(initialNodes);
+  const [edges, setEdges] = useState<Edge[]>(initialEdges);
+  const [nodeOptions, setNodeOptions] = useState([]);
+  console.log(nodes, initialNodes)
   const [showNodeOptions, setShowNodeOptions] = useState<boolean>(false);
-  const [editState, setEditState] = useState<boolean>(false);
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
 
   const [messageHistory, setMessageHistory] = useState([]);
@@ -62,16 +58,16 @@ export default function OsintPage() {
     },
   });
 
-
   function addNode(id, data: AddNode, position): void {
-    setNodes((nds) =>
-      nds.concat({
-        id,
-        type: 'base',
-        data,
-        position: graphInstance.project(position),
-      })
-    );
+    dispatch(createNode({ id, data, position, type: 'base' }))
+    // setNodes((nds) =>
+    //   nds.concat({
+    //     id,
+    //     type: 'base',
+    //     data,
+    //     position: graphInstance.project(position),
+    //   })
+    // );
   }
 
   function addEdge(source, target, sourceHandle, targetHandle, type: AddEdge): void {
@@ -82,9 +78,9 @@ export default function OsintPage() {
       targetHandle: targetHandle || 'l1',
       type: type || 'bezier',
     };
+    dispatch()
     setEdges((eds) => eds.concat(newEdge));
   }
-
 
   const togglePalette = () => setShowCommandPalette(!showCommandPalette);
   const toggleShowNodeOptions = () => setShowNodeOptions(!showNodeOptions);
@@ -137,7 +133,8 @@ export default function OsintPage() {
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState];
 
-  const updateNode = (node: JSONObject, data) => {
+  const createNodeUpdate = (node: JSONObject, data) => {
+    console.log('attempting update', node, data);
     let updatedNode = { ...node };
     updatedNode.elements = node.data.elements.map((elm) => {
       if (Object.keys(data)[0] === elm.label) {
@@ -148,20 +145,9 @@ export default function OsintPage() {
     return updatedNode;
   };
 
-  // user edits updates happen here
-  useEffect(() => {
-    if (editState) {
-      setNodes((nds) =>
-        nds.map((node) => {
-          if (editState && editState.data && node.id === editState.id) {
-            node = updateNode(node, editState.data);
-          }
-          return node;
-        })
-      );
-    }
-  }, [editState, setNodes]);
 
+
+  
   // websocket updates happen here
   useEffect(() => {
     if (lastJsonMessage !== null) {
@@ -247,8 +233,9 @@ export default function OsintPage() {
     setShowMenu(false);
     setTransforms(null);
     setCtxSelection(null);
+    dispatch(saveUserEdits())
   };
-
+  console.log('Outside ProjectGraph in ROOT')
 
 
   return (
@@ -274,16 +261,19 @@ export default function OsintPage() {
                 graphRef={graphRef}
                 nodes={initialNodes}
                 setNodes={setNodes}
-                onNodesChange={onNodesChange}
+                // onNodesChange={onNodesChange}
                 edges={initialEdges}
                 setEdges={setEdges}
-                onEdgesChange={onEdgesChange}
+                // onEdgesChange={onEdgesChange}
                 graphInstance={graphInstance}
                 setGraphInstance={setGraphInstance}
                 sendJsonMessage={sendJsonMessage}
                 lastMessage={lastMessage}
-                updateNode={updateNode}
-                setEditState={setEditState}
+                updateNode={createNodeUpdate}
+                setNodes={setNodes}
+        
+                // setEditState={setEditState}
+                // onNodeEdit={onNodeEdit}
               />
             </div>
           </div>
@@ -299,6 +289,7 @@ export default function OsintPage() {
           className='absolute top-[3.5rem] w-48 bg-red -z-10 h-20 left-[0.7rem] text-slate-900'
         />
         <ContextMenu
+        sendJsonMessage={sendJsonMessage}
           transforms={transforms}
           ctxSelection={ctxSelection}
           showMenu={showMenu}
