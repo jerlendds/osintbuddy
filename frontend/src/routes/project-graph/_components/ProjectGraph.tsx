@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef, useMemo, useEffect, DragEventHandler } from 'react';
+import { useCallback, useState, useMemo, DragEventHandler } from 'react';
 import ReactFlow, {
   Edge,
   Background,
@@ -7,10 +7,14 @@ import ReactFlow, {
   FitViewOptions,
   NodeDragHandler,
   Connection,
-  Node,
 } from 'reactflow';
 import BaseNode from './BaseNode';
-import { fetchNodeBlueprint, onEdgeConnect, saveUserEdits, updateEdgeEvent, updateNodeData, updateNodeFlow } from '@/features/graph/graphSlice';
+import {
+  fetchNodeBlueprint,
+  onEdgeConnect,
+  updateEdgeEvent,
+  updateNodeFlow,
+} from '@/features/graph/graphSlice';
 import { useAppDispatch } from '@/app/hooks';
 import { toast } from 'react-toastify';
 
@@ -81,7 +85,6 @@ export default function ProjectGraph({
     []
   );
 
-  console.log('ProjectGraph');
   return (
     <ReactFlow
       minZoom={0.2}
@@ -90,17 +93,12 @@ export default function ProjectGraph({
       edges={edges}
       onDrop={onDrop}
       onConnect={(connection) => {
-        dispatch(onEdgeConnect(connection))
+        dispatch(onEdgeConnect(connection));
       }}
       onDragOver={onDragOver}
       onEdgeUpdate={onEdgeUpdate}
       onInit={setGraphInstance}
-      onNodesChange={(changes) => {
-        console.log('changes', changes)
-        // dispatch(saveUserEdits())
-        dispatch(updateNodeFlow(changes));
-      }}
-      // onEdgesChange={onEdgesChange}
+      onNodesChange={(changes) => dispatch(updateNodeFlow(changes))}
       fitView
       fitViewOptions={viewOptions}
       nodeTypes={nodeTypes}

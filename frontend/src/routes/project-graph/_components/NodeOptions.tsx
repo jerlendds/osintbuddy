@@ -99,7 +99,6 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
   );
 }
 
-
 export default function NodeOptions({ options }: any) {
   const onDragStart = (event: any, nodeType: any) => {
     event.dataTransfer.setData('application/reactflow', nodeType);

@@ -12,7 +12,7 @@
 }
 
 .node .node-display {
-  @apply w-full flex flex-col px-2 pb-1 ;
+  @apply w-full flex flex-col px-2 pb-1;
 }
 
 .node .node-display h1 {
@@ -36,7 +36,7 @@
 }
 
 .node .header {
-  @apply flex h-full w-full items-center justify-between rounded-t-md text-slate-100 py-2 px-1;
+  @apply flex h-full w-full items-center justify-between rounded-t-md text-slate-100 py-2 px-1 cursor-grab focus:cursor-grabbing;
 }
 
 .node .header svg {
@@ -44,7 +44,7 @@
 }
 
 .text-container {
-  @apply flex w-full flex-col px-2 font-medium ;
+  @apply flex w-full flex-col px-2 font-medium;
 }
 
 .text-container p:first-child,

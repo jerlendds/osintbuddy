@@ -26,42 +26,6 @@ router = APIRouter(prefix="/nodes")
 
 logger = get_logger(" api_v1.endpoints.nodes ")
 
-def clean_vertices(graph: List[dict]):
-    """Clean vertices from an AsyncGraphTraversal.
-
-    Args:
-        graph (List[dict]): _description_
-
-    Returns:
-        _type_: _description_
-    """
-    vertices = []
-    for v in graph:
-        print(v['uuid'], v)
-        vertex = {
-            'id':  v[T.id],
-            'label': v[T.label],
-            'uuid': v['uuid'][0].hex,
-        }
-        del v[T.id]
-        del v[T.label]
-        del v['uuid']
-        vertex['__keys'] = [k for k in v.keys()]
-        [vertex.__setitem__(key, value[0]) for key, value in v.items()]
-        vertices.append(vertex)
-    print('vertices', vertices)
-    for vert in vertices:
-        print('for vert', vert)
-        vkeys = vert['__keys']
-        del vert['__keys']
-        print('vert vkeys: ', vkeys)
-        for key in vkeys:
-            print('vert', vert, key)
-            if elements := ujson.loads(vert[key]):
-                print('elements', elements)
-                vert[key] = json.dumps(elements)
-    return vertices
-
 async def fetch_node_transforms(plugin_label):
     plugin = await Registry.get_plugin(plugin_label=plugin_label)
     if plugin is not None:
@@ -217,8 +181,10 @@ async def remove_nodes(node, action_type, send_json):
 
 async def nodes_transform(node, action_type, send_json):
     node_output = {}
-    plugin = await Registry.get_plugin(node["type"])
-    if plugin := plugin():
+    print(node, )
+    plugin = await Registry.get_plugin(node.get('data', {}).get('label'))
+    if plugin:
+        plugin = plugin()
         transform_type = node["transform"]
         node_output = await plugin._get_transform(
             transform_type=transform_type,
@@ -235,7 +201,8 @@ async def nodes_transform(node, action_type, send_json):
             node_output["position"] = node["position"]
             node_output["parentId"] = node["parentId"]
         await send_json(node_output)
-
+    else:
+        await send_json({'error': 'noPluginFound'})
 
 async def execute_event(event, send_json):
     action, action_type = await get_command_type(event)
