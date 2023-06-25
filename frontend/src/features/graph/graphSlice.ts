@@ -51,11 +51,11 @@ export const graph = createSlice({
     setEditLabel: (state, action: PayloadAction<string>) => {
       state.editLabel = action.payload;
     },
-    
+
     setEditId: (state, action: PayloadAction<string>) => {
       state.editId = action.payload;
     },
-    
+
     saveUserEdits: (state, action) => {
       const nodeToUpdate = state.nodes.find((n) => n.id === state.editId);
       if (nodeToUpdate) {
@@ -74,7 +74,7 @@ export const graph = createSlice({
     },
 
     createEdge: (state, action) => {
-      state.edges.push(action.payload)
+      state.edges.push(action.payload);
     },
 
     setEditValue: (state, action: PayloadAction<EditValue>) => {
@@ -144,11 +144,12 @@ export const {
 
 export const graphNodes = (state: RootState) => state.graph.nodes;
 export const graphEdges = (state: RootState) => state.graph.nodes;
-export const selectNodeValue = (state: RootState, id: string, label: string) =>
-  state.graph.nodes
-    .filter((node: any) => {
-      return node.id === id;
-    })[0]
-    .data.elements.filter((elm: any) => elm.label === label)[0].value;
+export const selectNodeValue = (state: RootState, id: string, label: string) => {
+  const node = state.graph.nodes.find((node: any) => {
+    return node.id === id;
+  });
+  if (node) return node.data.elements.filter((elm: any) => elm.label === label)[0].value;
+  return '';
+};
 
 export default graph.reducer;
