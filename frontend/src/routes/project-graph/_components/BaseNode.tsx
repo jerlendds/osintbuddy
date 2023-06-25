@@ -78,7 +78,7 @@ export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject, se
       case 'text':
         return (
           <TextInput
-          updateValue={updateValue}
+            updateValue={updateValue}
             key={key}
             nodeId={ctx.id}
             label={element?.label}
@@ -266,7 +266,7 @@ export function UploadFileInput({
 
 
 
-export function TextInput({ nodeId, value, label, updateValue, sendJsonMessage, icon, dispatch, editState }: NodeElement) {
+export function TextInput({ nodeId, value, label, sendJsonMessage, icon, dispatch, editState }: NodeElement) {
 
 
   const [fieldValue, setFieldValue] = useState( useAppSelector((state) => selectNodeValue(state, nodeId, label)));
@@ -289,10 +289,6 @@ export function TextInput({ nodeId, value, label, updateValue, sendJsonMessage, 
                 onFocus={() => {
                   dispatch(setEditId(nodeId));
                   dispatch(setEditLabel(label));
-                }}
-                onBlurCapture={() => {
-                  // dispatch(setEditId(''));
-                  // dispatch(setEditLabel(''));
                 }}
                 onBlur={(event) => dispatch(saveUserEdits(event.target.value))}
                 type='text'
