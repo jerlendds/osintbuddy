@@ -120,7 +120,7 @@ def add_node_element(nodev, element: dict or List[dict], data_labels: List[tuple
     return element
 
 
-async def save_node_to_graph(node_label, node, project_uuid=None):
+async def save_node_to_graph(node_label: str, node: dict, project_uuid: str = None):
     async with await DriverRemoteConnection.open('ws://janus:8182/g', 'g') as connection:
         g: AsyncGraphTraversal = Graph().traversal().withRemote(connection)
         v = g.addV(node_label) \
@@ -156,8 +156,20 @@ async def save_node_to_graph(node_label, node, project_uuid=None):
             del element[T.id]
             del element[T.key]
             del element[T.value]
-        node['elements'] = list(reversed(graph_node))
-        node['id'] = v.id
+        del node['elements']
+    node['position'] = {
+        'x': node.pop('x', 0.0),
+        'y': node.pop('y', 0.0)
+    }
+    node['data'] = {
+        'color': node.pop('color', '#145070'),
+        'icon': node.pop('icon', 'atom-2'),
+        'style': node.pop('style', {}),
+        'label': node.pop('label'),
+        'elements': list(reversed(graph_node)),
+    }
+    node['type'] = 'base'
+    node['id'] = str(v.id)
     return node
 
 
