@@ -1,14 +1,17 @@
-import { AnyAction, createAsyncThunk, createSlice, current, PayloadAction } from '@reduxjs/toolkit';
+import { AnyAction, createAsyncThunk, createSelector, createSlice, current, PayloadAction } from '@reduxjs/toolkit';
 import { type RootState } from '@/app/store';
 import { XYPosition, type Edge, type Node, applyNodeChanges, NodeChange, updateEdge, Connection } from 'reactflow';
 import { nodesService } from '@/services';
 
-export interface Graph {
-  nodes: Node[];
-  edges: Edge[];
-  editId: string;
+export interface EditState {
+    editId: string;
   editLabel: string;
   editValue: string;
+}
+
+export interface Graph extends EditState {
+  nodes: Node[];
+  edges: Edge[];
 }
 
 const initialState: Graph = {
@@ -49,15 +52,23 @@ export const graph = createSlice({
   initialState,
   reducers: {
     setEditLabel: (state, action: PayloadAction<string>) => {
+      console.log('setting edit label', action.payload)
       state.editLabel = action.payload;
     },
 
     setEditId: (state, action: PayloadAction<string>) => {
+      console.log('setting edit id', action.payload)
       state.editId = action.payload;
+    },
+
+    setEditState: (state, action: PayloadAction<EditState>) => {
+      state.editId = action.payload.editId
+      state.editLabel = action.payload.editLabel
     },
 
     saveUserEdits: (state, action) => {
       const nodeToUpdate = state.nodes.find((n) => n.id === state.editId);
+      console.log('saving user edits', current(state), action.payload)
       if (nodeToUpdate) {
         nodeToUpdate.data.elements.forEach((element: JSONObject, idx: number) => {
           if (element.label === state.editLabel) {
@@ -65,8 +76,6 @@ export const graph = createSlice({
           }
         });
       }
-      state.editLabel = '';
-      state.editValue = '';
     },
 
     onEdgeConnect: (state, action) => {
@@ -78,7 +87,7 @@ export const graph = createSlice({
     },
 
     setEditValue: (state, action: PayloadAction<EditValue>) => {
-      state.editLabel = action.payload.label;
+      console.log('setting edit value', action.payload)
       state.editValue = action.payload.value;
     },
 
@@ -108,6 +117,14 @@ export const graph = createSlice({
           });
         });
       }
+    },
+
+    setNodeSelected: (state, action: PayloadAction<{ id: string, selected: boolean }>) => {
+      const nodeToUpdate = state.nodes.find((n) => n.id === action.payload.id);
+      if (nodeToUpdate) {
+        nodeToUpdate.selected = action.payload.selected
+      }
+      console.log(current(nodeToUpdate))
     },
 
     updateNode: (state, action: PayloadAction<Node>) => {
@@ -140,6 +157,8 @@ export const {
   saveUserEdits,
   setEditId,
   onEdgeConnect,
+  setEditState,
+  setNodeSelected
 } = graph.actions;
 
 export const graphNodes = (state: RootState) => state.graph.nodes;
@@ -148,8 +167,17 @@ export const selectNodeValue = (state: RootState, id: string, label: string) => 
   const node = state.graph.nodes.find((node: any) => {
     return node.id === id;
   });
-  if (node) return node.data.elements.filter((elm: any) => elm.label === label)[0].value;
+  if (node) return node.data.elements.find((elm: any) => elm.label === label).value;
   return '';
 };
+
+export const selectEditLabel = (state: RootState) => state.graph.editLabel;
+export const selectEditId = (state: RootState) => state.graph.editId;
+export const selectEditValue = (state: RootState) => state.graph.editValue;
+
+export const selectEditState = createSelector([selectEditId, selectEditLabel], (id, label) => ({
+  id,
+  label,
+}));
 
 export default graph.reducer;

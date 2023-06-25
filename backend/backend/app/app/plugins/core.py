@@ -33,6 +33,7 @@ class GoogleSearchPlugin(ob.Plugin):
 
     @ob.transform(label="To results")
     async def transform_to_google_results(self, node, **kwargs):
+        print("@todo refactor transform node API: ", node)
         query = node["data"][0]
         pages = node["data"][1]
         results = []

@@ -2,7 +2,7 @@
 import { ChevronUpDownIcon, PaperClipIcon } from '@heroicons/react/24/outline';
 import { Combobox } from '@headlessui/react';
 import classNames from 'classnames';
-import { ChangeEvent, Dispatch, Fragment, useEffect, useState } from 'react';
+import { ChangeEvent, Dispatch, Fragment, useEffect, useRef, useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { GripIcon, Icon } from '@/components/Icons';
 import { toast } from 'react-toastify';
@@ -12,13 +12,9 @@ import {
   setEditState,
   type Graph,
   EditState,
-  setEditLabel,
-  setEditValue,
-  setEditId,
   saveUserEdits,
   selectNodeValue,
 } from '@/features/graph/graphSlice';
-import { AnyAction } from 'redux';
 
 var dropdownKey = 0;
 
@@ -36,7 +32,6 @@ const getNodeKey = () => {
 
 const handleStyle = { borderColor: '#60666A' };
 
-
 type NodeElement = NodeInput & {
   nodeId: string;
   editState: EditState;
@@ -44,22 +39,13 @@ type NodeElement = NodeInput & {
     Dispatch<AnyAction>;
 };
 
-export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject, sendJsonMessage: () => void }) {
+export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject; sendJsonMessage: () => void }) {
   const node = ctx.data;
   const nodeColorStyle = {
     backgroundColor: node.color.length === 7 ? `${node.color}76` : node.color ? node.color : '#145070',
   };
   const dispatch = useAppDispatch();
-  const updateValue = (event: ChangeEvent<HTMLInputElement>, label) => {
-    // sendJsonMessage({ action: 'update:node', node: { id: nodeId, [label]: event.target.value } });
-    // event.preventDefault();
-    console.log('before Update', event, event.target);
-    // setFieldValue(event.target.value);
-    dispatch(setEditValue({ label, value: event.target.value }));
-    dispatch(saveUserEdits());
-    // console.log('after update', event.target, inputRef.current?.focus());
-    // sendJsonMessage({ action: 'update:node', node: { id: nodeId, [label]: event.target.value } });
-  };
+
   const getNodeElement = (element: NodeInput, key: string | null = getNodeKey()) => {
     switch (element.type) {
       case 'dropdown':
@@ -78,11 +64,9 @@ export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject, se
       case 'text':
         return (
           <TextInput
-            updateValue={updateValue}
             key={key}
             nodeId={ctx.id}
             label={element?.label}
-            value={element?.value || ''}
             icon={element?.icon || 'ballpen'}
             sendJsonMessage={sendJsonMessage}
             dispatch={dispatch}
@@ -134,9 +118,9 @@ export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject, se
       <Handle position={Position.Bottom} id='b1' key='b1' type='source' style={handleStyle} />
       <Handle position={Position.Left} id='l1' key='l1' type='target' style={handleStyle} />
       <div data-label-type={node.label} className=' node container' style={node.style}>
-        <div style={nodeColorStyle} className='header'>
-          <GripIcon className='cursor-grab focus:cursor-grabbing' />
-          <div className='text-container nodrag'>
+        <div style={nodeColorStyle} className='header '>
+          <GripIcon className='' />
+          <div className='text-container '>
             <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
               <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
               {ctx.id}
@@ -145,7 +129,12 @@ export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject, se
           </div>
           <Icon icon={node.icon} className='h-5 w-5 mr-2 cursor-grab focus:cursor-grabbing' />
         </div>
-        <form style={node.style} onSubmit={(event) => event.preventDefault()} className='nodrag elements gap-x-1'>
+        <form
+          id={`${ctx.id}-form`}
+          style={node.style}
+          onSubmit={(event) => event.preventDefault()}
+          className='nodrag elements gap-x-1'
+        >
           {node.elements.map((element: NodeInput, i: number) => {
             if (Array.isArray(element))
               return (
@@ -264,19 +253,32 @@ export function UploadFileInput({
   );
 }
 
+export function TextInput({ nodeId, label, sendJsonMessage, icon, dispatch }: NodeElement) {
+  const [fieldValue, setFieldValue] = useState(useAppSelector((state) => selectNodeValue(state, nodeId, label)));
 
-
-export function TextInput({ nodeId, value, label, sendJsonMessage, icon, dispatch, editState }: NodeElement) {
-
-
-  const [fieldValue, setFieldValue] = useState( useAppSelector((state) => selectNodeValue(state, nodeId, label)));
-
-
-  // useEffect(() => {
-  //   document.addEventListener('keyup', keyDownHandler);
-
-  //   return () => document.removeEventListener('keyup', keyDownHandler);
-  // }, []);
+  const handleKeyDown = async (e: KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === 'Tab') {
+      // I hacked together this workaround after spending over 2 days trying
+      // to save node input changes to the graph redux state while maintaining tab
+      // functionality. If you just dispatch on tab/the blur event then the next
+      // input wont get focused due to the save state change
+      // so Ive enabled saving + tabbing functionality on tab or enter by adding
+      // this really ugly promise in a timeout... sorry
+      await dispatch(saveUserEdits(event.target.value));
+      new Promise((r) => {
+        setTimeout(() => {
+          const inputs = [...document.getElementById(`${nodeId}-form`)?.querySelectorAll('input')];
+          const activeInput = inputs.findIndex((input) => input.id === `${nodeId}-${label}`);
+          if (activeInput < inputs.length - 1) {
+            r(inputs[activeInput + 1].focus());
+          } //  else {
+          //   inputs[0].focus()
+          // }
+        }, 60);
+      });
+      e.stopPropagation();
+    }
+  };
 
   return (
     <>
@@ -285,18 +287,23 @@ export function TextInput({ nodeId, value, label, sendJsonMessage, icon, dispatc
         <div className='flex items-center mb-1 '>
           <div className='nodrag node-field'>
             <Icon icon={icon} className='h-6 w-6' />
-              <input
-                onFocus={() => {
-                  dispatch(setEditId(nodeId));
-                  dispatch(setEditLabel(label));
-                }}
-                onBlur={(event) => dispatch(saveUserEdits(event.target.value))}
-                type='text'
-                data-label={label}
-                value={fieldValue}
-                onChange={(event: InputEvent) => setFieldValue(event.target.value)} // updateValue(event)
-                // value={fieldValue}
-              />
+            <input
+              id={`${nodeId}-${label}`}
+              type='text'
+              data-label={label}
+              onChange={(event: InputEvent) => setFieldValue(event.target.value)}
+              value={fieldValue}
+              onFocus={() =>
+                dispatch(
+                  setEditState({
+                    editLabel: label,
+                    editId: nodeId,
+                  })
+                )
+              }
+              onBlur={(event) => dispatch(saveUserEdits(event.target.value))}
+              onKeyDown={handleKeyDown}
+            />
           </div>
         </div>
       </div>

@@ -19,7 +19,7 @@ import { toast } from 'react-toastify';
 import { nodesService } from '@/services';
 import ProjectGraph from './_components/ProjectGraph';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { createNode, graphEdges, graphNodes, saveUserEdits, updateNode, updateNodeData } from '@/features/graph/graphSlice';
+import { createNode, graphEdges, graphNodes } from '@/features/graph/graphSlice';
 
 const fitViewOptions: FitViewOptions = {
   padding: 50,
@@ -45,7 +45,6 @@ export default function OsintPage() {
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const [nodeOptions, setNodeOptions] = useState([]);
-  console.log(nodes, initialNodes)
   const [showNodeOptions, setShowNodeOptions] = useState<boolean>(false);
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
 
@@ -233,10 +232,7 @@ export default function OsintPage() {
     setShowMenu(false);
     setTransforms(null);
     setCtxSelection(null);
-    dispatch(saveUserEdits())
   };
-  console.log('Outside ProjectGraph in ROOT')
-
 
   return (
     <>
@@ -261,19 +257,14 @@ export default function OsintPage() {
                 graphRef={graphRef}
                 nodes={initialNodes}
                 setNodes={setNodes}
-                // onNodesChange={onNodesChange}
                 edges={initialEdges}
                 setEdges={setEdges}
-                // onEdgesChange={onEdgesChange}
                 graphInstance={graphInstance}
                 setGraphInstance={setGraphInstance}
                 sendJsonMessage={sendJsonMessage}
                 lastMessage={lastMessage}
                 updateNode={createNodeUpdate}
                 setNodes={setNodes}
-        
-                // setEditState={setEditState}
-                // onNodeEdit={onNodeEdit}
               />
             </div>
           </div>
