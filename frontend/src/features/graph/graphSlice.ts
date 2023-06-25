@@ -22,7 +22,6 @@ const initialState: Graph = {
 export const fetchNodeBlueprint = createAsyncThunk(
   'graph/saveNewNode',
   async ({ label, position }: { label: string; position: XYPosition }) => {
-    console.log('wtf', label, position);
     const data = await nodesService
       .createNode({
         label,
@@ -59,7 +58,6 @@ export const graph = createSlice({
     
     saveUserEdits: (state, action) => {
       const nodeToUpdate = state.nodes.find((n) => n.id === state.editId);
-      console.log('state.nodes', current(state.nodes[0]));
       if (nodeToUpdate) {
         nodeToUpdate.data.elements.forEach((element: JSONObject, idx: number) => {
           if (element.label === state.editLabel) {
@@ -100,7 +98,6 @@ export const graph = createSlice({
 
     updateNodeData: (state, action: PayloadAction<Node>) => {
       const nodeToUpdate = state.nodes.find((n) => n.id === action.payload.id);
-      console.log('updateNodeData', current(state.nodes));
       if (nodeToUpdate) {
         nodeToUpdate.data.elements.forEach((element: JSONObject, idx: number) => {
           Object.keys(action.payload.data).some((updateKey: string) => {
@@ -114,7 +111,6 @@ export const graph = createSlice({
     },
 
     updateNode: (state, action: PayloadAction<Node>) => {
-      console.log('update');
       const editIdx = state.nodes.findIndex((n) => n.id === action.payload.id);
       state.nodes[editIdx] = action.payload;
     },
@@ -125,7 +121,6 @@ export const graph = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(fetchNodeBlueprint.fulfilled, (state, action) => {
-      console.log('pushing payload', action);
       state.nodes.push(action.payload);
     });
   },
