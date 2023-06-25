@@ -96,9 +96,7 @@ export const graph = createSlice({
     },
 
     deleteNode: (state, action: PayloadAction<Node['id']>) => {
-      state.nodes = state.nodes.filter((n) => {
-        n.id !== action.payload;
-      });
+      state.nodes = state.nodes.filter((n) => n.id !== action.payload);
     },
 
     updateNodeFlow: (state, action: PayloadAction<NodeChange[]>) => {

@@ -264,7 +264,6 @@ export function TextInput({ nodeId, label, sendJsonMessage, icon, dispatch }: No
       // input wont get focused due to the save state change
       // so Ive enabled saving + tabbing functionality on tab or enter by adding
       // this really ugly promise in a timeout... sorry
-      await dispatch(saveUserEdits(event.target.value));
       new Promise((r) => {
         setTimeout(() => {
           const inputs = [...document.getElementById(`${nodeId}-form`)?.querySelectorAll('input')];
