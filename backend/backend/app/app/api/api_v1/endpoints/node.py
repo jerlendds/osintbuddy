@@ -63,38 +63,40 @@ def build_dict(seq, key):
 
 def add_node_element(nodev, element: dict or List[dict], data_labels: List[tuple]):
     print('add_node_element', element)
+    label = element.pop('label', None)
     data_label = (
-        element['label'],
-        element['label'].strip().lower().replace(' ', '_'),
+        label,
+        label.strip().lower().replace(' ', '_'),
         element.get('style', {}),
         element.get('icon', 'atom-2'),
         element.get('placeholder', ''),
-        # element.get('options', None)
+        element.get('options', None)
     )
     # Remove element plugin values unrelated to data
-    element.pop('label', None)
+    
     element.pop('style', None)
     element.pop('icon', None)
     element.pop('placeholder', None)
     element.pop('options', None)
 
     nodev.property(data_label[1], 'node_element', *list(sum(element.items(), ())))
+    element['label'] = label
     # Save element plugin values unrelated to data to be re-added later
     data_labels.insert(len(data_labels) - 1, data_label)
     return element
 
 
-async def save_node_to_graph(node_label: str, node: dict, project_uuid: str = None):
+async def save_node_to_graph(node_label: str, node_blueprint: dict, project_uuid: str = None):
     async with await DriverRemoteConnection.open('ws://janus:8182/g', 'g') as connection:
         g: AsyncGraphTraversal = Graph().traversal().withRemote(connection)
-        position = node.get('position')
+        position = node_blueprint.get('position')
         print(position, '?????')
         v = g.addV(node_label) \
             .property('x', position.get('x', 0.0)) \
             .property('y', position.get('y', 0.0))
 
         data_labels = []
-        for element in node['elements']:
+        for element in node_blueprint['elements']:
             if isinstance(element, list):
                 element = [add_node_element(v, elm, data_labels) for elm in element]
             else:
@@ -107,6 +109,7 @@ async def save_node_to_graph(node_label: str, node: dict, project_uuid: str = No
             .properties(*[label[1] for label in data_labels]) \
             .valueMap(True) \
             .toList()
+        graph_node = graph_node
         # Apply other element plugin values that were removed
         for element in graph_node:
             element_styles = [
@@ -118,28 +121,45 @@ async def save_node_to_graph(node_label: str, node: dict, project_uuid: str = No
             element['icon'] = element_styles[3]
             element['placeholder'] = element_styles[4]
             # only the osintbuddy.elements.DropdownInput has an options key
-            # if element_styles[5]:
-            #     element['options'] = element_styles[5]
+            if element_styles[5]:
+                element['options'] = element_styles[5]
 
             del element[T.id]
             del element[T.key]
             del element[T.value]
-        del node['elements']
-    drop_position = node.pop('position')
-    node['position'] = {
+        # del node_blueprint['elements']
+    drop_position = node_blueprint.pop('position')
+    node_blueprint['position'] = {
         'x': drop_position.pop('x', 0.0),
         'y': drop_position.pop('y', 0.0)
     }
-    node['data'] = {
-        'color': node.pop('color', '#145070'),
-        'icon': node.pop('icon', 'atom-2'),
-        'style': node.pop('style', {}),
-        'label': node.pop('label'),
-        'elements': list(reversed(graph_node)),
+    ret = []
+    for idx, element in enumerate(node_blueprint['elements']):
+        if isinstance(element, list):
+            print('islist',)
+            ret.append([])
+            for elm in element:
+                if elm.get('label') == graph_node[idx].get('label'):
+                     ret[len(ret) - 1].append(graph_node[idx])
+            print('appending',ret[len(ret) - 1], )
+        else:
+            print('isnot list')
+            if element.get('label') == graph_node[idx].get('label'):
+                print('appending', graph_node[idx])
+                ret.append(graph_node[idx])
+    print('graph_node', graph_node)
+    print('ret', ret)   
+    node_blueprint['data'] = {
+        'color': node_blueprint.pop('color', '#145070'),
+        'icon': node_blueprint.pop('icon', 'atom-2'),
+        'style': node_blueprint.pop('style', {}),
+        'label': node_blueprint.pop('label'),
+        'elements': graph_node,
     }
-    node['type'] = 'base'
-    node['id'] = str(v.id)
-    return node
+    node_blueprint['type'] = 'base'
+    node_blueprint['id'] = str(v.id)
+    return node_blueprint
+
 
 
 @router.post('/')
@@ -151,7 +171,6 @@ async def get_node_option(node: schemas.CreateNode):
         blueprint['position'] = node.position.__dict__
         print('node.label', node.label)
         new_node = await save_node_to_graph(node.label, blueprint)
-        print('new_node', blueprint)
         return new_node
     raise HTTPException(status_code=422, detail=f'Plugin entity {node.label} can\'t be found.')
 
