@@ -18,7 +18,6 @@ from gremlin_python.process.graph_traversal import __ as _g
 from app.api import deps
 from app import schemas
 from app.core.logger import get_logger
-# from app.llm.prompts import get_prompt_transform_options
 from osintbuddy import Registry, discover_plugins
 from osintbuddy.errors import OBPluginError
 
@@ -63,13 +62,14 @@ def build_dict(seq, key):
 
 
 def add_node_element(nodev, element: dict or List[dict], data_labels: List[tuple]):
+    print('add_node_element', element)
     data_label = (
         element['label'],
         element['label'].strip().lower().replace(' ', '_'),
         element.get('style', {}),
         element.get('icon', 'atom-2'),
         element.get('placeholder', ''),
-        element.get('options', None)
+        # element.get('options', None)
     )
     # Remove element plugin values unrelated to data
     element.pop('label', None)
@@ -87,9 +87,11 @@ def add_node_element(nodev, element: dict or List[dict], data_labels: List[tuple
 async def save_node_to_graph(node_label: str, node: dict, project_uuid: str = None):
     async with await DriverRemoteConnection.open('ws://janus:8182/g', 'g') as connection:
         g: AsyncGraphTraversal = Graph().traversal().withRemote(connection)
+        position = node.get('position')
+        print(position, '?????')
         v = g.addV(node_label) \
-            .property('x', node.get('x', 0.0)) \
-            .property('y', node.get('y', 0.0))
+            .property('x', position.get('x', 0.0)) \
+            .property('y', position.get('y', 0.0))
 
         data_labels = []
         for element in node['elements']:
@@ -99,6 +101,8 @@ async def save_node_to_graph(node_label: str, node: dict, project_uuid: str = No
                 element = add_node_element(v, element, data_labels)
 
         v = await v.next()
+
+
         graph_node = await g.V().hasId(v.id) \
             .properties(*[label[1] for label in data_labels]) \
             .valueMap(True) \
@@ -114,16 +118,17 @@ async def save_node_to_graph(node_label: str, node: dict, project_uuid: str = No
             element['icon'] = element_styles[3]
             element['placeholder'] = element_styles[4]
             # only the osintbuddy.elements.DropdownInput has an options key
-            if element_styles[5]:
-                element['options'] = element_styles[5]
+            # if element_styles[5]:
+            #     element['options'] = element_styles[5]
 
             del element[T.id]
             del element[T.key]
             del element[T.value]
         del node['elements']
+    drop_position = node.pop('position')
     node['position'] = {
-        'x': node.pop('x', 0.0),
-        'y': node.pop('y', 0.0)
+        'x': drop_position.pop('x', 0.0),
+        'y': drop_position.pop('y', 0.0)
     }
     node['data'] = {
         'color': node.pop('color', '#145070'),
@@ -142,9 +147,12 @@ async def get_node_option(node: schemas.CreateNode):
     plugin = await Registry.get_plugin(plugin_label=node.label)
     if plugin:
         blueprint = plugin.blueprint()
-        blueprint['x'] = node.x
-        blueprint['y'] = node.y
-        return await save_node_to_graph(node.label, blueprint)
+        print(node, node.position, node.position.__dict__, dir(node.position))
+        blueprint['position'] = node.position.__dict__
+        print('node.label', node.label)
+        new_node = await save_node_to_graph(node.label, blueprint)
+        print('new_node', blueprint)
+        return new_node
     raise HTTPException(status_code=422, detail=f'Plugin entity {node.label} can\'t be found.')
 
 

@@ -16,6 +16,9 @@
 - [react-use-websocket](https://github.com/robtaussig/react-use-websocket)
 - [react-router-dom](https://reactrouter.com/en/main)
 - [react-toastify](https://www.npmjs.com/package/react-toastify)
+- [tagify](https://github.com/yairEO/tagify)
+- [react-grid-layout](https://github.com/react-grid-layout/react-grid-layout)
+- 
 
 # Getting Started
 
