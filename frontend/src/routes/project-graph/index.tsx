@@ -1,38 +1,23 @@
 // @ts-nocheck
-import { useCallback, useState, useRef, useMemo, useEffect } from 'react';
-import ReactFlow, { useNodesState, useEdgesState, Edge, XYPosition, Node, FitViewOptions } from 'reactflow';
-import {
-  ArrowDownOnSquareIcon,
-  ArrowPathIcon,
-  HomeIcon,
-  MagnifyingGlassMinusIcon,
-  MagnifyingGlassPlusIcon,
-  QueueListIcon,
-  TrashIcon,
-} from '@heroicons/react/24/outline';
+import { useCallback, useState, useRef, useEffect } from 'react';
+import { Edge, XYPosition, Node } from 'reactflow';
 import { HotKeys } from 'react-hotkeys';
-import { Link, useLocation } from 'react-router-dom';
+import {  useLocation } from 'react-router-dom';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import 'reactflow/dist/style.css';
-import classNames from 'classnames';
-import NodeOptions from './_components/NodeOptions';
+import EntityOptions from './_components/EntityOptions';
 import CommandPallet from '@/routes/project-graph/_components/CommandPallet';
 import ContextMenu from './_components/ContextMenu';
 import api, { WS_URL } from '@/services/api.service';
 import { getLayoutedElements } from './utils';
-import BaseNode from './BaseNode';
-import ContextAction from './_components/ContextAction';
 import { toast } from 'react-toastify';
 import { nodesService } from '@/services';
 import ProjectGraph from './_components/ProjectGraph';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { createNode, graphEdges, graphNodes } from '@/features/graph/graphSlice';
 
-const fitViewOptions: FitViewOptions = {
-  padding: 50,
-};
 
-const onNodeDragStop = (_: MouseEvent, node: Node) => console.log('@todo drag stop update position', node);
+
 
 const keyMap = {
   TOGGLE_PALETTE: ['shift+p'],
@@ -244,7 +229,7 @@ export default function OsintPage() {
         <div className='h-screen flex flex-col w-full'>
           <div className='flex h-full justify-between bg-dark-900 relative'>
             <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
-              <NodeOptions key={nodeOptions.length.toString()} activeProject={activeProject} options={nodeOptions} />
+              <EntityOptions activeProject={activeProject} options={nodeOptions} />
               <ProjectGraph
                 onSelectionCtxMenu={onSelectionCtxMenu}
                 onMultiSelectionCtxMenu={onMultiSelectionCtxMenu}

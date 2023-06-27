@@ -100,18 +100,25 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
   );
 }
 
-export default function NodeOptions({ options, activeProject }: any) {
+export default function EntityOptions({ options, activeProject }: any) {
   const onDragStart = (event: any, nodeType: any) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
   };
 
   const [showEntities, setShowEntities] = useState(true);
+  const [searchFilter, setSearchFilter] = useState('');
+  const filteredOptions = searchFilter
+    ? options.filter((option: JSONObject) => option.name.includes(searchFilter))
+    : options;
 
   return (
     <>
       <div
-        className={classNames('fixed overflow-hidden mt-3 ml-3 border-dark-300 rounded-lg z-10 border max-w-xs w-full bg-dark-700 py-2 flex flex-col  max-h-[84%] h-min', showEntities &&  'min-h-[80%]' )}
+        className={classNames(
+          'fixed overflow-hidden mt-2 ml-2 border-dark-300 rounded-md z-10 border max-w-xs w-full bg-dark-700 py-2 flex flex-col  max-h-[84%] h-min',
+          showEntities && 'min-h-[80%]'
+        )}
       >
         <ol className='text-sm flex select-none bg-dark-700 relative px-4'>
           <li className='flex items-start'>
@@ -133,14 +140,17 @@ export default function NodeOptions({ options, activeProject }: any) {
                 {activeProject.name}
                 <span className='font-medium font-display '>&nbsp;/</span>
               </span>
-             
             </div>
-             
           </li>
-          <li className="relative ml-auto">
+          <li className='relative ml-auto'>
             <span onClick={() => setShowEntities(!showEntities)}>
-                <EllipsisVerticalIcon className={classNames('h-6 w-6 text-light rotate-0 transition-transform duration-75', showEntities && 'rotate-90 origin-center ')} />
-              </span>
+              <EllipsisVerticalIcon
+                className={classNames(
+                  'h-6 w-6 text-light rotate-0 transition-transform duration-75',
+                  showEntities && 'rotate-90 origin-center '
+                )}
+              />
+            </span>
           </li>
         </ol>
 
@@ -152,25 +162,18 @@ export default function NodeOptions({ options, activeProject }: any) {
 
             <div className='mt-2.5 block justify-between items-center bg-dark-800 mx-4 rounded-md border-0 px-3.5 py-1 text-slate-100 shadow-sm ring-1 ring-light-900/10'>
               <input
+                onChange={(e) => setSearchFilter(e.target.value)}
                 className='block w-full placeholder:text-slate-700 bg-dark-800 outline-none focus:ring-info-200 sm:text-sm'
                 placeholder='Search entities...'
               />
             </div>
             <ul className='overflow-y-scroll ml-4 pr-4 h-full relative'>
-              {options.map((option: JSONObject) => (
+              {filteredOptions.map((option: JSONObject) => (
                 <ListItem onDragStart={onDragStart} key={option.name} entity={option} />
               ))}
             </ul>
           </>
         )}
-        {/* <button
-          type='button'
-          // onMouseDown={enableResize}
-          // onMouseUp={disableResize}
-          className='bottom-12  absolute z-50 rotate-90 origin-center -left-2 bg-dark-500 rounded-full border-x border-t border-info-200/20 cursor-sw-resize'
-        >
-          <ChevronUpDownIcon className='h-5 w-5 m-1.5 text-slate-400 bg-red z-50' />
-        </button> */}
       </div>
     </>
   );

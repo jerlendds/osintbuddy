@@ -130,7 +130,7 @@ export default function AppLayout() {
               showSidebar ? 'translate-x-0' : '-translate-x-52'
             )}
           >
-            <div className='flex min-h-0 flex-1 flex-col bg-dark-600'>
+            <div className='flex min-h-0 flex-1 flex-col bg-dark-700'>
               <div
                 className={classNames(
                   'flex h-12 flex-shrink-0 items-center justify-between',
@@ -144,7 +144,7 @@ export default function AppLayout() {
                 <HamburgerMenu isOpen={showSidebar} className='mx-1.5' onClick={toggleSidebar} />
               </div>
               <div className='flex flex-1 flex-col overflow-y-auto'>
-                <nav className={classNames('flex-1 flex py-4 flex-col')}>
+                <nav className='flex-1 flex py-4 flex-col'>
                   {navigation.map((item) => (
                     <NavLink
                       key={item.name}
