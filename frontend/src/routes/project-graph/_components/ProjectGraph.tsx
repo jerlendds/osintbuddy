@@ -62,6 +62,7 @@ export default function ProjectGraph({
         x: event.clientX - graphBounds.left,
         y: event.clientY - graphBounds.top,
       });
+      console.log('DROP POSITION?!', position)
       try {
         await dispatch(
           fetchNodeBlueprint({

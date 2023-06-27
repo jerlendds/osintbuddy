@@ -8,13 +8,7 @@ import { GripIcon, Icon } from '@/components/Icons';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { type ThunkDispatch } from 'redux-thunk';
-import {
-  setEditState,
-  type Graph,
-  EditState,
-  saveUserEdits,
-  selectNodeValue,
-} from '@/features/graph/graphSlice';
+import { setEditState, type Graph, EditState, saveUserEdits, selectNodeValue } from '@/features/graph/graphSlice';
 
 var dropdownKey = 0;
 
@@ -171,7 +165,7 @@ export function CopyText({ nodeId, label, value }: { nodeId: string; label: stri
       >
         {value}
       </p>
-      <input type='text' className='hidden' data-label={label} value={value} readOnly />
+      <input type='text' className='hidden' data-label={label} id={`${nodeId}-${label}`} value={value} readOnly />
     </div>
   );
 }
@@ -183,7 +177,7 @@ export function Text({ nodeId, label, value, icon }: { nodeId: string; label: st
       <div className=' w-full flex relative text-slate-500 text-xs sm:text-sm'>
         {icon && <Icon icon={icon} className='h-6 w-6' />}
         <p className='text-xs text-slate-400 truncate'>{value}</p>
-        <input data-label className='hidden' readOnly value={value} />
+        <input data-label={label} id={`${nodeId}-${label}`} className='hidden' readOnly value={value} />
       </div>
     </div>
   );
@@ -207,9 +201,9 @@ export function Title({
       {title && <h1 data-type='title'>{title}</h1>}
       {subtitle && <h2 data-type='subtitle'>{subtitle}</h2>}
       {text && <p data-type='text'>{text}</p>}
-      <input className='hidden' readOnly data-label value={title} />
-      <input className='hidden' readOnly data-label value={subtitle} />
-      <input className='hidden' readOnly data-label value={text} />
+      <input className='hidden' readOnly data-label={label} id={`${nodeId}-${label}`} value={title} />
+      <input className='hidden' readOnly data-label={label} id={`${nodeId}-${label}`} value={subtitle} />
+      <input className='hidden' readOnly data-label={label} id={`${nodeId}-${label}`} value={text} />
     </div>
   );
 }
@@ -244,7 +238,13 @@ export function UploadFileInput({
         <div className='node-field'>
           <Icon icon={icon} className='h-6 w-6' />
           <label className={classNames('ml-5 w-52', value?.name && 'text-slate-400')}>
-            <input data-label type='file' className='nodrag' onChange={(event: any) => updateValue(event)} />
+            <input
+              data-label={label}
+              id={`${nodeId}-${label}`}
+              type='file'
+              className='nodrag'
+              onChange={(event: any) => updateValue(event)}
+            />
             {value?.name ? value.name : label}
           </label>
         </div>
@@ -370,7 +370,13 @@ export function DropdownInput({ options, label, nodeId, sendJsonMessage, value }
             </Combobox.Options>
           )}
         </div>
-        <input data-label readOnly value={JSON.stringify(activeOption)} className='hidden invisible' />
+        <input
+          data-label={label}
+          id={`${nodeId}-${label}`}
+          readOnly
+          value={JSON.stringify(activeOption)}
+          className='hidden invisible'
+        />
       </Combobox>
     </>
   );

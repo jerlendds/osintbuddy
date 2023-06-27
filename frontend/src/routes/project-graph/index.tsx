@@ -1,13 +1,20 @@
 // @ts-nocheck
 import { useCallback, useState, useRef, useMemo, useEffect } from 'react';
 import ReactFlow, { useNodesState, useEdgesState, Edge, XYPosition, Node, FitViewOptions } from 'reactflow';
-import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowDownOnSquareIcon,
+  ArrowPathIcon,
+  HomeIcon,
+  MagnifyingGlassMinusIcon,
+  MagnifyingGlassPlusIcon,
+  QueueListIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
 import { HotKeys } from 'react-hotkeys';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import 'reactflow/dist/style.css';
 import classNames from 'classnames';
-import BreadcrumbHeader from './_components/BreadcrumbHeader';
 import NodeOptions from './_components/NodeOptions';
 import CommandPallet from '@/routes/project-graph/_components/CommandPallet';
 import ContextMenu from './_components/ContextMenu';
@@ -58,7 +65,7 @@ export default function OsintPage() {
   });
 
   function addNode(id, data: AddNode, position): void {
-    dispatch(createNode({ id, data, position, type: 'base' }))
+    dispatch(createNode({ id, data, position, type: 'base' }));
     // setNodes((nds) =>
     //   nds.concat({
     //     id,
@@ -77,7 +84,7 @@ export default function OsintPage() {
       targetHandle: targetHandle || 'l1',
       type: type || 'bezier',
     };
-    dispatch()
+    dispatch();
     setEdges((eds) => eds.concat(newEdge));
   }
 
@@ -144,9 +151,6 @@ export default function OsintPage() {
     return updatedNode;
   };
 
-
-
-  
   // websocket updates happen here
   useEffect(() => {
     if (lastJsonMessage !== null) {
@@ -238,16 +242,9 @@ export default function OsintPage() {
     <>
       <HotKeys keyMap={keyMap} handlers={handlers}>
         <div className='h-screen flex flex-col w-full'>
-          <BreadcrumbHeader
-            updateNodeOptions={updateNodeOptions}
-            nodeOptions={nodeOptions}
-            onLayout={onLayout}
-            description={activeProject?.description}
-            activeProject={activeProject?.name || 'Unknown'}
-          />
           <div className='flex h-full justify-between bg-dark-900 relative'>
-            <NodeOptions key={nodeOptions.length.toString()} options={nodeOptions} />
-            <div style={{ width: '100%', height: '100%' }} ref={graphRef}>
+            <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
+              <NodeOptions key={nodeOptions.length.toString()} activeProject={activeProject} options={nodeOptions} />
               <ProjectGraph
                 onSelectionCtxMenu={onSelectionCtxMenu}
                 onMultiSelectionCtxMenu={onMultiSelectionCtxMenu}
@@ -269,7 +266,6 @@ export default function OsintPage() {
             </div>
           </div>
         </div>
-
         <CommandPallet
           toggleShowOptions={toggleShowNodeOptions}
           isOpen={showCommandPalette}
@@ -280,7 +276,7 @@ export default function OsintPage() {
           className='absolute top-[3.5rem] w-48 bg-red -z-10 h-20 left-[0.7rem] text-slate-900'
         />
         <ContextMenu
-        sendJsonMessage={sendJsonMessage}
+          sendJsonMessage={sendJsonMessage}
           transforms={transforms}
           ctxSelection={ctxSelection}
           showMenu={showMenu}

@@ -10,7 +10,7 @@ class NodesService {
   async createNode({ label, position }: { label: string; position: XYPosition }) {
     const result = await api.post(`/nodes/`, {
       label,
-      ...position,
+      position,
     });
     return result.data as ApiNode;
   }

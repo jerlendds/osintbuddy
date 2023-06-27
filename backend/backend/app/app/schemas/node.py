@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 
-class CreateNode(BaseModel):
-    label: str
+class XYPosition(BaseModel):
     x: float
     y: float
+
+class CreateNode(BaseModel):
+    label: str
+    position: XYPosition

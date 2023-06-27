@@ -31,6 +31,7 @@ export const fetchNodeBlueprint = createAsyncThunk(
         position,
       })
       .catch((error) => error.message);
+    console.log('return data', data)
     return data;
   }
 );
@@ -72,6 +73,7 @@ export const graph = createSlice({
       if (nodeToUpdate) {
         nodeToUpdate.data.elements.forEach((element: JSONObject, idx: number) => {
           if (element.label === state.editLabel) {
+            console.log('before error', action.payload, state.editLabel)
             element.value = action.payload;
           }
         });

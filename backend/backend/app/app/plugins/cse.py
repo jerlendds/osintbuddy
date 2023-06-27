@@ -7,7 +7,8 @@ from osintbuddy.elements import TextInput, DropdownInput, Title, CopyText
 from osintbuddy.errors import OBPluginError
 from app.plugins.url import UrlPlugin
 
-cse_link_options = json.load(open("app/plugins/cses.json"))
+# @todo
+# cse_link_options = json.load(open("app/plugins/cses.json"))
 
 
 class CSESearchResultsPlugin(ob.Plugin):
@@ -35,7 +36,8 @@ class CSESearchPlugin(ob.Plugin):
             TextInput(label="Query", icon="search"),
             TextInput(label="Pages", icon="123", default="1"),
         ],
-        DropdownInput(label="Categories", options=cse_link_options),
+        DropdownInput(label="CSE Categories", options=[]), 
+        # @todo re-add to options after bug is fixed: cse_link_options
     ]
 
     @ob.transform(label="To cse results", icon="search")

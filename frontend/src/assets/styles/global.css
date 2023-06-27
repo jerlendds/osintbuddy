@@ -14,10 +14,7 @@ button {
 :disabled {
   cursor: default;
 }
-* {
-  scrollbar-width: auto;
-  scrollbar-color: #3c3c40 #3c3c40;
-}
+
 
 ::-moz-selection {
  @apply text-slate-200 bg-info-300
@@ -52,24 +49,24 @@ figcaption {
 }
 
 /* 
-* Custom Scrollbar Style 
+ Custom Scrollbar Style 
+ Works on Chrome, Edge, and Safari 
 */
-/* Works on Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 *::-webkit-scrollbar-track {
   background: #0A0F1B;
-  width: 8px;
+  width: 6px;
 }
 *::-webkit-scrollbar-thumb {
   background-color: #0F172A;
   border-radius: 0px;
-  border-right: 8px solid #0F172A;
+  border-right: 6px solid #0F172A;
 }
 * {
-  scrollbar-width: 8px;
-  scrollbar-color: #1b243e #15213E;
+  scrollbar-width: 4px;
+  scrollbar-color: #0F172A #0F172A;
 }
 /* end Custom Scrollbar Style */
 
