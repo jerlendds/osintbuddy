@@ -252,7 +252,7 @@ const ActionsRow = ({ row, updateTable }: JSONObject) => {
   return (
     <div className='flex items-center justify-between relative z-40 mb-1'>
       <Link
-        to={`/app/dashboard/${row.original.id}`}
+        to={`/app/dashboard/${row.original.uuid}`}
         state={{ activeProject: row.original }}
         className='flex whitespace-nowrap px-2 py-2 hover:ring-2 transition-all duration-75 ring-info-300 hover:ring-info-200 focus:ring-1 focus:ring-inset outline-none items-center text-slate-400 hover:text-slate-200 rounded-md ring-1 '
       >
@@ -262,7 +262,7 @@ const ActionsRow = ({ row, updateTable }: JSONObject) => {
       <button
         onClick={() => {
           api
-            .delete(`/cases?id=${row.original.id}`)
+            .delete(`/projects?id=${row.original.id}`)
             .then(() => updateTable())
             .catch((error) => toast.error('We ran into an error deleting your project. Is the backend running?'));
         }}

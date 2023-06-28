@@ -34,4 +34,4 @@ class CRUDGoogleDorks(CRUDBase[
         ).all()
 
 
-google_dorks = CRUDGoogleDorks(Google_Dorks)
+dorks = CRUDGoogleDorks(Google_Dorks)

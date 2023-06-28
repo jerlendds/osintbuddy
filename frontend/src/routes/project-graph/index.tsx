@@ -41,7 +41,7 @@ export default function OsintPage() {
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
 
   const [messageHistory, setMessageHistory] = useState([]);
-  const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/investigation`);
+  const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/project/${activeProject.uuid}`);
   const { lastMessage, lastJsonMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl, {
     onOpen: () => console.log('opened'),
     shouldReconnect: (closeEvent) => {
@@ -51,14 +51,6 @@ export default function OsintPage() {
 
   function addNode(id, data: AddNode, position): void {
     dispatch(createNode({ id, data, position, type: 'base' }));
-    // setNodes((nds) =>
-    //   nds.concat({
-    //     id,
-    //     type: 'base',
-    //     data,
-    //     position: graphInstance.project(position),
-    //   })
-    // );
   }
 
   function addEdge(source, target, sourceHandle, targetHandle, type: AddEdge): void {
