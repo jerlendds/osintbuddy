@@ -122,9 +122,7 @@ async def get_node_option(node: schemas.CreateNode):
     if plugin:
         blueprint = plugin.blueprint()
         blueprint['position'] = node.position.__dict__
-        new_node = await save_node_to_graph(node.label, blueprint)
-        print('new_node', new_node)
-        return new_node
+        return await save_node_to_graph(node.label, blueprint)
     raise HTTPException(status_code=422, detail=f'Plugin entity {node.label} can\'t be found.')
 
 
