@@ -167,7 +167,7 @@ export const selectNodeValue = (state: RootState, id: string, label: string) => 
   const node = state.graph.nodes.find((node: any) => {
     return node.id === id;
   });
-  if (node) return node.data.elements.find((elm: any) => elm.label === label).value;
+  if (node) return node.data.elements.flat().find((element: any) => element.label === label).value;
   return '';
 };
 
