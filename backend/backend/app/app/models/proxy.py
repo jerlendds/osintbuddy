@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 
 class Proxies(Base):
     id = Column(Integer, primary_key=True, index=True)
-    url = Column(String, nullable=False)
+    host = Column(String, nullable=False)
     username = Column(Integer, nullable=True)
     password = Column(Integer, nullable=True)
     proxy_type_id = Column(Integer, ForeignKey("proxy_type.id"))

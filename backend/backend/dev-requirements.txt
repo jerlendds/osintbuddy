@@ -37,7 +37,6 @@ httpx==0.24.1
 idna==3.4
 iniconfig==2.0.0
 isodate==0.6.1
-jsbeautifier==1.14.7
 kombu==5.2.4
 langdetect==1.0.9
 Mako==1.2.4

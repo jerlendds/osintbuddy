@@ -2,7 +2,7 @@ import sys
 import json
 import ujson
 import uuid
-from typing import List
+from typing import List, Callable
 from fastapi import (
     APIRouter,
     WebSocket,
@@ -84,22 +84,22 @@ def add_node_element(nodev, element: dict or List[dict], data_labels: List[tuple
     return element
 
 
-async def save_node_to_graph(node_label: str, node_blueprint: dict, project_uuid: str = None):
+async def save_node_on_drop(node_label: str, node_blueprint: dict, project_uuid: str = None):
     async with await DriverRemoteConnection.open('ws://janus:8182/g', 'g') as connection:
         g: AsyncGraphTraversal = Graph().traversal().withRemote(connection)
-        v = g.addV(node_label) \
+        new_entity_type = g.addV(node_label) \
             .property('x', node_blueprint['position']['x']) \
             .property('y', node_blueprint['position']['y'])
 
         new_labels = []
         for element in node_blueprint['elements']:
             if isinstance(element, list):
-                element = [add_node_element(v, elm, new_labels) for elm in element]
+                element = [add_node_element(new_entity_type, elm, new_labels) for elm in element]
             else:
-                element = add_node_element(v, element, new_labels)
-        v = await v.next()
+                element = add_node_element(new_entity_type, element, new_labels)
+        new_entity = await new_entity_type.next()
 
-        await g.V().hasId(v.id) \
+        await g.V().hasId(new_entity.id) \
             .properties(*new_labels) \
             .valueMap(True) \
             .toList()
@@ -111,19 +111,20 @@ async def save_node_to_graph(node_label: str, node_blueprint: dict, project_uuid
         'elements': node_blueprint.pop('elements'),
     }
     node_blueprint['type'] = 'base'
-    node_blueprint['id'] = str(v.id)
-    return node_blueprint
+    node_blueprint['id'] = str(new_entity.id)
+    return node_blueprint   
 
 
 
 @router.post('/')
 async def get_node_option(node: schemas.CreateNode):
     plugin = await Registry.get_plugin(plugin_label=node.label)
+    print('plugin???', plugin)
     if plugin:
         blueprint = plugin.blueprint()
         blueprint['position'] = node.position.__dict__
-        return await save_node_to_graph(node.label, blueprint)
-    raise HTTPException(status_code=422, detail=f'Plugin entity {node.label} can\'t be found.')
+        return await save_node_on_drop(node.label, blueprint)
+    raise HTTPException(status_code=422, detail=f'Plugin entity {node.label} cannot be found.')
 
 
 def save_transform(results: List[dict]):
@@ -131,35 +132,27 @@ def save_transform(results: List[dict]):
         pass
 
 
-async def get_command_type(event):
-    user_event = event["action"].split(":")
-    action = user_event[0]
-    action_type = None
-    if len(user_event) >= 2:
-        action_type = user_event[1]
-    return action, action_type
 
 
-async def read_graph(node, action_type, send_json):
+async def read_graph(node, action_type, send_json, project_uuid):
     await send_json(node)
 
 
-async def create_nodes(node, action_type, send_json):
+async def create_nodes(node, action_type, send_json, project_uuid):
     print(node)
     await send_json(node)
 
 
-async def update_nodes(node, action_type, send_json):
+async def update_nodes(node, action_type, send_json, project_uuid):
     await send_json(node)
 
 
-async def remove_nodes(node, action_type, send_json):
+async def remove_nodes(node, action_type, send_json, project_uuid):
     await send_json({"action": "remove:node", "node": node})
 
 
-async def nodes_transform(node, action_type, send_json):
+async def nodes_transform(node, action_type, send_json, project_uuid):
     node_output = {}
-    print(node, )
     plugin = await Registry.get_plugin(node.get('data', {}).get('label'))
     if plugin:
         plugin = plugin()
@@ -182,28 +175,37 @@ async def nodes_transform(node, action_type, send_json):
     else:
         await send_json({'error': 'noPluginFound'})
 
-async def execute_event(event, send_json):
+
+async def get_command_type(event):
+    user_event = event["action"].split(":")
+    action = user_event[0]
+    action_type = None
+    if len(user_event) >= 2:
+        action_type = user_event[1]
+    return action, action_type
+
+async def execute_event(event: dict, send_json: Callable, project_uuid: str):
     action, action_type = await get_command_type(event)
     if action == "read":
-        await read_graph(event["node"], action_type, send_json)
+        await read_graph(event["node"], action_type, send_json, project_uuid)
     if action == "create":
-        await create_nodes(event["node"], action_type, send_json)
+        await create_nodes(event["node"], action_type, send_json, project_uuid)
     if action == "update":
-        await update_nodes(event["node"], action_type, send_json)
+        await update_nodes(event["node"], action_type, send_json, project_uuid)
     if action == "delete":
-        await remove_nodes(event["node"], action_type, send_json)
+        await remove_nodes(event["node"], action_type, send_json, project_uuid)
     if action == "transform":
-        await nodes_transform(event["node"], action_type, send_json)
+        await nodes_transform(event["node"], action_type, send_json, project_uuid)
 
 
-@router.websocket("/investigation")
-async def active_investigation(websocket: WebSocket):
+@router.websocket("/project/{project_uuid}")
+async def active_project(websocket: WebSocket, project_uuid: str):
     await websocket.accept()
     await websocket.send_json({"action": "refresh"})
     while True:
         try:
             event = await websocket.receive_json()
-            await execute_event(event=event, send_json=websocket.send_json)
+            await execute_event(event=event, send_json=websocket.send_json, project_uuid=project_uuid)
         except OBPluginError as e:
             await websocket.send_json({"action": "error", "detail": f"{e}"})
         except WebSocketDisconnect as e:
