@@ -60,7 +60,7 @@ def get_dorks(
         limit = 100
 
     # the 'all' filter is set as a negative client side
-    if filter > 0:
+    if filter:
         dork_data = crud.dorks.get_multi_by_category(
             db=db, skip=skip, limit=limit, category_id=filter
         )

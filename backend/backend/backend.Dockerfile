@@ -13,6 +13,9 @@ RUN pip3 install --no-cache-dir --upgrade pip && \
 # @todo change to PyPi package for release 0.0.5 and remove gitmodules
 COPY osintbuddy-plugins /osintbuddy-plugins/
 RUN pip3 install /osintbuddy-plugins/
+COPY gremlinpy /gremlinpy/
+RUN pip3 install /gremlinpy/
+
 COPY app/ /app/
 
 CMD ["/bin/bash", "-c", "./start.sh"]

@@ -14,5 +14,5 @@ class UrlPlugin(ob.Plugin):
 
     @ob.transform(label='To website', icon='world-www')
     async def transform_to_website(self, node, **kwargs):
-        domain = urlparse(node['data'][0]).netloc
+        domain = urlparse(node.url).netloc
         return WebsitePlugin.blueprint(domain=domain)

@@ -48,6 +48,16 @@ services:
       - .env
     ports:
       - "${POSTGRES_PORT-.env POSTGRES_PORT needs to be set}:5432"
+  janus:
+    build:
+      context: ./janus
+      dockerfile: janusgraph.Dockerfile
+    ports:
+      - "8182:8182"
+    volumes:
+      - "./janus/janusgraph-dynamic.properties:/opt/janusgraph/janusgraph-dynamic.properties"
+      - "./janus/janusgraph-server.yaml:/etc/opt/janusgraph/janusgraph-server.yaml"
+      - "./janus/empty-sample.groovy:/opt/janusgraph/scripts/empty-sample.groovy"
   sdb:
     image: scylladb/scylla:5.1
     ports:
@@ -57,22 +67,10 @@ services:
      - "${INTERNODE_PORT-.env INTERNODE_PORT needs to be set}:7000"
      - "${INTERNODE_ONE_PORT-.env INTERNODE_ONE_PORT needs to be set}:7001"
      - "${JMX_PORT-.env JMX_PORT needs to be set}:7199"
-    environment:
-      --default-log-level: warn
     env_file:
       - .env
     volumes:
      - sdb-data:${SCYLLADATA-.env SCYLLADATA needs to be set}
-  janus:
-    image: "${JANUS_IMAGE-.env JANUS_IMAGE needs to be set}"
-    ports:
-      - "8182:8182"
-    environment:
-      storage.backend: "cql"
-      storage.hostname: sdb:9042
-      index.search.backend: elasticsearch
-      index.search.hostname: "index:${ELASTIC_PORT-.env ELASTIC_PORT needs to be set}"
-      janusgraph.set-vertex-id: true
   index:
     image: "${ELASTIC_IMAGE-.env ELASTIC_IMAGE needs to be set}"
     environment:
@@ -84,7 +82,6 @@ services:
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
-      - "-Des.logger.level=WARN"
     ulimits:
       memlock:
         soft: -1
@@ -101,14 +98,7 @@ services:
       - type: volume
         source: es-data
         target: /usr/share/elasticsearch/data
-
-volumes:
-  osintbuddy-db-data:
-  es-data:
-  sdb-data:
-  index-data:
-
-  # @todo uncomment for WARC release
+  # # @todo uncomment for WARC release
   # worker:
   #   # image: openinfolabs/osintbuddy-worker:latest
   #   command: /worker-start.sh
@@ -117,10 +107,16 @@ volumes:
   #     dockerfile: worker.Dockerfile
   #   env_file:
   #     - .env
-  # @todo Replace with https://github.com/rsalmei/clearly
+  # # @todo Replace with https://github.com/rsalmei/clearly
   # flower:
   #   image: mher/flower:1.2
   #   ports:
   #     - 5555:5555
   #   environment:
   #     - CELERY_BROKER_URL=redis://redis:6379//
+volumes:
+  osintbuddy-db-data:
+  es-data:
+  sdb-data:
+  index-data:
+

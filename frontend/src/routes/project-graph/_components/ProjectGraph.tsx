@@ -9,20 +9,13 @@ import ReactFlow, {
   Connection,
 } from 'reactflow';
 import BaseNode from './BaseNode';
-import {
-  fetchNodeBlueprint,
-  onEdgeConnect,
-  updateEdgeEvent,
-  updateNodeFlow,
-} from '@/features/graph/graphSlice';
+import { fetchNodeBlueprint, onEdgesChange, updateEdgeEvent, updateNodeFlow } from '@/features/graph/graphSlice';
 import { useAppDispatch } from '@/app/hooks';
 import { toast } from 'react-toastify';
 
 const viewOptions: FitViewOptions = {
   padding: 50,
 };
-
-const onNodeDragStop: NodeDragHandler = (_, node) => console.log('@todo on drag stop, update position', node);
 
 export default function ProjectGraph({
   graphRef,
@@ -36,9 +29,9 @@ export default function ProjectGraph({
   onPaneCtxMenu,
   onSelectionCtxMenu,
   onMultiSelectionCtxMenu,
+  activeProject,
 }: JSONObject) {
   const dispatch = useAppDispatch();
-
   const [isSavingNewNode, setSavingNewNode] = useState(false);
   const onEdgeUpdate = useCallback(
     (oldEdge: Edge, newConnection: Connection) => dispatch(updateEdgeEvent({ oldEdge, newConnection })),
@@ -62,12 +55,12 @@ export default function ProjectGraph({
         x: event.clientX - graphBounds.left,
         y: event.clientY - graphBounds.top,
       });
-      console.log('DROP POSITION?!', position)
       try {
         await dispatch(
           fetchNodeBlueprint({
             label,
             position,
+            uuid: activeProject.uuid,
           })
         ).unwrap();
       } catch (error: unknown) {
@@ -86,6 +79,11 @@ export default function ProjectGraph({
     []
   );
 
+  const onNodeDragStop: NodeDragHandler = (_, node) => {
+    sendJsonMessage({ action: 'update:node', node: { id: node.id, x: node.position.x } });
+    sendJsonMessage({ action: 'update:node', node: { id: node.id, y: node.position.y } });
+  };
+
   return (
     <ReactFlow
       minZoom={0.2}
@@ -94,7 +92,12 @@ export default function ProjectGraph({
       edges={edges}
       onDrop={onDrop}
       onConnect={(connection) => {
-        dispatch(onEdgeConnect(connection));
+        console.log('WTF connect', connection)
+        dispatch(onEdgesChange(connection));
+      }}
+      onEdgesChange={(changes) => {
+        console.log('WTF', changes)
+        dispatch(onEdgesChange(changes))
       }}
       onDragOver={onDragOver}
       onEdgeUpdate={onEdgeUpdate}

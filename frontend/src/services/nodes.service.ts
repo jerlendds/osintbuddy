@@ -7,10 +7,11 @@ class NodesService {
     return await api.get(`/nodes?case_id=${caseId}`);
   }
 
-  async createNode({ label, position }: { label: string; position: XYPosition }) {
+  async createNode({ label, position, uuid }: { label: string; position: XYPosition, uuid: string }) {
     const result = await api.post(`/nodes/`, {
       label,
       position,
+      project_uuid: uuid
     });
     return result.data as ApiNode;
   }

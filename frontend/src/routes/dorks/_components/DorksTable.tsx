@@ -12,6 +12,7 @@ import {
   ChevronRightIcon,
   EyeIcon,
   MagnifyingGlassCircleIcon,
+  PlusIcon,
 } from '@heroicons/react/24/outline';
 import { DorkStats } from './DorkStats';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
@@ -20,6 +21,8 @@ import SelectBoxApi, { SelectBoxOption } from '@/components/SelectBoxApi';
 import api from '@/services/api.service';
 import { PageHeader } from '@/components/Headers';
 import { toast } from 'react-toastify';
+import { CreateCaseModal } from '@/routes/projects';
+import Table, { DataRow, EmptyTableBody, LoadingRow } from '@/components/Table';
 
 interface TableProps {
   columns: Array<Column>;
@@ -29,7 +32,7 @@ interface TableProps {
   pageCount: number;
   setShowCreate: Function;
   setDork: Function;
-  updateGhdb: Function;
+  CustomRow?: any
 }
 
 interface FilterOptions {
@@ -38,7 +41,7 @@ interface FilterOptions {
   description: string;
 }
 
-function Table({
+function TableOld({
   columns,
   data,
   fetchData,
@@ -46,7 +49,7 @@ function Table({
   pageCount: controlledPageCount,
   setShowCreate,
   setDork,
-  updateGhdb,
+  CustomRow
 }: TableProps) {
   const {
     getTableProps,
@@ -80,7 +83,7 @@ function Table({
           accessor: 'edit',
           id: 'edit',
           Header: 'Actions',
-          Cell: ({ row, setEditableRowIndex, editableRowIndex }: CellProps<any>) => (
+          Cell: ({ row, setEditableRowIndex, editableRowIndex }: CellProps<any>) => !CustomRow ? (
             <div className='flex items-center relative z-40'>
                <button
                 // @ts-ignore
@@ -97,7 +100,7 @@ function Table({
                 <span className='text-slate-200 font-display'>Add to scans</span>{' '}
               </button>
             </div>
-          ),
+          ) : <CustomRow />,
         },
       ]);
     }
@@ -173,12 +176,7 @@ function Table({
           </p>
         </div>
         <div className='flex flex-1 justify-between sm:justify-end'>
-          <button
-            className='text-slate-100 mr-12 flex items-center justify-between text-sm font-display hover:text-slate-200 border-info-200 border-2 py-1 rounded-full px-3 bg-info-200 hover:border-info-50 transition-colors duration-75 ease-in'
-            onClick={() => updateGhdb()}
-          >
-            Fetch dorks
-          </button>
+   
           <button
             onClick={() => previousPage()}
             disabled={!canPreviousPage}
@@ -227,113 +225,174 @@ export const formatDork = (dorkTag: string) => {
 export default function DorksTable({
   setShowCreate,
   setDork,
+  getDorks,
   columns,
-  updateGhdb,
-}: {
-  setShowCreate: Function;
-  setDork: Function;
-  columns: Column[];
-  updateGhdb: Function;
-}) {
-  const [isLoadingFilter, setIsLoadingFilter] = useState<boolean>(false);
-  const [filterOptions, setFilterOptions] = useState<FilterOptions[] | []>([]);
-  const [selectedFilter, setSelectedFilter] = useState<SelectBoxOption>({
-    id: -1,
-    name: 'Select a category...',
-  });
+  loading,
+  data,
+  pageCount: controlledPageCount,
+  fetchData,
+  createButtonFunction,
+  createButtonLabel,
+  CustomRow,
+}: JSONObject) { 
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
+  } = useTable(
+    {
+      columns,
+      data,
+      initialState: { pageIndex: 0 },
+      manualPagination: true,
+      pageCount: controlledPageCount,
+    },
+    usePagination,
+    (hooks) => {
+      hooks.allColumns.push((columns) => [
+        ...columns,
+        {
+          accessor: 'edit',
+          id: 'edit',
+          Header: 'Actions',
+          Cell: ({ row, setEditableRowIndex, editableRowIndex }) => (
+            <CustomRow
+              updateTable={() => {
+                setTimeout(() => fetchData({ pageIndex, pageSize }), 150);
+              }}
+              row={row}
+            />
+          ),
+        },
+      ]);
+    }
+  );
 
   useEffect(() => {
-    setIsLoadingFilter(true);
-    api
-      .get('/ghdb/categories/')
-      .then((resp) => {
-        if (resp.data) {
-          setFilterOptions([
-            {
-              id: -1,
-              name: 'All',
-            },
-            ...resp.data,
-          ]);
-        }
-        setIsLoadingFilter(false);
-      })
-      .catch((error) => {
-        console.warn(error);
-        setIsLoadingFilter(false);
-      });
-  }, []);
-
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [pageCount, setPageCount] = useState(0);
-  const fetchIdRef = useRef(0);
-
-  // fetch the dorks data
-  const fetchData = useCallback(
-    ({ pageSize, pageIndex }: FetchProps) => {
-      const fetchId = ++fetchIdRef.current;
-      setLoading(true);
-      setTimeout(() => {
-        if (fetchId === fetchIdRef.current) {
-          const startRow = pageSize * pageIndex;
-          const endRow = startRow + pageSize;
-
-          let dorkFilter = selectedFilter.id;
-
-          dorksService
-            .getDorks(pageSize, pageIndex, dorkFilter)
-            .then((resp) => {
-              if (resp.data) {
-                if (resp.data.dorks) {
-                  setPageCount(Math.ceil(resp.data.dorksCount / pageSize));
-                  setData(resp.data.dorks);
-                }
-                setLoading(false);
-              } else {
-                setLoading(false);
-              }
-            })
-            .catch((error) => {
-              console.warn(error);
-              setLoading(false);
-            });
-          setLoading(false);
-        }
-      }, 1000);
-    },
-    [selectedFilter]
-  );
+    fetchData({ pageIndex, pageSize });
+  }, [pageIndex, pageSize]);
 
   return (
     <>
-
-      <div className=' flex flex-col '>
-        <div className=''>
-          <div className='flex mx-6 items-end'>
-            <div className='flex flex-col min-w-[20rem] z-50 pb-1 mr-4'>
-              <SelectBoxApi
-                setSelected={setSelectedFilter}
-                selected={selectedFilter}
-                loading={isLoadingFilter}
-                label='Filter Categories'
-                options={filterOptions}
-              />
-            </div>
-            <DorkStats />
-          </div>
-          <div className='inline-block min-w-full py-2 align-middle '>
-            <div className='mx-6 overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg'>
-              <Table
-                updateGhdb={updateGhdb}
-                setDork={setDork}
-                setShowCreate={setShowCreate}
-                columns={columns}
-                data={data}
-                fetchData={fetchData}
-                loading={loading}
-                pageCount={pageCount}
-              />
+      <div className='flex flex-col px-8  pb-4 -mt-8'>
+        <div className='-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8'>
+          <div className='inline-block min-w-full pb-2 align-middle md:px-6'>
+            <div className='overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg'>
+              {createButtonFunction && (
+                <button
+                  type='button'
+                  onClick={() => createButtonFunction()}
+                  className='mb-3.5 ring-1 bg-dark-800 ml-auto pr-3 text-left text-sm font-semibold text-info-100 hover:text-info-200 flex items-center border border-info-200 hover:border-info-300 py-2 px-3 rounded-md mr-1'
+                >
+                  {createButtonLabel ? createButtonLabel : 'Create'}
+                  <PlusIcon className='ml-2 w-5 h-5 ' />
+                </button>
+              )}
+              <div className={classNames('primary-table-wrap', data.length < 4 && 'no-scroll')}>
+                <table className='primary-table' {...getTableProps()}>
+                  <thead>
+                    {headerGroups.map((headerGroup: any, i) => (
+                      <tr key={i.toString()} {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map((column: any) => (
+                          <th
+                            key={column.Header}
+                            className={classNames(column.Header === 'Actions' && 'truncate whitespace-nowrap')}
+                            {...column.getHeaderProps()}
+                          >
+                            {column.render('Header')}
+                          </th>
+                        ))}
+                      </tr>
+                    ))}
+                  </thead>
+                  <tbody {...getTableBodyProps()}>
+                    {loading ? (
+                      <>
+                        <LoadingRow columnsLength={columns.length} />
+                        <LoadingRow columnsLength={columns.length} />
+                        <LoadingRow columnsLength={columns.length} />
+                        <LoadingRow columnsLength={columns.length} />
+                      </>
+                    ) : (
+                      <>
+                        {page.map((row: any, i: number) => {
+                          prepareRow(row);
+                          return <DataRow key={i.toString()} row={row} />;
+                        })}
+                        {data.length < columns.length + 1 && (
+                          <EmptyTableBody
+                            showWatermark={data.length === 0}
+                            title={data?.length === 0 ? 'No dorks Found' : null}
+                            description={data?.length === 0 ? 'Please wait for the dorks scrape to complete' : null}
+                            columnsLength={columns.length}
+                          />
+                        )}
+                      </>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              <nav
+                className='flex items-center bg-dark-500 justify-end border-t border-dark-800 px-4 py-3 sm:px-6'
+                aria-label='Pagination'
+              >
+                <div className='hidden sm:block mr-auto'>
+                  <div className='text-sm text-slate-400'>
+                    {loading ? (
+                      // Use our custom loading state to show a loading indicator
+                      <div className='text-slate-400 px-6 py-2'>
+                        <RoundLoader className='text-slate-400' />
+                      </div>
+                    ) : (
+                      <>
+                        Showing page <span className='font-medium'>{pageIndex + 1}</span> of{' '}
+                        <span className='font-medium'>{pageOptions.length === 0 ? 1 : pageOptions.length}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <div className='flex  max-w-sm '>
+                  <button
+                    onClick={() => previousPage()}
+                    disabled={!canPreviousPage}
+                    className='flex whitespace-nowrap ml-4 mr-auto px-2 py-2 disabled:hover:ring-1 disabled:hover:text-slate-600 hover:ring-2 ring-slate-600 focus:ring-1 focus:ring-inset outline-none items-center text-slate-600 hover:text-slate-400 rounded-md ring-1 '
+                  >
+                    <ChevronLeftIcon className='w-5 h-5 text-slate-400 mr-2' /> <span className='mx-2'>Previous</span>
+                  </button>
+                  <button
+                    onClick={() => nextPage()}
+                    disabled={!canNextPage}
+                    className='flex whitespace-nowrap ml-4 mr-auto px-2 py-2 disabled:hover:ring-1 disabled:hover:text-slate-600 hover:ring-2 ring-slate-600 focus:ring-1 focus:ring-inset outline-none items-center text-slate-600 hover:text-slate-400 rounded-md ring-1 '
+                  >
+                    <span className='mx-2'>Next</span>
+                    <ChevronRightIcon className='w-5 h-5 text-slate-400 mr-2' />{' '}
+                  </button>
+                </div>
+                <select
+                  className='bg-transparent text-slate-400 ml-4'
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                  }}
+                >
+                  {[10, 20, 30, 40, 50].map((pageSize) => (
+                    <option key={pageSize} value={pageSize}>
+                      Show {pageSize}
+                    </option>
+                  ))}
+                </select>
+              </nav>
             </div>
           </div>
         </div>
@@ -341,3 +400,4 @@ export default function DorksTable({
     </>
   );
 }
+

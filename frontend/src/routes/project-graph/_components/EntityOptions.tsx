@@ -1,6 +1,6 @@
 import { Menu, Disclosure, Transition } from '@headlessui/react';
 import { ChevronUpDownIcon, PlusIcon, Square2StackIcon } from '@heroicons/react/24/outline';
-import React, { useRef, useState, MutableRefObject, useEffect, useCallback } from 'react';
+import React, { useRef, useState, MutableRefObject, useEffect, useCallback, DragEventHandler } from 'react';
 import { Fragment } from 'react';
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
 import classNames from 'classnames';
@@ -101,15 +101,17 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
 }
 
 export default function EntityOptions({ options, activeProject }: any) {
-  const onDragStart = (event: any, nodeType: any) => {
-    event.dataTransfer.setData('application/reactflow', nodeType);
-    event.dataTransfer.effectAllowed = 'move';
+  const onDragStart = (event: DragEvent, nodeType: string) => {
+    if (event?.dataTransfer) {
+      event.dataTransfer.setData('application/reactflow', nodeType);
+      event.dataTransfer.effectAllowed = 'move';
+    }
   };
 
   const [showEntities, setShowEntities] = useState(true);
   const [searchFilter, setSearchFilter] = useState('');
   const filteredOptions = searchFilter
-    ? options.filter((option: JSONObject) => option.name.includes(searchFilter))
+    ? options.filter((option: JSONObject) => option.name.toLowerCase().includes(searchFilter))
     : options;
 
   return (
@@ -123,7 +125,7 @@ export default function EntityOptions({ options, activeProject }: any) {
         <ol className='text-sm flex select-none bg-dark-700 relative px-4'>
           <li className='flex items-start'>
             <div className='flex items-center'>
-              <Link title='View all projects' to='/app/dashboard' replace>
+              <Link title='View all projects' to='/app/projects' replace>
                 <span className='text-slate-500 font-display'>
                   All Projects <span className='font-medium font-display'>/&nbsp;</span>
                 </span>
@@ -146,7 +148,7 @@ export default function EntityOptions({ options, activeProject }: any) {
             <span onClick={() => setShowEntities(!showEntities)}>
               <EllipsisVerticalIcon
                 className={classNames(
-                  'h-6 w-6 text-light rotate-0 transition-transform duration-75',
+                  'h-6 w-6 text-slate-400 rotate-0 transition-transform duration-75',
                   showEntities && 'rotate-90 origin-center '
                 )}
               />

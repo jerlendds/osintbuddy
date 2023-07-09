@@ -35,7 +35,7 @@ export default function AppRoutes(): ReactElement {
       </Route>
       <Route path='/app' element={<AppLayout />}>
         <Route
-          path='dashboard'
+          path='projects'
           element={
             <Suspense>
               <DashboardPage />
@@ -51,7 +51,7 @@ export default function AppRoutes(): ReactElement {
           }
         />
         <Route
-          path='dashboard/:caseId'
+          path='projects/:caseId'
           element={
             <Suspense>
               <OSINTPage />

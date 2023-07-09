@@ -3,16 +3,18 @@ interface FetchProps {
   pageIndex: number;
 }
 
+interface NodeData {
+  label: string;
+  color: HexColor;
+  icon: TablerIcon;
+  style: {};
+  elements: NodeInput[];
+}
+
 interface ApiNode {
   id: string;
   position: XYPosition;
-  data: {
-    label: string;
-    color: HexColor;
-    icon: TablerIcon;
-    style: {};
-    elements: NodeInput[];
-  };
+  data: NodeData;
   type: 'base';
 }
 

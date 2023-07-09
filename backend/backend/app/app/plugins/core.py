@@ -34,11 +34,8 @@ class GoogleSearchPlugin(ob.Plugin):
     @ob.transform(label="To results")
     async def transform_to_google_results(self, node, **kwargs):
         # print("@todo refactor transform node API: ", node)
-        print('NODE', node)
-        query = node["data"][0]
-        pages = node["data"][1]
         results = []
-        for result in await self.search_google(query, pages):
+        for result in await self.search_google(node.query, node.pages):
             blueprint = GoogleResult.blueprint(
                 result={
                     "title": result.get("title"),
@@ -115,7 +112,7 @@ class GoogleCacheResult(ob.Plugin):
 
     @ob.transform(label="To website", icon="world-www")
     async def transform_to_website(self, node, **kwargs):
-        return WebsitePlugin.blueprint(domain=urlparse(node["data"][3]).netloc)
+        return WebsitePlugin.blueprint(domain=urlparse(node.url).netloc)
 
 
 class GoogleCacheSearchPlugin(ob.Plugin):
@@ -129,11 +126,7 @@ class GoogleCacheSearchPlugin(ob.Plugin):
 
     @ob.transform(label="To cache results")
     async def transform_to_google_cache_results(self, node, **kwargs):
-        
-        
-        query = node["data"][0]
-        pages = node["data"][1]
-        return await self.search_google_cache(query, pages)
+        return await self.search_google_cache(node.query, node.pages)
 
     async def search_google_cache(self, query, pages):
         cache_results = []
@@ -146,7 +139,7 @@ class GoogleCacheSearchPlugin(ob.Plugin):
                     timeout=None
                 )
                 cache_results = google_resp.json()
-        except OBPluginError:
+        except Exception:
             raise OBPluginError(
                 "We ran into an error crawling googles cache. Please try again."
             )
@@ -200,7 +193,7 @@ class GoogleCacheSearchPlugin(ob.Plugin):
 class DnsPlugin(ob.Plugin):
     label = "DNS"
     name = "DNS"
-    color = ""
+    color = "#2181B5"
     show_label = False
     icon = "server-2"
     node = [Title(label="record")]
@@ -238,12 +231,11 @@ class DnsPlugin(ob.Plugin):
             "title": "",
             "subtitle": f"{key} Record",
             "text": _data,
-            "data": [_data],
         }
 
     @ob.transform(label="Extract IP", icon="microscope")
     async def transform_extract_ip(self, node, **kwargs) -> list:
-        data = node["data"][2]
+        data = node.record['text']
         ip_regexp = re.compile("\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}")
         results = []
         for ip in ip_regexp.findall(data):
@@ -262,7 +254,7 @@ class GoogleResult(ob.Plugin):
     @ob.transform(label="To website", icon="world")
     async def transform_to_website(self, node, **kwargs):
         blueprint = WebsitePlugin.blueprint(
-            domain=urlparse(node["data"][3]).netloc
+            domain=urlparse(node.url).netloc
         )
         return blueprint
 
@@ -279,18 +271,16 @@ class WebsitePlugin(ob.Plugin):
     @ob.transform(label="To IP", icon="building-broadcast-tower")
     async def transform_to_ip(self, node, **kwargs):
         blueprint = IPAddressPlugin.blueprint(
-            ip_address=socket.gethostbyname(node["data"][0])
+            ip_address=socket.gethostbyname(node.domain)
         )
         return blueprint
 
     @ob.transform(label="To google", icon="world")
     async def transform_to_google(self, node, **kwargs):
         # @todo
-        domain = node["data"][0]
-        query = f"{domain}"
         results = []
         for result in await GoogleSearchPlugin().search_google(
-            query=query, pages="3"
+            query=node.domain, pages="3"
         ):
             blueprint = GoogleResult.blueprint(
                 result={
@@ -304,13 +294,13 @@ class WebsitePlugin(ob.Plugin):
         return results
 
     @ob.transform(label="To WHOIS", icon="world")
-    async def transform_to_whois(self, node, **kwargs):
-        domain = node["data"][0]
+    async def transform_to_whois(self, node, use):
+        domain = node.domain
         if len(domain.split(".")) > 2:
             domain = domain.split(".")
             domain = domain[len(domain) - 2] + "." + domain[len(domain) - 1]
 
-        with kwargs["get_driver"]() as driver:
+        with use.get_driver() as driver:
             driver.get(f"https://www.whois.com/whois/{domain}")
             raw_whois = None
             try:
@@ -332,12 +322,12 @@ class WebsitePlugin(ob.Plugin):
         blueprint = WebsitePlugin.blueprint()
         data = DnsPlugin.data_template()
 
-        if len(node["data"]) == 0:
+        if len(node.domain) == 0:
             raise NodeMissingValueError(
                 "A website is required to process dns records"
             )
 
-        website = node["data"][0]
+        website = node.domain
         website_parsed = urlparse(website)
         if website_parsed.scheme:
             domain = website_parsed.netloc
@@ -467,7 +457,7 @@ class IPAddressPlugin(ob.Plugin):
     node = [TextInput(label="IP Address", icon="map-pin")]
 
     @ob.transform(label="To website", icon="world", prompt="""""")
-    async def transform_to_website(self, node, **kwargs):
+    async def transform_to_website(self, node, use):
         try:
             resolved = socket.gethostbyaddr(node["data"][0])
             if len(resolved) >= 1:
@@ -504,7 +494,7 @@ class IPAddressPlugin(ob.Plugin):
         return nodes
 
     @ob.transform(label="To geolocation", icon="map-pin")
-    async def transform_to_geolocation(self, node, **kwargs):
+    async def transform_to_geolocation(self, node, use):
         summary_rows = [
             "ASN",
             "Hostname",
@@ -524,15 +514,15 @@ class IPAddressPlugin(ob.Plugin):
             "Timezone",
             "Coordinates",
         ]  # noqa
-        if len(node["data"]) == 0:
+        if len(node.ip_address) == 0:
             raise OBPluginError(
-                "IP Address is a required field for this transform"
+                "A valid IP Address is a required field for this transform"
             )
 
         geolocation = {}
         summary = {}
-        with kwargs["get_driver"]() as driver:
-            driver.get(f'https://ipinfo.io/{node["data"][0]}')
+        with use.get_driver() as driver:
+            driver.get(f'https://ipinfo.io/{node.ip_address}')
             for row in summary_rows:
                 summary[to_camel_case(row)] = driver.find_element(
                     by=By.XPATH, value=self.get_summary_xpath(row)
