@@ -1,6 +1,6 @@
 import dorksService from '@/services/dorks.service';
 import classNames from 'classnames';
-import { ReactEventHandler, useMemo, useState } from 'react';
+import { ReactEventHandler, useCallback, useMemo, useRef, useState } from 'react';
 import DorksTable from './_components/DorksTable';
 import { DorkStats } from './_components/DorkStats';
 import { XMarkIcon } from '@heroicons/react/24/outline';
@@ -106,14 +106,43 @@ export default function GoogleDorksPage() {
     []
   );
 
-  const updateGhdb = () => {
-    dorksService
-      .updateDorks()
-      .then((resp) => {
-      })
-      .catch((error) => console.warn(error));
-  };
 
+
+  const [pageCount, setPageCount] = useState(0);
+  const [dorksData, setDorksData] = useState<any>([]);
+  const [loadingDorks, setLoadingDorks] = useState(false);
+  const fetchIdRef = useRef(0);
+
+  const fetchDorks = useCallback(
+    ({ pageSize, pageIndex }: FetchProps) => {
+      const fetchId = ++fetchIdRef.current;
+      setLoadingDorks(true);
+      if (fetchId === fetchIdRef.current) {
+        const startRow = pageSize * pageIndex;
+        const endRow = startRow + pageSize;
+        if (fetchId === fetchIdRef.current) {
+          // @todo remove timeout
+          setTimeout(() => {
+            dorksService.getDorks(pageSize * pageIndex, pageCount)
+              .then((resp) => {
+                if (resp?.data) {
+                  setPageCount(Math.ceil(resp.data?.dorksCount / pageSize));
+                  setDorksData(resp.data.dorks);
+                  setLoadingDorks(false);
+                }
+              })
+              .catch((error) => {
+                console.warn(error);
+                setLoadingDorks(false);
+              });
+          }, 300);
+        }
+      }
+    },
+    [pageCount]
+  );
+
+  console.log(dorksData)
   return (
     <>
       <PageHeader title='Dorks' header='Google Dorking' />
@@ -122,7 +151,7 @@ export default function GoogleDorksPage() {
         <div className='flex w-full flex-col'>
           <div className='w-full  '>
             <div className='flex'></div>{' '}
-            <DorksTable updateGhdb={updateGhdb} columns={columns} setDork={setDork} setShowCreate={setShowCreate} />
+            <DorksTable fetchData={fetchDorks} data={dorksData} columns={columns} setDork={setDork} setShowCreate={setShowCreate} />
           </div>
         </div>
       </div>

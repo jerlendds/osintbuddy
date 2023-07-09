@@ -1,14 +1,26 @@
+import sys
+import json
+import ujson
 import uuid
-from fastapi import APIRouter, Depends, HTTPException
+import asyncio
+from contextlib import asynccontextmanager
+from typing import List, Callable, Tuple, Any, AsyncIterator
+from fastapi import (
+    APIRouter,
+    HTTPException,
+    Depends
+)
+from gremlinpy import Cluster
+from gremlinpy.exception import GremlinServerError
+from app.api import deps
 from sqlalchemy.orm import Session
 from app import crud, schemas
-from app.api import deps
 
 router = APIRouter(prefix="/projects")
 
 
 @router.get('')
-def get_project(
+async def get_project(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
@@ -25,21 +37,44 @@ def get_project(
 
 
 @router.post('')
-def create_project(
+async def create_project(
     name: str,
     db: Session = Depends(deps.get_db),
     description: str = '',
 ):
+    project_uuid = uuid.uuid4().hex
+    create_project_graph = f"""
+map = new HashMap<>()
+map.put('storage.backend', 'cql')
+map.put('storage.hostname', 'sdb:9042')
+map.put('index.search.backend', 'elasticsearch')
+map.put('index.search.hostname', 'index:9200')
+map.put('graph.graphname', 'project_{project_uuid}')
+ConfiguredGraphFactory.createConfiguration(new MapConfiguration(map))
+ConfiguredGraphFactory.open('project_{project_uuid}')
+    """
     obj_in = schemas.ProjectCreate(
         name=name,
         description=description,
-        uuid=uuid.uuid4().hex
+        uuid=project_uuid
     )
-    return crud.projects.create(db=db, obj_in=obj_in)
+    new_project = crud.projects.create(db=db, obj_in=obj_in)
+    cluster = await Cluster.open(
+        asyncio.get_event_loop(),
+        **{'hosts': ['janus'], 'port': 8182}
+    )
+    try:
+        client = await cluster.connect(hostname='janus')
+        await client.submit(create_project_graph)
+    except GremlinServerError as e:
+        print(e)
+    finally:
+        await cluster.close()
+    return new_project
 
 
 @router.delete('')
-def delete_project(
+async def delete_project(
     id: int,
     db: Session = Depends(deps.get_db),
 ):

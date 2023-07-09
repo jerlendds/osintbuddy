@@ -1,6 +1,30 @@
 interface XYPosition {
-    x: number;
-    y: number;
+  x: number;
+  y: number;
+}
+
+interface ActiveProject {
+  name: string;
+  description: string;
+  uuid: string;
+  id: number;
+}
+
+interface EditState {
+  editId: string;
+  editLabel: string;
+  editValue: string;
+}
+
+
+
+
+
+interface ActiveProjectGraph {
+  id: number;
+  uuid: string;
+  name: string;
+  description?: string
 }
 
 interface NodeMenu {
@@ -44,9 +68,6 @@ type NodeTypes =
   | 'copy-code'
   | 'empty';
 
-
-
-
 interface NodeInput {
   type: NodeTypes;
   label: string;
@@ -58,14 +79,11 @@ interface NodeInput {
   title?: string;
   subtitle?: string;
   text?: string;
-  dispatch: () => void
-  sendJsonMessage: () => void
+  dispatch: () => void;
+  sendJsonMessage: () => void;
 }
-
 
 interface DropdownOption {
   label: string;
   tooltip: string;
 }
-
-

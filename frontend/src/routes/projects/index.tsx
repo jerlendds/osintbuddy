@@ -12,6 +12,8 @@ import Table from '@/components/Table';
 import { toast } from 'react-toastify';
 import { api } from '@/services';
 import { useTour } from '@reactour/tour';
+import { useAppDispatch } from '@/app/hooks';
+import { resetGraph, setActiveProject } from '@/features/graph/graphSlice';
 
 export function NewCaseForm({ closeModal, updateTable }: JSONObject) {
   const navigate = useNavigate();
@@ -49,7 +51,7 @@ export function NewCaseForm({ closeModal, updateTable }: JSONObject) {
             toast.info(`Created the ${resp?.data?.name || ''} project`);
             closeModal();
             if (showTour) {
-              navigate(`/app/dashboard/${resp.data.id}`, {
+              navigate(`/app/projects/${resp.data.id}`, {
                 state: { activeProject: resp.data },
               });
               setIsOpen(true);
@@ -57,13 +59,15 @@ export function NewCaseForm({ closeModal, updateTable }: JSONObject) {
           })
           .catch((err) => {
             if (err.code === 'ERR_NETWORK') {
-              toast.warn('We ran into an error fetching your projects. Is the backend running and are you connected on localhost? (update the BACKEND_CORS_ORIGINS in your .env if you\'re on an interface that\'s not localhost)', {
-                autoClose: 10000
-              })
+              toast.warn(
+                "We ran into an error fetching your projects. Is the backend running and are you connected on localhost? (update the BACKEND_CORS_ORIGINS in your .env if you're on an interface that's not localhost)",
+                {
+                  autoClose: 10000,
+                }
+              );
             } else {
-              toast.error(`Error: ${err}`)
+              toast.error(`Error: ${err}`);
             }
-
           });
         setSubmitting(false);
       }}
@@ -249,11 +253,16 @@ export function NewCaseForm({ closeModal, updateTable }: JSONObject) {
 }
 
 const ActionsRow = ({ row, updateTable }: JSONObject) => {
+  const dispatch = useAppDispatch();
   return (
     <div className='flex items-center justify-between relative z-40 mb-1'>
       <Link
-        to={`/app/dashboard/${row.original.uuid}`}
+        to={`/app/projects/${row.original.uuid}`}
         state={{ activeProject: row.original }}
+        onClick={() => {
+          dispatch(setActiveProject({...row.original}))
+          dispatch(resetGraph())
+        }}
         className='flex whitespace-nowrap px-2 py-2 hover:ring-2 transition-all duration-75 ring-info-300 hover:ring-info-200 focus:ring-1 focus:ring-inset outline-none items-center text-slate-400 hover:text-slate-200 rounded-md ring-1 '
       >
         <span className='mx-2'>Investigate</span>
@@ -275,7 +284,7 @@ const ActionsRow = ({ row, updateTable }: JSONObject) => {
   );
 };
 
-function CreateCaseModal({
+export function CreateCaseModal({
   closeModal,
   isOpen,
   cancelCreateRef,

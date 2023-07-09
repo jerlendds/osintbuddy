@@ -35,9 +35,7 @@ type NodeElement = NodeInput & {
 
 export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject; sendJsonMessage: () => void }) {
   const node = ctx.data;
-  const nodeColorStyle = {
-    backgroundColor: node.color.length === 7 ? `${node.color}76` : node.color ? node.color : '#145070',
-  };
+
   const dispatch = useAppDispatch();
 
   const getNodeElement = (element: NodeInput, key: string | null = getNodeKey()) => {
@@ -105,14 +103,21 @@ export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject; se
     }
   };
 
+  const backgroundColor = node?.color?.length === 7 ? `${node.color}76` : node?.color ? node.color : '#145070';
+
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
       <Handle position={Position.Top} id='t1' key='t1' type='source' style={handleStyle} />
       <Handle position={Position.Bottom} id='b1' key='b1' type='source' style={handleStyle} />
-      <Handle position={Position.Left} id='l1' key='l1' type='target' style={handleStyle} />
+      <Handle position={Position.Left} id='l1' key='l1' type='source' style={handleStyle} />
+      
+      <Handle position={Position.Right} id='r2' key='r2' type='target' style={handleStyle} />
+      <Handle position={Position.Top} id='t2' key='t2' type='target' style={handleStyle} />
+      <Handle position={Position.Bottom} id='b2' key='b2' type='target' style={handleStyle} />
+      <Handle position={Position.Left} id='l2' key='l2' type='target' style={handleStyle} />
       <div data-label-type={node.label} className=' node container' style={node.style}>
-        <div style={nodeColorStyle} className='header '>
+        <div style={{ backgroundColor }} className='header '>
           <GripIcon className='' />
           <div className='text-container '>
             <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
@@ -134,13 +139,11 @@ export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject; se
               return (
                 <Fragment key={i.toString()}>
                   {element.map((elm, i: number) => (
-                    <div key={i.toString()} className='flex flex-col mr-2 last:mr-0'>
-                      {getNodeElement(elm, null)}
-                    </div>
+                    <div className='flex flex-col mr-2 last:mr-0'>{getNodeElement(elm, `${elm.label}-${elm.id}-${ctx.id}`)}</div>
                   ))}
                 </Fragment>
               );
-            return getNodeElement(element);
+            return getNodeElement(element, `${element.label}-${element.id}-${ctx.id}`);
           })}
         </form>
       </div>
@@ -153,7 +156,7 @@ export function CopyText({ nodeId, label, value }: { nodeId: string; label: stri
     <div
       onClick={() => {
         navigator.clipboard.writeText(value);
-        toast.success('Copied to clipboard!');
+        toast.success(`Copied ${label} to clipboard!`);
       }}
       className='flex items-center max-w-xs text-info-300'
     >
@@ -254,54 +257,28 @@ export function UploadFileInput({
 }
 
 export function TextInput({ nodeId, label, sendJsonMessage, icon, dispatch }: NodeElement) {
-  const [fieldValue, setFieldValue] = useState(useAppSelector((state) => selectNodeValue(state, nodeId, label)));
+  // @todo remove this hack once firefox supports `:has`
+  const [isFocused, setFocused] = useState(false);
 
-  const handleKeyDown = async (e: KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === 'Tab') {
-      // I hacked together this workaround after spending over 2 days trying
-      // to save node input changes to the graph redux state while maintaining tab
-      // functionality. If you just dispatch on tab/the blur event then the next
-      // input wont get focused due to the save state change
-      // so Ive enabled saving + tabbing functionality on tab or enter by adding
-      // this really ugly promise in a timeout... sorry
-      new Promise((r) => {
-        setTimeout(() => {
-          const inputs = [...document.getElementById(`${nodeId}-form`)?.querySelectorAll('input')];
-          const activeInput = inputs.findIndex((input) => input.id === `${nodeId}-${label}`);
-          if (activeInput < inputs.length - 1) {
-            r(inputs[activeInput + 1].focus());
-          } //  else {
-          //   inputs[0].focus()
-          // }
-        }, 60);
-      });
-      e.stopPropagation();
-    }
-  };
-
+  const value = useAppSelector((state) => selectNodeValue(state, nodeId, label));
   return (
     <>
       <div className='flex flex-col'>
         <p className='text-[0.5rem] ml-1 text-slate-400 whitespace-wrap font-semibold font-display mt-1'>{label}</p>
         <div className='flex items-center mb-1 '>
-          <div className='nodrag node-field'>
+          <div className={classNames('nodrag node-field', isFocused && 'ring-info-400')}>
             <Icon icon={icon} className='h-6 w-6' />
             <input
               id={`${nodeId}-${label}`}
               type='text'
               data-label={label}
-              onChange={(event: InputEvent) => setFieldValue(event.target.value)}
-              value={fieldValue}
-              onFocus={() =>
-                dispatch(
-                  setEditState({
-                    editLabel: label,
-                    editId: nodeId,
-                  })
-                )
-              }
-              onBlur={(event) => dispatch(saveUserEdits(event.target.value))}
-              onKeyDown={handleKeyDown}
+              onFocus={() => setFocused(true)}
+              onBlur={() => {
+                sendJsonMessage({ action: 'update:node', node: { id: nodeId, [label]: value } });
+                setFocused(false);
+              }}
+              onChange={(event: InputEvent) => dispatch(saveUserEdits({ value: event.target.value, nodeId, label }))}
+              value={value}
             />
           </div>
         </div>
@@ -310,35 +287,45 @@ export function TextInput({ nodeId, label, sendJsonMessage, icon, dispatch }: No
   );
 }
 
-export function DropdownInput({ options, label, nodeId, sendJsonMessage, value }: NodeElement) {
+interface DropdownOption {
+  label: string;
+  tooltip: string;
+  value: string;
+}
+
+export function DropdownInput({ options, label, nodeId, sendJsonMessage, dispatch }: NodeElement) {
   const [query, setQuery] = useState('');
   const filteredOptions =
     query === ''
       ? options ?? []
-      : options?.filter((option: any) => {
+      : options?.filter((option: DropdownOption) => {
           return option.label.toLowerCase().includes(query.toLowerCase());
         }) ?? [];
-  const [activeOption, setActiveOption] = useState(value);
 
-  useEffect(() => {
-    // sendJsonMessage({
-    //   action: 'update:node',
-    //   node: { id: nodeId, [label]: activeOption },
-    // });
-    // setEditState({ id: nodeId, data: { [label]: activeOption } });
-  }, [query, activeOption]);
+  const activeValue = useAppSelector((state) => selectNodeValue(state, nodeId, label));
 
   return (
     <>
-      <Combobox className=' w-full z-[999] dropdown-input' as='div' value={activeOption} onChange={setActiveOption}>
+      <Combobox
+        className=' w-full z-[999] dropdown-input'
+        as='div'
+        value={activeValue}
+        onChange={(option) => {
+          sendJsonMessage({
+            action: 'update:node',
+            node: { id: nodeId, [label]: option?.value ? option.value : option.label },
+          });
+          dispatch(saveUserEdits({ value: option, nodeId, label }));
+        }}
+      >
         <Combobox.Label>
           <p className='text-[0.5rem] ml-1 text-slate-400 whitespace-wrap font-semibold font-display mt-1'>{label}</p>
         </Combobox.Label>
         <div className='relative mt-1 '>
           <Combobox.Input
-            className='nodrag  focus:ring-info-400 node-field outline-none pl-2'
             onChange={(event) => setQuery(event.target.value)}
             displayValue={(option: DropdownOption) => option.label}
+            className='nodrag focus:ring-info-400 node-field outline-none pl-2'
           />
           <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
             <ChevronUpDownIcon className='h-5 w-5 text-slate-600' aria-hidden='true' />
@@ -357,26 +344,17 @@ export function DropdownInput({ options, label, nodeId, sendJsonMessage, value }
                     )
                   }
                 >
-                  {({ active, selected }) => (
-                    <span
-                      className={classNames('block truncate pl-2')}
-                      title={option?.tooltip !== option.label ? option.tooltip : 'No description found'}
-                    >
-                      {option.label}
-                    </span>
-                  )}
+                  <span
+                    className={classNames('block truncate pl-2')}
+                    title={option?.tooltip !== option.label ? option.tooltip : 'No description found'}
+                  >
+                    {option.label}
+                  </span>
                 </Combobox.Option>
               ))}
             </Combobox.Options>
           )}
         </div>
-        <input
-          data-label={label}
-          id={`${nodeId}-${label}`}
-          readOnly
-          value={JSON.stringify(activeOption)}
-          className='hidden invisible'
-        />
       </Combobox>
     </>
   );

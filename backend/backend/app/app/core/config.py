@@ -61,6 +61,9 @@ class Settings(BaseSettings):
     CELERY_BROKER_URL: str
     CELERY_BACKEND: str
 
+    JANUSGRAPH_HOST: str = 'janus'
+    JANUSGRAPH_PORT: int = 8182
+
     class Config:
         case_sensitive = True
 

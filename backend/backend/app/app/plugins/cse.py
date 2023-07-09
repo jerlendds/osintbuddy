@@ -3,6 +3,7 @@ import urllib
 from collections import defaultdict
 import httpx
 import osintbuddy as ob
+from pydantic import BaseModel
 from osintbuddy.elements import TextInput, DropdownInput, Title, CopyText
 from osintbuddy.errors import OBPluginError
 from app.plugins.url import UrlPlugin
@@ -23,7 +24,7 @@ class CSESearchResultsPlugin(ob.Plugin):
 
     @ob.transform(label="To URL", icon='link')
     async def transform_to_url(self, node, **kwargs):
-        return UrlPlugin.blueprint(url=node["data"][3])
+        return UrlPlugin.blueprint(url=node.url)
 
 
 class CSESearchPlugin(ob.Plugin):
@@ -35,34 +36,28 @@ class CSESearchPlugin(ob.Plugin):
             TextInput(label="Query", icon="search"),
             TextInput(label="Pages", icon="123", default="1"),
         ],
-        DropdownInput(label="CSE Categories", options=cse_link_options), 
+        DropdownInput(label="CSE Categories", options=cse_link_options)
     ]
 
     @ob.transform(label="To cse results", icon="search")
-    async def transform_to_cse_results(self, node, **kwargs):
+    async def transform_to_cse_results(self, node: BaseModel, **kwargs):
         results = []
-
-        query = node["data"][0]
-        pages = node["data"][1]
-        option = json.loads(node["data"][2])
-        if pages == "" or pages:
-            # @todo implement support in golang CSE crawler for n pages
-            pages = "1"
-        if option.get("url") and query != "":
-            parsed_url = urllib.parse.urlparse(option["url"])
-        else:
-            raise OBPluginError("All fields are required to search. Please try again")
+        url = node.cse_categories['value']
+        if not url:
+            raise OBPluginError('The CSE Category field is required to transform.')
+        parsed_url = urllib.parse.urlparse(url)
         cse_id = urllib.parse.parse_qs(parsed_url.query)["cx"][0]
         try:
             async with httpx.AsyncClient() as client:
+                # @todo add support for n pages... {node.pages}
                 resp = await client.get(
-                    f'http://microservice:1323/google-cse?query={query}&pages={pages}&id={cse_id}',
+                    f'http://microservice:1323/google-cse?query={node.query}&pages={"1"}&id={cse_id}',
                     timeout=None
                 )
                 resp = defaultdict(None, **resp.json())
         except Exception:
             raise OBPluginError(
-                "There was an error fetching CSE results. Please try again"
+                "There was an error fetching CSE results. Please try again later"
             )
         results = []
         if resp and resp.get("results"):

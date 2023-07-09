@@ -1,5 +1,4 @@
 import { Icon } from '@components/Icons';
-import { XYPosition } from 'reactflow';
 
 export default function ContextAction({
   nodeCtx: ctx,
@@ -20,7 +19,8 @@ export default function ContextAction({
             <div key={transform.label}>
               <button
                 className='capitalize'
-                onClick={() =>{
+                onClick={(e) => {
+                  e.preventDefault()
                   closeMenu()
                   sendJsonMessage({
                     action: 'transform:node',

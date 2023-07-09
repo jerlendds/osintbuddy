@@ -14,7 +14,7 @@ import {
 import { TourProvider } from '@reactour/tour';
 import { ViewfinderCircleIcon } from '@heroicons/react/20/solid';
 import classNames from 'classnames';
-import OSINTBuddyLogo from '@images/logo.svg';
+import { ReactComponent  as OSINTBuddyLogo} from '@images/logo.svg';
 import HamburgerMenu from '@/components/HamburgerMenu';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -23,7 +23,7 @@ import { isSidebarOpen, setSidebar } from '@/features/settings/settingsSlice';
 import IncidentCard from '@/components/IncidentCard';
 
 const navigation = [
-  { name: 'Projects', to: '/app/dashboard', icon: InboxIcon },
+  { name: 'Projects', to: '/app/projects', icon: InboxIcon },
   { name: 'Incidents *', to: '/app/incidents', icon: FolderOpenIcon },
   { name: 'Scans *', to: '/app/scans', icon: DocumentMagnifyingGlassIcon },
   { name: 'Dorks', to: '/app/dorking', icon: ViewfinderCircleIcon },
@@ -138,7 +138,7 @@ export default function AppLayout() {
                 )}
               >
                 <Link to='/' replace>
-                  <img className='h-7 w-auto' src={OSINTBuddyLogo} alt='OSINTBuddy' />
+                  <OSINTBuddyLogo className='h-7 w-auto fill-slate-400'  />
                 </Link>
 
                 <HamburgerMenu isOpen={showSidebar} className='mx-1.5' onClick={toggleSidebar} />

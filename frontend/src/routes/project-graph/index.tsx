@@ -2,7 +2,7 @@
 import { useCallback, useState, useRef, useEffect } from 'react';
 import { Edge, XYPosition, Node } from 'reactflow';
 import { HotKeys } from 'react-hotkeys';
-import {  useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import 'reactflow/dist/style.css';
 import EntityOptions from './_components/EntityOptions';
@@ -14,10 +14,8 @@ import { toast } from 'react-toastify';
 import { nodesService } from '@/services';
 import ProjectGraph from './_components/ProjectGraph';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { createNode, graphEdges, graphNodes } from '@/features/graph/graphSlice';
-
-
-
+import { createEdge, createNode, graphEdges, graphNodes, resetGraph } from '@/features/graph/graphSlice';
+import { useEffectOnce } from '@/components/utils';
 
 const keyMap = {
   TOGGLE_PALETTE: ['shift+p'],
@@ -27,10 +25,9 @@ export default function OsintPage() {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const activeProject = location?.state?.activeProject;
-
   const initialNodes = useAppSelector((state) => graphNodes(state));
   const initialEdges = useAppSelector((state) => graphEdges(state));
-
+  console.log(initialEdges);
   const graphRef = useRef<HTMLDivElement>(null);
   const [graphInstance, setGraphInstance] = useState(null);
 
@@ -41,28 +38,44 @@ export default function OsintPage() {
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
 
   const [messageHistory, setMessageHistory] = useState([]);
-  const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/project/${activeProject.uuid}`);
+  const projectUUID = activeProject.uuid.replace('-', '');
+  const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/project/${projectUUID}`);
+  const traversalId = activeProject.uuid.replaceAll(/\-/g, '');
+
   const { lastMessage, lastJsonMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl, {
-    onOpen: () => console.log('opened'),
+    onOpen: () => console.log(`opening traversal: \n\tproject_${traversalId}_traversal`),
     shouldReconnect: (closeEvent) => {
       return true;
     },
   });
 
-  function addNode(id, data: AddNode, position): void {
+  useEffectOnce(() => {
+    dispatch(resetGraph())
+    sendJsonMessage({ action: 'read:node' })
+  });
+
+  function addNode(id, data: AddNode, position) {
+    console.log('adding', { id, data, position, type: 'base' });
     dispatch(createNode({ id, data, position, type: 'base' }));
   }
 
-  function addEdge(source, target, sourceHandle, targetHandle, type: AddEdge): void {
-    const newEdge = {
-      source,
-      target,
-      sourceHandle: sourceHandle || 'r1',
-      targetHandle: targetHandle || 'l1',
-      type: type || 'bezier',
-    };
-    dispatch();
-    setEdges((eds) => eds.concat(newEdge));
+  function addEdge(
+    source,
+    target,
+    sourceHandle?: string = 'r1',
+    targetHandle?: string = 'l2',
+    type?: string = 'default'
+  ): void {
+    console.log(source, target, sourceHandle, targetHandle, type);
+    dispatch(
+      createEdge({
+        source,
+        target,
+        sourceHandle,
+        targetHandle,
+        type,
+      })
+    );
   }
 
   const togglePalette = () => setShowCommandPalette(!showCommandPalette);
@@ -73,24 +86,25 @@ export default function OsintPage() {
   };
 
   // @todo ... https://reactflow.dev/docs/examples/layout/dagre/
-  const onLayout = useCallback(
-    (direction) => {
-      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(initialNodes, initialEdges, direction);
-      setNodes([...layoutedNodes]);
-      setEdges([...layoutedEdges]);
-    },
-    [initialNodes, initialEdges]
-  );
+  // const onLayout = useCallback(
+  //   (direction) => {
+  //     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(initialNodes, initialEdges, direction);
+  //     setNodes([...layoutedNodes]);
+  //     setEdges([...layoutedEdges]);
+  //   },
+  //   [initialNodes, initialEdges]
+  // );
 
   const addNodeAction = (node) => {
-    const newId = getId();
+    console.log('addNodeAction', node);
     const position = node?.position;
     const parentId = node.parentId;
     delete node.action;
     delete node.position;
     delete node.parentId;
-    addNode(newId, { node }, position);
-    addEdge(parentId, newId);
+    console.log('node.positoin?!?!', position);
+    addNode(node.id, node.data, position);
+    addEdge(parentId, node.id);
   };
 
   const updateNodeOptions = () => {
@@ -120,6 +134,7 @@ export default function OsintPage() {
     console.log('attempting update', node, data);
     let updatedNode = { ...node };
     updatedNode.elements = node.data.elements.map((elm) => {
+      // @todo refactor me to `find`
       if (Object.keys(data)[0] === elm.label) {
         elm.value = data[elm.label];
       }
@@ -130,25 +145,38 @@ export default function OsintPage() {
 
   // websocket updates happen here
   useEffect(() => {
-    if (lastJsonMessage !== null) {
+    console.log('hello?', lastJsonMessage);
+    if (lastJsonMessage) {
       setMessageHistory((prev) => prev.concat(lastJsonMessage));
-      if (lastJsonMessage && !Array.isArray(lastJsonMessage)) {
-        if (lastJsonMessage?.action === 'addNode') {
+      if (lastJsonMessage.action === 'error') toast.error(`${lastJsonMessage.detail}`);
+      if (!Array.isArray(lastJsonMessage)) {
+        if (lastJsonMessage.action === 'addInitialLoad') {
+          lastJsonMessage.nodes.forEach((node, idx) => addNode(
+            node.id.toString(),
+            node.data,
+            node.position
+          ));
+          lastJsonMessage.edges.forEach((edge) => addEdge(edge.source.toString(), edge.target.toString()));
+        }
+        if (lastJsonMessage.action === 'addNode') {
+          lastJsonMessage.position.x += 520;
+          lastJsonMessage.position.y += 100;
           addNodeAction(lastJsonMessage);
           toast.success(`Found 1 ${label.label}`);
-        }
-        if (lastJsonMessage?.action === 'error') {
-          toast.error(`${lastJsonMessage.detail}`);
         }
       } else if (Array.isArray(lastJsonMessage)) {
         lastJsonMessage.map((node, idx) => {
           if (node?.action === 'addNode') {
             const isOdd = idx % 2 === 0;
             const pos = node.position;
+            const x = isOdd ? pos.x + 530 : pos.x + 1020;
+            const y = isOdd ? (idx - 1) * 120 + pos.y : idx * 120 + pos.y;
             node.position = {
-              x: isOdd ? pos.x + 60 : pos.x + 370,
-              y: isOdd ? (idx - 1) * 70 + pos.y : idx * 70 + pos.y,
+              x,
+              y,
             };
+            sendJsonMessage({ action: 'update:node', node: { id: node.id, x } });
+            sendJsonMessage({ action: 'update:node', node: { id: node.id, y } });
             addNodeAction(node);
           }
         });
@@ -223,6 +251,7 @@ export default function OsintPage() {
             <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
               <EntityOptions activeProject={activeProject} options={nodeOptions} />
               <ProjectGraph
+                activeProject={activeProject}
                 onSelectionCtxMenu={onSelectionCtxMenu}
                 onMultiSelectionCtxMenu={onMultiSelectionCtxMenu}
                 onPaneCtxMenu={onPaneCtxMenu}

@@ -24,7 +24,7 @@ export default function ContextMenu({
   closeMenu: Function;
   sendJsonMessage: Function;
 }) {
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const ctxPosition = {
     top: position.y,
@@ -69,7 +69,11 @@ export default function ContextMenu({
                     <button
                       onClick={() => {
                         closeMenu();
-                        dispatch(deleteNode(ctxSelection?.id))
+                        sendJsonMessage({
+                          action: 'delete:node',
+                          node: { id: ctxSelection.id },
+                        });
+                        dispatch(deleteNode(ctxSelection.id));
                       }}
                       type='button'
                     >
