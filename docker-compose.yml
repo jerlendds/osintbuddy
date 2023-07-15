@@ -6,6 +6,7 @@ services:
       context: ./frontend
       args:
         REACT_APP_BASE_URL: "${BASE_URL}"
+        NODE_ENV: "${ENVIRONMENT}"
     volumes:
       - ./frontend/:/app/
     ports:
