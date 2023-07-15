@@ -99,3 +99,4 @@ urllib3==1.26.16
 yarl==1.9.2
 aenum==3.1.12
 gremlinpy @ git+https://github.com/jerlendds/gremlinpy.git@7d3033e6a55ed9cb1f982ec3b58ca233e01c58e3
+osintbuddy==0.0.4rc44.post1

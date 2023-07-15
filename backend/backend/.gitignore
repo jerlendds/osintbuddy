@@ -4,7 +4,7 @@ app/tdb/
 __pycache__/
 *.py[cod]
 *$py.class
-
+gremlinpy
 # C extensions
 *.so
 
