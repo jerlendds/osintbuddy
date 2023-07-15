@@ -88,7 +88,7 @@ p.node-label {
 }
 
 .node-context button {
-  @apply hover:bg-slate-900 hover:text-slate-300 text-slate-400 flex items-center px-4 py-2 text-sm w-full;
+  @apply hover:bg-dark-800 hover:text-slate-300 text-slate-400 flex items-center px-4 py-2 text-sm w-full;
 }
 
 .node-context svg {
@@ -110,4 +110,23 @@ p.node-label {
 
 .elements:nth-child(even) {
   @apply bg-dark-600;
+}
+
+
+.node-details-popup .arrow {
+  color: #797979;
+}
+
+
+.triangle-left{
+  width: 0;
+  height: 0;
+  margin: 30px auto;
+  border-top:
+    12px solid transparent;
+  border-bottom:
+    12px solid transparent;
+    border-right:
+    20px solid  rgb(23 35 65);
+  
 }

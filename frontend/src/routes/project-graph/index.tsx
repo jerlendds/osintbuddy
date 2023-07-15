@@ -16,6 +16,7 @@ import ProjectGraph from './_components/ProjectGraph';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { createEdge, createNode, graphEdges, graphNodes, resetGraph } from '@/features/graph/graphSlice';
 import { useEffectOnce } from '@/components/utils';
+import DisplayOptions from './_components/DisplayOptions';
 
 const keyMap = {
   TOGGLE_PALETTE: ['shift+p'],
@@ -27,7 +28,6 @@ export default function OsintPage() {
   const activeProject = location?.state?.activeProject;
   const initialNodes = useAppSelector((state) => graphNodes(state));
   const initialEdges = useAppSelector((state) => graphEdges(state));
-  console.log(initialEdges);
   const graphRef = useRef<HTMLDivElement>(null);
   const [graphInstance, setGraphInstance] = useState(null);
 
@@ -44,9 +44,7 @@ export default function OsintPage() {
 
   const { lastMessage, lastJsonMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl, {
     onOpen: () => console.log(`opening traversal: \n\tproject_${traversalId}_traversal`),
-    shouldReconnect: (closeEvent) => {
-      return true;
-    },
+    shouldReconnect: () => true,
   });
 
   useEffectOnce(() => {
@@ -55,7 +53,6 @@ export default function OsintPage() {
   });
 
   function addNode(id, data: AddNode, position) {
-    console.log('adding', { id, data, position, type: 'base' });
     dispatch(createNode({ id, data, position, type: 'base' }));
   }
 
@@ -66,7 +63,6 @@ export default function OsintPage() {
     targetHandle?: string = 'l2',
     type?: string = 'default'
   ): void {
-    console.log(source, target, sourceHandle, targetHandle, type);
     dispatch(
       createEdge({
         source,
@@ -96,13 +92,11 @@ export default function OsintPage() {
   // );
 
   const addNodeAction = (node) => {
-    console.log('addNodeAction', node);
     const position = node?.position;
     const parentId = node.parentId;
     delete node.action;
     delete node.position;
     delete node.parentId;
-    console.log('node.positoin?!?!', position);
     addNode(node.id, node.data, position);
     addEdge(parentId, node.id);
   };
@@ -131,7 +125,6 @@ export default function OsintPage() {
   }[readyState];
 
   const createNodeUpdate = (node: JSONObject, data) => {
-    console.log('attempting update', node, data);
     let updatedNode = { ...node };
     updatedNode.elements = node.data.elements.map((elm) => {
       // @todo refactor me to `find`
@@ -145,7 +138,6 @@ export default function OsintPage() {
 
   // websocket updates happen here
   useEffect(() => {
-    console.log('hello?', lastJsonMessage);
     if (lastJsonMessage) {
       setMessageHistory((prev) => prev.concat(lastJsonMessage));
       if (lastJsonMessage.action === 'error') toast.error(`${lastJsonMessage.detail}`);
@@ -226,7 +218,6 @@ export default function OsintPage() {
   };
 
   const onPaneCtxMenu = (event: MouseEvent) => {
-    console.log('onPaneCtxMenu');
     event.preventDefault();
     setCtxSelection(null);
     setTransforms(null);
@@ -248,6 +239,7 @@ export default function OsintPage() {
       <HotKeys keyMap={keyMap} handlers={handlers}>
         <div className='h-screen flex flex-col w-full'>
           <div className='flex h-full justify-between bg-dark-900 relative'>
+              <DisplayOptions />
             <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
               <EntityOptions activeProject={activeProject} options={nodeOptions} />
               <ProjectGraph
@@ -271,6 +263,7 @@ export default function OsintPage() {
               />
             </div>
           </div>
+
         </div>
         <CommandPallet
           toggleShowOptions={toggleShowNodeOptions}

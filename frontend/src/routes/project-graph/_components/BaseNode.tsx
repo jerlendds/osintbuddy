@@ -45,6 +45,7 @@ export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject; se
           <DropdownInput
             key={key}
             nodeId={ctx.id}
+            value={ctx?.value}
             options={element.options || []}
             label={element.label}
             value={element.value as string}
@@ -111,7 +112,7 @@ export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject; se
       <Handle position={Position.Top} id='t1' key='t1' type='source' style={handleStyle} />
       <Handle position={Position.Bottom} id='b1' key='b1' type='source' style={handleStyle} />
       <Handle position={Position.Left} id='l1' key='l1' type='source' style={handleStyle} />
-      
+
       <Handle position={Position.Right} id='r2' key='r2' type='target' style={handleStyle} />
       <Handle position={Position.Top} id='t2' key='t2' type='target' style={handleStyle} />
       <Handle position={Position.Bottom} id='b2' key='b2' type='target' style={handleStyle} />
@@ -139,7 +140,9 @@ export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject; se
               return (
                 <Fragment key={i.toString()}>
                   {element.map((elm, i: number) => (
-                    <div className='flex flex-col mr-2 last:mr-0'>{getNodeElement(elm, `${elm.label}-${elm.id}-${ctx.id}`)}</div>
+                    <div key={i.toString()} className='flex flex-col mr-2 last:mr-0'>
+                      {getNodeElement(elm, `${elm.label}-${elm.id}-${ctx.id}`)}
+                    </div>
                   ))}
                 </Fragment>
               );
@@ -304,18 +307,33 @@ export function DropdownInput({ options, label, nodeId, sendJsonMessage, dispatc
 
   const activeValue = useAppSelector((state) => selectNodeValue(state, nodeId, label));
 
+  const activeOption = options.find((option) => option.value === activeValue || option.label === activeValue) ?? {
+    label: '',
+    value: '',
+    tooltip: ''
+  };
+
   return (
     <>
       <Combobox
         className=' w-full z-[999] dropdown-input'
         as='div'
-        value={activeValue}
+        value={activeOption}
         onChange={(option) => {
           sendJsonMessage({
             action: 'update:node',
-            node: { id: nodeId, [label]: option?.value ? option.value : option.label },
+            node: {
+              id: nodeId,
+              [label]: option?.value ? option.value : option.label,
+            },
           });
-          dispatch(saveUserEdits({ value: option, nodeId, label }));
+          dispatch(
+            saveUserEdits({
+              value: option?.value ? option.value : option.label,
+              nodeId,
+              label,
+            })
+          );
         }}
       >
         <Combobox.Label>
