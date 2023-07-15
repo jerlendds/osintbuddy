@@ -31,7 +31,8 @@
   </p>
 <br/>
 
-![osintbuddy-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/5640a430-50f7-45df-9f75-8dd473dcdd1b)
+![ob-demo 2023-07-14 20-51](https://github.com/jerlendds/osintbuddy/assets/29207058/b69e08f3-ac2a-4cef-9a85-713e7df6b12f)
+
 
   ---
 </p>
@@ -82,8 +83,6 @@ Some of the main hindrances to practical OSINT is the volume of information it h
 
 We've decided to do something about it. The rapid developments in technologies such as AI and big data analytics have opened new horizons for OSINT which weren't previously available. We want our information quick and to the point, that's why we're building an open-source OSINT tool that's free. Free to use, free to modify, free to do with as you wish, and built with plain old web technologies anyone can learn. But this isn't really the project. This is a free new community. A community for OSINT enthusiast around the world and we need your help to design it, to program it, and to build it. We want to hear your suggestions, your ideas, and we're going to build it right in front of your eyes. The notion of a “needle in a haystack” is taken to the extreme on the internet. Let's build a magnet.
 
-
-[OSINTBuddy demo video](https://www.youtube.com/watch?v=XKBusfYGL4M)
 
 
 ### Key Features
@@ -149,15 +148,10 @@ for a list of requested features (and known issues).
 - [x] CSE node
 - [x] Username node
 - [x] Added a plugin system
-
--  For this update you'll have to rebuild your docker containers. After that long wait you'll be rewarded with a newly released package: [osintbuddy](https://pypi.org/project/osintbuddy/)  
-    The osintbuddy package allows for transforming data through a `@transform` decorator, which is applied to methods in the Plugin class.
-- The transform decorator must have a label and, optionally, a [tabler-icons](https://tabler-icons.io/) icon name. You can manage node transformations and node creation easily through the API.
--  Basically these updates make it easier to create nodes and context menu options for a nodes transform options which are mapped to plugin methods.
-- More documentation is coming soon when I have the time.
-  Here's a video on the new update in the meantime: [Introducing OSINTBuddy: A plugin based Maltego alternative in beta](https://www.youtube.com/watch?v=XKBusfYGL4M).
-  
-
+- [x] Updated plugin system to be easier to work with
+- [x] Implemented automatic saving for project graphs
+ 
+-  For this update you'll have to rebuild your docker containers (`docker compose build`)! After that long wait you'll be rewarded with an updated UI and automatic saving for project graphs alongside an updated and easier to work with plugin system! [osintbuddy](https://pypi.org/project/osintbuddy/)  
 
 
 ## [↑](#what-is-osintbuddycom)Contributing
@@ -175,7 +169,7 @@ Contributions are what make the open source community such an amazing place to l
 
 Licensed under the GNU Affero General Public License v3.0.
 
-Copyright 2023 jerlendds. After more consideration I have changed the license from Apache 2.0 to [GNU AGPL v3](https://choosealicense.com/licenses/apache-2.0/).
+Copyright 2023 jerlendds.[GNU AGPL v3](https://choosealicense.com/licenses/apache-2.0/).
 
 
 *Note, the [OSINTBuddy PyPi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*.

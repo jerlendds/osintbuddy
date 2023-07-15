@@ -1,19 +1,21 @@
 import { Icon } from '@components/Icons';
 
 export default function ContextAction({
+
   nodeCtx: ctx,
   transforms,
   sendJsonMessage,
   closeMenu
 }: {
   nodeCtx: JSONObject
-  transforms: string[]
+  transforms: JSONObject[]
   sendJsonMessage: Function
   closeMenu: Function
 }) {
+
   return (
     <>
-      <div className='node-context'>
+      <div className='node-context max-h-32 overflow-y-scroll'>
         {transforms?.map((transform: any) => {
           return (
             <div key={transform.label}>

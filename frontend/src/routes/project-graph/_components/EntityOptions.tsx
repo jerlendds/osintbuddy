@@ -118,7 +118,7 @@ export default function EntityOptions({ options, activeProject }: any) {
     <>
       <div
         className={classNames(
-          'fixed overflow-hidden mt-2 ml-4 border-dark-300 rounded-md z-10 border max-w-xs w-full bg-dark-700 py-2 flex flex-col  max-h-[84%] h-min',
+          'fixed overflow-hidden mt-2 ml-4 rounded-md z-10 border border-dark-300 max-w-xs w-full bg-dark-700 py-2 flex flex-col  max-h-[84%] h-min',
           showEntities && 'min-h-[80%]'
         )}
       >

@@ -32,7 +32,7 @@ class GoogleSearchPlugin(ob.Plugin):
     ]
 
     @ob.transform(label="To results")
-    async def transform_to_google_results(self, node, **kwargs):
+    async def transform_to_google_results(self, node, use):
         # print("@todo refactor transform node API: ", node)
         results = []
         for result in await self.search_google(node.query, node.pages):
@@ -111,7 +111,7 @@ class GoogleCacheResult(ob.Plugin):
     ]
 
     @ob.transform(label="To website", icon="world-www")
-    async def transform_to_website(self, node, **kwargs):
+    async def transform_to_website(self, node, use):
         return WebsitePlugin.blueprint(domain=urlparse(node.url).netloc)
 
 
@@ -125,7 +125,7 @@ class GoogleCacheSearchPlugin(ob.Plugin):
     ]
 
     @ob.transform(label="To cache results")
-    async def transform_to_google_cache_results(self, node, **kwargs):
+    async def transform_to_google_cache_results(self, node, use):
         return await self.search_google_cache(node.query, node.pages)
 
     async def search_google_cache(self, query, pages):
@@ -234,7 +234,7 @@ class DnsPlugin(ob.Plugin):
         }
 
     @ob.transform(label="Extract IP", icon="microscope")
-    async def transform_extract_ip(self, node, **kwargs) -> list:
+    async def transform_extract_ip(self, node, use) -> list:
         data = node.record['text']
         ip_regexp = re.compile("\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}")
         results = []
@@ -252,7 +252,7 @@ class GoogleResult(ob.Plugin):
     node = [Title(label="result"), CopyText(label="url")]
 
     @ob.transform(label="To website", icon="world")
-    async def transform_to_website(self, node, **kwargs):
+    async def transform_to_website(self, node, use):
         blueprint = WebsitePlugin.blueprint(
             domain=urlparse(node.url).netloc
         )
@@ -269,14 +269,14 @@ class WebsitePlugin(ob.Plugin):
     ]
 
     @ob.transform(label="To IP", icon="building-broadcast-tower")
-    async def transform_to_ip(self, node, **kwargs):
+    async def transform_to_ip(self, node, use):
         blueprint = IPAddressPlugin.blueprint(
             ip_address=socket.gethostbyname(node.domain)
         )
         return blueprint
 
     @ob.transform(label="To google", icon="world")
-    async def transform_to_google(self, node, **kwargs):
+    async def transform_to_google(self, node, use):
         # @todo
         results = []
         for result in await GoogleSearchPlugin().search_google(
@@ -317,7 +317,7 @@ class WebsitePlugin(ob.Plugin):
             )
 
     @ob.transform(label="To DNS", icon="world")
-    async def transform_to_dns(self, node, **kwargs):
+    async def transform_to_dns(self, node, use):
         # @todo
         blueprint = WebsitePlugin.blueprint()
         data = DnsPlugin.data_template()
@@ -351,21 +351,21 @@ class WebsitePlugin(ob.Plugin):
         return results
 
     # @ob.transform(label='To subdomains', icon='world')
-    # async def transform_to_subdomains(self, node, **kwargs):
+    # async def transform_to_subdomains(self, node, use):
     #     # @todo
     #     return WebsitePlugin.blueprint(
     #         domain=urlparse(node['data'][3]).netloc
     #     )
 
     # @ob.transform(label='To emails', icon='world')
-    # async def transform_to_emails(self, node, **kwargs):
+    # async def transform_to_emails(self, node, use):
     #     # @todo
     #     blueprint = WebsitePlugin.blueprint()
     #     website = node['data'][3]
     #     blueprint['elements'][0]['value'] = urlparse(website).netloc
     #     return blueprint
     # @ob.transform(label='To urlscan.io', icon='world')
-    # async def transform_to_urlscanio(self, node, **kwargs):
+    # async def transform_to_urlscanio(self, node, use):
     #     # @todo
     #     blueprint = WebsitePlugin.blueprint()
     #     domain = node['data'][0]
@@ -459,7 +459,7 @@ class IPAddressPlugin(ob.Plugin):
     @ob.transform(label="To website", icon="world", prompt="""""")
     async def transform_to_website(self, node, use):
         try:
-            resolved = socket.gethostbyaddr(node["data"][0])
+            resolved = socket.gethostbyaddr(node.ip_address)
             if len(resolved) >= 1:
                 blueprint = WebsitePlugin.blueprint(domain=resolved[0])
                 return blueprint
@@ -469,14 +469,14 @@ class IPAddressPlugin(ob.Plugin):
             raise OBPluginError("We ran into a socket error. Please try again")
 
     # @ob.transform(label='To traceroute', icon='crosshair')
-    # async def transform_todo(self, node, **kwargs):
+    # async def transform_todo(self, node, use):
     #     blueprint = IPGeolocationPlugin.blueprint()
     #     return blueprint
     @ob.transform(label="To subdomains", icon="world")
-    async def transform_to_subdomains(self, node, **kwargs):
+    async def transform_to_subdomains(self, node, use):
         nodes = []
         params = {
-            "q": node["data"][0],
+            "q": node.ip_address,
         }
         try:
             async with httpx.AsyncClient() as client:
@@ -505,7 +505,7 @@ class IPAddressPlugin(ob.Plugin):
             "Anycast",
             "ASN type",
             "Abuse contact",
-        ]  # noqa
+        ]
         geo_rows = [
             "City",
             "State",
@@ -513,7 +513,7 @@ class IPAddressPlugin(ob.Plugin):
             "Postal",
             "Timezone",
             "Coordinates",
-        ]  # noqa
+        ]
         if len(node.ip_address) == 0:
             raise OBPluginError(
                 "A valid IP Address is a required field for this transform"

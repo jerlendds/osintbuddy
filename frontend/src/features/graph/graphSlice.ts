@@ -176,6 +176,12 @@ export const graph = createSlice({
       }
     },
 
+    setNodeType: (state, action: PayloadAction<any>) => {
+      state.nodes.forEach((node) => {
+        node.type = action.payload
+      })
+    },
+
     setNodeSelected: (state, action: PayloadAction<{ id: string; selected: boolean }>) => {
       const nodeToUpdate = state.nodes.find((n) => n.id === action.payload.id);
       if (nodeToUpdate) {
@@ -221,7 +227,8 @@ export const {
   setEditState,
   setNodeSelected,
   resetGraph,
-  setActiveProject
+  setActiveProject,
+  setNodeType
 } = graph.actions;
 
 export const graphNodes = (state: RootState) => state.graph.nodes;

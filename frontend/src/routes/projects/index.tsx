@@ -266,19 +266,19 @@ const ActionsRow = ({ row, updateTable }: JSONObject) => {
         className='flex whitespace-nowrap px-2 py-2 hover:ring-2 transition-all duration-75 ring-info-300 hover:ring-info-200 focus:ring-1 focus:ring-inset outline-none items-center text-slate-400 hover:text-slate-200 rounded-md ring-1 '
       >
         <span className='mx-2'>Investigate</span>
-        <EyeIcon className='w-5 h-5 text-slate-400 mr-2' />{' '}
+        <EyeIcon className='w-5 h-5 text-slate-400 mr-2' />
       </Link>
       <button
         onClick={() => {
           api
             .delete(`/projects?id=${row.original.id}`)
             .then(() => updateTable())
-            .catch((error) => toast.error('We ran into an error deleting your project. Is the backend running?'));
+            .catch((error) => toast.error('We ran into an error deleting your project. Is the backend/db running yet?'));
         }}
         className='flex whitespace-nowrap ml-4 mr-auto px-2 py-2 hover:ring-2 ring-danger-600 focus:ring-1 focus:ring-inset outline-none items-center text-slate-400 hover:text-slate-200 rounded-md ring-1 '
       >
         <span className='mx-2'>Delete</span>
-        <TrashIcon className='w-5 h-5 text-slate-400 mr-2' />{' '}
+        <TrashIcon className='w-5 h-5 text-slate-400 mr-2' />
       </button>
     </div>
   );

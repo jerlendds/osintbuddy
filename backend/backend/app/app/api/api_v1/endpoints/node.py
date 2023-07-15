@@ -157,7 +157,6 @@ async def save_node_on_drop(
         }
         node_blueprint['type'] = 'base'
         node_blueprint['id'] = str(new_entity.id)
-        print('new_entity', new_entity)
     return node_blueprint
 
 
@@ -178,11 +177,11 @@ async def get_entity_from_drop(node: schemas.CreateNode):
 async def load_initial_graph(project_uuid: str):
     async with ProjectGraphConnection(project_uuid) as graph:
         edges = await graph.V().outE().project('from', 'edge', 'to')\
-            .by(
-                _g.outV()).by(_g.valueMap(True)).by(_g.inV()).union(_g.select('edge').unfold(),
-                _g.project('from').by(_g.select('from')).unfold(),
-                _g.project('to').by(_g.select('to')).unfold()
-            ).fold().toList()
+            .by(_g.outV()).by(_g.valueMap(True)).by(_g.inV()).union(
+            _g.select('edge').unfold(),
+            _g.project('from').by(_g.select('from')).unfold(),
+            _g.project('to').by(_g.select('to')).unfold()
+        ).fold().toList()
         nodes = await graph.V().valueMap(True).toList()
         return nodes, edges
 
@@ -193,12 +192,19 @@ def chunks(lst, n):
         yield lst[i:i + n]
 
 
-def map_read_to_blueprint(blueprint, map_element, data, obmap, position, entity_id):
+def map_read_to_blueprint(blueprint, map_element, data, position, entity_id):
+    data_keys = data.keys()
+    obmap = {}
+    if len(data_keys) > 1:
+        for d_key in data_keys:
+            key_split = d_key.split(MAP_KEY)
+            if len(key_split) >= 2:
+                obmap[key_split[1]] = d_key
+
     data_label = to_snake_case(map_element['label'])
-    print('blueproint?!', blueprint)
     color = blueprint.get('color')
 
-    if data.get(data_label) and map_element.get('value') == '':
+    if data.get(data_label):
         map_element['value'] = data[data_label][0]
     else:
         for k, v in obmap.items():
@@ -220,23 +226,15 @@ async def read_graph(action_type, send_json, project_uuid):
     nodes = []
     nodes_data, edges = await load_initial_graph(project_uuid)
     for data in nodes_data:
- 
+
         position = {
             'x': data.pop('x')[0],
             'y': data.pop('y')[0]
         }
         entity_id = data.pop(T.id)
         label_data = data.pop(T.label)
-
         plugin = await Registry.get_plugin(to_snake_case(label_data))
         blueprint = plugin.blueprint()
-        data_keys = data.keys()
-        if len(data_keys) > 1:
-            obmap = {}
-            for d_key in data_keys:
-                key_split = d_key.split(MAP_KEY)
-                if len(key_split) >= 2:
-                    obmap[key_split[1]] = d_key
 
         for element in blueprint['elements']:
             if isinstance(element, list):
@@ -244,7 +242,6 @@ async def read_graph(action_type, send_json, project_uuid):
                     blueprint,
                     elm,
                     data,
-                    obmap,
                     position,
                     entity_id
                 ) for elm in element]
@@ -253,7 +250,6 @@ async def read_graph(action_type, send_json, project_uuid):
                     blueprint,
                     element,
                     data,
-                    obmap,
                     position,
                     entity_id
                 )
@@ -278,7 +274,6 @@ async def update_node(node, action_type, send_json, project_uuid):
             updateTarget = graph.V(updateTargetId)
             for k, v in node.items():
                 await updateTarget.property(Cardinality.single, to_snake_case(k), v).next()
-                print(updateTargetId, updateTarget, to_snake_case(k), v)
             node['id'] = updateTargetId
 
 
@@ -388,5 +383,5 @@ async def active_project(websocket: WebSocket, project_uuid: str):
             await websocket.send_json({"action": "error", "detail": f"Unhandled plugin error! {e}"})
         except WebSocketDisconnect as e:
             logger.info(e)
-        except (WebSocketException, BufferError, ConnectionClosedError) as e:
-            logger.error(e)
+        except (WebSocketException, BufferError, ConnectionClosedError):
+            pass

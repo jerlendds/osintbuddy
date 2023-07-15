@@ -12,6 +12,7 @@ import BaseNode from './BaseNode';
 import { fetchNodeBlueprint, onEdgesChange, updateEdgeEvent, updateNodeFlow } from '@/features/graph/graphSlice';
 import { useAppDispatch } from '@/app/hooks';
 import { toast } from 'react-toastify';
+import BaseMiniNode from './BaseMiniNode';
 
 const viewOptions: FitViewOptions = {
   padding: 50,
@@ -75,6 +76,7 @@ export default function ProjectGraph({
   const nodeTypes = useMemo(
     () => ({
       base: (data: JSONObject) => <BaseNode ctx={data} sendJsonMessage={sendJsonMessage} />,
+      mini: (data: JSONObject) => <BaseMiniNode ctx={data} sendJsonMessage={sendJsonMessage} />
     }),
     []
   );
