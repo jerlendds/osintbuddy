@@ -42,7 +42,7 @@ class CSESearchPlugin(ob.Plugin):
     @ob.transform(label="To cse results", icon="search")
     async def transform_to_cse_results(self, node: BaseModel, **kwargs):
         results = []
-        url = node.cse_categories['value']
+        url = node.cse_categories
         if not url:
             raise OBPluginError('The CSE Category field is required to transform.')
         parsed_url = urllib.parse.urlparse(url)
