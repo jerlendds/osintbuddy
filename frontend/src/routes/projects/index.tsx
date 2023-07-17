@@ -1,4 +1,4 @@
-import projects from '@/services/projects.service';
+import projects from '@/app/services/projects.service';
 import { ChevronUpDownIcon, EyeIcon, PlusIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { MutableRefObject, useCallback, useRef } from 'react';
 import { Combobox, Dialog, Switch, Transition } from '@headlessui/react';
@@ -10,7 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { PageHeader } from '@/components/Headers';
 import Table from '@/components/Table';
 import { toast } from 'react-toastify';
-import { api } from '@/services';
+import { api } from '@/app/services';
 import { useTour } from '@reactour/tour';
 import { useAppDispatch } from '@/app/hooks';
 import { resetGraph, setActiveProject } from '@/features/graph/graphSlice';

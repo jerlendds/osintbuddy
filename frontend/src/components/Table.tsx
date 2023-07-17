@@ -1,4 +1,4 @@
-import { casesService } from '@/services';
+import { casesService } from '@/app/services';
 import { ChevronLeftIcon, ChevronRightIcon, EyeIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';

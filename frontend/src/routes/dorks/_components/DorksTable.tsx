@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState, Fragment, useEffect } from 'react';
 import { useTable, usePagination, type Column, type CellProps, CellValue } from 'react-table';
-import dorksService from '@/services/dorks.service';
+import dorksService from '@/app/services/dorks.service';
 import classNames from 'classnames';
 import { VirusSearchIcon } from '@/components/Icons';
 import RoundLoader from '@/components/Loaders';
@@ -18,7 +18,7 @@ import { DorkStats } from './DorkStats';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { Listbox, Transition } from '@headlessui/react';
 import SelectBoxApi, { SelectBoxOption } from '@/components/SelectBoxApi';
-import api from '@/services/api.service';
+import api from '@/app/services/api.service';
 import { PageHeader } from '@/components/Headers';
 import { toast } from 'react-toastify';
 import { CreateCaseModal } from '@/routes/projects';

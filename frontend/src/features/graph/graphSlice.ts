@@ -13,7 +13,7 @@ import {
   addEdge,
   MarkerType,
 } from 'reactflow';
-import { nodesService } from '@/services';
+import { nodesService } from '@/app/services';
 
 export interface Graph extends EditState {
   nodes: Node[];

@@ -1,8 +1,8 @@
-import dorksService from '@/services/dorks.service';
+import dorksService from '@/app/services/dorks.service';
 import { useEffect, useState } from 'react';
 import { DocumentMagnifyingGlassIcon, PencilSquareIcon, TagIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
-import api from '@/services/api.service';
+import api from '@/app/services/api.service';
 
 const stats = [
   { name: 'Total Subscribers', stat: '71,897' },

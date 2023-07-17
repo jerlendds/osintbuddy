@@ -1,11 +1,11 @@
-import dorksService from '@/services/dorks.service';
+import dorksService from '@/app/services/dorks.service';
 import classNames from 'classnames';
 import { ReactEventHandler, useCallback, useMemo, useRef, useState } from 'react';
 import DorksTable from './_components/DorksTable';
 import { DorkStats } from './_components/DorkStats';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from 'formik';
-import casesService from '@/services/projects.service';
+import casesService from '@/app/services/projects.service';
 import { CellValue, Column } from 'react-table';
 import { PageHeader } from '@/components/Headers';
 

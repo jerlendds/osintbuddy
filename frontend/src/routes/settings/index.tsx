@@ -1,4 +1,4 @@
-import casesService from '@/services/projects.service';
+import casesService from '@/app/services/projects.service';
 import { EyeIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 import { useTable, usePagination, type Column, type CellProps, CellValue } from 'react-table';
