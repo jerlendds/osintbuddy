@@ -13,7 +13,6 @@ import { createEdge, fetchNodeBlueprint, onEdgesChange, updateEdgeEvent, updateN
 import { useAppDispatch } from '@/app/hooks';
 import { toast } from 'react-toastify';
 import BaseMiniNode from './BaseMiniNode';
-import ArrowEdge from './ArrowEdge';
 
 const viewOptions: FitViewOptions = {
   padding: 50,
