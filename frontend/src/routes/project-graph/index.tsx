@@ -61,7 +61,7 @@ export default function OsintPage() {
     target,
     sourceHandle?: string = 'r1',
     targetHandle?: string = 'l2',
-    type?: string = 'default'
+    type?: string = 'default',
   ): void {
     dispatch(
       createEdge({

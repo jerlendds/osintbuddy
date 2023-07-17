@@ -9,10 +9,11 @@ import ReactFlow, {
   Connection,
 } from 'reactflow';
 import BaseNode from './BaseNode';
-import { fetchNodeBlueprint, onEdgesChange, updateEdgeEvent, updateNodeFlow } from '@/features/graph/graphSlice';
+import { createEdge, fetchNodeBlueprint, onEdgesChange, updateEdgeEvent, updateNodeFlow } from '@/features/graph/graphSlice';
 import { useAppDispatch } from '@/app/hooks';
 import { toast } from 'react-toastify';
 import BaseMiniNode from './BaseMiniNode';
+import ArrowEdge from './ArrowEdge';
 
 const viewOptions: FitViewOptions = {
   padding: 50,
@@ -76,8 +77,13 @@ export default function ProjectGraph({
   const nodeTypes = useMemo(
     () => ({
       base: (data: JSONObject) => <BaseNode ctx={data} sendJsonMessage={sendJsonMessage} />,
-      mini: (data: JSONObject) => <BaseMiniNode ctx={data} sendJsonMessage={sendJsonMessage} />
+      mini: (data: JSONObject) => <BaseMiniNode ctx={data} sendJsonMessage={sendJsonMessage} />,
     }),
+    []
+  );
+
+  const edgeTypes = useMemo(
+    () => ({}),
     []
   );
 
@@ -94,13 +100,12 @@ export default function ProjectGraph({
       edges={edges}
       onDrop={onDrop}
       onConnect={(connection) => {
-        console.log('WTF connect', connection)
-        dispatch(onEdgesChange(connection));
+        dispatch(createEdge(connection));
       }}
       onEdgesChange={(changes) => {
-        console.log('WTF', changes)
-        dispatch(onEdgesChange(changes))
+        dispatch(onEdgesChange(changes));
       }}
+      edgeTypes={edgeTypes}
       onDragOver={onDragOver}
       onEdgeUpdate={onEdgeUpdate}
       onInit={setGraphInstance}

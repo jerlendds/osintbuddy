@@ -11,6 +11,7 @@ import {
   Connection,
   applyEdgeChanges,
   addEdge,
+  MarkerType,
 } from 'reactflow';
 import { nodesService } from '@/services';
 
@@ -74,7 +75,6 @@ export const graph = createSlice({
       state.project.name = action.payload.name;
       state.project.id = action.payload.id;
       state.project.description = action.payload?.description ?? '';
-
     },
 
     setEditLabel: (state, action: PayloadAction<string>) => {
@@ -126,7 +126,18 @@ export const graph = createSlice({
     },
 
     createEdge: (state, action) => {
-      state.edges = addEdge(action.payload, state.edges);
+      state.edges.push({
+        ...action.payload,
+        style: {
+          strokeWidth: 1.5,
+        },
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          width: 16,
+          height: 16,
+          color: '#3a3c40',
+        },
+      });
     },
 
     setEditValue: (state, action: PayloadAction<EditValue>) => {
@@ -146,10 +157,10 @@ export const graph = createSlice({
     },
 
     resetGraph: (state) => {
-      state.nodes = []
-      state.edges = []
+      state.nodes = [];
+      state.edges = [];
     },
-    
+
     updateNodeData: (state, action: PayloadAction<Node>) => {
       const nodeToUpdate = state.nodes.find((n) => n.id === action.payload.id);
       if (nodeToUpdate) {
@@ -179,8 +190,8 @@ export const graph = createSlice({
 
     setNodeType: (state, action: PayloadAction<any>) => {
       state.nodes.forEach((node) => {
-        node.type = action.payload
-      })
+        node.type = action.payload;
+      });
     },
 
     setNodeSelected: (state, action: PayloadAction<{ id: string; selected: boolean }>) => {
@@ -205,9 +216,9 @@ export const graph = createSlice({
       console.log('adding!!', action.payload);
       state.nodes.push(action.payload);
     }),
-    builder.addCase(saveNode.fulfilled, (state, action) => {
-      state.nodes.push(action.payload)
-    });
+      builder.addCase(saveNode.fulfilled, (state, action) => {
+        state.nodes.push(action.payload);
+      });
   },
 });
 
@@ -229,7 +240,7 @@ export const {
   setNodeSelected,
   resetGraph,
   setActiveProject,
-  setNodeType
+  setNodeType,
 } = graph.actions;
 
 export const graphNodes = (state: RootState) => state.graph.nodes;
