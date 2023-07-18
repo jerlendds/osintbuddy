@@ -41,6 +41,8 @@ export default function OsintPage() {
   const projectUUID = activeProject.uuid.replace('-', '');
   const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/project/${projectUUID}`);
   const traversalId = activeProject.uuid.replaceAll(/\-/g, '');
+  const [isLoading, setIsLoading] = useState(true)
+
 
   const { lastMessage, lastJsonMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl, {
     onOpen: () => console.log(`opening traversal: \n\tproject_${traversalId}_traversal`),
@@ -149,10 +151,11 @@ export default function OsintPage() {
             node.position
           ));
           lastJsonMessage.edges.forEach((edge) => addEdge(edge.source.toString(), edge.target.toString()));
+          setIsLoading(false)
         }
         if (lastJsonMessage.action === 'addNode') {
-          lastJsonMessage.position.x += 460;
-          lastJsonMessage.position.y += 80;
+          lastJsonMessage.position.x += 560;
+          lastJsonMessage.position.y += 140;
           addNodeAction(lastJsonMessage);
           toast.success(`Found 1 ${label.label}`);
         }
@@ -161,7 +164,7 @@ export default function OsintPage() {
           if (node?.action === 'addNode') {
             const isOdd = idx % 2 === 0;
             const pos = node.position;
-            const x = isOdd ? pos.x + 320 : pos.x + 740;
+            const x = isOdd ? pos.x + 560 : pos.x + 740;
             const y = isOdd ?  pos.y - (idx - 4) * 120 : pos.y  - (idx - 3.5) * 120 ;
             node.position = {
               x,

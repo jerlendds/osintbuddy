@@ -11,5 +11,7 @@ RUN pip3 install --no-cache-dir --upgrade pip && \
     pip3 install --no-cache-dir -r /app/requirements.txt
 
 COPY app/ /app/
+# COPY osintbuddy-plugins /app/osintbuddy-plugins/
+# RUN pip install /app/osintbuddy-plugins/
 
 CMD ["/bin/bash", "-c", "./start.sh"]
