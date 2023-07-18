@@ -151,8 +151,8 @@ export default function OsintPage() {
           lastJsonMessage.edges.forEach((edge) => addEdge(edge.source.toString(), edge.target.toString()));
         }
         if (lastJsonMessage.action === 'addNode') {
-          lastJsonMessage.position.x += 520;
-          lastJsonMessage.position.y += 100;
+          lastJsonMessage.position.x += 460;
+          lastJsonMessage.position.y += 80;
           addNodeAction(lastJsonMessage);
           toast.success(`Found 1 ${label.label}`);
         }
@@ -161,8 +161,8 @@ export default function OsintPage() {
           if (node?.action === 'addNode') {
             const isOdd = idx % 2 === 0;
             const pos = node.position;
-            const x = isOdd ? pos.x + 530 : pos.x + 1020;
-            const y = isOdd ? (idx - 1) * 120 + pos.y : idx * 120 + pos.y;
+            const x = isOdd ? pos.x + 320 : pos.x + 740;
+            const y = isOdd ?  pos.y - (idx - 4) * 120 : pos.y  - (idx - 3.5) * 120 ;
             node.position = {
               x,
               y,
