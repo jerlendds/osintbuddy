@@ -16,12 +16,12 @@ class CSESearchResultsPlugin(ob.Plugin):
     name = "CSE result"
     show_label = False
     color = "#058F63"
+
     node = [
         Title(label="result"),
         CopyText(label="URL"),
         CopyText(label="Cache URL"),
     ]
-
     @ob.transform(label="To URL", icon='link')
     async def transform_to_url(self, node, **kwargs):
         return UrlPlugin.blueprint(url=node.url)
@@ -30,6 +30,10 @@ class CSESearchResultsPlugin(ob.Plugin):
 class CSESearchPlugin(ob.Plugin):
     label = "CSE Search"
     name = "CSE search"
+
+    description = 'Search through hundreds of categorized custom search engines provided by Google'
+    author = 'the OSINTBuddy team'
+    
     color = "#2C7237"
     node = [
         [

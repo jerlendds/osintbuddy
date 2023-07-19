@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChevronUpDownIcon, PaperClipIcon } from '@heroicons/react/24/outline';
+import { ChevronUpDownIcon, PaperClipIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Combobox } from '@headlessui/react';
 import classNames from 'classnames';
 import { ChangeEvent, Dispatch, Fragment, useEffect, useRef, useState } from 'react';
@@ -8,7 +8,14 @@ import { GripIcon, Icon } from '@/components/Icons';
 import { Dialog } from '@headlessui/react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { type ThunkDispatch } from 'redux-thunk';
-import { setEditState, type Graph, EditState, saveUserEdits, selectNodeValue } from '@/features/graph/graphSlice';
+import {
+  setEditState,
+  type Graph,
+  EditState,
+  saveUserEdits,
+  selectNodeValue,
+  setEditId,
+} from '@/features/graph/graphSlice';
 
 var dropdownKey = 0;
 
@@ -33,90 +40,78 @@ type NodeElement = NodeInput & {
     Dispatch<AnyAction>;
 };
 
-export function useComponentVisible(initialIsVisible) {
-    const [isOpen, setIsOpen] = useState(initialIsVisible);
-    const ref = useRef(null);
+const getNodeElement = (nodeId, value, element: NodeInput, key: string | null = getNodeKey(), sendJsonMessage) => {
+  const dispatch = useAppDispatch();
 
-    const handleClickOutside = (event) => {
-        if (ref.current && !ref.current.contains(event.target)) {
-            setIsOpen(false);
-        }
-    };
+  switch (element.type) {
+    case 'dropdown':
+      return (
+        <DropdownInput
+          key={key}
+          nodeId={nodeId}
+          value={value}
+          options={element.options || []}
+          label={element.label}
+          value={element.value as string}
+          sendJsonMessage={sendJsonMessage}
+          dispatch={dispatch}
+        />
+      );
+    case 'text':
+      return (
+        <TextInput
+          key={key}
+          nodeId={nodeId}
+          label={element?.label}
+          icon={element?.icon || 'ballpen'}
+          sendJsonMessage={sendJsonMessage}
+          dispatch={dispatch}
+        />
+      );
+    case 'upload':
+      return (
+        <h2 className='text-slate-400 text-xs max-w-sm font-sans'>
+          Editing upload entity elements is not currently supported.
+        </h2>
+      );
+    case 'title':
+      return (
+        <h2 className='text-slate-400 text-xs max-w-sm font-sans'>
+          Editing title entity elements is not currently supported.
+        </h2>
+      );
+    case 'section':
+      return (
+        <h2 className='text-slate-400 text-xs max-w-sm font-sans'>
+          Editing section entity elements is not currently supported.
+        </h2>
+      );
+    case 'copy-text':
+      return (
+        <h2 className='text-slate-400 text-xs max-w-sm font-sans'>
+          Editing copy entity elements is not currently supported.
+        </h2>
+      );
+    case 'empty':
+      return <div className='hidden' />;
+  }
+};
 
-    useEffect(() => {
-        document.addEventListener('click', handleClickOutside, true);
-        return () => {
-            document.removeEventListener('click', handleClickOutside, true);
-        };
-    }, []);
-
-
-    return { ref, isOpen, setIsOpen };
-}
-
-export default function BaseMiniNode({ ctx, sendJsonMessage }: { ctx: JSONObject; sendJsonMessage: () => void }) {
+export default function BaseMiniNode({
+  ctx,
+  sendJsonMessage,
+  setIsEditing,
+}: {
+  ctx: JSONObject;
+  sendJsonMessage: () => void;
+  setIsEditing: () => void;
+}) {
   const node = ctx.data;
 
   const dispatch = useAppDispatch();
 
   const backgroundColor = node?.color?.length === 7 ? `${node.color}76` : node?.color ? node.color : '#145070';
 
-  const getNodeElement = (element: NodeInput, key: string | null = getNodeKey()) => {
-    switch (element.type) {
-      case 'dropdown':
-        return (
-          <DropdownInput
-            key={key}
-            nodeId={ctx.id}
-            value={ctx?.value}
-            options={element.options || []}
-            label={element.label}
-            value={element.value as string}
-            sendJsonMessage={sendJsonMessage}
-            dispatch={dispatch}
-          />
-        );
-      case 'text':
-        return (
-          <TextInput
-            key={key}
-            nodeId={ctx.id}
-            label={element?.label}
-            icon={element?.icon || 'ballpen'}
-            sendJsonMessage={sendJsonMessage}
-            dispatch={dispatch}
-          />
-        );
-      case 'upload':
-        return (
-          <h2 className='text-slate-400 text-xs max-w-sm font-sans'>
-            Editing upload entity elements is not currently supported. 
-          </h2>
-        );
-      case 'title':
-        return (
-          <h2 className='text-slate-400 text-xs max-w-sm font-sans'>
-            Editing title entity elements is not currently supported.
-          </h2>
-        );
-      case 'section':
-        return (
-          <h2 className='text-slate-400 text-xs max-w-sm font-sans'>
-            Editing section entity elements is not currently supported.
-          </h2>
-        );
-      case 'copy-text':
-        return (
-          <h2 className='text-slate-400 text-xs max-w-sm font-sans'>
-            Editing copy entity elements is not currently supported.
-          </h2>
-        );
-      case 'empty':
-        return <div className='hidden' />;
-    }
-  };
-
-  const {ref, isOpen, setIsOpen } = useComponentVisible(false)
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
@@ -129,37 +124,69 @@ export default function BaseMiniNode({ ctx, sendJsonMessage }: { ctx: JSONObject
       <Handle position={Position.Bottom} id='b2' key='b2' type='target' style={handleStyle} />
       <Handle position={Position.Left} id='l2' key='l2' type='target' style={handleStyle} />
       <div
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          dispatch(setEditId(ctx.id));
+          setIsEditing(true);
+        }}
         data-label-type={node.label}
         className='node container !rounded-full'
         style={node.style}
       >
         <div style={{ backgroundColor }} className='header !rounded-full !p-4'>
-          <Icon icon={node.icon} className='h-5 w-5 cursor-grab focus:cursor-grabbing' />
+          <Icon icon={node.icon} className='!h-14 !w-14  cursor-grab focus:cursor-grabbing' />
         </div>
       </div>
-    
-        <>
-        <div   ref={ref}  className="flex flex-col">
-            <div className={classNames(isOpen ? 'fixed left-14 top-10 w-full min-w-[18rem] min-h-[4.5rem] pl-2 bg-dark-700 border-dark-300 border pt-2 pb-4 rounded-md' : 'hidden ')}>
-            <h2 className='text-slate-400 font-display text-xs font-medium leading-5 flex'>
-              Editing {node.label} <span className='font-display text-xs font-light ml-auto mr-2'>{ctx.id}</span>
+    </>
+  );
+}
+
+export function MiniEditDialog({ ref, isOpen, setIsOpen, activeNode, nodeId, sendJsonMessage }) {
+  console.log('activeNode', activeNode);
+  return (
+    <>
+      {activeNode && (
+        <div ref={ref} className='flex flex-col'>
+          <div
+            className={classNames(
+              'z-50',
+              isOpen
+                ? 'absolute top-0 right-0 max-w-sm w-full min-h-[4.5rem] pl-2 bg-dark-700 border-dark-300 border pt-2 pb-4 rounded-md rounded-t-none'
+                : 'hidden '
+            )}
+          >
+            <button
+              onClick={() => setIsOpen(false)}
+              className='absolute right-0 top-0 -left-7 z-0 bg-dark-700 rounded-b-md border-dark-300 border-b border-l border-t hover:text-slate-200 text-slate-400'
+            >
+              <XMarkIcon className='w-7 h-7 text-inherit' />
+            </button>
+            <h2 className='text-slate-400 font-display text-lg font-medium leading-5 flex'>
+              {activeNode.data.label} <span className='font-display text-xs font-light ml-auto mr-2'>{nodeId}</span>
             </h2>
-            {node.elements.map((element) => {
+            {activeNode.data.elements.map((element) => {
               if (Array.isArray(element)) {
                 return element.map((elm, i) => (
                   <div key={i.toString()} className='flex flex-col mr-2 last:mr-0'>
                     {' '}
-                    {getNodeElement(elm, `${elm.label}-${elm.id}-${ctx.id}`)}
+                    {getNodeElement(nodeId, elm.value, elm, `${elm.label}-${elm.id}-${nodeId}`, sendJsonMessage)}
                   </div>
                 ));
               }
-              return <div className='mr-2'>{getNodeElement(element, `${element.label}-${element.id}-${ctx.id}`)}</div>;
+              return (
+                <div className='mr-2'>
+                  {getNodeElement(
+                    nodeId,
+                    element.value,
+                    element,
+                    `${element.label}-${element.id}-${nodeId}`,
+                    sendJsonMessage
+                  )}
+                </div>
+              );
             })}
           </div>
         </div>
-        
-        </>
+      )}
     </>
   );
 }

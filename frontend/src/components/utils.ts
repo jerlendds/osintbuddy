@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
 
 export const useEffectOnce = (effect: () => void | (() => void)) => {
   const destroyFunc = useRef<void | (() => void)>();
@@ -38,4 +38,24 @@ export function capitalize(value: string) {
 }
 
 
+export function useComponentVisible(initialIsVisible: boolean) {
+    const [isOpen, setIsOpen] = useState(initialIsVisible);
+    const ref = useRef(null);
 
+    const handleClickOutside = (event: any) => {
+        // @ts-ignore
+        if (ref.current && !ref.current.contains(event.target)) {
+            setIsOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('click', handleClickOutside, true);
+        return () => {
+            document.removeEventListener('click', handleClickOutside, true);
+        };
+    }, []);
+
+
+    return { ref, isOpen, setIsOpen };
+}

@@ -14,9 +14,21 @@ import { toast } from 'react-toastify';
 import { nodesService } from '@/app/services';
 import ProjectGraph from './_components/ProjectGraph';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { createEdge, createNode, graphEdges, graphNodes, resetGraph } from '@/features/graph/graphSlice';
-import { useEffectOnce } from '@/components/utils';
+import {
+  ProjectViewModes,
+  createEdge,
+  createNode,
+  graphEdges,
+  graphNodes,
+  resetGraph,
+  selectEditId,
+  selectNode,
+  selectViewMode,
+} from '@/features/graph/graphSlice';
+import { useComponentVisible, useEffectOnce } from '@/components/utils';
 import DisplayOptions from './_components/DisplayOptions';
+import classNames from 'classnames';
+import { MiniEditDialog } from './_components/BaseMiniNode';
 
 const keyMap = {
   TOGGLE_PALETTE: ['shift+p'],
@@ -41,8 +53,8 @@ export default function OsintPage() {
   const projectUUID = activeProject.uuid.replace('-', '');
   const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/project/${projectUUID}`);
   const traversalId = activeProject.uuid.replaceAll(/\-/g, '');
-  const [isLoading, setIsLoading] = useState(true)
-
+  const [isLoading, setIsLoading] = useState(true);
+  const viewMode = useAppSelector((state) => selectViewMode(state));
 
   const { lastMessage, lastJsonMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl, {
     onOpen: () => console.log(`opening traversal: \n\tproject_${traversalId}_traversal`),
@@ -50,12 +62,12 @@ export default function OsintPage() {
   });
 
   useEffectOnce(() => {
-    dispatch(resetGraph())
-    sendJsonMessage({ action: 'read:node' })
+    dispatch(resetGraph());
+    sendJsonMessage({ action: 'read:node' });
   });
 
-  function addNode(id, data: AddNode, position) {
-    dispatch(createNode({ id, data, position, type: 'base' }));
+  function addNode(id, data: AddNode, position, type: ProjectViewModes = viewMode) {
+    dispatch(createNode({ id, data, position, type }));
   }
 
   function addEdge(
@@ -63,7 +75,7 @@ export default function OsintPage() {
     target,
     sourceHandle?: string = 'r1',
     targetHandle?: string = 'l2',
-    type?: string = 'default',
+    type?: string = 'default'
   ): void {
     dispatch(
       createEdge({
@@ -109,9 +121,14 @@ export default function OsintPage() {
       .then((resp) => {
         const options =
           resp?.data?.plugins
-            ?.filter((label: any) => label)
-            .map((label: string) => {
-              return { event: label, title: label, name: label };
+            ?.filter((option: any) => option)
+            .map((option: string) => {
+              return {
+                event: option.label,
+                title: option.label,
+                description: option.description,
+                author: option.author,
+              };
             }) || [];
         return options;
       })
@@ -145,13 +162,9 @@ export default function OsintPage() {
       if (lastJsonMessage.action === 'error') toast.error(`${lastJsonMessage.detail}`);
       if (!Array.isArray(lastJsonMessage)) {
         if (lastJsonMessage.action === 'addInitialLoad') {
-          lastJsonMessage.nodes.forEach((node, idx) => addNode(
-            node.id.toString(),
-            node.data,
-            node.position
-          ));
+          lastJsonMessage.nodes.forEach((node, idx) => addNode(node.id.toString(), node.data, node.position));
           lastJsonMessage.edges.forEach((edge) => addEdge(edge.source.toString(), edge.target.toString()));
-          setIsLoading(false)
+          setIsLoading(false);
         }
         if (lastJsonMessage.action === 'addNode') {
           lastJsonMessage.position.x += 560;
@@ -165,7 +178,7 @@ export default function OsintPage() {
             const isOdd = idx % 2 === 0;
             const pos = node.position;
             const x = isOdd ? pos.x + 560 : pos.x + 740;
-            const y = isOdd ?  pos.y - (idx - 4) * 120 : pos.y  - (idx - 3.5) * 120 ;
+            const y = isOdd ? pos.y - (idx - 4) * 120 : pos.y - (idx - 3.5) * 120;
             node.position = {
               x,
               y,
@@ -212,9 +225,7 @@ export default function OsintPage() {
         setTransforms(data.transforms);
       })
       .catch((error) => {
-        toast.error(
-          `We ran into an error loading transforms from the plugin ${node.data.label}. Please file a bug with the plugin author.`
-        );
+        toast.warn(`We found no transforms while trying to load the plugin ${node.data.label}.`);
         setTransforms([]);
       });
     setShowMenu(true);
@@ -236,15 +247,29 @@ export default function OsintPage() {
     setTransforms(null);
     setCtxSelection(null);
   };
+  const { ref, isOpen, setIsOpen } = useComponentVisible(false);
 
+  const activeNodeId = useAppSelector((state) => selectEditId(state));
+  const activeNode = useAppSelector((state) => selectNode(state, activeNodeId));
+  console.log(activeNodeId);
   return (
     <>
       <HotKeys keyMap={keyMap} handlers={handlers}>
         <div className='h-screen flex flex-col w-full'>
           <div className='flex h-full justify-between bg-dark-900 relative'>
-              <DisplayOptions />
+            <DisplayOptions />
             <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
               <EntityOptions activeProject={activeProject} options={nodeOptions} />
+
+              <MiniEditDialog
+              setIsOpen={setIsOpen}
+                ref={ref}
+                isOpen={isOpen}
+                activeNode={activeNode}
+                nodeId={activeNodeId}
+                sendJsonMessage={sendJsonMessage}
+              />
+
               <ProjectGraph
                 activeProject={activeProject}
                 onSelectionCtxMenu={onSelectionCtxMenu}
@@ -263,10 +288,10 @@ export default function OsintPage() {
                 lastMessage={lastMessage}
                 updateNode={createNodeUpdate}
                 setNodes={setNodes}
+                setIsEditingMini={setIsOpen}
               />
             </div>
           </div>
-
         </div>
         <CommandPallet
           toggleShowOptions={toggleShowNodeOptions}

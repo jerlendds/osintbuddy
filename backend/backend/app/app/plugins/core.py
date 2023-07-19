@@ -21,6 +21,8 @@ class WhoisPlugin(ob.Plugin):
         CopyText(label="Raw whois", icon="world"),
     ]
 
+    author = 'the OSINTBuddy team'
+    description = 'test'
 
 class GoogleSearchPlugin(ob.Plugin):
     label = "Google Search"
@@ -30,6 +32,9 @@ class GoogleSearchPlugin(ob.Plugin):
         TextInput(label="Query", icon="search"),
         TextInput(label="Pages", icon="123", value="3"),
     ]
+
+    author = 'the OSINTBuddy team'
+    description = 'Search google using the advanced operators you\'re used to'
 
     @ob.transform(label="To results")
     async def transform_to_google_results(self, node, use):
@@ -123,6 +128,8 @@ class GoogleCacheSearchPlugin(ob.Plugin):
         TextInput(label="Query", icon="search"),
         TextInput(label="Pages", icon="123", default="3"),
     ]
+    author = 'the OSINTBuddy team'
+    description = 'Search the google cache'
 
     @ob.transform(label="To cache results")
     async def transform_to_google_cache_results(self, node, use):
@@ -194,7 +201,6 @@ class DnsPlugin(ob.Plugin):
     label = "DNS"
     name = "DNS"
     color = "#2181B5"
-    show_label = False
     icon = "server-2"
     node = [Title(label="record")]
 
@@ -212,6 +218,8 @@ class DnsPlugin(ob.Plugin):
         "DCHID",
         "DNAME",
     ]
+
+    author = ['the OSINTBuddy team', 'Bugfest']
 
     @classmethod
     def data_template(cls):
@@ -267,6 +275,9 @@ class WebsitePlugin(ob.Plugin):
     node = [
         TextInput(label="Domain", icon="world-www"),
     ]
+
+    author = 'the OSINTBuddy team'
+    description = 'Reveal insights for any website'
 
     @ob.transform(label="To IP", icon="building-broadcast-tower")
     async def transform_to_ip(self, node, use):
@@ -398,10 +409,15 @@ class SubdomainPlugin(ob.Plugin):
         TextInput(label="Subdomain", icon="world"),
     ]
 
+    author = 'the OSINTBuddy team'
+    description = 'test'
 
 class IPGeolocationPlugin(ob.Plugin):
     label = "IP Geo"
     show_label = False
+
+    description = 'test'
+
 
     name = "IP geolocation (ipinfo.io)"
     color = "#FFCC33"
@@ -456,7 +472,10 @@ class IPAddressPlugin(ob.Plugin):
     color = "#F47C00"
     node = [TextInput(label="IP Address", icon="map-pin")]
 
-    @ob.transform(label="To website", icon="world", prompt="""""")
+    author = 'the OSINTBuddy team'
+    description = 'Reveal details on an IP address'
+
+    @ob.transform(label="To website", icon="world")
     async def transform_to_website(self, node, use):
         try:
             resolved = socket.gethostbyaddr(node.ip_address)

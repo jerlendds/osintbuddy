@@ -56,6 +56,7 @@ async def fetch_node_transforms(plugin_label):
 @router.get("/refresh")
 async def refresh_plugins():
     discover_plugins("app/plugins/")
+    print('wtf!',  Registry.ui_labels, Registry.labels)
     return {"status": "success", "plugins": Registry.ui_labels}
 
 
@@ -133,7 +134,7 @@ async def save_node_to_graph(
         source = graph.V().hasId(new_entity.id)
         target = graph.V().hasId(add_edge['id'])
         await target.addE(add_edge['label']).to(source).next()
-
+    print('Invalid type?!',  new_entity.id, new_labels)
     await graph.V().hasId(new_entity.id) \
         .properties(*new_labels) \
         .valueMap(True) \

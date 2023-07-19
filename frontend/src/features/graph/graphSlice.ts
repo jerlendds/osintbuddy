@@ -15,10 +15,13 @@ import {
 } from 'reactflow';
 import { nodesService } from '@/app/services';
 
+export type ProjectViewModes = 'base' | 'mini'
+
 export interface Graph extends EditState {
   nodes: Node[];
   edges: Edge[];
   project: ActiveProject;
+  viewMode: ProjectViewModes;
 }
 
 const initialState: Graph = {
@@ -33,6 +36,7 @@ const initialState: Graph = {
     uuid: '',
     name: '',
   },
+  viewMode: 'base'
 };
 
 export const fetchNodeBlueprint = createAsyncThunk(
@@ -140,6 +144,10 @@ export const graph = createSlice({
       });
     },
 
+    setViewMode: (state, action: PayloadAction<ProjectViewModes>) => {
+      state.viewMode = action.payload
+    },
+
     setEditValue: (state, action: PayloadAction<EditValue>) => {
       state.editValue = action.payload.value;
     },
@@ -214,7 +222,7 @@ export const graph = createSlice({
   extraReducers(builder) {
     builder.addCase(fetchNodeBlueprint.fulfilled, (state, action) => {
       console.log('adding!!', action.payload);
-      state.nodes.push(action.payload);
+      state.nodes.push({ ...action.payload, type: state.viewMode});
     }),
       builder.addCase(saveNode.fulfilled, (state, action) => {
         state.nodes.push(action.payload);
@@ -241,6 +249,7 @@ export const {
   resetGraph,
   setActiveProject,
   setNodeType,
+  setViewMode
 } = graph.actions;
 
 export const graphNodes = (state: RootState) => state.graph.nodes;
@@ -261,6 +270,7 @@ export const selectNode = (state: RootState, id: string) =>
 export const selectEditLabel = (state: RootState) => state.graph.editLabel;
 export const selectEditId = (state: RootState) => state.graph.editId;
 export const selectEditValue = (state: RootState) => state.graph.editValue;
+export const selectViewMode = (state: RootState) => state.graph.viewMode;
 
 export const selectEditState = createSelector([selectEditId, selectEditLabel], (id, label) => ({
   id,

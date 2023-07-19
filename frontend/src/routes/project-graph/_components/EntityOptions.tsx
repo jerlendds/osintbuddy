@@ -65,32 +65,28 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
       <li key={entity.id} className='flex items-center w-full justify-between py-3'>
         <div
           draggable
-          onDragStart={(event) => onDragStart(event, entity.name)}
-          className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden bg-dark-400/60 hover:bg-dark-600 border-transparent border h-[86px] border-l-info-300 hover:border-info-100 transition-colors duration-150 border-l-[6px] hover:border-l-[6px] rounded-md w-full'
+          onDragStart={(event) => onDragStart(event, entity.event)}
+          className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden bg-dark-400/60 hover:bg-dark-600 border-transparent border max-h-[160px] border-l-info-300 hover:border-info-100 transition-colors duration-150 border-l-[6px] hover:border-l-[6px] rounded-md w-full'
         >
           <div className='flex flex-col w-full select-none'>
             <div className='flex items-start justify-between gap-x-3 w-full relative'>
-              <p className='text-sm font-semibold leading-6 text-slate-300 whitespace-nowrap'>{entity.name}</p>
+              <p className='text-sm font-semibold leading-6 text-slate-300 whitespace-nowrap'>{entity.title}</p>
               <p
                 className={classNames(
-                  statuses[entity.status as string],
+                  statuses[entity.status],
                   'rounded-[0.25rem] right-0 relative whitespace-nowrap text-slate-300 px-1.5 py-0.5 text-xs font-medium ring-1 ring-info-300 ring-inset'
                 )}
               >
-                {entity.status}Installed
+                {entity.status }Installed
               </p>
             </div>
             <div className='mt-1 flex flex-wrap items-center gap-x-2 text-xs leading-5 text-slate-500'>
-              <p className='truncate  leading-5 text-slate-500'>
-                {' '}
-                {entity.description ? entity.description : 'No Description'}
-              </p>
-
+              <p className='truncate whitespace-normal leading-5 text-slate-500'> {entity.description && entity.description}</p>
               <svg viewBox='0 0 2 2' className='h-0.5 w-0.5 fill-current'>
                 <circle cx={1} cy={1} r={1} />
               </svg>
               <p className='truncate  leading-5 text-slate-500 text-xs'>
-                Created by {entity.createdBy ? entity.createdBy : 'the OSINTBuddy team'}
+                Created by {entity.author ? entity.author : 'the OSINTBuddy team'}
               </p>
             </div>
           </div>
@@ -103,15 +99,15 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
 export default function EntityOptions({ options, activeProject }: any) {
   const onDragStart = (event: DragEvent, nodeType: string) => {
     if (event?.dataTransfer) {
+      console.log(nodeType);
       event.dataTransfer.setData('application/reactflow', nodeType);
       event.dataTransfer.effectAllowed = 'move';
     }
   };
-
   const [showEntities, setShowEntities] = useState(true);
   const [searchFilter, setSearchFilter] = useState('');
   const filteredOptions = searchFilter
-    ? options.filter((option: JSONObject) => option.name.toLowerCase().includes(searchFilter))
+    ? options.filter((option: JSONObject) => option.event.toLowerCase().includes(searchFilter))
     : options;
 
   return (
@@ -171,7 +167,7 @@ export default function EntityOptions({ options, activeProject }: any) {
             </div>
             <ul className='overflow-y-scroll ml-4 pr-4 h-full relative'>
               {filteredOptions.map((option: JSONObject) => (
-                <ListItem onDragStart={onDragStart} key={option.name} entity={option} />
+                <ListItem onDragStart={onDragStart} key={option.event} entity={option} />
               ))}
             </ul>
           </>

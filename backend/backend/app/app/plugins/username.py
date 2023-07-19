@@ -15,6 +15,9 @@ class UsernamePlugin(ob.Plugin):
         TextInput(label='Username', icon='user-search'),
     ]
 
+    author = 'the OSINTBuddy team'
+    description = 'Reveal social profiles'
+
     @ob.transform(label='To profile', icon='user')
     async def transform_to_profile(self, node, use):
         with use.get_driver() as driver:

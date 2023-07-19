@@ -11,6 +11,7 @@ class UrlPlugin(ob.Plugin):
     node = [
         TextInput(label='URL', icon='link'),
     ]
+    author = 'the OSINTBuddy team'
 
     @ob.transform(label='To website', icon='world-www')
     async def transform_to_website(self, node, **kwargs):

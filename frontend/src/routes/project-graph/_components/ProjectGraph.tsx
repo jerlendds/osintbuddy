@@ -31,6 +31,7 @@ export default function ProjectGraph({
   onSelectionCtxMenu,
   onMultiSelectionCtxMenu,
   activeProject,
+  setIsEditingMini
 }: JSONObject) {
   const dispatch = useAppDispatch();
   const [isSavingNewNode, setSavingNewNode] = useState(false);
@@ -57,6 +58,7 @@ export default function ProjectGraph({
         y: event.clientY - graphBounds.top,
       });
       try {
+        console.log('position?!?!?!', position, label)
         await dispatch(
           fetchNodeBlueprint({
             label,
@@ -76,7 +78,7 @@ export default function ProjectGraph({
   const nodeTypes = useMemo(
     () => ({
       base: (data: JSONObject) => <BaseNode ctx={data} sendJsonMessage={sendJsonMessage} />,
-      mini: (data: JSONObject) => <BaseMiniNode ctx={data} sendJsonMessage={sendJsonMessage} />,
+      mini: (data: JSONObject) => <BaseMiniNode setIsEditing={setIsEditingMini} ctx={data} sendJsonMessage={sendJsonMessage} />,
     }),
     []
   );
