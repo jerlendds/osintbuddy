@@ -121,6 +121,7 @@ https://willi.am/blog/2016/08/11/docker-for-windows-dealing-with-windows-line-en
    cp .env.example .env
    docker compose up
    ```
+   - **Note:** the stack will take a few minutes to startup while elastic and scylladb configure themselves for JanusGraph. If you try to connect before all the databases are ready you will encounter error notifications.
 
 - **URLs**
   - Frontend: http://localhost:3000
