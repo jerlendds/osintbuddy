@@ -177,7 +177,7 @@ export default function OsintPage() {
           if (node?.action === 'addNode') {
             const isOdd = idx % 2 === 0;
             const pos = node.position;
-            const x = isOdd ? pos.x + 560 : pos.x + 740;
+            const x = isOdd ? pos.x + 560 : pos.x + 970;
             const y = isOdd ? pos.y - (idx - 4) * 120 : pos.y - (idx - 3.5) * 120;
             node.position = {
               x,
