@@ -4,7 +4,7 @@
 python app/backend_pre_start.py
 
 
-# alembic revision --autogenerate -m "initial revision"
+# alembic revision --autogenerate -m "last initial revision reset"
 
 
 ## Run migrations

@@ -1,5 +1,12 @@
 import { Menu, Disclosure, Transition } from '@headlessui/react';
-import { ChevronUpDownIcon, PlusIcon, Square2StackIcon } from '@heroicons/react/24/outline';
+import {
+  ChevronUpDownIcon,
+  EllipsisHorizontalIcon,
+  LockClosedIcon,
+  LockOpenIcon,
+  PlusIcon,
+  Square2StackIcon,
+} from '@heroicons/react/24/outline';
 import React, { useRef, useState, MutableRefObject, useEffect, useCallback, DragEventHandler } from 'react';
 import { Fragment } from 'react';
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
@@ -77,11 +84,14 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
                   'rounded-[0.25rem] right-0 relative whitespace-nowrap text-slate-300 px-1.5 py-0.5 text-xs font-medium ring-1 ring-info-300 ring-inset'
                 )}
               >
-                {entity.status }Installed
+                {entity.status}Installed
               </p>
             </div>
             <div className='mt-1 flex flex-wrap items-center gap-x-2 text-xs leading-5 text-slate-500'>
-              <p className='truncate whitespace-normal leading-5 text-slate-500'> {entity.description && entity.description}</p>
+              <p className='truncate whitespace-normal leading-5 text-slate-500'>
+                {' '}
+                {entity.description && entity.description}
+              </p>
               <svg viewBox='0 0 2 2' className='h-0.5 w-0.5 fill-current'>
                 <circle cx={1} cy={1} r={1} />
               </svg>
@@ -96,29 +106,72 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
   );
 }
 
-export default function EntityOptions({ options, activeProject }: any) {
-  const onDragStart = (event: DragEvent, nodeType: string) => {
-    if (event?.dataTransfer) {
-      console.log(nodeType);
-      event.dataTransfer.setData('application/reactflow', nodeType);
-      event.dataTransfer.effectAllowed = 'move';
-    }
+import 'react-grid-layout/css/styles.css';
+import RGL, { Responsive, WidthProvider } from 'react-grid-layout';
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
+
+const ReactGridLayout = WidthProvider(RGL);
+
+export default function EntityOptions({ options, activeProject }: JSONObject) {
+  const defaultProps = {
+    className: 'layout',
+    items: 10,
+    rowHeight: 30,
+    onLayoutChange: function () {},
+    cols: 12,
   };
   const [showEntities, setShowEntities] = useState(true);
   const [searchFilter, setSearchFilter] = useState('');
+  // const layout = {
+  //     lg: [
+  //       { i: 'a', x: 0, y: 0, w: 1, h: 2, static: true },
+  //       { i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4 },
+  //       { i: 'c', x: 4, y: 0, w: 1, h: 2 },
+  //     ],
+  //   }
+  const dataGrid = {
+    x: 0.1,
+    y: 0,
+    w: 5,
+    h: 16,
+    maxH: 16,
+    minH: 1,
+    maxW: 16,
+    minW: 4.5,
+  };
   const filteredOptions = searchFilter
-    ? options.filter((option: JSONObject) => option.event.toLowerCase().includes(searchFilter))
+    ? options.filter((option: JSONObject) => option.event.toLowerCase().includes(searchFilter.toLowerCase()))
     : options;
 
+  const onDragStart = (event: DragEvent, nodeType: string) => {
+    if (event?.dataTransfer) {
+      event.dataTransfer.setData('application/reactflow', nodeType);
+      event.dataTransfer.effectAllowed = 'move';
+    }
+    event.stopPropagation();
+  };
+
+  const [isDraggable, setDraggable] = useState(false);
+
   return (
-    <>
+    <ResponsiveGridLayout
+      compactType={null}
+      className='h-full w-full z-[99] absolute'
+      rowHeight={42}
+      onLayoutChange={(e) => console.log('onLayoutChange: ', e)}
+      breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+      cols={{ lg: 26, md: 26, sm: 24, xs: 22, xxs: 18 }}
+      isDraggable={isDraggable}
+      isResizable={true}
+    >
       <div
-        className={classNames(
-          'fixed overflow-hidden mt-2 ml-4 rounded-md z-10 border border-dark-300 max-w-xs w-full bg-dark-700 py-2 flex flex-col  max-h-[84%] h-min',
-          showEntities && 'min-h-[80%]'
-        )}
+        draggable={false}
+        className=' overflow-hidden rounded-md z-10 border border-dark-300 bg-dark-700 flex flex-col h-min'
+        key='a'
+        data-grid={dataGrid}
       >
-        <ol className='text-sm flex select-none bg-dark-700 relative px-4'>
+        <ol className='text-sm flex select-none bg-dark-700 relative px-4 pt-2'>
           <li className='flex items-start'>
             <div className='flex items-center'>
               <Link title='View all projects' to='/app/projects' replace>
@@ -128,7 +181,7 @@ export default function EntityOptions({ options, activeProject }: any) {
               </Link>
             </div>
           </li>
-          <li className='flex'>
+          <li className='flex mr-auto'>
             <div className='flex justify-between items-center w-full text-slate-400 '>
               <span
                 className='text-slate-500 text-inherit whitespace-nowrap font-display'
@@ -140,18 +193,19 @@ export default function EntityOptions({ options, activeProject }: any) {
               </span>
             </div>
           </li>
-          <li className='relative ml-auto'>
-            <span onClick={() => setShowEntities(!showEntities)}>
-              <EllipsisVerticalIcon
-                className={classNames(
-                  'h-6 w-6 text-slate-400 rotate-0 transition-transform duration-75',
-                  showEntities && 'rotate-90 origin-center '
-                )}
-              />
-            </span>
+          <li className='flex'>
+            <div className='flex justify-between items-center w-full text-slate-400 '>
+              <button
+                onClick={() => setDraggable(!isDraggable)}
+                className='text-slate-500 hover:text-slate-400 text-inherit whitespace-nowrap font-display'
+                title={activeProject.name}
+                aria-current={activeProject.description}
+              >
+                {isDraggable ? <LockOpenIcon className='w-5 h-5' /> : <LockClosedIcon className='w-5 h-5' />}
+              </button>
+            </div>
           </li>
         </ol>
-
         {showEntities && (
           <>
             <div className='text-xl items-center justify-between w-full flex mt-2 px-4'>
@@ -173,6 +227,6 @@ export default function EntityOptions({ options, activeProject }: any) {
           </>
         )}
       </div>
-    </>
+    </ResponsiveGridLayout>
   );
 }

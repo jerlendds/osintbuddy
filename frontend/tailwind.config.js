@@ -21,6 +21,7 @@ module.exports = {
     fontFamily: {
       sans: ['Inter'],
       display: ['Lexend'],
+      code: ['Fira Code', 'monospace']
     },
     extend: {
       maxWidth: {

@@ -34,7 +34,10 @@ export default function Table({
   createButtonFunction,
   createButtonLabel,
   CustomRow,
-}: any) {
+  emptyTitle,
+  emptyDescription,
+  DataRow
+}: JSONObject) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -130,11 +133,19 @@ export default function Table({
                           prepareRow(row);
                           return <DataRow key={i.toString()} row={row} />;
                         })}
-                        {data.length < columns.length + 1 && (
+                        {data.length < columns.length  && (
                           <EmptyTableBody
                             showWatermark={data.length === 0}
-                            title={data?.length === 0 ? 'No Projects Found' : null}
-                            description={data?.length === 0 ? 'Get started by creating a new project' : null}
+                            title={
+                              data.length === 0 && emptyTitle ? emptyTitle : data.length > 0 ? null : 'No data found'
+                            }
+                            description={
+                              data.length === 0 && emptyDescription
+                                ? emptyDescription
+                                : data.length > 0
+                                ? null
+                                : 'Get started by creating data'
+                            }
                             columnsLength={columns.length}
                           />
                         )}
@@ -150,7 +161,6 @@ export default function Table({
                 <div className='hidden sm:block mr-auto'>
                   <div className='text-sm text-slate-400'>
                     {loading ? (
-                      // Use our custom loading state to show a loading indicator
                       <div className='text-slate-400 px-6 py-2'>
                         <RoundLoader className='text-slate-400' />
                       </div>
@@ -201,23 +211,7 @@ export default function Table({
   );
 }
 
-export function DataRow({ row }: JSONObject) {
-  return (
-    <tr className='' {...row.getRowProps()}>
-      {row.cells.map((cell: any) => {
-        return (
-          <td
-            colSpan={1}
-            className='lg:first:w-32 lg:last:w-72  last:mr-auto min-w-min py-2 pr-3 text-sm font-medium text-slate-400 first:pl-8'
-            {...cell.getCellProps()}
-          >
-            {cell.render('Cell')}
-          </td>
-        );
-      })}
-    </tr>
-  );
-}
+
 
 export function LoadingRow({ columnsLength }: JSONObject) {
   return (
@@ -240,29 +234,28 @@ export function EmptyTableBody({
   showWatermark,
 }: JSONObject) {
   return (
-    <tr className='my-1 empty-body'>
+    <tr className='my-1 empty-body relative'>
       {Array(columnsLength + 1)
         .fill(0)
         .map((_, i) => {
-          if (i === columnsLength)
+          if (i === 0) {
             return (
               <Fragment key={i.toString()}>
-                <td className='text-sm text-slate-400 '>
-                  <div className='absolute left-0 z-50 pl-12 invisible hidden min-w-max lg:visible lg:flex flex-col top-40'>
+                <td className='relative text-sm text-slate-400 '>
+                  <div className=' left-0 z-50 pl-12 invisible hidden min-w-max lg:visible lg:flex flex-col top-0 mb-72'>
                     {title && <h3 className='text-2xl text-slate-300  '>{title}</h3>}
                     {description && <h4 className='mt-1 mb-3 text-lg font-light text-slate-400'>{description}</h4>}
                   </div>
-                  {/* <div className='flex relative z-50 ml-2'>
-                    
-                  </div> */}
                   {showWatermark && (
-                    <WaterMark className='md:visible invisible hidden md:block absolute h-72 top-44 mt-auto text-dark-600 mx-auto left-0 right-0' />
+                    <WaterMark className=' md:visible invisible hidden md:block absolute h-52 top-5 left-[150%] text-dark-600 mx-auto' />
                   )}
                 </td>
               </Fragment>
             );
+          }
+
           return (
-            <td key={i.toString()} className={classNames('min-w-min text-sm text-slate-400 h-[26rem]')}>
+            <td key={i.toString()} className='min-w-min relative text-sm text-slate-400 h-[26rem] ml-auto right-0'>
               <div className='flex'>
                 <div className=' flex flex-col px-6 py-3'></div>
               </div>

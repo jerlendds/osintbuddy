@@ -2,6 +2,7 @@
 @import './prism.css';
 @import './docs.css';
 @import './layouts.css';
+@import './tables.css';
 
 *,
 :after,
@@ -56,17 +57,17 @@ figcaption {
   width: 6px;
 }
 *::-webkit-scrollbar-track {
-  background: #0A0F1B;
+  background: #1A1F27;
   width: 6px;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: #0F172A;
+  background-color: #1A1F27;
   border-radius: 0px;
-  border-right: 6px solid #0F172A;
+  border-right: 6px solid #1A1F27;
 }
 * {
   scrollbar-width: 4px;
-  scrollbar-color: #0F172A #0F172A;
+  scrollbar-color: #0e1526 #1A1F27;
 }
 /* end Custom Scrollbar Style */
 
@@ -149,7 +150,7 @@ input[type='number'] {
   @apply !border-dark-400 !fill-slate-400 hover:!bg-dark-200 !bg-dark-600;
 }
 .react-flow__attribution {
-  @apply !bg-dark-600 z-0;
+  @apply !bg-dark-600;
 }
 .react-flow__attribution a {
   @apply !text-slate-500;
@@ -237,28 +238,12 @@ input[type='file'] {
 }
 /* end toastify styles */
 
-/* global table styles */
-.primary-table {
-  @apply min-w-full divide-y-2 rounded-t-lg overflow-hidden divide-dark-800 table-auto;
+/* start react-grid-layout and codemirror */
+.react-resizable-handle::after {
+  @apply !border-slate-600 !w-2 !h-2
 }
 
-.primary-table-wrap {
-  @apply overflow-y-scroll max-h-[26rem];
+.cm-line span {
+  @apply !font-code text-sm;
 }
-.primary-table thead tr th {
-  @apply bg-dark-600 text-slate-300 sticky top-0 z-50 first:py-3.5 pr-2 py-3.5 text-left text-sm font-semibold first:sm:pl-8 last:w-96 even:w-52 first:w-20  first:pr-20 whitespace-nowrap truncate;
-}
-.primary-table tbody {
-  @apply bg-dark-500 pb-2 max-h-[26rem] overflow-y-scroll;
-}
-.primary-table-wrap.no-scroll {
-  @apply overflow-hidden;
-}
-.primary-table tbody tr {
-  @apply first:sm:pl-8;
-}
-
-.primary-table tbody tr.empty-body td {
-  @apply last:pt-44 last:mr-4;
-}
-/* end global table styles */
+/* end react-grid-layout and codemirror */

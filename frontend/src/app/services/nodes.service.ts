@@ -8,7 +8,6 @@ class NodesService {
   }
 
   async createNode({ label, position, uuid }: { label: string; position: XYPosition, uuid: string }) {
-    console.log('label??!', label)
     const result = await api.post(`/nodes/`, {
       label,
       position,

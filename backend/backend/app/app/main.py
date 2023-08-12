@@ -79,8 +79,6 @@ async def on_shutdown() -> None:
 
 @app.on_event('startup')
 async def on_startup() -> None:
-    if 'dev' in settings.ENVIRONMENT:
-        discover_plugins('/plugins.osintbuddy.com/src/osintbuddy/core/')
     rc = RedisCacheBackend(settings.REDIS_URL)
     caches.set(CACHE_KEY, rc)
 

@@ -1,10 +1,5 @@
-import sys
-import json
-import ujson
 import uuid
 import asyncio
-from contextlib import asynccontextmanager
-from typing import List, Callable, Tuple, Any, AsyncIterator
 from fastapi import (
     APIRouter,
     HTTPException,
@@ -47,8 +42,9 @@ async def create_project(
 map = new HashMap<>()
 map.put('storage.backend', 'cql')
 map.put('storage.hostname', 'sdb:9042')
-map.put('index.search.backend', 'elasticsearch')
-map.put('index.search.hostname', 'index:9200')
+map.put('index.search.backend', 'solr')
+map.put('index.search.solr.mode', 'http')
+map.put('index.search.solr.http-urls', 'http://index:8983/solr')
 map.put('graph.graphname', 'project_{project_uuid}')
 ConfiguredGraphFactory.createConfiguration(new MapConfiguration(map))
 ConfiguredGraphFactory.open('project_{project_uuid}')

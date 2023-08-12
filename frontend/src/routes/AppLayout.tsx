@@ -26,7 +26,6 @@ const navigation = [
   { name: 'Projects', to: '/app/projects', icon: InboxIcon },
   { name: 'Incidents *', to: '/app/incidents', icon: FolderOpenIcon },
   { name: 'Scans *', to: '/app/scans', icon: DocumentMagnifyingGlassIcon },
-  { name: 'Dorks', to: '/app/dorking', icon: ViewfinderCircleIcon },
 ];
 
 const graphTourSteps: any = [
@@ -225,7 +224,7 @@ export default function AppLayout() {
               showSidebar ? 'translate-x-64' : 'translate-x-12'
             )}
           >
-            <main className='flex-1 block h-screen relative w-full'>
+            <main className='flex-1 block h-screen relative w-full overflow-y-scroll'>
               <Outlet />
             </main>
           </div>

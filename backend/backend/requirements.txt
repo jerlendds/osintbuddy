@@ -1,4 +1,5 @@
 aiohttp==3.8.4
+fastapi-sso==0.7.1
 aioredis==1.3.1
 aiosignal==1.3.1
 alembic==1.10.4
@@ -31,9 +32,7 @@ greenlet==2.0.2
 grequests==0.6.0
 h11==0.14.0
 hiredis==2.2.3
-httpcore==0.17.0
 httptools==0.5.0
-httpx==0.24.1
 idna==3.4
 iniconfig==2.0.0
 isodate==0.6.1
@@ -99,4 +98,15 @@ urllib3==1.26.16
 yarl==1.9.2
 aenum==3.1.12
 gremlinpy @ git+https://github.com/jerlendds/gremlinpy.git@7d3033e6a55ed9cb1f982ec3b58ca233e01c58e3
-osintbuddy==0.0.4rc45.post1
+osintbuddy==0.0.4rc46.post1
+passlib==1.7.4
+email-validator==2.0.0.post2
+cffi==1.15.1
+cryptography==41.0.2
+ecdsa==0.18.0
+pyasn1==0.5.0
+pycparser==2.21
+python-jose==3.3.0
+rsa==4.9
+python-multipart==0.0.6
+emails==0.6

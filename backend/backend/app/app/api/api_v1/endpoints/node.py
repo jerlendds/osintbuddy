@@ -6,25 +6,28 @@ from fastapi import (
     WebSocket,
     WebSocketException,
     WebSocketDisconnect,
-    HTTPException
+    HTTPException,
+    Depends
 )
+from sqlalchemy.orm import Session
 from websockets.exceptions import ConnectionClosedError
 from gremlinpy import DriverRemoteConnection, Graph, Cluster
-from gremlinpy.exception import GremlinServerError
 from gremlinpy.process.graph_traversal import AsyncGraphTraversal
 from gremlin_python.process.traversal import T, Cardinality
 from gremlin_python.process.graph_traversal import __ as _g
 from app.api import deps
-from app import schemas
+from app import schemas, crud
 from app.core.config import settings
 from app.core.logger import get_logger
-from osintbuddy import Registry, discover_plugins, PluginUse
+from osintbuddy import Registry, PluginUse, load_plugins
 from osintbuddy.errors import OBPluginError
 from osintbuddy.utils import to_snake_case
+from app.api.utils import MAP_KEY, chunks
+
 
 router = APIRouter(prefix="/nodes")
 
-logger = get_logger(" api_v1.endpoints.nodes ")
+logger = get_logger("api_v1.endpoints.nodes")
 
 
 @asynccontextmanager
@@ -37,6 +40,8 @@ async def ProjectGraphConnection(
         asyncio.get_event_loop(),
         **{'hosts': [host], 'port': port}
     )
+    client = await cluster.connect(hostname='janus')
+    await client.submit(f'project_{project_uuid}.io(IoCore.graphson()).writeGraph("data.json")')
     print(f'connecting traversal: project_{project_uuid}_traversal')
     async with await DriverRemoteConnection.using(
         cluster,
@@ -52,11 +57,17 @@ async def fetch_node_transforms(plugin_label):
         return labels
 
 
-
 @router.get("/refresh")
-async def refresh_plugins():
-    discover_plugins("app/plugins/")
-    print('wtf!',  Registry.ui_labels, Registry.labels)
+async def refresh_plugins(
+    db: Session = Depends(deps.get_db)
+):
+    Registry.plugins = []
+    Registry.labels = []
+    Registry.ui_labels = []
+    entities = crud.entities.get_multi(db)
+    load_plugins(entities)
+    
+    print('Registry', Registry, Registry.plugins, 'wtf')
     return {"status": "success", "plugins": Registry.ui_labels}
 
 
@@ -71,13 +82,6 @@ async def get_node_transforms(label: str):
         status_code=422,
         detail='Invalid transform error. Please file an issue if this occurs.'
     )
-
-
-def build_dict(seq, key):
-    return dict((d[key], dict(d, index=index)) for (index, d) in enumerate(seq))
-
-
-MAP_KEY = '___obmap___'
 
 
 def add_node_element(vertex, element: dict or List[dict], data_labels: List[str]):
@@ -134,7 +138,6 @@ async def save_node_to_graph(
         source = graph.V().hasId(new_entity.id)
         target = graph.V().hasId(add_edge['id'])
         await target.addE(add_edge['label']).to(source).next()
-    print('Invalid type?!',  new_entity.id, new_labels)
     await graph.V().hasId(new_entity.id) \
         .properties(*new_labels) \
         .valueMap(True) \
@@ -187,12 +190,6 @@ async def load_initial_graph(project_uuid: str):
         return nodes, edges
 
 
-def chunks(lst, n):
-    """Yield successive n-sized chunks from lst."""
-    for i in range(0, len(lst), n):
-        yield lst[i:i + n]
-
-
 def map_read_to_blueprint(blueprint, map_element, data, position, entity_id):
     data_keys = data.keys()
     obmap = {}
@@ -223,11 +220,11 @@ def map_read_to_blueprint(blueprint, map_element, data, position, entity_id):
     }
 
 
+
 async def read_graph(action_type, send_json, project_uuid):
     nodes = []
     nodes_data, edges = await load_initial_graph(project_uuid)
     for data in nodes_data:
-
         position = {
             'x': data.pop('x')[0],
             'y': data.pop('y')[0]
@@ -262,6 +259,7 @@ async def read_graph(action_type, send_json, project_uuid):
             'target': e[3]['to'].id,
             'label': e[1][T.label]
         }) for e in chunks(edges[0], 4)]
+    print('WTF', nodes)
     await send_json({
         'action': 'addInitialLoad',
         'nodes': nodes,
@@ -345,14 +343,14 @@ async def nodes_transform(
 async def get_command_type(event):
     user_event: list = event["action"].split(":")
     action = user_event[0]
-    action_type = None
+    USER_ACTION = None
     if len(user_event) >= 2:
-        action_type = user_event[1]
+        USER_ACTION = user_event[1]
     IS_READ = action == "read"
     IS_UPDATE = action == "update"
     IS_DELETE = action == "delete"
     IS_TRANSFORM = action == "transform"
-    return action_type, IS_READ, IS_UPDATE, IS_DELETE, IS_TRANSFORM
+    return USER_ACTION, IS_READ, IS_UPDATE, IS_DELETE, IS_TRANSFORM
 
 
 async def execute_event(event: dict, send_json: Callable, project_uuid: str):

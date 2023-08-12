@@ -4,13 +4,11 @@ import blurCyanImage from '@images/blur-cyan.png';
 import blurIndigoImage from '@images/blur-indigo.png';
 import { Link } from 'react-router-dom';
 
-
 export default function LandingPage(): React.ReactElement {
-
   return (
     <>
-      <div className='overflow-hidden bg-slate-900 dark:mt-[-4.5rem] dark:pb-32 dark:pt-[4.5rem] dark:lg:mt-[-4.75rem] dark:lg:pt-[4.75rem]'>
-        <div className='py-16 sm:px-2 lg:relative  lg:px-0'>
+      <div className='overflow-hidden bg-slate-900 mt-[-4.5rem] pb-32 pt-[4.5rem] lg:pt-[4.75rem]'>
+        <div className='pt-16 sm:px-2 lg:relative  lg:px-0'>
           <div className='mx-auto grid max-w-2xl grid-cols-1 items-center gap-y-16 py-24 gap-x-8 px-4 lg:max-w-8xl lg:grid-cols-2 lg:px-8 xl:gap-x-16 xl:px-12'>
             <div className='relative z-10 md:text-center lg:text-left'>
               <img
@@ -30,11 +28,11 @@ export default function LandingPage(): React.ReactElement {
                 </p>
                 <div className='mt-8 flex gap-4 md:justify-center lg:justify-start'>
                   <Link
-                    to='/app/projects'
+                    to='/sign-in'
                     replace
                     className='rounded-full bg-sky-300 py-2 px-4 text-sm font-semibold text-slate-900 hover:bg-sky-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300/50 active:bg-sky-500'
                   >
-                    Get started
+                    Login
                   </Link>
                   <a
                     href='https://github.com/jerlendds/osintbuddy'
@@ -58,22 +56,27 @@ export default function LandingPage(): React.ReactElement {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className='relative mx-auto bg-slate-900 flex w-full justify-center sm:px-2 lg:px-0 '>
-        <div className='min-w-0  max-w-2xl flex-auto py-4 lg:max-w-none lg:pr-0 2xl:px-64 lg:px-10 px-2'>
-          <article>
-            <header className='mb-9 space-y-1'>
-              <p className='font-display text-sm font-medium text-sky-500'>Getting started</p>
-              <h1 className='font-display text-3xl tracking-tight text-slate-200 dark:text-white'>
-                Welcome to your OSINT Buddy
-              </h1>
-            </header>
-          </article>
-          <div className='docs max-w-4xl text-slate-400'>v0.0.3</div>
-        </div>
-        <div className='hidden xl:sticky xl:top-[4.5rem] xl:-mr-6 xl:block xl:h-[calc(100vh-4.5rem)] xl:flex-none xl:overflow-y-auto xl:py-16 xl:pr-6'>
-          <nav aria-labelledby='on-this-page-title' className='w-56'></nav>
+        <div className='overflow-hidden bg-slate-900'>
+          <div className='sm:px-2 lg:relative  lg:px-0'>
+            <div className='mx-auto grid -mt-20 max-w-2xl grid-cols-1 items-center gap-x-8 lg:max-w-8xl lg:grid-cols-2 xl:gap-x-16 xl:px-12'>
+              <div className='relative z-10 md:text-center lg:text-left'>
+                <article>
+                  <header className='space-y-1'>
+                    <p className='font-display text-sm font-medium text-sky-500'>Getting started</p>
+                    <h1 className='font-display text-3xl tracking-tight text-slate-200 dark:text-white'>
+                      Welcome to OSINTBuddy
+                    </h1>
+                  </header>
+                </article>
+                <div className='docs max-w-4xl text-slate-400 mt-2'>v0.0.4</div>
+                {/* <div className='docs max-w-4xl text-slate-400'>Hi, I'm the creator of OSINTBuddy. Want your feature ideas prioritized? Email <a href='mailto:theosintbuddyproject@openinfolabs.com' className='text-sky-500'>theosintbuddyproject@openinfolabs.com</a> with the subject: <i>Early Access Request</i>. The first 15 people to email us will get access to a live version of OSINTBuddy and have their suggestions and features prioritized! */}
+                {/* </div>.  */}
+              </div>
+              <div className='hidden xl:sticky xl:-mr-6 xl:block xl:h-[calc(100vh-4.5rem)] xl:flex-none xl:overflow-y-auto  xl:pr-6'>
+                <nav aria-labelledby='on-this-page-title' className='w-56'></nav>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>

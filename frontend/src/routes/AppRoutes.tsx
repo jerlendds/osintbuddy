@@ -3,11 +3,12 @@ import { Route, Routes } from 'react-router-dom';
 import AppLayout from './AppLayout';
 import NotFound from './NotFound';
 import PublicLayout from './PublicLayout';
+const SigninPage = lazy(() => import('./public/SigninPage'));
 const DashboardPage = lazy(() => import('./projects'));
 const AboutPage = lazy(() => import('@routes/public/AboutPage'));
 const LandingPage = lazy(() => import('@routes/public/LandingPage'));
-const GoogleDorksPage = lazy(() => import('./dorks'));
-const OSINTPage = lazy(() => import('./project-graph'));
+const ProjectGraphPage = lazy(() => import('./project-graph'));
+const EntityGraphPage = lazy(() => import('./entity-graph'));
 const SettingsPage = lazy(() => import('./settings'));
 const IncidentsPage = lazy(() => import('./incidents'));
 const ScansPage = lazy(() => import('./scans'));
@@ -29,6 +30,14 @@ export default function AppRoutes(): ReactElement {
           element={
             <Suspense>
               <AboutPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path='sign-in'
+          element={
+            <Suspense>
+              <SigninPage />
             </Suspense>
           }
         />
@@ -54,15 +63,15 @@ export default function AppRoutes(): ReactElement {
           path='projects/:caseId'
           element={
             <Suspense>
-              <OSINTPage />
+              <ProjectGraphPage />
             </Suspense>
           }
         />
         <Route
-          path='dorking'
+          path='entity/:entityId'
           element={
             <Suspense>
-              <GoogleDorksPage />
+              <EntityGraphPage />
             </Suspense>
           }
         />

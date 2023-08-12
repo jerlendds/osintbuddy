@@ -73,32 +73,13 @@ services:
     volumes:
      - sdb-data:${SCYLLADATA-.env SCYLLADATA needs to be set}
   index:
-    image: "${ELASTIC_IMAGE-.env ELASTIC_IMAGE needs to be set}"
-    environment:
-      - http.host=0.0.0.0
-      - transport.host=127.0.0.1
-      - node.name=es
-      - cluster.initial_master_nodes=es
-      - cluster.name=osintbuddy-es
-      - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 262144
-        hard: 262144
+    image: "solr:9.3.0-slim"
+    volumes:
+      - solr-data:/var/solr
     ports:
-     - "${ELASTIC_PORT-.env ELASTIC_PORT needs to be set}:9200"
+     - "${SOLR_PORT-.env SOLR_PORT needs to be set}:8983"
     env_file:
       - .env
-    user: "1000"
-    volumes:
-      - type: volume
-        source: es-data
-        target: /usr/share/elasticsearch/data
   # # @todo uncomment for WARC release
   # worker:
   #   # image: openinfolabs/osintbuddy-worker:latest
@@ -117,7 +98,5 @@ services:
   #     - CELERY_BROKER_URL=redis://redis:6379//
 volumes:
   osintbuddy-db-data:
-  es-data:
   sdb-data:
-  index-data:
-
+  solr-data:

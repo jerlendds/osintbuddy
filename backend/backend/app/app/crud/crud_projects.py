@@ -2,7 +2,7 @@ from typing import List
 
 from app.crud.base import CRUDBase, ModelType
 from app.models.projects import Projects
-from app.schemas.search import ProjectCreate, ProjectUpdate
+from app.schemas.projects import ProjectCreate, ProjectUpdate
 from sqlalchemy.orm import Session
 
 

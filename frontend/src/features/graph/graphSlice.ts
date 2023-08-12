@@ -82,12 +82,10 @@ export const graph = createSlice({
     },
 
     setEditLabel: (state, action: PayloadAction<string>) => {
-      console.log('setting edit label', action.payload);
       state.editLabel = action.payload;
     },
 
     setEditId: (state, action: PayloadAction<string>) => {
-      console.log('setting edit id', action.payload);
       state.editId = action.payload;
     },
 
@@ -104,13 +102,11 @@ export const graph = createSlice({
           if (Array.isArray(element)) {
             element.forEach((elm: JSONObject) => {
               if (elm.label === label) {
-                console.log('saving?! elm', label, elm, value);
                 elm.value = value;
               }
             });
           } else {
             if (element.label === label) {
-              console.log('saving?! element', label, element, value);
               element.value = value;
             }
           }
@@ -118,10 +114,7 @@ export const graph = createSlice({
     },
 
     onEdgesChange: (state, action) => {
-      console.log('onEdgesChange?!', current(state.edges), action.payload);
       state.edges = [action.payload, ...state.edges];
-
-      console.log('onEdgesChange?!', current(state.edges));
       // state.edges = applyEdgeChanges(action.payload, state.edges)
     },
 
@@ -177,7 +170,6 @@ export const graph = createSlice({
             element.forEach((elm: JSONObject) => {
               Object.keys(action.payload.data).some((updateKey: string) => {
                 if (elm.label === updateKey) {
-                  console.log('saving', updateKey, action.payload, element);
                   elm.value = action.payload.data[updateKey];
                   return elm;
                 }
@@ -186,7 +178,6 @@ export const graph = createSlice({
           } else {
             Object.keys(action.payload.data).some((updateKey: string) => {
               if (element.label === updateKey) {
-                console.log('saving', updateKey, action.payload, element);
                 element.value = action.payload.data[updateKey];
                 return element;
               }
@@ -207,7 +198,6 @@ export const graph = createSlice({
       if (nodeToUpdate) {
         nodeToUpdate.selected = action.payload.selected;
       }
-      console.log(current(nodeToUpdate));
     },
 
     updateNode: (state, action: PayloadAction<Node>) => {
@@ -221,7 +211,6 @@ export const graph = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(fetchNodeBlueprint.fulfilled, (state, action) => {
-      console.log('adding!!', action.payload);
       state.nodes.push({ ...action.payload, type: state.viewMode});
     }),
       builder.addCase(saveNode.fulfilled, (state, action) => {

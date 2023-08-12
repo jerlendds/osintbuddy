@@ -251,19 +251,18 @@ export default function OsintPage() {
 
   const activeNodeId = useAppSelector((state) => selectEditId(state));
   const activeNode = useAppSelector((state) => selectNode(state, activeNodeId));
-  console.log(activeNodeId);
   return (
     <>
       <HotKeys keyMap={keyMap} handlers={handlers}>
         <div className='h-screen flex flex-col w-full'>
-          <div className='flex h-full justify-between bg-dark-900 relative'>
+              <EntityOptions activeProject={activeProject} options={nodeOptions} />
+          <div className='h-full w-full justify-between bg-dark-900 '>
             <DisplayOptions />
             <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
-              <EntityOptions activeProject={activeProject} options={nodeOptions} />
 
               <MiniEditDialog
-              setIsOpen={setIsOpen}
-                ref={ref}
+                setIsOpen={setIsOpen}
+                closeRef={ref}
                 isOpen={isOpen}
                 activeNode={activeNode}
                 nodeId={activeNodeId}

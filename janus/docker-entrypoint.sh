@@ -40,10 +40,6 @@ if [ "$1" == 'janusgraph' ]; then
       rm -f "$F"
     fi
 
-    if ! [ "$(ls -A ${JANUS_INITDB_DIR})" ]; then
-      exit 0
-    fi
-
     # wait for JanusGraph server
     if ! [ -z "${JANUS_SERVER_TIMEOUT:-}" ]; then
       timeout "${JANUS_SERVER_TIMEOUT}s" bash -c \
