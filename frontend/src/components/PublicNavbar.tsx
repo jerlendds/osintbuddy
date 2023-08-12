@@ -131,14 +131,6 @@ export function ThemeSelector(props: any) {
   )
 }
 
-
-const navigation = [
-  { name: 'Home', href: '/' },
-  { name: 'Docs', href: '/about' },
-  // { name: 'Sign up', href: '/sign-up' },
-  { name: 'Sign in', href: '/sign-in' },
-];
-
 export default function PublicNavbar(): React.ReactElement {
   const location = useLocation();
   let [isScrolled, setIsScrolled] = useState(false)
