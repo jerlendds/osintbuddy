@@ -17,11 +17,15 @@ router = APIRouter(prefix="/entities")
 
 @router.post('')
 async def create_entity(
-    entity: schemas.EntityCreate,
+    entity: schemas.PostEntityCreate,
     db: Session = Depends(deps.get_db)
 ):
-    entity.source = plugin_source_template(entity)
-    return crud.entities.create(db, obj_in=entity)
+    return crud.entities.create(db, obj_in=schemas.EntityCreate(
+        label=entity.label,
+        author=entity.author,
+        description=entity.description,
+        source=plugin_source_template(entity)
+    ))
 
 
 @router.get('/{entity_uuid}')

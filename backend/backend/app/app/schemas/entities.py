@@ -16,7 +16,11 @@ class EntitiesBase(BaseModel):
 class EntityCreate(EntitiesBase):
     pass
     # is_superuser: bool = False
-
+# Properties to receive via API on creation
+class PostEntityCreate(BaseModel):
+    label: str
+    author: str
+    description: str
 
 # Properties to receive via API on update
 class EntityUpdate(EntitiesBase):

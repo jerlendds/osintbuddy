@@ -17,7 +17,8 @@ from .entities import (  # noqa
     EntityInDBBase,
     EntityCreate,
     EntityUpdate,
-    EntityInDB
+    EntityInDB,
+    PostEntityCreate
 )
 from .user import (  # noqa
     User,
