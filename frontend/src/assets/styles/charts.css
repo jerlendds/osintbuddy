@@ -1,0 +1,36 @@
+.bar-hz .ct-label {
+  @apply text-slate-400 font-display
+}
+
+.bar-hz .ct-series-a .ct-bar {
+  @apply stroke-sky-600
+}
+
+.bar-hz .ct-series-b .ct-bar {
+ @apply stroke-persian
+}
+
+.bar-hz .ct-series-c .ct-bar {
+  @apply stroke-info-300
+ }
+ .bar-hz .ct-series-d .ct-bar {
+  @apply stroke-slate-400
+ }
+ .bar-hz .ct-series-e .ct-bar {
+  @apply stroke-persian-400
+ }
+ .bar-hz .ct-series-f .ct-bar {
+  @apply stroke-persian-200
+ }
+ .bar-hz .ct-series-g .ct-bar {
+  @apply stroke-info-100
+ }
+ .bar-hz .ct-series-h .ct-bar {
+  @apply stroke-sky-100
+ }
+ .bar-hz .ct-series-i .ct-bar {
+  @apply stroke-sky-600
+ }
+ .bar-hz .ct-series-j .ct-bar {
+  @apply stroke-slate-200
+ }

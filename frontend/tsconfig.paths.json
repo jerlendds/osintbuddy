@@ -7,7 +7,7 @@
       "@images/*": ["./src/assets/images/*"],
       "@styles/*": ["./src/assets/styles/*"],
       "@components/*": ["./src/components/*"],
-      "@routes/*": ["./src/routes/*"],
+      "@routes/*": ["./src/routes/*"]
     }
   }
 }

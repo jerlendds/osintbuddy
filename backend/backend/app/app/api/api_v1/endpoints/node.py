@@ -23,31 +23,10 @@ from osintbuddy import Registry, PluginUse, load_plugins
 from osintbuddy.errors import OBPluginError
 from osintbuddy.utils import to_snake_case
 from app.api.utils import MAP_KEY, chunks
+from app.db.janus import ProjectGraphConnection
 
-
+log = get_logger("api_v1.endpoints.nodes")
 router = APIRouter(prefix="/nodes")
-
-logger = get_logger("api_v1.endpoints.nodes")
-
-
-@asynccontextmanager
-async def ProjectGraphConnection(
-    project_uuid: str,
-    host: str = settings.JANUSGRAPH_HOST,
-    port: int = settings.JANUSGRAPH_PORT
-) -> AsyncIterator[AsyncGraphTraversal]:
-    cluster = await Cluster.open(
-        asyncio.get_event_loop(),
-        **{'hosts': [host], 'port': port}
-    )
-    client = await cluster.connect(hostname='janus')
-    await client.submit(f'project_{project_uuid}.io(IoCore.graphson()).writeGraph("data.json")')
-    print(f'connecting traversal: project_{project_uuid}_traversal')
-    async with await DriverRemoteConnection.using(
-        cluster,
-        {'g': f'project_{project_uuid}_traversal'}
-    ) as connection:
-        yield Graph().traversal().withRemote(connection)
 
 
 async def fetch_node_transforms(plugin_label):
@@ -57,7 +36,10 @@ async def fetch_node_transforms(plugin_label):
         return labels
 
 
-@router.get("/refresh")
+@router.get(
+    "/refresh",
+    operation_id="refresh_plugins"
+)
 async def refresh_plugins(
     db: Session = Depends(deps.get_db)
 ):
@@ -66,12 +48,13 @@ async def refresh_plugins(
     Registry.ui_labels = []
     entities = crud.entities.get_multi(db)
     load_plugins(entities)
-    
-    print('Registry', Registry, Registry.plugins, 'wtf')
     return {"status": "success", "plugins": Registry.ui_labels}
 
 
-@router.get("/transforms")
+@router.get(
+    "/transforms",
+    operation_id="get_entity_transforms"
+)
 async def get_node_transforms(label: str):
     if transforms := await fetch_node_transforms(label):
         return {
@@ -82,6 +65,23 @@ async def get_node_transforms(label: str):
         status_code=422,
         detail='Invalid transform error. Please file an issue if this occurs.'
     )
+
+
+@router.post(
+    '/',
+    operation_id="create_graph_entity"
+)
+async def get_entity_from_drop(node: schemas.CreateNode):
+    plugin = await Registry.get_plugin(plugin_label=node.label)
+    if plugin:
+        blueprint = plugin.blueprint()
+        blueprint['position'] = node.position.dict()
+        return await save_node_on_drop(
+            node.label,
+            blueprint,
+            node.graphId.replace('-', '')
+        )
+    raise HTTPException(status_code=422, detail=f'Plugin entity {node.label} cannot be found.')
 
 
 def add_node_element(vertex, element: dict or List[dict], data_labels: List[str]):
@@ -164,19 +164,6 @@ async def save_node_on_drop(
     return node_blueprint
 
 
-@router.post('/')
-async def get_entity_from_drop(node: schemas.CreateNode):
-    plugin = await Registry.get_plugin(plugin_label=node.label)
-    if plugin:
-        blueprint = plugin.blueprint()
-        blueprint['position'] = node.position.dict()
-        return await save_node_on_drop(
-            node.label,
-            blueprint,
-            node.project_uuid.replace('-', '')
-        )
-    raise HTTPException(status_code=422, detail=f'Plugin entity {node.label} cannot be found.')
-
 
 async def load_initial_graph(project_uuid: str):
     async with ProjectGraphConnection(project_uuid) as graph:
@@ -220,7 +207,6 @@ def map_read_to_blueprint(blueprint, map_element, data, position, entity_id):
     }
 
 
-
 async def read_graph(action_type, send_json, project_uuid):
     nodes = []
     nodes_data, edges = await load_initial_graph(project_uuid)
@@ -259,7 +245,6 @@ async def read_graph(action_type, send_json, project_uuid):
             'target': e[3]['to'].id,
             'label': e[1][T.label]
         }) for e in chunks(edges[0], 4)]
-    print('WTF', nodes)
     await send_json({
         'action': 'addInitialLoad',
         'nodes': nodes,
@@ -366,7 +351,7 @@ async def execute_event(event: dict, send_json: Callable, project_uuid: str):
             await nodes_transform(event["node"], send_json, project_uuid)
 
 
-@router.websocket("/project/{project_uuid}")
+@router.websocket("/graph/{project_uuid}")
 async def active_project(websocket: WebSocket, project_uuid: str):
     await websocket.accept()
     await websocket.send_json({"action": "refresh"})
@@ -380,7 +365,7 @@ async def active_project(websocket: WebSocket, project_uuid: str):
             )
         except OBPluginError as e:
             await websocket.send_json({"action": "error", "detail": f"Unhandled plugin error! {e}"})
-        except WebSocketDisconnect as e:
-            logger.info(e)
+        except WebSocketDisconnect:
+            pass
         except (WebSocketException, BufferError, ConnectionClosedError):
             pass

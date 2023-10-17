@@ -1,4 +1,3 @@
-import { casesService } from '@/app/services';
 import { ChevronLeftIcon, ChevronRightIcon, EyeIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
@@ -133,7 +132,7 @@ export default function Table({
                           prepareRow(row);
                           return <DataRow key={i.toString()} row={row} />;
                         })}
-                        {data.length < columns.length  && (
+                        {data.length < columns.length && (
                           <EmptyTableBody
                             showWatermark={data.length === 0}
                             title={
@@ -143,8 +142,8 @@ export default function Table({
                               data.length === 0 && emptyDescription
                                 ? emptyDescription
                                 : data.length > 0
-                                ? null
-                                : 'Get started by creating data'
+                                  ? null
+                                  : 'Get started by creating data'
                             }
                             columnsLength={columns.length}
                           />

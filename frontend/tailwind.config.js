@@ -21,13 +21,41 @@ module.exports = {
     fontFamily: {
       sans: ['Inter'],
       display: ['Lexend'],
-      code: ['Fira Code', 'monospace']
+      code: ['Fira Code', 'monospace'],
+      title: ['Crimson Text']
     },
     extend: {
+      animation: {
+        border: 'background ease infinite',
+      },
+      keyframes: {
+        shimmer: {
+          "100%": {
+            "transform": "translateX(0%)",
+          },
+        },
+        background: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+      },
       maxWidth: {
         '8xl': '88rem',
       },
       colors: {
+        slate: {
+         "50": "#f8fafc",
+        "100": "#f1f5f9",
+        "200": "#e2e8f0",
+        "300": "#cbd5e1",
+        "400": "#94a3b8",
+        "500": "#64748b",
+        "600": "#475569",
+        "700": "#334155",
+        "800": "#1e293b",
+        "900": "#0f172a",
+        "950": "#020617",
+        },
         dark: {
           DEFAULT: '#0F172A',
           50: '#21335D',

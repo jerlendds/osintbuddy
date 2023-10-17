@@ -13,37 +13,13 @@ def test_celery(msg: str = "success") -> dict:
     return {"status": "ok"}
 
 
-@app.task(bind=True)
-def brute_force_subdomains(self, domain: str = None) -> dict:
-    if domain is None:
-        return {"status": "error"}
-    else:
-        subdomains = []
-        matching_domains = []
-        try:
-            resp = requests.get('https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/DNS/subdomains-top1million-20000.txt')
-        except Exception as e:
-            return {"status": "error"}
-        if resp.status_code == 200:
-            data = resp.content.decode('utf8').split('\n')
-            for subdomain in data:
-                subdomains.append(subdomain + '.' + domain)
-            checked = 0
-            for domain in subdomains:
-                checked += 1
-                try:
-                    result = socket.getaddrinfo(domain, 80)
-                    if result:
-                        matching_domains.append(domain)
-                except socket.gaierror:
-                    pass
-                
-                self.update_state(
-                    state='PENDING',
-                    meta={
-                        'checked': checked,
-                        'total': len(subdomains),
-                        'subdomains': matching_domains
-                    }
-                )
-            return {"status": "ok", "data": matching_domains}
+@app.task
+def run_dynamic_task(funcname, funccode, *args, **kwargs):
+    try:
+        ns = {}
+        code = compile(funccode, funcname, "exec")
+        eval(code, ns, ns)
+        logger.info("execute %r with args %r, %r", funcname, args, kwargs)
+        return ns["task"](*args, **kwargs)
+    except IOError:
+        logger.error("Error loading the dynamic function from text %s", funcname)

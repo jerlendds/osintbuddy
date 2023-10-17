@@ -1,87 +1,61 @@
 // @ts-nocheck
-import React, { useCallback, useState, useRef, useEffect } from 'react';
-import { Edge, XYPosition, Node } from 'reactflow';
-import { HotKeys } from 'react-hotkeys';
-import { useLocation } from 'react-router-dom';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
-import 'reactflow/dist/style.css';
-import EntityOptions from './_components/EntityOptions';
-import CommandPallet from '@/routes/project-graph/_components/CommandPallet';
-import ContextMenu from './_components/ContextMenu';
-import api, { WS_URL } from '@/app/services/api.service';
-import { getLayoutedElements } from './utils';
-import { toast } from 'react-toastify';
-import { nodesService } from '@/app/services';
-import ProjectGraph from './_components/ProjectGraph';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import React, { useState, useRef } from "react";
+import { Edge, XYPosition, Node } from "reactflow";
+import { HotKeys } from "react-hotkeys";
+import { useLocation } from "react-router-dom";
+import useWebSocket, { ReadyState } from "react-use-websocket";
+import "reactflow/dist/style.css";
+import CommandPallet from "@/routes/project-graph/_components/CommandPallet";
+import ContextMenu from "./_components/ContextMenu";
+import { WS_URL, sdk } from "@/app/api";
+import { toast } from "react-toastify";
+import ProjectGraph from "./_components/ProjectGraph";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import {
   ProjectViewModes,
   createEdge,
   createNode,
   graphEdges,
   graphNodes,
-  resetGraph,
   selectEditId,
   selectNode,
   selectViewMode,
-} from '@/features/graph/graphSlice';
-import { useComponentVisible, useEffectOnce } from '@/components/utils';
-import DisplayOptions from './_components/DisplayOptions';
-import classNames from 'classnames';
-import { MiniEditDialog } from './_components/BaseMiniNode';
+} from "@/features/graph/graphSlice";
+import { useComponentVisible, useEffectOnce } from "@/components/utils";
+import DisplayOptions from "./_components/DisplayOptions";
 const keyMap = {
-  TOGGLE_PALETTE: ['shift+p'],
+  TOGGLE_PALETTE: ["shift+p"],
 };
-import 'react-grid-layout/css/styles.css';
-import RGL, { Responsive, WidthProvider } from 'react-grid-layout';
-import CodeMirror from '@uiw/react-codemirror';
-import GridLayout from 'react-grid-layout';
-import { EllipsisVerticalIcon, LockClosedIcon, LockOpenIcon } from '@heroicons/react/24/outline';
-import { tokyoNight, tokyoNightInit } from '@uiw/codemirror-theme-tokyo-night';
-import { tags as t } from '@lezer/highlight';
-import { python } from '@codemirror/lang-python';
-import entitiesService from '@/app/services/entities.service';
-import { Icon } from '@/components/Icons';
+import "react-grid-layout/css/styles.css";
+import { Responsive, WidthProvider } from "react-grid-layout";
+import CodeMirror from "@uiw/react-codemirror";
+import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
+import { tokyoNight, tokyoNightInit } from "@uiw/codemirror-theme-tokyo-night";
+import { tags as t } from "@lezer/highlight";
+import { python } from "@codemirror/lang-python";
+import { Icon } from "@/components/Icons";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 export function ResizableHandles({ activeEntity }: JSONObject) {
-  const defaultProps = {
-    className: 'layout',
-    items: 10,
-    rowHeight: 30,
-    onLayoutChange: function () {},
-    cols: 12,
-  };
-
-  // const layout = {
-  //     lg: [
-  //       { i: 'a', x: 0, y: 0, w: 1, h: 2, static: true },
-  //       { i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4 },
-  //       { i: 'c', x: 4, y: 0, w: 1, h: 2 },
-  //     ],
-  //   }
-
   const [pythonCode, setPythonCode] = useState(activeEntity.source);
-  console.log('PYTHON CODE?!!', pythonCode)
   const [isEntityDraggable, setEntityDraggable] = useState(false);
   const [isElementsDraggable, setElementsDraggable] = useState(false);
-  console.log(activeEntity)
   return (
     <>
       <ResponsiveGridLayout
         compactType={null}
-        className='w-full z-[99] absolute'
-        rowHeight={46}
-        onLayoutChange={(e: any) => console.log('onLayoutChange: ', e)}
+        className="w-full z-[99] absolute"
+        rowHeight={12}
+        maxRows={50}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 26, md: 24, sm: 20, xs: 18, xxs: 16 }}
+        cols={{ lg: 20, md: 20, sm: 20, xs: 18, xxs: 16 }}
         isDraggable={isEntityDraggable}
         isResizable={true}
       >
         <div
-          className=' overflow-hidden rounded-md z-10 border border-dark-300 bg-dark-700 flex flex-col h-min'
-          key='b'
+          className=" overflow-hidden rounded-md z-10 border border-dark-300 bg-dark-700 flex flex-col h-min"
+          key="b"
           data-grid={{
             x: 0,
             y: 0,
@@ -93,65 +67,75 @@ export function ResizableHandles({ activeEntity }: JSONObject) {
             minW: 4.5,
           }}
         >
-          <ol className='text-sm flex select-none bg-dark-700 relative px-2 py-2'>
-            <li className='flex items-start'>
-              <div className='flex items-center'>
-                <span className='text-slate-500 font-display truncate'>
-                  Entity Editor <span className='font-medium font-display'>/&nbsp;</span>
+          <ol className="text-sm flex select-none bg-dark-700 relative px-2 py-2">
+            <li className="flex items-start">
+              <div className="flex items-center">
+                <span className="text-slate-500 font-display truncate">
+                  Entity Editor
+                  <span className="font-medium font-display">/&nbsp;</span>
                 </span>
               </div>
             </li>
-            <li className='flex mr-auto'>
-              <div className='flex justify-between items-center w-full text-slate-400 '>
+            <li className="flex mr-auto">
+              <div className="flex justify-between items-center w-full text-slate-400 ">
                 <span
-                  className='text-slate-500 text-inherit whitespace-nowrap font-display'
-                  title={'placeholder'}
-                  aria-current={'placeholder'}
+                  className="text-slate-500 text-inherit whitespace-nowrap font-display"
+                  title="placeholder"
+                  aria-current="placeholder"
                 >
                   {activeEntity.label}
-                  <span className='font-medium font-display '>&nbsp;/</span>
+                  <span className="font-medium font-display ">&nbsp;/</span>
                 </span>
               </div>
             </li>
-            <li className='flex'>
-              <div className='flex justify-between items-center w-full text-slate-400 '>
-                <button onClick={() => {
-                  entitiesService.updateEntity({ 
-                    uuid: activeEntity.uuid,
-                    source: pythonCode
-                  }).then(() => {
-                    toast.info(`The ${activeEntity.label} entity has been saved.`)
-                  })
-                }}>
-                <Icon icon='device-floppy' className='w-5 h-5 text-slate-500 hover:text-slate-400 -mb-0.5 mx-1' />
-
+            <li className="flex">
+              <div className="flex justify-between items-center w-full text-slate-400 ">
+                <button
+                  onClick={() => {
+                    sdk.entities.updateEntityByUuid(({
+                      entityUuid: activeEntity.uuid,
+                      source: pythonCode,
+                      label: activeEntity.label,
+                      description: activeEntity.description,
+                      author: activeEntity.author
+                    }))
+                  }}
+                >
+                  <Icon
+                    icon="device-floppy"
+                    className="w-5 h-5 text-slate-500 hover:text-slate-400 -mb-0.5 mx-1"
+                  />
                 </button>
                 <button
                   onClick={() => setEntityDraggable(!isEntityDraggable)}
-                  className='text-slate-500 hover:text-slate-400 text-inherit whitespace-nowrap font-display'
+                  className="text-slate-500 hover:text-slate-400 text-inherit whitespace-nowrap font-display"
                 >
-                  {isEntityDraggable ? <LockOpenIcon className='w-5 h-5' /> : <LockClosedIcon className='w-5 h-5' />}
+                  {isEntityDraggable ? (
+                    <LockOpenIcon className="w-5 h-5" />
+                  ) : (
+                    <LockClosedIcon className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </li>
           </ol>
 
-          <div className='container overflow-y-scroll'>
-            <div className='editor'>
+          <div className="container overflow-y-scroll">
+            <div className="editor">
               <CodeMirror
                 theme={tokyoNightInit({
                   settings: {
-                    caret: '#c6c6c6',
-                    fontFamily: 'FiraCode',
+                    caret: "#c6c6c6",
+                    fontFamily: "FiraCode",
                   },
-                  styles: [{ tag: t.comment, color: '#6272a4' }],
+                  styles: [{ tag: t.comment, color: "#6272a4" }],
                 })}
                 value={pythonCode}
                 onChange={(value) => setPythonCode(value)}
                 extensions={[python({ jsx: true })]}
                 options={{
-                  mode: 'python',
-                  theme: 'default',
+                  mode: "python",
+                  theme: "default",
                   lineNumbers: true,
                 }}
               />
@@ -159,7 +143,6 @@ export function ResizableHandles({ activeEntity }: JSONObject) {
           </div>
         </div>
       </ResponsiveGridLayout>
-
     </>
   );
 }
@@ -180,31 +163,39 @@ export default function EntityGraph() {
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
 
   const [messageHistory, setMessageHistory] = useState([]);
-  const entityUUID = passedEntity.uuid.replace('-', '');
-  const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/project/${entityUUID}`);
+  const entityUUID = passedEntity.uuid.replace("-", "");
+  const [socketUrl, setSocketUrl] = useState(
+    `ws://${WS_URL}/nodes/graph/${entityUUID}`
+  );
   const [isLoading, setIsLoading] = useState(true);
   const viewMode = useAppSelector((state) => selectViewMode(state));
 
-  const { lastMessage, lastJsonMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl, {
-    onOpen: () => null,
-    shouldReconnect: () => true,
-  });
+  const { lastMessage, lastJsonMessage, readyState, sendJsonMessage } =
+    useWebSocket(socketUrl, {
+      onOpen: () => null,
+      shouldReconnect: () => true,
+    });
 
   // useEffectOnce(() => {
   //   dispatch(resetGraph());
   //   sendJsonMessage({ action: 'read:node' });
   // });
 
-  function addNode(id, data: AddNode, position, type: ProjectViewModes = viewMode) {
+  function addNode(
+    id,
+    data: AddNode,
+    position,
+    type: ProjectViewModes = viewMode
+  ) {
     dispatch(createNode({ id, data, position, type }));
   }
 
   function addEdge(
     source,
     target,
-    sourceHandle?: string = 'r1',
-    targetHandle?: string = 'l2',
-    type?: string = 'default'
+    sourceHandle?: string = "r1",
+    targetHandle?: string = "l2",
+    type?: string = "default"
   ): void {
     dispatch(
       createEdge({
@@ -245,31 +236,29 @@ export default function EntityGraph() {
   };
 
   const updateNodeOptions = () => {
-    api
-      .get('/nodes/refresh')
-      .then((resp) => {
-        const options =
-          resp?.data?.plugins
-            ?.filter((option: any) => option)
-            .map((option: string) => {
-              return {
-                event: option.label,
-                title: option.label,
-                description: option.description,
-                author: option.author,
-              };
-            }) || [];
-        return options;
-      })
-      .then((options) => setNodeOptions(options));
+    sdk.nodes.refreshPlugins((data) => {
+      const options =
+        data?.plugins
+          ?.filter((option: any) => option)
+          .map((option: string) => {
+            return {
+              event: option.label,
+              title: option.label,
+              description: option.description,
+              author: option.author,
+            };
+          }) || [];
+      return options;
+    }).then((options) => setNodeOptions(options))
+      .catch((error: Error) => console.error(error));
   };
 
   const connectionStatus = {
-    [ReadyState.CONNECTING]: 'Connecting',
-    [ReadyState.OPEN]: 'Open',
-    [ReadyState.CLOSING]: 'Closing',
-    [ReadyState.CLOSED]: 'Closed',
-    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
+    [ReadyState.CONNECTING]: "Connecting",
+    [ReadyState.OPEN]: "Open",
+    [ReadyState.CLOSING]: "Closing",
+    [ReadyState.CLOSED]: "Closed",
+    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
   }[readyState];
 
   const createNodeUpdate = (node: JSONObject, data) => {
@@ -284,7 +273,6 @@ export default function EntityGraph() {
     return updatedNode;
   };
 
- 
   const [ctxPosition, setCtxPosition] = useState<XYPosition>({ x: 0, y: 0 });
   const [ctxSelection, setCtxSelection] = useState<JSONObject>(null);
   const [showMenu, setShowMenu] = useState(false);
@@ -309,7 +297,9 @@ export default function EntityGraph() {
         setTransforms(data.transforms);
       })
       .catch((error) => {
-        toast.warn(`We found no transforms while trying to load the plugin ${node.data.label}.`);
+        toast.warn(
+          `We found no transforms while trying to load the plugin ${node.data.label}.`
+        );
         setTransforms([]);
       });
     setShowMenu(true);
@@ -336,20 +326,25 @@ export default function EntityGraph() {
   const activeNodeId = useAppSelector((state) => selectEditId(state));
   const activeNode = useAppSelector((state) => selectNode(state, activeNodeId));
 
-  const [activeEntity, setActiveEntity] = useState({}); 
+  const [activeEntity, setActiveEntity] = useState({});
   useEffectOnce(() => {
-     entitiesService.getEntity({ uuid: entityUUID }).then((resp) => setActiveEntity(resp.data)).catch(error => toast.error(`Error: ${error}`))
-    
-  })
+    entitiesService
+      .getEntity({ uuid: entityUUID })
+      .then((resp) => setActiveEntity(resp.data))
+      .catch((error) => toast.error(`Error: ${error}`));
+  });
 
   return (
     <>
       <HotKeys keyMap={keyMap} handlers={handlers}>
-        <div className='h-screen flex flex-col w-full'>
-          <ResizableHandles key={activeEntity.label} activeEntity={activeEntity} />
-          <div className=' h-full justify-between bg-dark-900 relative'>
+        <div className="h-screen flex flex-col w-full">
+          <ResizableHandles
+            key={activeEntity.label}
+            activeEntity={activeEntity}
+          />
+          <div className=" h-full justify-between bg-dark-900 relative">
             <DisplayOptions />
-            <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
+            <div style={{ width: "100%", height: "100vh" }} ref={graphRef}>
               <ProjectGraph
                 activeProject={activeEntity}
                 onSelectionCtxMenu={onSelectionCtxMenu}
@@ -379,8 +374,8 @@ export default function EntityGraph() {
           setOpen={setShowCommandPalette}
         />
         <div
-          id='node-options-tour'
-          className='absolute top-[3.5rem] w-48 bg-red -z-10 h-20 left-[0.7rem] text-slate-900'
+          id="node-options-tour"
+          className="absolute top-[3.5rem] w-48 bg-red -z-10 h-20 left-[0.7rem] text-slate-900"
         />
         <ContextMenu
           sendJsonMessage={sendJsonMessage}

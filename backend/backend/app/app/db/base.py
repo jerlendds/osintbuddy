@@ -7,5 +7,7 @@ from app.models import (  # noqa
     Projects,
     Proxy_Type,
     Proxies,
-    Entities
+    Entities,
+    Scan_Machines,
+    Scans,
 )

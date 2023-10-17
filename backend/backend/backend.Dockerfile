@@ -1,4 +1,4 @@
-FROM python:3.11.4-slim-bullseye
+FROM python:3.11.0-slim-bullseye
 LABEL maintainer="jerlendds <jerlendds@openinfolabs.com>"
 
 WORKDIR /app/

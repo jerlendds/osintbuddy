@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from 'react';
 import { Combobox, Switch, Transition } from '@headlessui/react';
 import { ChevronUpDownIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
-import projectsService from '@/app/services/projects.service';
+import { sdk } from '@/app/api';
 
 export default function IncidentCard({ closeModal }: JSONObject) {
   const [query, setQuery] = useState('');
@@ -14,12 +14,12 @@ export default function IncidentCard({ closeModal }: JSONObject) {
     query === ''
       ? options ?? []
       : options?.filter((option: any) => {
-          return option.label.toLowerCase().includes(query.toLowerCase());
-        }) ?? [];
+        return option.label.toLowerCase().includes(query.toLowerCase());
+      }) ?? [];
 
   useEffect(() => {
-    projectsService.getProjects(0, 1000).then((resp) => {
-      setOptions(resp.data);
+    sdk.graphs.getGraphs(0, 1000).then((data) => {
+      setOptions(data);
     });
   }, []);
 

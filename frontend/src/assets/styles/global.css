@@ -3,11 +3,12 @@
 @import './docs.css';
 @import './layouts.css';
 @import './tables.css';
+@import './charts.css';
 
 *,
 :after,
 :before {
-  @apply box-border font-sans;
+  @apply box-border ;
 }
 button {
   cursor: pointer;
@@ -37,6 +38,10 @@ svg.icon {
   @apply flex items-center justify-center;
 }
 
+p {
+  @apply font-sans;
+}
+
 h1,
 h2,
 h3,
@@ -62,12 +67,12 @@ figcaption {
 }
 *::-webkit-scrollbar-thumb {
   background-color: #1A1F27;
-  border-radius: 0px;
-  border-right: 6px solid #1A1F27;
+  border-radius: 8px;
+  border-right: 8px solid #1A1F27;
 }
 * {
-  scrollbar-width: 4px;
-  scrollbar-color: #0e1526 #1A1F27;
+  scrollbar-width: 6px;
+  scrollbar-color: #1A1F27 #0B111F;
 }
 /* end Custom Scrollbar Style */
 
@@ -79,9 +84,9 @@ figcaption {
 
 .hamburger {
   @apply relative hover:cursor-pointer rotate-0;
-  -webkit-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.15s ease-in-out;
+  -o-transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
 }
 
 .hamburger .line {
@@ -90,9 +95,9 @@ figcaption {
   background-color: #94A3B8;
   display: block;
   margin: 8px auto;
-  -webkit-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.15s ease-in-out;
+  -o-transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
 }
 
 .hamburger.is-active .line:nth-child(1),

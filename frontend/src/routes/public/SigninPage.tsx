@@ -1,6 +1,5 @@
 import { FormikProps, Form, Field, Formik, FormikHelpers } from "formik";
 import RoundLoader from "@/components/Loaders";
-import authService from "@/app/services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { login } from "@/features/auth/authSlice";
 import { useAppDispatch } from "@/app/hooks";
@@ -40,7 +39,6 @@ const LoginForm = ({ initialEmail, remembered }: FormProps) => {
           })
           .catch((error) => {
             setSubmitting(false);
-            console.log("catching??", error);
           });
       }}
     >
@@ -100,7 +98,7 @@ const LoginForm = ({ initialEmail, remembered }: FormProps) => {
 
             <div className="text-sm">
               <a
-                href="#"
+                href="#todo"
                 className="font-medium text-info-100 hover:text-persian-500"
               >
                 Forgot your password?

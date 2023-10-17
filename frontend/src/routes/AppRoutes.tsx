@@ -1,22 +1,28 @@
-import React, { ReactElement, Suspense, lazy } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import AppLayout from './AppLayout';
-import NotFound from './NotFound';
-import PublicLayout from './PublicLayout';
-const SigninPage = lazy(() => import('./public/SigninPage'));
-const DashboardPage = lazy(() => import('./projects'));
-const AboutPage = lazy(() => import('@routes/public/AboutPage'));
-const LandingPage = lazy(() => import('@routes/public/LandingPage'));
-const ProjectGraphPage = lazy(() => import('./project-graph'));
-const EntityGraphPage = lazy(() => import('./entity-graph'));
-const SettingsPage = lazy(() => import('./settings'));
-const IncidentsPage = lazy(() => import('./incidents'));
-const ScansPage = lazy(() => import('./scans'));
+import React, { ReactElement, Suspense, lazy } from "react";
+import { Route, Routes } from "react-router-dom";
+import AppLayout from "./AppLayout";
+import NotFound from "./NotFound";
+import PublicLayout from "./PublicLayout";
+import ScansCreatePage from "./scans-create";
+import GraphDetails from "./projects/GraphDetails";
+import Graphs from "./projects/Graphs";
+import Entities from "./projects/Entities";
+import Market from "./projects/Market";
+import EntityDetails from "./projects/EntityDetails";
+const SigninPage = lazy(() => import("./public/SigninPage"));
+const DashboardPage = lazy(() => import("./projects"));
+const AboutPage = lazy(() => import("@routes/public/AboutPage"));
+const LandingPage = lazy(() => import("@routes/public/LandingPage"));
+const InquiryGraph = lazy(() => import("./project-graph"));
+const EntityGraphPage = lazy(() => import("./entity-graph"));
+const SettingsPage = lazy(() => import("./settings"));
+const IncidentsPage = lazy(() => import("./incidents"));
+const ScansPage = lazy(() => import("./scans"));
 
 export default function AppRoutes(): ReactElement {
   return (
     <Routes>
-      <Route path='/' element={<PublicLayout />}>
+      <Route path="/" element={<PublicLayout />}>
         <Route
           index
           element={
@@ -26,7 +32,7 @@ export default function AppRoutes(): ReactElement {
           }
         />
         <Route
-          path='about'
+          path="about"
           element={
             <Suspense>
               <AboutPage />
@@ -34,7 +40,7 @@ export default function AppRoutes(): ReactElement {
           }
         />
         <Route
-          path='sign-in'
+          path="sign-in"
           element={
             <Suspense>
               <SigninPage />
@@ -42,17 +48,52 @@ export default function AppRoutes(): ReactElement {
           }
         />
       </Route>
-      <Route path='/app' element={<AppLayout />}>
+      <Route path="/app" element={<AppLayout />}>
         <Route
-          path='projects'
+          path="inquiries"
           element={
             <Suspense>
               <DashboardPage />
             </Suspense>
           }
-        />
+        >
+          <Route
+            path='market'
+            element={
+              <>
+                <Market />
+              </>
+            } />
+          <Route
+            path='graph'
+            element={
+              <>
+                <Graphs />
+              </>
+            } />
+          <Route
+            path='graph/:graphId'
+            element={
+              <>
+                <GraphDetails />
+              </>
+            } />
+
+          <Route
+            path='entity'
+            element={
+              <>
+                <Entities />
+              </>
+            } />
+          <Route
+            path='entity/:entityId'
+            element={
+              <EntityDetails />
+            } />
+        </Route>
         <Route
-          path='settings'
+          path="settings"
           element={
             <Suspense>
               <SettingsPage />
@@ -60,15 +101,15 @@ export default function AppRoutes(): ReactElement {
           }
         />
         <Route
-          path='projects/:caseId'
+          path="inquiries/investigation/:graphId"
           element={
             <Suspense>
-              <ProjectGraphPage />
+              <InquiryGraph />
             </Suspense>
           }
         />
         <Route
-          path='entity/:entityId'
+          path="entity/:entityId"
           element={
             <Suspense>
               <EntityGraphPage />
@@ -76,23 +117,41 @@ export default function AppRoutes(): ReactElement {
           }
         />
         <Route
-          path='incidents'
+          path="incidents"
           element={
             <Suspense>
               <IncidentsPage />
             </Suspense>
           }
         />
-        <Route
-          path='scans'
-          element={
-            <Suspense>
-              <ScansPage />
-            </Suspense>
-          }
-        />
+        <Route path="scans">
+          <Route
+            element={
+              <Suspense>
+                <ScansPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path=""
+            element={
+              <Suspense>
+                <ScansPage />
+              </Suspense>
+            }
+          />
+
+          <Route
+            path=":scanId"
+            element={
+              <Suspense>
+                <ScansCreatePage />
+              </Suspense>
+            }
+          />
+        </Route>
       </Route>
-      <Route path='*' element={<NotFound />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

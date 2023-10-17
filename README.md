@@ -116,12 +116,13 @@ https://willi.am/blog/2016/08/11/docker-for-windows-dealing-with-windows-line-en
     - [Learn how to install Docker on Mac](https://docs.docker.com/desktop/install/mac-install/)
     - [Learn how to install Docker on Windows](https://docs.docker.com/desktop/install/windows-install/)
     - [Learn how to install Docker on Linux](https://docs.docker.com/desktop/install/linux-install/)
-3. Start the stack with Docker *(if the `cp` command doesn't work on your OS, copy and rename the `.env.example` file to `.env`)*: 
+3.  
+4. Start the stack with Docker *(if the `cp` command doesn't work on your OS, copy and rename the `.env.example` file to `.env`)*: 
    ```sh
    cp .env.example .env
    docker compose up
    ```
-   - **Note:** the stack will take a few minutes to startup while elastic and scylladb configure themselves for JanusGraph. If you try to connect before all the databases are ready you will encounter error notifications.
+   - **Note:** the stack will take a few minutes to startup while solr and scylladb configure themselves for JanusGraph. If you try to connect before all the databases are ready you will encounter error notifications.
 
 - **URLs**
   - Frontend: http://localhost:3000

@@ -22,13 +22,12 @@ export default function LandingPage(): React.ReactElement {
                 <p className='inline bg-gradient-to-r from-indigo-200 via-sky-400 to-indigo-200 bg-clip-text font-display text-5xl tracking-tight text-transparent'>
                   Open Source Intelligence
                 </p>
-
                 <p className='mt-3 text-2xl tracking-tight text-slate-400'>
                   Fetch data from different sources and returns the results as visual entities that you can explore.
                 </p>
                 <div className='mt-8 flex gap-4 md:justify-center lg:justify-start'>
                   <Link
-                    to='/app/projects'
+                    to='/app/inquiries/graph'
                     replace
                     className='rounded-full bg-sky-300 py-2 px-4 text-sm font-semibold text-slate-900 hover:bg-sky-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300/50 active:bg-sky-500'
                   >
@@ -68,9 +67,9 @@ export default function LandingPage(): React.ReactElement {
                     </h1>
                   </header>
                 </article>
-                <div className='docs max-w-4xl text-slate-400 mt-2'>v0.0.4</div>
-                {/* <div className='docs max-w-4xl text-slate-400'>Hi, I'm the creator of OSINTBuddy. Want your feature ideas prioritized? Email <a href='mailto:theosintbuddyproject@openinfolabs.com' className='text-sky-500'>theosintbuddyproject@openinfolabs.com</a> with the subject: <i>Early Access Request</i>. The first 15 people to email us will get access to a live version of OSINTBuddy and have their suggestions and features prioritized! */}
-                {/* </div>.  */}
+                <div className='docs max-w-4xl text-slate-400 mt-2'>v0.1.0</div>
+                <div className='docs max-w-4xl text-slate-400 py-2'>Hi, I'm the creator of OSINTBuddy. Want a chance at having your feature ideas prioritized? Email <a href='mailto:theosintbuddyproject@openinfolabs.com' className='text-sky-500'>theosintbuddyproject@openinfolabs.com</a> with the subject: <i>Early Access Request</i>. The first 50 people to reach out will have their suggestions put up for vote on the osintbuddy website so the community can decide what gets built first!
+                </div>.
               </div>
               <div className='hidden xl:sticky xl:-mr-6 xl:block xl:h-[calc(100vh-4.5rem)] xl:flex-none xl:overflow-y-auto  xl:pr-6'>
                 <nav aria-labelledby='on-this-page-title' className='w-56'></nav>

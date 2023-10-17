@@ -4,7 +4,7 @@ from app.db.init_db import init_db
 from app.db.session import SessionLocal
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 def init() -> None:
@@ -14,11 +14,11 @@ def init() -> None:
 
 def main() -> None:
     try:
-        logger.info("Running initial data check...")
+        log.info("Running initial data check...")
         init()
-        logger.info("Initial data check completed")
+        log.info("Initial data check completed")
     except Exception as e:
-        print(e)
+        log.error(e)
 
 
 if __name__ == "__main__":

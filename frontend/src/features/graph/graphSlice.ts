@@ -13,7 +13,7 @@ import {
   addEdge,
   MarkerType,
 } from 'reactflow';
-import { nodesService } from '@/app/services';
+import { sdk } from '@/app/api';
 
 export type ProjectViewModes = 'base' | 'mini'
 
@@ -42,14 +42,11 @@ const initialState: Graph = {
 export const fetchNodeBlueprint = createAsyncThunk(
   'graph/saveNewNode',
   async ({ label, position, uuid }: { label: string; position: XYPosition; uuid: string }) => {
-    const data = await nodesService
-      .createNode({
+    return await sdk.nodes.createGraphEntity({
         label,
         position,
-        uuid,
+        graphId: uuid,
       })
-      .catch((error) => error.message);
-    return data;
   }
 );
 

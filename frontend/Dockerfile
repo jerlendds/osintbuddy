@@ -11,7 +11,9 @@ COPY . .
 
 ARG NODE_ENV=${ENVIRONMENT}
 ARG REACT_APP_BASE_URL=${BASE_URL}
-
+# TODO: Improve docker file for dev...
+# if [ $NODE_ENV=='production' ]; then yarn build
+# if [ $NODE_ENV=='development' ]; then yarn start
 RUN yarn build
 
 FROM nginx:1.25.0-alpine

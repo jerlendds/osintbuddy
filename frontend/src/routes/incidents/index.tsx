@@ -1,5 +1,5 @@
 import { Switch } from '@headlessui/react';
-import { PageHeader } from '@/components/Headers';
+import { InquiryHeader } from '@/components/Headers';
 import classNames from 'classnames';
 
 import { Fragment, useState } from 'react';
@@ -52,14 +52,14 @@ export function SearchBar() {
     projectQuery === ''
       ? []
       : projectOptions.filter((item: JSONObject) => {
-          return item.name.toLowerCase().includes(incidentQuery.toLowerCase());
-        });
+        return item.name.toLowerCase().includes(incidentQuery.toLowerCase());
+      });
   const filteredIncidents =
     incidentQuery === ''
       ? []
       : incidentOptions.filter((item: JSONObject) => {
-          return item.name.toLowerCase().includes(incidentQuery.toLowerCase());
-        });
+        return item.name.toLowerCase().includes(incidentQuery.toLowerCase());
+      });
 
   return (
     <>
@@ -268,8 +268,8 @@ export function SearchBar() {
 export default function IncidentsPage() {
   return (
     <>
-      <PageHeader title='Incidents' />
-      <SearchBar /> 
+      <InquiryHeader title='Incidents' />
+      <SearchBar />
       <UnderConstruction
         header='OSINTBuddy Incidents'
         description='This feature is currently being planned out and created and will be finished by around August. 

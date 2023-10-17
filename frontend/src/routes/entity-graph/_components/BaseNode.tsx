@@ -30,7 +30,7 @@ type NodeElement = NodeInput & {
   nodeId: string;
   editState: EditState;
   dispatch: ThunkDispatch<{ settings: { showSidebar: boolean }; graph: Graph }, undefined, AnyAction> &
-    Dispatch<AnyAction>;
+  Dispatch<AnyAction>;
 };
 
 export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject; sendJsonMessage: () => void }) {
@@ -41,7 +41,6 @@ export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject; se
   const getNodeElement = (element: NodeInput, key: string | null = getNodeKey()) => {
     switch (element.type) {
       case 'dropdown':
-        console.log('element?!', element)
         return (
           <DropdownInput
             key={key}
@@ -299,14 +298,12 @@ interface DropdownOption {
 
 export function DropdownInput({ options, label, nodeId, sendJsonMessage, dispatch }: NodeElement) {
   const [query, setQuery] = useState('');
-  console.log('WHERE ARE MY OPTIONS', options)
   const filteredOptions =
     query === ''
       ? options ?? []
       : options?.filter((option: DropdownOption) => {
-        console.log('option?!', option)
-          return option.label.toLowerCase().includes(query.toLowerCase());
-        }) ?? [];
+        return option.label.toLowerCase().includes(query.toLowerCase());
+      }) ?? [];
 
   const activeValue = useAppSelector((state) => selectNodeValue(state, nodeId, label));
 

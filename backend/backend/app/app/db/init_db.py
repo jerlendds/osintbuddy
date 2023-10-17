@@ -7,7 +7,7 @@ from app.core.logger import get_logger
 # make sure all SQL Alchemy models are imported (app.db.base) before initializing DB
 from .base import *  # noqa
 
-logger = get_logger(name=__name__)
+log = get_logger(name=__name__)
 
 core_ob_url = 'https://raw.githubusercontent.com/jerlendds/osintbuddy-core-plugins/main/plugins/'
 core_plugins = {
@@ -34,25 +34,27 @@ def load_initial_plugin(db, plugin_mod, plugin_code):
     load_plugin(plugin_mod, plugin_code)
 
     plugin = Registry.get_plug(plugin_mod)
+    print(plugin)
     obj_in = schemas.EntityCreate(
         label=plugin.label,
         author=plugin.author,
         description=plugin.description,
-        source=plugin_code
+        source=plugin_code,
+        is_favorite=False
     )
-    crud.entities.create(db=db, obj_in=obj_in)
+    return crud.entities.create(db=db, obj_in=obj_in)
 
 def init_db(db: Session) -> None:
 
-    entities = crud.entities.count_all(db)
-    entity_count = entities[0][0]
+    entity_count = crud.entities.count_all(db)[0][0]
     if entity_count < 14:
         for plugin_label, plugin_mod in core_plugins.items():
-            logger.info(f'Loading core plugins: {plugin_label}')
+            log.info(f'Loading core plugins: {plugin_label}')
             try:
                 resp = requests.get(core_ob_url + plugin_mod + '.py')
                 load_initial_plugin(db=db, plugin_mod=plugin_mod, plugin_code=resp.text)
-            except requests.exceptions.ConnectionError:
+            except requests.exceptions.ConnectionError as e:
+                log.error(e)
                 resp = requests.get(core_ob_url + plugin_mod + '.py')
                 load_initial_plugin(db=db, plugin_mod=plugin_mod, plugin_code=resp.text)
             except Exception:

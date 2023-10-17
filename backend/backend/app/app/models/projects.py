@@ -1,7 +1,7 @@
 import uuid
 import datetime
 from typing import List
-from sqlalchemy import Column, String, DateTime, func
+from sqlalchemy import Column, String, DateTime, Boolean, func
 from sqlalchemy.dialects.postgresql import UUID
 from app.db.base_class import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -21,19 +21,22 @@ class Projects(Base):
     # A project can have many entities and each entity can be for many projects
     entities: Mapped[List[Entities]] = relationship(secondary=ProjectEntities)
 
+    is_favorite: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+
+    last_seen: Mapped[DateTime] = mapped_column(
+        DateTime, default=lambda: datetime.datetime.utcnow(), server_default=func.now()
+    )
     updated: Mapped[DateTime] = mapped_column(
-        DateTime,
-        default=lambda: datetime.datetime.utcnow(),
-        server_default=func.now()
+        DateTime, default=lambda: datetime.datetime.utcnow(), server_default=func.now()
     )
     created: Mapped[DateTime] = Column(DateTime, server_default=func.now())
 
     def __repr__(self) -> str:
         return (
-            f'Projects(id={self.id!r}, '
-            f'uuid={self.uuid!r}, '
-            f'name={self.name!r}, '
-            f'description={self.description[64:]!r}, '
-            f'updated={self.updated!r}, '
-            f'created={self.created!r})'
+            f"Projects(id={self.id!r}, "
+            f"uuid={self.uuid!r}, "
+            f"name={self.name!r}, "
+            f"description={self.description[64:]!r}, "
+            f"updated={self.updated!r}, "
+            f"created={self.created!r})"
         )

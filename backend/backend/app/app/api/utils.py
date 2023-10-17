@@ -1,5 +1,4 @@
-import re
-import urllib
+import re, urllib, string
 from typing import List
 from pydantic import EmailStr
 
@@ -36,17 +35,19 @@ def to_clean_domain(value: str) -> str:
     return domain
 
 
-def plugin_source_template(entity):
+def plugin_source_template(label: str, description: str, author: str):
+    class_name = ''.join(x for x in filter(str.isalnum, label.title()) if not x.isspace())
+
     return f"""import osintbuddy as ob
 from osintbuddy.elements import TextInput
 
-class {''.join(x for x in entity.label.title() if not x.isspace())}(ob.Plugin):
-    label = '{entity.label}'
+class {class_name}(ob.Plugin):
+    label = '{label}'
     icon = 'atom'   # https://tabler-icons.io/
     color = '#FFD166'
 
-    author = ''
-    description = ''
+    author = '{author}'
+    description = '{description}'
 
     node = [
         TextInput(label='Example', icon='radioactive')
@@ -58,4 +59,5 @@ class {''.join(x for x in entity.label.title() if not x.isspace())}(ob.Plugin):
         website_plugin = WebsitePlugin()
         return website_plugin.blueprint(domain=node.example)
 \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
-    """
+\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+"""

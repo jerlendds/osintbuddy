@@ -7,28 +7,23 @@ from .projects import (  # noqa
     ProjectsListInDB,
     ProjectInDB,
 )
-from .node import (  # noqa
-    CreateNode
-)
+from .node import CreateNode  # noqa
 from .entities import (  # noqa
     Entity,
-    EntitiesBase,
+    EntityBase,
     EntitiesListInDB,
     EntityInDBBase,
     EntityCreate,
     EntityUpdate,
     EntityInDB,
-    PostEntityCreate
+    PostEntityCreate,
 )
-from .user import (  # noqa
-    User,
-    UserUpdate,
-    UserCreate,
-    UserBase,
-    UserInDB,
-    UserInDBBase
-)
-from .token import (  # noqa
-    Token,
-    TokenPayload
+from .user import User, UserUpdate, UserCreate, UserBase, UserInDB, UserInDBBase  # noqa
+from .token import Token, TokenPayload  # noqa
+from .scan_machines import (
+    ScanMachine,
+    ScanMachineBase,
+    ScanMachineCreate,
+    ScanMachineUpdate,
+    ScanMachineInDB,
 )

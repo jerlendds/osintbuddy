@@ -8,10 +8,7 @@ import 'reactflow/dist/style.css';
 import EntityOptions from './_components/EntityOptions';
 import CommandPallet from '@/routes/project-graph/_components/CommandPallet';
 import ContextMenu from './_components/ContextMenu';
-import api, { WS_URL } from '@/app/services/api.service';
-import { getLayoutedElements } from './utils';
 import { toast } from 'react-toastify';
-import { nodesService } from '@/app/services';
 import ProjectGraph from './_components/ProjectGraph';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
@@ -19,7 +16,7 @@ import {
   createEdge,
   createNode,
   graphEdges,
-  graphNodes,
+graphNodes,
   resetGraph,
   selectEditId,
   selectNode,
@@ -27,8 +24,8 @@ import {
 } from '@/features/graph/graphSlice';
 import { useComponentVisible, useEffectOnce } from '@/components/utils';
 import DisplayOptions from './_components/DisplayOptions';
-import classNames from 'classnames';
 import { MiniEditDialog } from './_components/BaseMiniNode';
+import { sdk, WS_URL } from '@/app/api';
 
 const keyMap = {
   TOGGLE_PALETTE: ['shift+p'],
@@ -37,7 +34,7 @@ const keyMap = {
 export default function OsintPage() {
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const activeProject = location?.state?.activeProject;
+  const activeProject = location?.state?.graph;
   const initialNodes = useAppSelector((state) => graphNodes(state));
   const initialEdges = useAppSelector((state) => graphEdges(state));
   const graphRef = useRef<HTMLDivElement>(null);
@@ -51,7 +48,7 @@ export default function OsintPage() {
 
   const [messageHistory, setMessageHistory] = useState([]);
   const projectUUID = activeProject.uuid.replace('-', '');
-  const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/project/${projectUUID}`);
+  const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/graph/${projectUUID}`);
   const traversalId = activeProject.uuid.replaceAll(/\-/g, '');
   const [isLoading, setIsLoading] = useState(true);
   const viewMode = useAppSelector((state) => selectViewMode(state));
@@ -116,23 +113,22 @@ export default function OsintPage() {
   };
 
   const updateNodeOptions = () => {
-    api
-      .get('/nodes/refresh')
-      .then((resp) => {
-        const options =
-          resp?.data?.plugins
-            ?.filter((option: any) => option)
-            .map((option: string) => {
-              return {
-                event: option.label,
-                title: option.label,
-                description: option.description,
-                author: option.author,
-              };
-            }) || [];
-        return options;
-      })
-      .then((options) => setNodeOptions(options));
+    sdk.nodes.refreshPlugins().then((data) => {
+      const options =
+        data?.plugins
+          ?.filter((option: any) => option)
+          .map((option: string) => {
+            return {
+              event: option.label,
+              title: option.label,
+              description: option.description,
+              author: option.author,
+            };
+          }) || [];
+      return options;
+    }).then((options) => setNodeOptions(options))
+      .catch((error: Error) => console.error(error))
+
   };
 
   const connectionStatus = {
@@ -255,7 +251,7 @@ export default function OsintPage() {
     <>
       <HotKeys keyMap={keyMap} handlers={handlers}>
         <div className='h-screen flex flex-col w-full'>
-              <EntityOptions activeProject={activeProject} options={nodeOptions} />
+          <EntityOptions activeProject={activeProject} options={nodeOptions} />
           <div className='h-full w-full justify-between bg-dark-900 '>
             <DisplayOptions />
             <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>

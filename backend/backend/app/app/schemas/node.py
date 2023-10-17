@@ -7,5 +7,5 @@ class XYPosition(BaseModel):
 class CreateNode(BaseModel):
     label: str
     position: XYPosition
-    project_uuid: str
+    graphId: str
 

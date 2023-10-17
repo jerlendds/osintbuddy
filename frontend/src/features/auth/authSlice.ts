@@ -1,7 +1,6 @@
+import { LS_USER_AUTH_KEY, sdk } from '@/app/api';
 import { LoginFormValues } from '@/routes/public/SigninPage';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { LS_USER_AUTH_KEY } from '@/app/services/api.service';
-import AuthService from '@/app/services/auth.service';
 
 export interface User {
   email: string;
@@ -43,17 +42,16 @@ if (rememberState) {
 
 export const login = createAsyncThunk('auth/login', async (user: LoginFormValues, thunkAPI) => {
   try {
-    const response = await AuthService.loginUser(user);
-    if (response.status !== 200) throw Error('status error, authentication failed');
-    if (response && response.data && response.data.token) {
-      localStorage.setItem(LS_USER_AUTH_KEY, JSON.stringify(response.data));
-      return response.data;
+    const data = await sdk.login.loginAccessToken({
+      username: user.email,
+      password: user.password
+    })
+    if (data && data.token) {
+      localStorage.setItem(LS_USER_AUTH_KEY, JSON.stringify(data));
+      return data
     }
   } catch (error) {
-    console.warn(error);
-    if (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+    console.error(error);
     return thunkAPI.rejectWithValue(error);
   }
 });
@@ -70,9 +68,9 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
-      const user = action.payload.user;
+      const user = action?.payload;
       state.isAuthenticated = true;
-      state.token = action.payload.token;
+      state.token = action?.payload?.token;
       state.user = {
         ...user,
       };

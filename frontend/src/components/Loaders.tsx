@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { PageHeader } from './Headers';
+import { InquiryHeader } from './Headers';
 
 interface RoundLoaderProps {
   className?: string;
@@ -34,7 +34,7 @@ export function UnderConstruction({ header, description, className = 'flex px-6'
           </div>
         </div>
         <section className='flex flex-col  px-3  mb-6'>
-          <PageHeader className='z-10' title='New Feature' header={header} />
+          <InquiryHeader className='z-10' title='New Feature' header={header} />
           <p className='my-3 ml-6 text-slate-400 max-w-xl'>
             {description}&nbsp;
             <a

@@ -1,4 +1,4 @@
-import entities from '@/app/services/entities.service';
+import { sdk } from '@/app/api';
 import { Dialog, Transition } from '@headlessui/react';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { useTour } from '@reactour/tour';
@@ -13,18 +13,18 @@ export function CreateEntityForm({ closeModal, updateTable }: JSONObject) {
   const [tags, setTags] = useState<any>([]);
   const [query, setQuery] = useState('');
   const [activeOption, setActiveOption] = useState(null);
-  
+
   const filteredOptions =
     query === ''
       ? tags ?? []
       : tags.filter((option: any) => {
-          return option.label.toLowerCase().includes(query.toLowerCase());
-        }) ?? [];
+        return option.label.toLowerCase().includes(query.toLowerCase());
+      }) ?? [];
 
 
   return (
     <Formik
-      initialValues={{ label: '', description: '', author: ''}}
+      initialValues={{ label: '', description: '', author: '' }}
       validate={(values: JSONObject) => {
         const errors: JSONObject = {};
         if (values.label.length < 1) {
@@ -33,16 +33,11 @@ export function CreateEntityForm({ closeModal, updateTable }: JSONObject) {
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
-        // @todo implement tags on the backend
-        entities
-          .createEntity(values)
-          .then((resp) => {
-            updateTable(resp.data);
-            toast.info(`Created the ${resp?.data?.name || ''} project`);
+        sdk.entities.createEntity(values)
+          .then((data) => {
+            updateTable(data);
+            toast.info(`Created the ${data?.name || ''} entity`);
             closeModal();
-            // navigate(`/app/projects/${resp.data.id}`, {
-            //   state: { activeProject: resp.data },
-            // });
           })
           .catch((err) => {
             if (err.code === 'ERR_NETWORK') {
@@ -75,7 +70,7 @@ export function CreateEntityForm({ closeModal, updateTable }: JSONObject) {
               </label>
               <div className='mt-2.5 px-8'>
                 <input
-                   onChange={handleChange}
+                  onChange={handleChange}
                   value={values.label}
                   onBlur={handleBlur}
                   name='label'
@@ -116,12 +111,12 @@ export function CreateEntityForm({ closeModal, updateTable }: JSONObject) {
               </div>
             </div>
             <div className='sm:col-span-2 mb-4 mx-8'>
-               {/* <label htmlFor='description' className='block font-semibold leading-6 mt-4 text-slate-200'>
+              {/* <label htmlFor='description' className='block font-semibold leading-6 mt-4 text-slate-200'>
                 Tags
               </label> */}
-            {/* <Tags className='text-slate-400' /> */}
+              {/* <Tags className='text-slate-400' /> */}
             </div>
-           
+
             <div className='flex justify-end items-center px-8 pb-6 w-full relative'>
               <div className='mt-2 flex-shrink-0 flex items-center'>
                 <button

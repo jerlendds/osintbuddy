@@ -118,7 +118,7 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
     className: 'layout',
     items: 10,
     rowHeight: 30,
-    onLayoutChange: function () {},
+    onLayoutChange: function () { },
     cols: 12,
   };
   const [showEntities, setShowEntities] = useState(true);
@@ -133,12 +133,12 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
   const dataGrid = {
     x: 0.1,
     y: 0,
-    w: 5,
-    h: 16,
+    w: 14,
+    h: 16.5,
     maxH: 16,
     minH: 1,
-    maxW: 16,
-    minW: 4.5,
+    maxW: 44,
+    minW: 10,
   };
   const filteredOptions = searchFilter
     ? options.filter((option: JSONObject) => option.event.toLowerCase().includes(searchFilter.toLowerCase()))
@@ -157,9 +157,8 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
   return (
     <ResponsiveGridLayout
       compactType={null}
-      className='h-full w-full z-[99] absolute'
+      className='h-full w-full max-w-sm z-[99] absolute'
       rowHeight={42}
-      onLayoutChange={(e) => console.log('onLayoutChange: ', e)}
       breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
       cols={{ lg: 26, md: 26, sm: 24, xs: 22, xxs: 18 }}
       isDraggable={isDraggable}

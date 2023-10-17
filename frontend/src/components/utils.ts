@@ -1,3 +1,4 @@
+import { format } from 'path';
 import { RefObject, useEffect, useRef, useState } from 'react';
 
 export const useEffectOnce = (effect: () => void | (() => void)) => {
@@ -58,4 +59,25 @@ export function useComponentVisible(initialIsVisible: boolean) {
 
 
     return { ref, isOpen, setIsOpen };
+}
+
+export function formatAMPM(date: Date) {
+  var hours = date.getHours();
+  var minutes: string | number = date.getMinutes();
+  var ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return strTime;
+}
+
+export function formatPGDate(date: string, showAt: boolean = false) {
+  if (date) {
+    const dateStr = date.replace(' ', 'T')
+    return `${new Date(dateStr).toDateString()}
+     ${showAt ? 'at' : ''}
+     ${formatAMPM(new Date(dateStr))}`
+  }
+  return null
 }

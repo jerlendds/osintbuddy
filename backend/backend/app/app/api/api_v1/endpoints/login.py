@@ -9,6 +9,7 @@ from app import crud, schemas
 from app.api import deps
 from app.core import security
 from app.core.config import settings
+from app.core.logger import get_logger
 from app.core.security import get_password_hash
 from app.utils import (
     generate_password_reset_token,
@@ -16,6 +17,7 @@ from app.utils import (
     verify_password_reset_token,
 )
 
+log = get_logger("api_v1.endpoints.login")
 router = APIRouter()
 
 
@@ -44,7 +46,11 @@ def get_login_token(db: Session, username: str, password: str) -> schemas.Token 
     }
 
 
-@router.post("/login/access-token", response_model=schemas.Token)
+@router.post(
+    "/login/access-token", 
+    response_model=schemas.Token,
+    operation_id="login_access_token"
+)
 def login_access_token(
     db: Session = Depends(deps.get_db),
     form_data: OAuth2PasswordRequestForm = Depends()
@@ -57,7 +63,11 @@ def login_access_token(
     return token
 
 
-@router.post("/password-recovery/{email}", response_model=schemas.Msg)
+@router.post(
+    "/password-recovery/{email}",
+    response_model=schemas.Msg,
+    operation_id="password_recovery_email"
+)
 def recover_password(email: str, db: Session = Depends(deps.get_db)) -> Any:
     """
     Password Recovery
@@ -76,7 +86,11 @@ def recover_password(email: str, db: Session = Depends(deps.get_db)) -> Any:
     return {"msg": "Password recovery email sent"}
 
 
-@router.post("/reset-password/", response_model=schemas.Msg)
+@router.post(
+    "/reset-password/",
+    response_model=schemas.Msg,
+    operation_id="reset_password"
+)
 def reset_password(
     token: str = Body(...),
     new_password: str = Body(...),

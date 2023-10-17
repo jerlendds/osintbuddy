@@ -6,27 +6,33 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cache import caches, close_caches
 from fastapi_cache.backends.redis import CACHE_KEY, RedisCacheBackend
 # import sentry_sdk
+# from sentry_sdk.integrations.asyncio import AsyncioIntegration
 from osintbuddy import discover_plugins
 from app.api.api_v1.api import api_router
 from app.core.config import settings
 
-
 # if settings.SENTRY_DSN:
-#    # @todo find alternative to sentry...
-#     https://github.com/getsentry/sentry-python/issues/1950#issuecomment-1526099852
 #     sentry_sdk.init(
-#         dsn="https://c5f217ca357c468cbb7cfe663318018f@o567628.ingest.sentry.io/4505363615711232",
-#         traces_sample_rate=1.0,  # capture 100%
+#         # integrations=(AsyncioIntegration(),),
+#         dsn=settings.SENTRY_DSN,
+#         traces_sample_rate=1.0,
 #     )
 
-def redis_cache():
-    return caches.get(CACHE_KEY)
+async def on_shutdown() -> None:
+    await close_caches()
+
+
+async def on_startup() -> None:
+    rc = RedisCacheBackend(settings.REDIS_URL)
+    caches.set(CACHE_KEY, rc)
 
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     default_response_class=UJSONResponse,
+    on_startup=[on_startup],
+    on_shutdown=[on_shutdown]
 )
 
 app.add_middleware(
@@ -59,30 +65,15 @@ def app_openapi_schema(app):
         description=settings.PROJECT_DESCRIPTION,
         routes=app.routes,
     )
-    # @todo upload a .png
     openapi_schema["info"]["x-logo"] = {
-        "url": "https://raw.githubusercontent.com/jerlendds/osintbuddy/main/docs/assets/logo-watermark.svg"
+        "url": "https://github.com/jerlendds/osintbuddy/assets/29207058/41d71b7f-2e51-4d43-8f4d-fa22635f98d3"
     }
+
     return openapi_schema
 
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 app.openapi_schema = app_openapi_schema(app)
-
-
-@app.on_event('shutdown')
-async def on_shutdown() -> None:
-    await close_caches()
-    import sys
-    sys.exit()
-
-
-@app.on_event('startup')
-async def on_startup() -> None:
-    rc = RedisCacheBackend(settings.REDIS_URL)
-    caches.set(CACHE_KEY, rc)
-
-
 
 # @app.get("/sentry-debug")
 # async def trigger_error():

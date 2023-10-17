@@ -1,4 +1,4 @@
-import projects from '@/app/services/projects.service';
+import { sdk } from '@/app/api';
 import { Dialog, Switch, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { useTour } from '@reactour/tour';
@@ -26,15 +26,14 @@ export function NewProjectForm({ closeModal, updateTable }: JSONObject) {
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
-        projects
-          .createProject({ name: values.name, description: values.description })
-          .then((resp) => {
-            updateTable(resp.data);
-            toast.info(`Created the ${resp?.data?.name || ''} project`);
+        sdk.graphs.createGraph(values.name, values.description)
+          .then((data) => {
+            updateTable(data.data);
+            toast.info(`Created the ${data?.name || ''} project`);
             closeModal();
             if (showTour) {
-              navigate(`/app/projects/${resp.data.id}`, {
-                state: { activeProject: resp.data },
+              navigate(`/app/projects/${data.id}`, {
+                state: { activeProject: data },
               });
               setIsOpen(true);
             }
@@ -60,7 +59,7 @@ export function NewProjectForm({ closeModal, updateTable }: JSONObject) {
             <div className='border-b border-dark-300 mx-4 py-5 sm:px-6'>
               <div className='-ml-6 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap'>
                 <div className='ml-4 mt-2'>
-                  <h1 className='font-display text-2xl tracking-tight text-slate-200 dark:text-white'>New Project</h1>
+                  <h1 className='font-display text-2xl tracking-tight text-slate-200 dark:text-white'>New Graph</h1>
                 </div>
               </div>
             </div>
@@ -97,10 +96,10 @@ export function NewProjectForm({ closeModal, updateTable }: JSONObject) {
             </div>
             <div className='sm:col-span-2 mb-4 mx-8'>
               {/* @todo add tagging use tags import above */}
-               {/* <label htmlFor='description' className='block font-semibold leading-6 mt-4 text-slate-200'>
+              {/* <label htmlFor='description' className='block font-semibold leading-6 mt-4 text-slate-200'>
                 Tags
               </label> */}
-            
+
             </div>
             <Switch.Group as='div' className='px-4 pb-5 sm:px-6 sm:col-span-2'>
               <Switch.Label as='h3' className='mx-4 text-base font-semibold leading-6 text-slate-200' passive>
@@ -109,7 +108,7 @@ export function NewProjectForm({ closeModal, updateTable }: JSONObject) {
               <div className='mt-2 mx-4 sm:flex sm:items-start sm:justify-between'>
                 <div className='max-w-xl text-sm text-slate-400'>
                   <Switch.Description>
-                    Get a step-by-step tour on how to use OSINTBuddy Investigations
+                    Get a step-by-step tour on how to perform OSINTBuddy investigations
                   </Switch.Description>
                 </div>
                 <div className='mt-5 sm:ml-6 sm:-mt-2 sm:flex sm:flex-shrink-0 sm:items-center'>
