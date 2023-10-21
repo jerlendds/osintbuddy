@@ -8,6 +8,10 @@ usage () {
     echo "    restart:     Restart the app (or a specific container: ./ob/launcher restart janus)"
     echo "    ui:          Launch the UI in development mode"
     echo "    debugsend:   Upload the docker compose logs to https://paste.c-net.org and help the developers with debugging any issues"
+    echo "    cleanup:     Remove docker volumes"
+    echo "    shell:       Enter a containers shell"
+    echo "    migrate:     Generate a migration"
+    echo "    python:      Open a python shell on the backend"
     
     exit 1
 }
@@ -19,12 +23,12 @@ command=$1
 config=$2
 
 
+
 config_file="ob-alpha-compose.yml"
 docker_path=`which docker`
 git_path=`which git`
 
 alias ob_compose="$docker_path compose -f $config_file"
-
 
 
 
@@ -259,6 +263,37 @@ case "$command" in
     debugsend)
         pastebin
         exit 0
+    ;;
+    cleanup)
+        echo "Stopping containers and removing volumes"
+        ob_compose down
+        $docker_path volume rm $($docker_path volume ls -q) &> /dev/null
+        echo "Finished cleanup."
+        exit 0
+    ;;
+    shell)
+        echo "Launching the $config shell"
+        ob_compose exec $config sh
+        exit 0
+    ;;
+    python)
+        echo "Launching the backend Python shell"
+        ob_compose exec backend python3 -i app/shell.py
+        exit 0
+    ;;
+    migrate)
+        if [ ! -z "$command" ] & [ ! -z "$config" ] & [ ! -z "$3" ]; then
+            echo "Launching the $config shell"
+            ob_compose exec backend alembic revision --autogenerate -m "$3"
+            ob_compose exec backend alembic upgrade head
+            ob_compose exec backend useradd $USER
+            ob_compose exec backend sh -c "chown $USER:$USER  -R alembic/versions/*.py"
+            exit 0
+        else
+            echo "Migration Error. A migration message is required."
+            exit 1
+        fi
+        
     ;;
 esac
 

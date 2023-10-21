@@ -179,7 +179,7 @@ Copyright 2023 jerlendds.[GNU AGPL v3](https://choosealicense.com/licenses/apach
 
 ## [↑](#what-is-osintbuddycom)Contact
 
-[Open an issue](https://github.com/jerlendds/osintbuddy/issues/new?assignees=jerlendds&labels=Type%3A+Suggestion&projects=&template=feature.md&title=%5BFEATURE+REQUEST%5D+Your_feature_request_here) if you need to get in touch with me or send an email to <a href="mailto:theosintbuddyproject@openinfolabs.com">theosintbuddyproject@openinfolabs.com</a>
+[Open an issue](https://github.com/jerlendds/osintbuddy/issues/new?assignees=jerlendds&labels=Type%3A+Suggestion&projects=&template=feature.md&title=%5BFEATURE+REQUEST%5D+Your_feature_request_here) if you need to get in touch with me or send an email to <a href="mailto:getsupport@osintbuddy.com">getsupport@osintbuddy.com</a>
 
 You can find my personal blog where I'll be documenting the journey of building OSINTBuddy at [studium.dev](https://studium.dev)
 

@@ -74,7 +74,7 @@ export default function GraphPanel({
         )}
         {showFavoriteGraphs && !isLoadingFavorites && (
           <div className="mt-2 h-full overflow-y-scroll overflow-x-hidden">
-            {favoriteGraphsData.map((graph: JSONObject) => {
+            {favoriteGraphsData?.map((graph: JSONObject) => {
               return <> <button key={graph.uuid} onClick={() => navigate(`graphs/${graph.uuid}`)} className={classNames("mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center ", params?.graphId === graph.uuid && "!border-dark-400 bg-dark-900 translate-x-px")}>
                 <div className="flex w-full flex-col items-start mr-3 space-y-1">
                   <p className={classNames("text-sm font-medium leading-none", params?.graphId === graph.uuid && "text-slate-400")}>{graph.name}</p>
@@ -115,7 +115,7 @@ export default function GraphPanel({
         )}
         {showAllGraphs && !isLoadingGraphs && (
           <div className="mt-2 h-full overflow-y-scroll overflow-x-hidden">
-            {graphsData.map((graph: JSONObject) => {
+            {graphsData?.map((graph: JSONObject) => {
               return (
                 <button key={graph.uuid} onClick={() => navigate(`graphs/${graph.uuid}`)} className={classNames("mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center ", params?.graphId === graph.uuid && "!border-dark-400 bg-dark-900 translate-x-px")}>
                   <div className="flex w-full flex-col items-start mr-3 space-y-1.5">
