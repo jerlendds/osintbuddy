@@ -6,6 +6,8 @@ usage () {
     echo "    start:       Start the OSINTBuddy app"
     echo "    stop:        Stop the OSINTBuddy app (or a specific container ./ob/launcher stop janus)"
     echo "    restart:     Restart the app (or a specific container: ./ob/launcher restart janus)"
+    echo "    ui:          Launch the UI in development mode"
+    echo "    debugsend:   Upload the docker compose logs to https://paste.c-net.org and help the developers with debugging any issues"
     
     exit 1
 }
@@ -24,8 +26,11 @@ git_path=`which git`
 alias ob_compose="$docker_path compose -f $config_file"
 
 
+
+
 # From https://stackoverflow.com/a/44660519/702738
-compare_version() {
+compare_version()
+{
     if [[ $1 == $2 ]]; then
         return 1
     fi
@@ -48,24 +53,40 @@ compare_version() {
 }
 
 
-launch() {
+launch()
+{
     ob_compose up -d
 }
 
 
-fatal () {
+fatal ()
+{
     echo -e "\n$1\n"
     exit "${2:-1}"
 }
 
-install_docker() {
+install_docker()
+{
     echo "Docker is not installed, you will need to install Docker in order to run the OSINTBuddy Launcher"
     echo "See https://docs.docker.com/installation/"
     exit 1
 }
 
+pastebin()
+{
+    ob_compose logs > osintbuddy-debug.log
+    local url='https://paste.c-net.org/'
+    local file='osintbuddy-debug.log'
+    curl -s \
+    --data-binary @"$file" \
+    --header "X-FileName: ${file##*/}" \
+    "$url"
+    # curl -s --data-binary @- "$url"
+    rm osintbuddy-debug.log
+}
 
-check_images () {
+check_images ()
+{
     # TODO: fix me
     test_solr=`$docker_path images | awk '{print $1 ":" $2 }' | grep "$SOLR_IMAGE"`
     test_janus=`$docker_path images | awk '{print $1 ":" $2 }' | grep "$JANUS_IMAGE"`
@@ -92,7 +113,8 @@ check_images () {
     fi
 }
 
-check_prereqs() {
+check_prereqs()
+{
     if [ -z $docker_path ]; then
         install_docker
     fi
@@ -156,7 +178,8 @@ check_prereqs() {
 }
 
 
-container_ids() {
+container_ids()
+{
     ID_UI=$(cmd/container_id "ob_dev_ui");
     ID_BACKEND=$(cmd/container_id "ob_dev_backend");
     ID_REDIS=$(cmd/container_id "ob_dev_redis");
@@ -170,7 +193,8 @@ container_ids() {
 }
 
 
-run_run() {
+run_run()
+{
     unset ERR
     ob_compose up -d || ERR=$?
     
@@ -179,7 +203,8 @@ run_run() {
     fi
 }
 
-run_bootstrap() {
+run_bootstrap()
+{
     check_prereqs
     ob_compose build
 }
@@ -209,12 +234,31 @@ case "$command" in
     ;;
     stop)
         if [ ! -z "$command" ] & [ ! -z "$config" ]; then
-            ob_compose stop $config;
+            ob_compose stop $config
             exit 0
         else
-            ob_compose stop;
+            ob_compose stop
             exit 0
         fi
+    ;;
+    logs)
+        if [ ! -z "$command" ] & [ ! -z "$config" ]; then
+            ob_compose logs $config -f
+            exit 0
+        else
+            ob_compose logs -f
+            exit 0
+        fi
+    ;;
+    dev)
+        ob_compose stop ui;
+        cd ../frontend && \
+        yarn start
+        exit 0
+    ;;
+    debugsend)
+        pastebin
+        exit 0
     ;;
 esac
 
