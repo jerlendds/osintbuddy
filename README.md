@@ -12,7 +12,7 @@
 
 <p>
   <a href="https://github.com/jerlendds/osintbuddy">
-    <img src="./docs/watermark.svg" height="130px" alt="OSINT Buddy Logo">
+    <img src="./ob/_assets/watermark.svg" height="130px" alt="OSINT Buddy Logo">
   </a>
 
 > *I have no data yet. It is a capital mistake to theorize before one has data. Insensibly

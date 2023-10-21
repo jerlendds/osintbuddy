@@ -8,12 +8,11 @@ export default function Graphs() {
   const { activeInquiryTab, graphsData, favoriteGraphsData } = useDashboardContext()
 
   useEffect(() => {
-    if (favoriteGraphsData?.length >= 1) {
-      navigate(`/app/inquiries/graph/${favoriteGraphsData[0]?.uuid}`)
+    if (favoriteGraphsData?.length > 0) {
+      navigate(`/app/inquiries/graphs/${favoriteGraphsData[0]?.uuid}`)
     } else {
-      if (graphsData?.length) navigate(`/app/inquiries/graph/${graphsData[0]?.uuid}`)
+      if (graphsData?.length) navigate(`/app/inquiries/graphs/${graphsData[0]?.uuid}`)
     }
-
   }, [graphsData])
 
   return <>

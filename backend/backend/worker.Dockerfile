@@ -1,15 +1,15 @@
-FROM python:3.9.6-buster
-LABEL maintainer="jerlendds <jerlendds@openinfolabs.com>"
+FROM python:3.11.4-slim-bullseye
+LABEL maintainer="jerlendds <support@forum.osintbuddy.com>"
 
 WORKDIR /app/
 ENV PYTHONPATH=/app/
-COPY ./requirements.txt /app/requirements.txt
 
+RUN apt-get -y update && apt-get -y install git && \
+    apt-get clean;
+COPY requirements.txt /app/requirements.txt
+RUN pip3 install --no-cache-dir --upgrade pip && \
+    pip3 install --no-cache-dir -r /app/requirements.txt
 
-RUN pip install --no-cache-dir --upgrade pip 
-RUN  if test -e /app/requirements.txt; then pip install --no-cache-dir -r /app/requirements.txt; fi
+COPY app/ /app/
 
-COPY ./app/worker-start.sh /worker-start.sh
-COPY ./app/ /app
-
-CMD ["/bin/bash", "-c", "./worker-start.sh"]
+CMD ["/bin/bash", "-c", "./app/worker-start.sh"]

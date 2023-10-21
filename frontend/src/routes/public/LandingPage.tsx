@@ -27,7 +27,7 @@ export default function LandingPage(): React.ReactElement {
                 </p>
                 <div className='mt-8 flex gap-4 md:justify-center lg:justify-start'>
                   <Link
-                    to='/app/inquiries/graph'
+                    to='/app/inquiries/graphs'
                     replace
                     className='rounded-full bg-sky-300 py-2 px-4 text-sm font-semibold text-slate-900 hover:bg-sky-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300/50 active:bg-sky-500'
                   >

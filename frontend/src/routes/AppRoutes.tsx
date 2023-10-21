@@ -4,16 +4,16 @@ import AppLayout from "./AppLayout";
 import NotFound from "./NotFound";
 import PublicLayout from "./PublicLayout";
 import ScansCreatePage from "./scans-create";
-import GraphDetails from "./projects/GraphDetails";
-import Graphs from "./projects/Graphs";
-import Entities from "./projects/Entities";
-import Market from "./projects/Market";
-import EntityDetails from "./projects/EntityDetails";
+import GraphDetails from "./graphs/GraphDetails";
+import Graphs from "./graphs/Graphs";
+import Entities from "./graphs/Entities";
+import Market from "./graphs/Market";
+import EntityDetails from "./graphs/EntityDetails";
 const SigninPage = lazy(() => import("./public/SigninPage"));
-const DashboardPage = lazy(() => import("./projects"));
+const DashboardPage = lazy(() => import("./graphs"));
 const AboutPage = lazy(() => import("@routes/public/AboutPage"));
 const LandingPage = lazy(() => import("@routes/public/LandingPage"));
-const InquiryGraph = lazy(() => import("./project-graph"));
+const InquiryGraph = lazy(() => import("./inquiry-graph"));
 const EntityGraphPage = lazy(() => import("./entity-graph"));
 const SettingsPage = lazy(() => import("./settings"));
 const IncidentsPage = lazy(() => import("./incidents"));
@@ -65,14 +65,14 @@ export default function AppRoutes(): ReactElement {
               </>
             } />
           <Route
-            path='graph'
+            path='graphs'
             element={
               <>
                 <Graphs />
               </>
             } />
           <Route
-            path='graph/:graphId'
+            path='graphs/:graphId'
             element={
               <>
                 <GraphDetails />
@@ -80,7 +80,7 @@ export default function AppRoutes(): ReactElement {
             } />
 
           <Route
-            path='entity'
+            path='entities'
             element={
               <>
                 <Entities />
@@ -101,7 +101,7 @@ export default function AppRoutes(): ReactElement {
           }
         />
         <Route
-          path="inquiries/investigation/:graphId"
+          path="inquiries/graph/:graphId"
           element={
             <Suspense>
               <InquiryGraph />

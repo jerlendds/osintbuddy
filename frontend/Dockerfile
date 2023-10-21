@@ -1,5 +1,5 @@
 FROM node:18-alpine as build-stage
-LABEL maintainer="jerlendds <jerlendds@openinfolabs.com>"
+LABEL maintainer="jerlendds <support@forum.osintbuddy.com>"
 
 WORKDIR /app/
 

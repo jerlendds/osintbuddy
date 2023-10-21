@@ -1,6 +1,6 @@
 from typing import Generator
 from contextlib import contextmanager
-
+import boto3
 from jose import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -27,6 +27,18 @@ def get_db() -> Generator:
         yield db
     finally:
         db.close()
+
+
+def get_s3(
+    # current_user: models.User = Depends(get_current_active_user),
+):
+    kwargs = {
+        "endpoint_url": "http://s3:8333", 
+        "aws_access_key_id": "accessKey1",
+        "aws_secret_access_key": "secretKey1"
+    }
+    s3 = boto3.resource("s3", **kwargs)
+    return s3
 
 
 def get_current_user(

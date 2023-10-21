@@ -1,5 +1,5 @@
 import { Icon } from '@components/Icons';
-
+// wtf
 export default function ContextAction({
 
   nodeCtx: ctx,
@@ -12,11 +12,11 @@ export default function ContextAction({
   sendJsonMessage: Function
   closeMenu: Function
 }) {
-
+  console.log('before map', transforms)
   return (
     <>
-      <div className='node-context max-h-32 overflow-y-scroll'>
-        {transforms?.map((transform: any) => {
+      {transforms && <div className='node-context max-h-32 overflow-y-scroll'>
+        {transforms.map((transform: any) => {
           return (
             <div key={transform.label}>
               <button
@@ -42,7 +42,7 @@ export default function ContextAction({
             </div>
           );
         })}
-      </div>
+      </div>}
     </>
   );
 }

@@ -1,5 +1,5 @@
-FROM python:3.11.0-slim-bullseye
-LABEL maintainer="jerlendds <jerlendds@openinfolabs.com>"
+FROM python:3.11.4-slim-bullseye
+LABEL maintainer="jerlendds <support@forum.osintbuddy.com>"
 
 WORKDIR /app/
 ENV PYTHONPATH=/app/
@@ -11,7 +11,7 @@ RUN pip3 install --no-cache-dir --upgrade pip && \
     pip3 install --no-cache-dir -r /app/requirements.txt
 
 COPY app/ /app/
-# COPY osintbuddy-plugins /app/osintbuddy-plugins/
-# RUN pip install /app/osintbuddy-plugins/
+COPY osintbuddy-plugins /app/osintbuddy-plugins/
+RUN pip install /app/osintbuddy-plugins/
 
 CMD ["/bin/bash", "-c", "./start.sh"]

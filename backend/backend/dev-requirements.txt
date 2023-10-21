@@ -37,4 +37,7 @@ undetected-chromedriver==3.4.7
 uvicorn==0.22.0
 validators==0.20.0
 watchfiles==0.19.0
+boto3==1.28.64
 gremlinpy @ git+https://github.com/jerlendds/gremlinpy.git@7d3033e6a55ed9cb1f982ec3b58ca233e01c58e3
+boto3-stubs==1.28.64
+

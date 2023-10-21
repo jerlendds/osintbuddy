@@ -108,7 +108,7 @@ export default function InquirySidebar({
   return (
     <>
       <div className="h-screen !min-w-[20rem] max-w-[20rem] justify-between flex flex-col w-full py-8 bg-dark-700 border-r border-dark-400 pl-3">
-        <div className="flex items-center relative bg-dark-900 rounded rounded-r-none -mr-px">
+        <div className="flex items-center relative bg-dark-900 border-y border-l border-dark-400 rounded rounded-r-none -mr-px">
           <MagnifyingGlassIcon className="w-5 h-5 text-slate-700 ml-2" />
           <input type="text" className="py-3 pl-1 w-full focus:outline-none relative  bg-dark-700 text-sm font-medium text-slate-400 bg-transparent placeholder-slate-700" placeholder={`Search ${activeTab}...`} />
         </div>
@@ -120,7 +120,7 @@ export default function InquirySidebar({
                   <button
                     onClick={() => {
                       setActiveTab('graphs')
-                      navigate('/app/inquiries/graph', { replace: true })
+                      navigate('/app/inquiries/graphs', { replace: true })
                     }}
                     className={classNames("focus:outline-none transition-colors duration-75 ease-in-out flex items-center justify-center px-3 py-2.5 font-display rounded-full text-sm leading-none ", selected ? 'bg-info-300 text-slate-300 ' : 'text-slate-700 hover:text-slate-600')}>
                     Graphs
@@ -132,7 +132,7 @@ export default function InquirySidebar({
                   <button
                     onClick={() => {
                       setActiveTab('entities')
-                      navigate('/app/inquiries/entity', { replace: true })
+                      navigate('/app/inquiries/entities', { replace: true })
                     }}
                     className={classNames("focus:outline-none transition-colors duration-75 ease-in-out flex items-center justify-center px-3 py-2.5 font-display rounded-full text-sm leading-none ", selected ? 'bg-info-300 text-slate-300 ' : 'text-slate-700 hover:text-slate-600')}>
                     Entities

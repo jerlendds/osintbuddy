@@ -6,7 +6,6 @@ import { useLocation } from 'react-router-dom';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import 'reactflow/dist/style.css';
 import EntityOptions from './_components/EntityOptions';
-import CommandPallet from '@/routes/project-graph/_components/CommandPallet';
 import ContextMenu from './_components/ContextMenu';
 import { toast } from 'react-toastify';
 import ProjectGraph from './_components/ProjectGraph';
@@ -16,7 +15,7 @@ import {
   createEdge,
   createNode,
   graphEdges,
-graphNodes,
+  graphNodes,
   resetGraph,
   selectEditId,
   selectNode,
@@ -26,6 +25,7 @@ import { useComponentVisible, useEffectOnce } from '@/components/utils';
 import DisplayOptions from './_components/DisplayOptions';
 import { MiniEditDialog } from './_components/BaseMiniNode';
 import { sdk, WS_URL } from '@/app/api';
+import CommandPallet from './_components/CommandPallet';
 
 const keyMap = {
   TOGGLE_PALETTE: ['shift+p'],
@@ -215,9 +215,9 @@ export default function OsintPage() {
       x: event.clientX - 20,
     });
     setCtxSelection(node);
-    nodesService
-      .getTransforms({ label: node.data.label })
+    sdk.nodes.getEntityTransforms(node.data.label)
       .then((data) => {
+        console.log('entityTransforms', data)
         setTransforms(data.transforms);
       })
       .catch((error) => {

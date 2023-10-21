@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e
 
 if [ -f ./app/app/main.py ]; then
     DEFAULT_MODULE_NAME=app.app.main
-elif [ -f ./app/main.py ]; then
+    elif [ -f ./app/main.py ]; then
     DEFAULT_MODULE_NAME=app.main
 else
     DEFAULT_MODULE_NAME=app.main

@@ -28,7 +28,6 @@ python-jose==3.3.0
 python-multipart==0.0.6
 python3-nmap==1.6.0
 redis==4.5.4
-sentry-sdk==1.32.0
 sqlalchemy-json==0.7.0
 tenacity==8.2.2
 termcolor==2.3.0
@@ -37,4 +36,5 @@ undetected-chromedriver==3.4.7
 uvicorn==0.22.0
 validators==0.20.0
 watchfiles==0.19.0
+boto3==1.28.64
 gremlinpy @ git+https://github.com/jerlendds/gremlinpy.git@7d3033e6a55ed9cb1f982ec3b58ca233e01c58e3

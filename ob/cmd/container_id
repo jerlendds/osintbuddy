@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker ps -aqf "name=$(yq -r .services.$1.container_name docker-compose.yml)"

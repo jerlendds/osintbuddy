@@ -1,6 +1,7 @@
 import uuid
 import asyncio
 
+import boto3
 from fastapi import (
     APIRouter,
     HTTPException,
@@ -17,6 +18,7 @@ from app.db.janus import ProjectGraphConnection
 
 log = get_logger("api_v1.endpoints.graphs")
 router = APIRouter(prefix="/graphs")
+
 
 @router.get('/{graph_id}', operation_id="get_graph")
 async def get_project(
@@ -65,6 +67,7 @@ async def get_project(
 async def create_project(
     name: str,
     db: Session = Depends(deps.get_db),
+    s3 = Depends(deps.get_s3),
     description: str = '',
 ):
     project_uuid = uuid.uuid4().hex
@@ -90,6 +93,7 @@ ConfiguredGraphFactory.open('project_{project_uuid}')
         **{'hosts': ['janus'], 'port': 8182}
     )
     try:
+        log.info(s3.list_buckets())
         client = await cluster.connect(hostname='janus')
         await client.submit(create_project_graph)
     except GremlinServerError as e:

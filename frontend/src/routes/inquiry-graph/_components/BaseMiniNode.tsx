@@ -37,7 +37,7 @@ type NodeElement = NodeInput & {
   nodeId: string;
   editState: EditState;
   dispatch: ThunkDispatch<{ settings: { showSidebar: boolean }; graph: Graph }, undefined, AnyAction> &
-    Dispatch<AnyAction>;
+  Dispatch<AnyAction>;
 };
 
 const getNodeElement = (nodeId, value, element: NodeInput, key: string | null = getNodeKey(), sendJsonMessage) => {
@@ -224,8 +224,8 @@ function DropdownInput({ options, label, nodeId, sendJsonMessage, dispatch }: No
     query === ''
       ? options ?? []
       : options?.filter((option: DropdownOption) => {
-          return option.label.toLowerCase().includes(query.toLowerCase());
-        }) ?? [];
+        return option.label.toLowerCase().includes(query.toLowerCase());
+      }) ?? [];
 
   const activeValue = useAppSelector((state) => selectNodeValue(state, nodeId, label));
 

@@ -1,24 +1,11 @@
-import { Switch } from '@headlessui/react';
 import { InquiryHeader } from '@/components/Headers';
 import classNames from 'classnames';
-
 import { Fragment, useState } from 'react';
-import { Combobox, Dialog, Transition } from '@headlessui/react';
+import { Combobox } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import {
-  CalendarIcon,
-  CodeBracketIcon,
-  DocumentIcon,
   ExclamationCircleIcon,
-  LinkIcon,
   PencilSquareIcon,
-  PhotoIcon,
-  TableCellsIcon,
-  VideoCameraIcon,
-  ViewColumnsIcon,
-  Bars4Icon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   ListBulletIcon,
   Squares2X2Icon,
   MapIcon,

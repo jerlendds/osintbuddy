@@ -58,6 +58,4 @@ class {class_name}(ob.Plugin):
         WebsitePlugin = await ob.Registry.get_plugin('website')
         website_plugin = WebsitePlugin()
         return website_plugin.blueprint(domain=node.example)
-\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
-\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 """

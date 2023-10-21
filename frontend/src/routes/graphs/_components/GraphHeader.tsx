@@ -7,8 +7,8 @@ export default function GraphHeader({ graph, stats }: JSONObject) {
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex w-full bg-dark-600 border-b border-dark-400">
-        <div className="py-1 w-full mx-auto">
+      <div className="flex w-full bg-transparent border-b border-dark-400">
+        <div className="py-3.5 w-full mx-auto">
           <section className="flex flex-col items-start justify-between px-4 lg:items-center lg:px-6 md:px-4 lg:flex-row md:flex-row md:items-center  relative">
             <div className="flex flex-col w-full">
               <h3 className="text-lg font-semibold whitespace-nowrap leading-normal text-slate-300">
@@ -24,7 +24,7 @@ export default function GraphHeader({ graph, stats }: JSONObject) {
                 <TrashIcon className="text-inherit h-5 w-5 ml-2" />
               </button>
               <Link
-                to={`/app/inquiries/investigation/${graph?.uuid}`}
+                to={`/app/inquiries/graph/${graph?.uuid}`}
                 state={{ graph }}
                 className='mb-3.5 ring-1 ring-info-200 pr-3 text-left text-sm font-semibold text-info-200 hover:text-info-300 flex items-center border border-info-200 hover:border-info-300 py-2 px-3 rounded-md mr-1'
               >

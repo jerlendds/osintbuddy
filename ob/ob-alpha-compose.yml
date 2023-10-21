@@ -1,0 +1,111 @@
+version: "3.9"
+
+services:
+  ui:
+    container_name: "ob_dev_ui"
+    build:
+      context: ../frontend
+      args:
+        REACT_APP_BASE_URL: "${BASE_URL}"
+        NODE_ENV: "${ENVIRONMENT}"
+    volumes:
+      - ../frontend/:/app/
+    ports:
+      - "${FRONTEND_PORT-3000}:80"
+    env_file:
+      - .env.alpha
+  backend:
+    container_name: "ob_dev_backend"
+    command: ["/bin/sh", "-c", "./start-reload.sh"]
+    build:
+      context: ../backend/backend
+      dockerfile: backend.Dockerfile
+    volumes:
+      - ../backend/backend/app:/app/
+    environment:
+      PYTHONDONTWRITEBYTECODE: 1
+    ports:
+      - "${BACKEND_PORT-8000}:80"
+    env_file:
+      - .env.alpha
+  redis:
+    image: ${REDIS_IMAGE-redis:alpine3.18}
+    container_name: "ob_dev_redis"
+    ports:
+      - "${REDIS_PORT-6379}:6379"
+    command: redis-server
+  db:
+    image: "${POSTGRES_IMAGE-postgres:15.4}"
+    container_name: "ob_dev_db"
+    volumes:
+      - "ob-db-data:${PGDATA-/var/lib/postgresql/data/pgdata}"
+    env_file:
+      - .env.alpha
+    ports:
+      - "${POSTGRES_PORT-5432}:5432"
+  janus:
+    container_name: "ob_dev_janus"
+    build:
+      context: ./_janus
+      dockerfile: janusgraph.Dockerfile
+    ports:
+      - "8182:8182"
+    volumes:
+      - "./_janus/janusgraph-dynamic.properties:/opt/janusgraph/janusgraph-dynamic.properties"
+      - "./_janus/janusgraph-server.yaml:/etc/opt/janusgraph/janusgraph-server.yaml"
+      - "./_janus/empty-sample.groovy:/opt/janusgraph/scripts/empty-sample.groovy"
+  sdb:
+    image: ${SCYLLA_IMAGE-scylladb/scylla:5.1}
+    container_name: "ob_dev_sdb"
+    ports:
+      - "${SDB_REST_PORT-10000}:10000"
+      - "${CQL_PORT-9042}:9042"
+      - "${THRIFT_PORT-9160}:9160"
+      - "${INTERNODE_PORT-7000}:7000"
+      - "${INTERNODE_ONE_PORT-7001}:7001"
+      - "${JMX_PORT-7199}:7199"
+    env_file:
+      - .env.alpha
+    volumes:
+      - ob-sdb-data:${SCYLLADATA-/var/lib/scylla}
+  index:
+    image: "${SOLR_IMAGE-solr:9.3.0-slim}"
+    container_name: "ob_dev_index"
+    volumes:
+      - ob-solr-data:/var/solr
+    ports:
+      - "${SOLR_PORT-8983}:8983"
+    env_file:
+      - .env.alpha
+  # TODO: Fix worker and clearlys
+  worker:
+    container_name: "ob_dev_worker"
+    build:
+      context: ../backend/backend
+      dockerfile: worker.Dockerfile
+    command: ./worker-start.sh
+    env_file:
+      - .env.alpha
+  clearly:
+    image: "${CLEARLY_IMAGE-rsalmei/clearly:latest}"
+    container_name: "ob_dev_clearly"
+    ports:
+      - "${CLEARLY_PORT-12223}:12223"
+    command:
+      - "server $(CELERY_BROKER_URL) --backend "
+    env_file:
+      - .env.alpha
+  s3: # TODO: Add option to use ob/_seaweedfs/* eventually
+    image: "${S3_IMAGE-minio/minio:RELEASE.2023-10-16T04-13-43Z}"
+    container_name: "ob_dev_s3"
+    ports:
+      - 9000:9000
+      - 9001:9001
+    command: 'server -master.port=9333 -volume.port=8080 -dir="/ob-data" --console-address ":9001"'
+    env_file:
+      - .env.alpha
+
+volumes:
+  ob-db-data:
+  ob-sdb-data:
+  ob-solr-data:

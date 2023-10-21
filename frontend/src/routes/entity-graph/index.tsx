@@ -5,7 +5,6 @@ import { HotKeys } from "react-hotkeys";
 import { useLocation } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import "reactflow/dist/style.css";
-import CommandPallet from "@/routes/project-graph/_components/CommandPallet";
 import ContextMenu from "./_components/ContextMenu";
 import { WS_URL, sdk } from "@/app/api";
 import { toast } from "react-toastify";
@@ -34,6 +33,7 @@ import { tokyoNight, tokyoNightInit } from "@uiw/codemirror-theme-tokyo-night";
 import { tags as t } from "@lezer/highlight";
 import { python } from "@codemirror/lang-python";
 import { Icon } from "@/components/Icons";
+import CommandPallet from "./_components/CommandPallet";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -291,8 +291,7 @@ export default function EntityGraph() {
       x: event.clientX - 20,
     });
     setCtxSelection(node);
-    nodesService
-      .getTransforms({ label: node.data.label })
+    sdk.nodes.getEntityTransforms(node.data.label)
       .then((data) => {
         setTransforms(data.transforms);
       })
@@ -328,9 +327,8 @@ export default function EntityGraph() {
 
   const [activeEntity, setActiveEntity] = useState({});
   useEffectOnce(() => {
-    entitiesService
-      .getEntity({ uuid: entityUUID })
-      .then((resp) => setActiveEntity(resp.data))
+    sdk.entities.getEntity(entityUUID)
+      .then((data) => setActiveEntity(data))
       .catch((error) => toast.error(`Error: ${error}`));
   });
 

@@ -17,7 +17,6 @@ https://www.exploit-db.com/google-hacking-database -->
 - [jsbeautifier](https://pypi.org/project/jsbeautifier/1.14.8/)
 - [python3-nmap](https://pypi.org/project/python3-nmap/1.6.0/)
 - [gremlinpy](https://github.com/jerlendds/gremlinpy)
-- [elasticsearch](https://pypi.org/project/elasticsearch/8.8.0/)
 
 #### **For creating and saving WARC files we're planning to use:**
 - [selenium-wire](https://pypi.org/project/selenium-wire/5.1.0/)
