@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+. cmd/env
+
+
+run_python() {
+    trap 'abort' INT
+    heading "Launching backend Python shell..."
+    
+    BACKEND_ID=$(cmd/container_id backend)
+    if [ ! -z "$BACKEND_ID" ]; then
+        ob_compose exec backend python3 -i app/shell.py
+        success
+    else
+        error "Error: The backend container is not running."
+        info "      To start up the OSINTBuddy app try running: ./launcher start"
+    fi
+}
+
+run_python

@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+. cmd/env
+
+run_build() {
+    if [ ! -z "$OB_CMD" ] & [ ! -z "$OB_CMD_ARGS" ]; then
+        ob_compose build $OB_CMD_ARGS
+        exit 0
+    else
+        ob_compose build
+        exit 0
+    fi
+}
+
+run_build

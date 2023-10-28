@@ -1,0 +1,13 @@
+
+#!/usr/bin/env sh
+. cmd/env
+
+run_cleanup() {
+    heading "Stopping containers and removing volumes"
+    ob_compose down
+    $docker_path volume rm $($docker_path volume ls -q) # &> /dev/null
+    success "Finished cleanup."
+    exit 0
+}
+
+run_cleanup

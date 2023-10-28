@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. cmd/env
+
+run_shell() {
+    echo "Launching the $OB_CMD_ARGS shell"
+    ob_compose exec $OB_CMD_ARGS sh
+    exit 0
+}
+
+run_shell
+

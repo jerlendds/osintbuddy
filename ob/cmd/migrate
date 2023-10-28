@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+. cmd/env
+
+migration_message="$OB_CMD_ARGS"
+
+
+run_migration() {
+    trap 'abort' INT
+    heading "Preparing to create a new migration..."
+    if [ ! -z "$migration_message" ]; then
+        ob_compose exec backend alembic revision --autogenerate -m "$migration_message"
+        ob_compose exec backend alembic upgrade head
+        heading "Fixing migration file permissions..."
+        ob_compose exec backend sh -c "/usr/sbin/useradd $USER > /dev/null 2>&1"
+        ob_compose exec backend sh -c "chown $USER:$USER  -R alembic/versions/*.py"
+        success
+        info "View migrations at: ./backend/backend/app/alembic/versions"
+        exit 0
+    else
+        error "Error: A short message summarizing your changes is required to create an alembic migration:"
+        info "    e.g:   ./launcher migrate 'update entities is_favorite'"
+    fi
+}
+
+run_migration $migration_message

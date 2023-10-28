@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+. cmd/env
+
+run_logs() {
+    heading "Loading $OB_CMD_ARGS logs"
+    if [ ! -z "$OB_CMD_ARGS" ]; then
+        ob_compose logs $OB_CMD_ARGS -f
+    else
+        ob_compose logs -f
+    fi
+}
+
+run_logs

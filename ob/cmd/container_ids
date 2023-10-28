@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+. cmd/env
+
+export_container_ids() {
+    export ID_UI=$(cmd/container_id "ui");
+    export ID_BACKEND=$(cmd/container_id "backend");
+    export ID_REDIS=$(cmd/container_id "redis");
+    export ID_DB=$(cmd/container_id "db");
+    export ID_JANUS=$(cmd/container_id "janus");
+    export ID_SDB=$(cmd/container_id "sdb");
+    export ID_INDEX=$(cmd/container_id "index");
+    export ID_WORKER=$(cmd/container_id "worker");
+    export ID_CLEARLY=$(cmd/container_id "clearly");
+    export ID_S3=$(cmd/container_id "s3");
+}

@@ -1,0 +1,105 @@
+#!/usr/bin/env sh
+export OB_CMD=$1;
+export OB_CMD_ARGS=$2;
+
+export OB_DIR="$(dirname $0)/ob"
+cd $OB_DIR
+
+if [ -f cmd/env ]; then
+    source cmd/env;
+fi
+
+# localhost:8080/login/oauth/authorize?client_id=&response_type=&redirect_uri=&scope=read&state=
+usage_containers () {
+    echo ""
+    echo -e "$(c 0uY)   CONTAINERS: CONTAINER DESCRIPTION.$(c)"
+    echo -e "    $(c Y )ui$(c):          React - SPA frontend."
+    echo -e "    $(c Y )backend$(c):     FastAPI - running on Uvicorn with hot reloading."
+    echo -e "    $(c Y )casdoor$(c):     Casdoor - An open-source IAM / SSO platform with web UI supporting OAuth 2.0, OIDC, etc"
+    echo -e "    $(c Y )worker$(c):      Celery - Distributed Task Queue."
+    echo -e "    $(c Y )clearly$(c):     Clearly - Real time monitor for your celery tasks and workers."
+    echo -e "    $(c Y )redis$(c):       Redis - In-memory database that persists on disk. Used by worker and for caching."
+    echo -e "    $(c Y )s3$(c):          Minio S3 object storage - In the future we plan to also support seaweedfs."
+    echo -e "    $(c Y )db$(c):          PostgreSQL - need I say anything else?"
+    echo -e "    $(c Y )sdb$(c):         ScyllaDB - a NoSQL database that optimizes for raw performance. Used by JanusGraph."
+    # TODO: Make lucene the default option...
+    # > "Apache Lucene performs better in small scale, single machine applications..."
+    # source: https://docs.janusgraph.org/index-backend/
+    echo -e "    $(c Y )index$(c):       Solr - Open source enterprise search platform - Used by JanusGraph."
+    echo -e "    $(c Y )janus$(c):       JanusGraph - Distributed, open source, massively scalable graph database."
+    
+    exit 1
+}
+
+usage () {
+    echo -e "Launcher usage: $(c G)./launcher COMMAND COMMAND_ARGS $(c)"
+    echo -e "$(c 0usBB)   COMMANDS:   COMMAND DESCRIPTION.$(c)"
+    echo -e "    $(c YsB)start$(c):       Start the OSINTBuddy app and tail the logs."
+    echo -e "    $(c YsB)stop$(c):        Stop the OSINTBuddy app (or a specific container ./launcher stop janus)."
+    echo -e "    $(c YsB)build$(c):       Build the OSINTBuddy app (or a specific container ./launcher build ui)."
+    echo -e "    $(c YsB)restart$(c):     Restart the app (or a specific container: ./launcher restart janus)."
+    echo -e "    $(c YsB)api:gen$(c):     Generate API client SDK from the backend OpenAPI spec; launch the UI outside of the container"
+    echo -e "    $(c YsB)bootstrap$(c):   Initialize and download dependencies and check for environment misconfigurations"
+    echo -e "    $(c YsB)debug:send$(c):  Upload all logs to https://paste.c-net.org for help with debugging"
+    echo -e "    $(c YsB)cleanup$(c):     Remove docker volumes."
+    echo -e "    $(c YsB)shell$(c):       Enter a containers shell."
+    echo -e "    $(c YsB)migrate$(c):     Generate a migration."
+    echo -e "    $(c YsB)python$(c):      Open a python shell on the backend."
+    echo -e "    $(c YsB)ui$(c):          Stop the UI container and launch the frontend locally."
+    echo -e "    $(c YsB)containers$(c):  List the names you can access the containers by"
+    usage_containers
+    
+    exit 1
+}
+
+if [ -z "$OB_CMD" -a "$OB_CMD" != "cleanup" ]; then
+    usage
+fi
+
+case "$OB_CMD" in
+    bootstrap)
+        cmd/bootstrap
+    ;;
+    start)
+        cmd/start
+    ;;
+    restart)
+        cmd/restart
+    ;;
+    stop)
+        cmd/stop
+    ;;
+    build)
+        cmd/build
+    ;;
+    logs)
+        cmd/logs
+    ;;
+    api:gen)
+        cmd/api:gen
+    ;;
+    ui)
+        cmd/api:gen
+        ob_compose stop ui && \
+        cd ../frontend && yarn start
+    ;;
+    debug:send)
+        cmd/debug:send
+    ;;
+    cleanup)
+        cmd/stop
+        cmd/cleanup
+    ;;
+    shell)
+        cmd/shell
+    ;;
+    python)
+        cmd/python
+    ;;
+    migrate)
+        cmd/migrate
+    ;;
+    containers)
+        usage_containers
+    ;;
+esac

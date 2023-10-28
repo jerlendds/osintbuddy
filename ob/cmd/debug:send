@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+. cmd/env
+
+pastebin() {
+    ob_compose logs > osintbuddy-debug.log
+    sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' osintbuddy-debug.log > debug.log
+    rm osintbuddy-debug.log
+    
+    local url='https://paste.c-net.org/'
+    local file='debug.log'
+    curl -s \
+    --data-binary @"$file" \
+    --header "X-FileName: ${file##*/}" \
+    "$url"
+    # curl -s --data-binary @- "$url"
+    rm debug.log
+}
+
+run_pastebin () {
+    trap 'abort' INT
+    heading "Uploading container logs to: https://paste.c-net.org/"
+    pastebin
+    success
+    exit 0
+}
+
+run_pastebin

@@ -1,0 +1,137 @@
+#!/usr/bin/env sh
+. cmd/env
+
+# From https://stackoverflow.com/a/44660519/702738
+compare_version() {
+    if [[ $1 == $2 ]]; then
+        return 1
+    fi
+    local IFS=.
+    local i a=(${1%%[^0-9.]*}) b=(${2%%[^0-9.]*})
+    local arem=${1#${1%%[^0-9.]*}} brem=${2#${2%%[^0-9.]*}}
+    for ((i=0; i<${#a[@]} || i<${#b[@]}; i++)); do
+        if ((10#${a[i]:-0} < 10#${b[i]:-0})); then
+            return 1
+            elif ((10#${a[i]:-0} > 10#${b[i]:-0})); then
+            return 0
+        fi
+    done
+    if [ "$arem" '<' "$brem" ]; then
+        return 1
+        elif [ "$arem" '>' "$brem" ]; then
+        return 0
+    fi
+    return 1
+}
+
+
+
+check_images () {
+    # TODO: fix me
+    test_solr=`$docker_path images | awk '{print $1 ":" $2 }' | grep "$SOLR_IMAGE"`
+    test_janus=`$docker_path images | awk '{print $1 ":" $2 }' | grep "$JANUS_IMAGE"`
+    test_postgres=`$docker_path images | awk '{print $1 ":" $2 }' | grep "$POSTGRES_IMAGE"`
+    test_s3=`$docker_path images | awk '{print $1 ":" $2 }' | grep "$S3_IMAGE"`
+    test_clearly`$docker_path images | awk '{print $1 ":" $2 }' | grep "$CLEARLY_IMAGE"`
+    test_backend=`$docker_path images | awk '{print $1 ":" $2 }' | grep "$BACKEND_IMAGE"`
+    test_nginx=`$docker_path images | awk '{print $1 ":" $2 }' | grep "$NGINX_IMAGE"`
+    test_scylla=`$docker_path images | awk '{print $1 ":" $2 }' | grep "$SCYLLA_IMAGE"`
+    test_node=`$docker_path images | awk '{print $1 ":" $2 }' | grep "$NODE_IMAGE"`
+    test_redis=`$docker_path images | awk '{print $1 ":" $2 }' | grep "$REDIS_IMAGE"`
+    
+    
+    # arm experimental support is on a fixed tag, always pull
+    if [ -z "$test_solr" ] || [ -z "$test_janus" ] || [ -z "$test_postgres" ] || [ -z "$test_s3" ] || [ -z "$test_clearly" ] || [ -z "$test_backend" ] || [ -z "$test_nginx" ] || [ -z "$test_scylla" ] || [ -z "$test_node" ] || [ -z "$test_redis" ] || [ $arm = true ]; then
+        echo
+        echo "WARNING: We are about to start downloading the base images for OSINTBuddy"
+        echo "This process may take anywhere between 10 minutes to an hour, depending on your network speed"
+        echo
+        echo "Please be patient"
+        echo
+        
+        ob_compose pull
+    fi
+}
+
+
+install_docker() {
+    echo "Docker is not installed, you will need to install Docker in order to run the OSINTBuddy Launcher"
+    echo "See https://docs.docker.com/installation/"
+    exit 1
+}
+
+
+check_prereqs() {
+    if [ -z $docker_path ]; then
+        install_docker
+    fi
+    
+    # 1. docker daemon running?
+    # we send stderr to /dev/null cause we don't care about warnings,
+    # it usually complains about swap which does not matter
+    test=`$docker_path info 2> /dev/null`
+    if [[ $? -ne 0 ]] ; then
+        echo "Cannot connect to the docker daemon - verify it is running and you have access"
+        exit 1
+    fi
+    
+    # 2. running recommended docker version
+    test=($($docker_path --version))  # Get docker version string
+    test=${test[2]//,/}  # Get version alone and strip comma if exists
+    
+    # At least minimum docker version
+    if compare_version "${docker_min_version}" "${test}"; then
+        echo "ERROR: Docker version ${test} not supported, please upgrade to at least ${docker_min_version}, or recommended ${docker_rec_version}"
+        exit 1
+    fi
+    
+    # 3. docker images are downloadeded
+    # check_images
+    
+    arm=false
+    case $(uname -m) in
+        armv7l)
+            error "ERROR: 32bit arm is not supported. Check if your hardware support arm64, which is supported in experimental capacity."
+            exit 1
+        ;;
+        aarch64 | arm64)
+            warning "WARNING: Support for aarch64 is experimental at the moment. Please report any problems at https://forum.osintbuddy.com/c/bug-reports/6"
+            image=""
+            arm=true
+        ;;
+        x86_64)
+            success "x86_64 arch detected."
+        ;;
+        *)
+            error "ERROR: unknown arch detected."
+            exit 1
+        ;;
+    esac
+    
+    # 4. running recommended git version
+    test=($($git_path --version))  # Get git version string
+    test=${test[2]//,/}  # Get version alone and strip comma if exists
+    
+    # At least minimum version
+    if compare_version "${git_min_version}" "${test}"; then
+        warning "ERROR: Git version ${test} not supported, please upgrade to at least ${git_min_version}, or recommended ${git_rec_version}"
+        exit 1
+    fi
+    
+    # Recommend best version
+    if compare_version "${git_rec_version}" "${test}"; then
+        warning "WARNING: Git version ${test} deprecated, recommend upgrade to ${git_rec_version} or newer."
+    fi
+}
+
+run_bootstrap() {
+    trap 'abort' INT
+    heading "Checking for prerequisities..."
+    check_prereqs
+    heading "Building containers..."
+    ob_compose build
+    success
+    info "You can now launch OSINTBuddy with \`./launcher start\`"
+}
+
+run_bootstrap

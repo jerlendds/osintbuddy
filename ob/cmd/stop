@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+. cmd/env
+
+
+run_stop() {
+    if [ ! -z "$OB_CMD" ] & [ ! -z "$OB_CMD_ARGS" ]; then
+        ob_compose stop $OB_CMD_ARGS
+        exit 0
+    else
+        ob_compose stop
+        exit 0
+    fi
+}
+
+run_stop

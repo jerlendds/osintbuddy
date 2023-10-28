@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+. cmd/env
+
+start() {
+    ob_compose up -d
+}
+
+
+run_start() {
+    unset ERR
+    start || ERR=$?
+    if [[ $ERR > 0 ]]; then
+        error "We ran into an error starting OSINTBuddy. Please file an issue on Github."
+        exit 1
+    else
+        ob_compose logs -f
+        success "Starting OSINTBuddy..."
+        success "After JanusGraph connects to ScyllaDB and Solr, the app is ready for use."
+        success "Please allow a few minutes for JanusGraph to finish starting up."
+        echo ""
+        info "To monitor when JanusGraph is ready, run: ./launcher logs janus"
+        info "After that you can access OSINTBuddy through the following URLs:"
+        info "      http://localhost:3000       - frontend"
+        info "      http://localhost:8080       - casdoor"
+        info "      http://localhost:8000/api   - backend"
+        info "      http://localhost:8000/docs  - docs"
+        
+        exit 0
+    fi
+}
+
+run_start
