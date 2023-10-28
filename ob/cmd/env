@@ -13,5 +13,5 @@ function warning() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${magenta}${1}${reset}
 function error() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${red}${1}${reset}\n"; }
 function success() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${green}${1:-Completed successfully!}${reset}\n"; }
 function info() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${CYAN}${1:-''}${reset}\n"; }
-function abort() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${RED}${1:-Aborted by user!}${reset}\n\n"; exit; }
+function abort() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${RED}${1:-Aborting!}${reset}\n\n"; exit 1; }
 

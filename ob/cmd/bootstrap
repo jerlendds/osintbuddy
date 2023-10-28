@@ -43,10 +43,10 @@ check_images () {
     # arm experimental support is on a fixed tag, always pull
     if [ -z "$test_solr" ] || [ -z "$test_janus" ] || [ -z "$test_postgres" ] || [ -z "$test_s3" ] || [ -z "$test_clearly" ] || [ -z "$test_backend" ] || [ -z "$test_nginx" ] || [ -z "$test_scylla" ] || [ -z "$test_node" ] || [ -z "$test_redis" ] || [ $arm = true ]; then
         echo
-        echo "WARNING: We are about to start downloading the base images for OSINTBuddy"
-        echo "This process may take anywhere between 10 minutes to an hour, depending on your network speed"
+        warning "WARNING: We are about to start downloading the base images for OSINTBuddy"
+        warning "This process may take anywhere between 10 minutes to an hour, depending on your network speed"
         echo
-        echo "Please be patient"
+        heading "Please be patient"
         echo
         
         ob_compose pull
@@ -55,13 +55,35 @@ check_images () {
 
 
 install_docker() {
-    echo "Docker is not installed, you will need to install Docker in order to run the OSINTBuddy Launcher"
-    echo "See https://docs.docker.com/installation/"
+    error "Docker is not installed, you will need to install Docker in order to run the OSINTBuddy Launcher"
+    info "      See https://docs.docker.com/installation/"
     exit 1
 }
 
 
+prepare_windows() {
+    git_autocrlf=$(git config --get core.autocrlf)
+    
+    info "Windows Tip: \n\t\t\thttps://tabby.sh/ configured with a git bash profile is recommended for development"
+    
+    if [[ ! -z "$git_autocrlf" ]] && [[ "$git_autocrlf" == "true" ]]; then
+        warning "Misconfiguration detected! For this project to work you need unix line endings (https://stackoverflow.com/a/13154031).\n\t\t\tTo fix this error try running the following commands:"
+        info "      1. cd .. && rm -dr osintbuddy"
+        info "      2. git config --global core.autocrlf false"
+        info "      3. git clone --depth=1 --recurse-submodules https://github.com/jerlendds/osintbuddy.git"
+        abort
+    else
+        success "Unix line endings detected!"
+    fi
+}
+
+
 check_prereqs() {
+    if [[ $(grep -i Microsoft /proc/version) ]]; then
+        heading "Windows detected! Checking for environment issues..."
+        prepare_windows
+    fi
+    
     if [ -z $docker_path ]; then
         install_docker
     fi
@@ -71,7 +93,7 @@ check_prereqs() {
     # it usually complains about swap which does not matter
     test=`$docker_path info 2> /dev/null`
     if [[ $? -ne 0 ]] ; then
-        echo "Cannot connect to the docker daemon - verify it is running and you have access"
+        error "Cannot connect to the docker daemon - verify it is running and you have access"
         exit 1
     fi
     

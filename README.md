@@ -12,14 +12,14 @@
 
 <p>
   <a href="https://github.com/jerlendds/osintbuddy">
-    <img src="./ob/_assets/watermark.svg" height="130px" alt="OSINT Buddy Logo">
+    <img src="./ob/_assets/watermark.svg" height="130px" alt="OSINTBuddy Logo">
   </a>
 
 > *I have no data yet. It is a capital mistake to theorize before one has data. Insensibly
 > one begins to twist facts to suit theories, instead of theories to suit facts.*
 
 
-<span style="display: inline-block; width:830px"> [Discord](https://discord.gg/gsbbYHA3K3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [osintbuddy.com](https://osintbuddy.com)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  [osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins) </span>
+<span style="display: inline-block; width:830px"> [Discord](https://discord.gg/gsbbYHA3K3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [forum.osintbuddy.com](https://forum.osintbuddy.com)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  [osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins) </span>
 
 
   <h2><b>Introducing OSINTBuddy</b></h2>
@@ -104,38 +104,37 @@ https://willi.am/blog/2016/08/11/docker-for-windows-dealing-with-windows-line-en
  -->
 
 ### Installation
-1. Open your terminal
-   - *Note for Windows: I recommend using [tabby](https://tabby.sh/) configured with a git bash profile*
-   - *Note for Windows: For this project to work you need unix line endings ([context](https://stackoverflow.com/a/13154031)). Before cloning, run:*
-      
-      *`git config --global core.autocrlf false`*
 1. Clone the repo and submodules
    ```sh
-   git clone --recurse-submodules https://github.com/jerlendds/osintbuddy.git
+   git clone --depth=1 --recurse-submodules https://github.com/jerlendds/osintbuddy.git
    cd osintbuddy
    ```
 2. Install Docker
     - [Learn how to install Docker on Mac](https://docs.docker.com/desktop/install/mac-install/)
     - [Learn how to install Docker on Windows](https://docs.docker.com/desktop/install/windows-install/)
     - [Learn how to install Docker on Linux](https://docs.docker.com/desktop/install/linux-install/)
-3.  
-4. Start the stack with Docker *(if the `cp` command doesn't work on your OS, copy and rename the `.env.example` file to `.env`)*: 
+3. Start the stack with Docker: 
    ```sh
-   cp .env.example .env
-   docker compose up
+   # run ./launcher with no arguments for help  
+   ./launcher bootstrap
+   ./launcher start
    ```
-   - **Note:** the stack will take a few minutes to startup while solr and scylladb configure themselves for JanusGraph. If you try to connect before all the databases are ready you will encounter error notifications.
+   - **Note:** the stack will take a few minutes to startup while solr and scylladb configure themselves for JanusGraph. If you try to connect before all the databases are ready you will encounter errors.
 
 - **URLs**
   - Frontend: http://localhost:3000
-  - Backend: http://localhost:8000/api/
-  - Documentation: http://localhost:8000/docs -- http://localhost:8000/redoc
-- Access OSINTBuddy through the URLs provided for frontend, backend, and documentation.
+  - Casdoor: http://localhost:8080
+  - Backend: http://localhost:8000/api
+  - Documentation: http://localhost:8000/docs
+- Access OSINTBuddy through the URLs provided for the frontend, backend, and documentation.
 
 ## [↑](#what-is-osintbuddycom)Roadmap
  
-See our [trello board](https://trello.com/b/99Q70frX/) 
-for a list of our upcoming features.
+~~See our [trello board](https://trello.com/b/99Q70frX/) 
+for a list of our upcoming features.~~
+
+See the forum: [forum.osintbuddy.com](https://forum.osintbuddy.com), for a list of our upcoming features, potential ideas, and more. (*Note: We're currently in the process of setting up the forum and moving trello issues over. We're not sure when this will be completed. For the time being you can count on dev log updates being on the forum from now on.*)
+
 
 See the [open issues](https://github.com/jerlendds/osintbuddy/issues)
 for a list of requested features (and known issues).
@@ -155,7 +154,9 @@ for a list of requested features (and known issues).
 - [x] Updated plugin system to be easier to work with
 - [x] Implemented automatic saving for project graphs
  
--  For this update you'll have to rebuild your docker containers (`docker compose build`)! After that long wait you'll be rewarded with an updated UI and automatic saving for project graphs alongside an updated and easier to work with plugin system! [osintbuddy](https://pypi.org/project/osintbuddy/)  
+-  For this update you'll have to rebuild your docker containers (`./launcher build`)! After a long wait you'll be rewarded with a new UX, an updated plugin system now running as its own service, Casdoor managed auth for signing in/up, a new CLI tool, `ob` for managing plugin development, and another CLI `./launcher` for managing the OSINTBuddy stack: `launcher`! 
+
+[osintbuddy](https://pypi.org/project/osintbuddy/)  
 
 
 ## [↑](#what-is-osintbuddycom)Contributing
@@ -163,9 +164,9 @@ for a list of requested features (and known issues).
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/add-core-plugin`)
-3. Commit your Changes (`git commit -m 'feat: add core plugin to osintbuddy app'`)
-4. Push to the Branch (`git push origin feature/add-core-plugin`)
+2. Create your Feature Branch (`git checkout -b feature/add-core-feature`)
+3. Commit your Changes (`git commit -m 'feat: add core feature to osintbuddy app'`)
+4. Push to the Branch (`git push origin feature/add-core-feature`)
 5. Open a Pull Request
 
 
@@ -173,21 +174,20 @@ Contributions are what make the open source community such an amazing place to l
 
 Licensed under the GNU Affero General Public License v3.0.
 
-Copyright 2023 jerlendds.[GNU AGPL v3](https://choosealicense.com/licenses/apache-2.0/).
+Copyright 2023 jerlendds. [GNU AGPL v3](https://choosealicense.com/licenses/apache-2.0/).
 
-
-*Note, the [OSINTBuddy PyPi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*.
+*Note: the [OSINTBuddy PyPi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*.
 
 
 ## [↑](#what-is-osintbuddycom)Contact
 
-[Open an issue](https://github.com/jerlendds/osintbuddy/issues/new?assignees=jerlendds&labels=Type%3A+Suggestion&projects=&template=feature.md&title=%5BFEATURE+REQUEST%5D+Your_feature_request_here) if you need to get in touch with me or send an email to <a href="mailto:getsupport@osintbuddy.com">getsupport@osintbuddy.com</a>
+[Open an issue](https://github.com/jerlendds/osintbuddy/issues/new?assignees=jerlendds&labels=Type%3A+Suggestion&projects=&template=feature.md&title=%5BFEATURE+REQUEST%5D+Your_feature_request_here) if you need to get in touch with me or send an email to <a href="mailto:jerlendds@osintbuddy.com">jerlendds@osintbuddy.com</a>.
 
-You can find my personal blog where I'll be documenting the journey of building OSINTBuddy at [studium.dev](https://studium.dev)
 
-- Project Link: [https://github.com/jerlendds/osintbuddy](https://github.com/jerlendds/osintbuddy)
-- Plugins Package Link: [https://github.com/jerlendds/osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins)
-- Patched `aiogremlin` Link: https://github.com/jerlendds/gremlinpy/
+- osintbuddy: [github.com/jerlendds/osintbuddy](https://github.com/jerlendds/osintbuddy)
+- osintbuddy-core-plugins: [github.com/jerlendds/osintbuddy-core-plugins](https://github.com/jerlendds/osintbuddy-core-plugins)
+- osintbuddy-plugins: [github.com/jerlendds/osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins)
+- patched `aiogremlin` library: [github.com/jerlendds/gremlinpy](https://github.com/jerlendds/gremlinpy/)
 
 ## [↑](#what-is-osintbuddycom)Sponsor OSINTBuddy 
 Help us keep the OSINTBuddy project free and maintained forever.
