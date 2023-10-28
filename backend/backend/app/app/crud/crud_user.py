@@ -30,6 +30,23 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.refresh(db_obj)
         return db_obj
 
+    def create_superuser(self, db: Session, *, obj_in: UserCreate) -> User:
+        if isinstance(obj_in, dict):
+            user_data = obj_in
+        else:
+            user_data = obj_in.dict(exclude_unset=True)
+
+        if user_data["password"]:
+            hashed_password = get_password_hash(user_data["password"])
+            del user_data["password"]
+            user_data["hashed_password"] = hashed_password
+        user_data['is_superuser'] = True
+        db_obj = self.model(**user_data)
+        db.add(db_obj)
+        db.commit()
+        db.refresh(db_obj)
+        return db_obj
+
     def update(
         self, db: Session, *, db_obj: User, obj_in: Union[UserUpdate, Dict[str, Any]]
     ) -> User:
@@ -60,6 +77,9 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
 
     def is_superuser(self, user: User) -> bool:
         return user.is_superuser
+
+    def is_disabled(self, user: User) -> bool:
+        return user.disabled
 
 
 user = CRUDUser(User)

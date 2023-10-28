@@ -1,8 +1,10 @@
 import { configureStore, ThunkAction, Action, combineReducers } from '@reduxjs/toolkit';
 import settings from '@/features/settings/settingsSlice';
 import graph from '@/features/graph/graphSlice';
+import dashboard from '@/features/dashboard/dashboardSlice';
 
 const reducer = combineReducers({
+  dashboard,
   settings,
   graph,
 });

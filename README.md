@@ -29,10 +29,12 @@
       can be explored step-by-step. An easy-to-use plugin system allows any
       Python developer to quickly integrate new data sources.
   </p>
+
+  > 🚧 *Work in progress*
+
 <br/>
 
 ![ob-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/9a22223f-7477-4268-be85-46b94dd875bb)
-
 
   ---
 </p>

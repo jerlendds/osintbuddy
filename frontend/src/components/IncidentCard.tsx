@@ -17,11 +17,6 @@ export default function IncidentCard({ closeModal }: JSONObject) {
         return option.label.toLowerCase().includes(query.toLowerCase());
       }) ?? [];
 
-  useEffect(() => {
-    sdk.graphs.getGraphs(0, 1000).then((data) => {
-      setOptions(data);
-    });
-  }, []);
 
   return (
     <div className='bg-dark-600 w-full  shadow sm:rounded-lg'>

@@ -34,7 +34,7 @@ async def get_scan_machines(
 
 
 @router.delete("")
-async def delete_project(
+async def delete_scan_project(
     id: int,
     db: Session = Depends(deps.get_db),
 ):

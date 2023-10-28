@@ -85,7 +85,7 @@ export default function ScansPage() {
   const [scanMachines, setScanMachines] = useState([]);
 
   const getScanMachineData = (limit = 100, skip = 0) => {
-    return sdk.scans.getScanMachinesApiV1ScansMachinesGet(skip, limit).then((data) => {
+    return sdk.scans.getScanMachines(skip, limit).then((data) => {
       setScanMachines(data);
     }).catch((error: Error) => console.error(error));
   };

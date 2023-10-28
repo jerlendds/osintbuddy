@@ -8,14 +8,6 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
 
-# http://localhost:3000/app/projects - entities are at the second table on the ui
-ProjectEntities = Table(
-    "project_entities",
-    Base.metadata,
-    Column('project_id', ForeignKey('projects.id'), primary_key=True),
-    Column('entity_id', ForeignKey('entities.id'), primary_key=True)
-)
-
 # Endpoints that use entities can be found here:
 #
 #        backend/backend/app/app/api/api_v1/endpoints/entities.py

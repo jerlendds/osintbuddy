@@ -4,6 +4,7 @@ from osintbuddy import load_plugin, Registry
 
 from app import crud, schemas
 from app.core.logger import get_logger
+from app.core.config import settings
 # make sure all SQL Alchemy models are imported (app.db.base) before initializing DB
 from .base import *  # noqa
 
@@ -29,12 +30,10 @@ core_plugins = {
     'Whois': 'whois'
 }
 
-
 def load_initial_plugin(db, plugin_mod, plugin_code):
     load_plugin(plugin_mod, plugin_code)
 
     plugin = Registry.get_plug(plugin_mod)
-    print(plugin)
     obj_in = schemas.EntityCreate(
         label=plugin.label,
         author=plugin.author,
@@ -45,7 +44,15 @@ def load_initial_plugin(db, plugin_mod, plugin_code):
     return crud.entities.create(db=db, obj_in=obj_in)
 
 def init_db(db: Session) -> None:
-
+    users_count = crud.user.count_all(db)[0][0]
+    if users_count == 0:
+        log.info('Creating initial system user (superuser)...')
+        crud.user.create_superuser(db, obj_in=schemas.UserCreate(
+            email=settings.SUPERUSER_EMAIL,
+            username=settings.SUPERUSER_USERNAME,
+            full_name=settings.SUPERUSER_FULL_NAME,
+            password=settings.SUPERUSER_PASSWORD
+        ))
     entity_count = crud.entities.count_all(db)[0][0]
     if entity_count < 14:
         for plugin_label, plugin_mod in core_plugins.items():

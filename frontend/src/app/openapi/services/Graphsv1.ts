@@ -2,6 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Graph } from '../models/Graph';
+import type { GraphCreate } from '../models/GraphCreate';
+import type { GraphsList } from '../models/GraphsList';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 
@@ -10,14 +14,14 @@ export class Graphsv1 {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
 
   /**
-   * Get Project
+   * Get Graph
    * @param graphId
-   * @returns any Successful Response
+   * @returns Graph Successful Response
    * @throws ApiError
    */
   public getGraph(
     graphId: string,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<Graph> {
     return this.httpRequest.request({
       method: 'GET',
       url: '/api/v1/graphs/{graph_id}',
@@ -31,7 +35,7 @@ export class Graphsv1 {
   }
 
   /**
-   * Get Project
+   * Update Favorite Graph Uuid
    * @param graphId
    * @param isFavorite
    * @returns any Successful Response
@@ -57,18 +61,18 @@ export class Graphsv1 {
   }
 
   /**
-   * Get Project
+   * Get Graphs
    * @param skip
    * @param limit
    * @param isFavorite
-   * @returns any Successful Response
+   * @returns GraphsList Successful Response
    * @throws ApiError
    */
   public getGraphs(
     skip?: number,
     limit: number = 100,
     isFavorite: boolean = false,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<GraphsList> {
     return this.httpRequest.request({
       method: 'GET',
       url: '/api/v1/graphs',
@@ -84,23 +88,19 @@ export class Graphsv1 {
   }
 
   /**
-   * Create Project
-   * @param name
-   * @param description
-   * @returns any Successful Response
+   * Create Graph
+   * @param requestBody
+   * @returns Graph Successful Response
    * @throws ApiError
    */
   public createGraph(
-    name: string,
-    description: string = '',
-  ): CancelablePromise<any> {
+    requestBody: GraphCreate,
+  ): CancelablePromise<Graph> {
     return this.httpRequest.request({
       method: 'POST',
       url: '/api/v1/graphs',
-      query: {
-        'name': name,
-        'description': description,
-      },
+      body: requestBody,
+      mediaType: 'application/json',
       errors: {
         422: `Validation Error`,
       },
@@ -108,7 +108,7 @@ export class Graphsv1 {
   }
 
   /**
-   * Delete Project
+   * Delete Graph
    * @param uuid
    * @returns any Successful Response
    * @throws ApiError
@@ -129,7 +129,7 @@ export class Graphsv1 {
   }
 
   /**
-   * Get Unique Graph Labels
+   * Get Graph Stats
    * @param graphId
    * @returns any Successful Response
    * @throws ApiError

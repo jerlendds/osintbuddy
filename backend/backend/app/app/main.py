@@ -1,15 +1,19 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.routing import APIRoute
 from fastapi.responses import UJSONResponse
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
+
 from fastapi_cache import caches, close_caches
 from fastapi_cache.backends.redis import CACHE_KEY, RedisCacheBackend
 # import sentry_sdk
 # from sentry_sdk.integrations.asyncio import AsyncioIntegration
 from osintbuddy import discover_plugins
 from app.api.api_v1.api import api_router
-from app.core.config import settings
+from app.core.config import settings, use_route_names_as_operation_ids
+from app.core.casdoor import Config as CasdoorConfig
 
 # if settings.SENTRY_DSN:
 #     sentry_sdk.init(
@@ -35,6 +39,12 @@ app = FastAPI(
     on_shutdown=[on_shutdown]
 )
 
+app.include_router(api_router, prefix=settings.API_V1_STR)
+
+@app.get("/status")
+def get_status():
+    return {"status": "ok"}
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.BACKEND_CORS_ORIGINS,
@@ -54,6 +64,19 @@ app.add_middleware(
     ],
 )
 
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=CasdoorConfig.SECRET_KEY,
+)
+app.state.CASDOOR_SDK = CasdoorConfig().CASDOOR_SDK
+app.state.REDIRECT_URI = CasdoorConfig().REDIRECT_URI
+app.state.SECRET_TYPE = CasdoorConfig().SECRET_TYPE
+app.state.SECRET_KEY = CasdoorConfig().SECRET_KEY
+
+
+
+
+use_route_names_as_operation_ids(app)
 
 def app_openapi_schema(app):
     """Return openapi_schema. cached."""
@@ -71,11 +94,5 @@ def app_openapi_schema(app):
 
     return openapi_schema
 
-
-app.include_router(api_router, prefix=settings.API_V1_STR)
 app.openapi_schema = app_openapi_schema(app)
 
-# @app.get("/sentry-debug")
-# async def trigger_error():
-#     division_by_zero = 1 / 0
-#     return division_by_zero

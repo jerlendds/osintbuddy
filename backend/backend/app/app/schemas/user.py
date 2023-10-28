@@ -1,7 +1,42 @@
+from uuid import UUID
 import datetime
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, EmailStr
+
+
+class CasdoorUser(BaseModel):
+    id: UUID
+    name: str
+    displayName: str
+    createdTime: datetime.datetime
+    updatedTime: datetime.datetime
+    sub: UUID
+    firstName: str
+    lastName: str
+    avatar: str
+    avatarType: str
+    permanentAvatar: str
+    email: str
+    emailVerified: bool
+    phone: str
+    countryCode: str
+    region: str
+    location: str
+    bio: str
+    language: str
+    isOnline: bool
+    isAdmin: bool
+    isForbidden: bool
+    isDeleted: bool
+    owner: str = "org_ob"
+    type: str = "normal-user"
+    signupApplication: str = "application_ob"
+    aud: List[str] = []
+    exp: int
+    nbf: int
+    iat: int
+    jti: str
 
 
 # Shared properties
@@ -17,7 +52,7 @@ class UserCreate(UserBase):
     email: EmailStr
     full_name: str
     password: str
-    # is_superuser: bool = False
+    username: str = ""
 
 
 # Properties to receive via API on update

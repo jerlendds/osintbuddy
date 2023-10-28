@@ -1,5 +1,6 @@
 import datetime
 from uuid import UUID
+from typing import Annotated 
 import json
 import ujson
 from fastapi import (
@@ -21,8 +22,9 @@ log = get_logger("api_v1.endpoints.entities")
 router = APIRouter(prefix="/entities")
 
 
-@router.get('/{entity_uuid}', operation_id="get_entity")
+@router.get("/{entity_uuid}")
 async def get_entity(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
     entity_uuid: str,
     db: Session = Depends(deps.get_db),
 ):
@@ -30,11 +32,9 @@ async def get_entity(
     return entities
 
 
-@router.post(
-    '',
-    operation_id="create_entity"
-)
+@router.post("")
 async def create_entity(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
     entity: schemas.PostEntityCreate,
     db: Session = Depends(deps.get_db)
 ):
@@ -45,11 +45,9 @@ async def create_entity(
     ))
 
 
-@router.put(
-    '/{entity_id}',
-    operation_id="update_entity_by_uuid"
-)
-async def update_entity(
+@router.put("/{entity_id}")
+async def update_entity_by_uuid(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
     entity_id: str,
     obj_in: schemas.EntityBase,
     db: Session = Depends(deps.get_db)
@@ -59,11 +57,9 @@ async def update_entity(
     return entity
 
       
-@router.get(
-    '',
-    operation_id="get_entities",
-)
-async def get_many_entites_by_favorite(
+@router.get("")
+async def get_entities(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
@@ -87,10 +83,10 @@ async def get_many_entites_by_favorite(
 
 
 @router.delete(
-    '/{entity_id}',
-    operation_id="delete_entity"
+    "/{entity_id}",
 )
 async def delete_entity(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
     entity_id: str,
     db: Session = Depends(deps.get_db),
 ):
@@ -100,8 +96,9 @@ async def delete_entity(
         raise HTTPException(status_code=422, detail='entity_id is a required field')
 
 
-@router.put('/{entity_id}/favorite', operation_id="update_favorite_entity_uuid")
-async def update_entity_favorite(
+@router.put("/{entity_id}/favorite")
+async def update_favorite_entity_uuid(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
     entity_id: str,
     is_favorite: bool = False,
     db: Session = Depends(deps.get_db),

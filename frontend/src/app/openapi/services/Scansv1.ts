@@ -17,7 +17,7 @@ export class Scansv1 {
    * @returns any Successful Response
    * @throws ApiError
    */
-  public createScanMachineApiV1ScansMachinesPost(
+  public createScanMachine(
     requestBody: ScanMachineCreate,
   ): CancelablePromise<any> {
     return this.httpRequest.request({
@@ -38,7 +38,7 @@ export class Scansv1 {
    * @returns any Successful Response
    * @throws ApiError
    */
-  public getScanMachinesApiV1ScansMachinesGet(
+  public getScanMachines(
     skip?: number,
     limit: number = 50,
   ): CancelablePromise<any> {
@@ -56,12 +56,12 @@ export class Scansv1 {
   }
 
   /**
-   * Delete Project
+   * Delete Scan Project
    * @param id
    * @returns any Successful Response
    * @throws ApiError
    */
-  public deleteProjectApiV1ScansDelete(
+  public deleteScanProject(
     id: number,
   ): CancelablePromise<any> {
     return this.httpRequest.request({

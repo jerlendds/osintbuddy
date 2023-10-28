@@ -23,7 +23,7 @@ import { isSidebarOpen, setSidebar } from "@/features/settings/settingsSlice";
 import IncidentCard from "@/components/IncidentCard";
 
 const navigation = [
-  { name: "Inquiries", to: "/app/inquiries", icon: InboxIcon },
+  { name: "Dashboard", to: "/app/dashboard/graphs", icon: InboxIcon },
   { name: "Incidents *", to: "/app/incidents", icon: FolderOpenIcon },
   { name: "Scans", to: "/app/scans", icon: DocumentMagnifyingGlassIcon },
 ];

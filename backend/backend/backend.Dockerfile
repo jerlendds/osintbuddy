@@ -4,11 +4,10 @@ LABEL maintainer="jerlendds <support@forum.osintbuddy.com>"
 WORKDIR /app/
 ENV PYTHONPATH=/app/
 
-RUN apt-get -y update && apt-get -y install apt-transport-https nmap git wget gnupg curl chromium chromium-driver && \
-    apt-get clean;
+RUN apt-get -y update && apt-get -y install git wget gnupg curl && \
+    apt-get clean && pip3 install --no-cache-dir --upgrade pip;
 COPY requirements.txt /app/requirements.txt
-RUN pip3 install --no-cache-dir --upgrade pip && \
-    pip3 install --no-cache-dir -r /app/requirements.txt
+RUN pip3 install --no-cache-dir -r /app/requirements.txt
 
 COPY app/ /app/
 COPY osintbuddy-plugins /app/osintbuddy-plugins/

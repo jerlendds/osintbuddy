@@ -54,7 +54,7 @@ export class Entitiesv1 {
   }
 
   /**
-   * Get Many Entites By Favorite
+   * Get Entities
    * @param skip
    * @param limit
    * @param isFavorite
@@ -81,7 +81,7 @@ export class Entitiesv1 {
   }
 
   /**
-   * Update Entity
+   * Update Entity By Uuid
    * @param entityId
    * @param requestBody
    * @returns any Successful Response
@@ -127,7 +127,7 @@ export class Entitiesv1 {
   }
 
   /**
-   * Update Entity Favorite
+   * Update Favorite Entity Uuid
    * @param entityId
    * @param isFavorite
    * @returns any Successful Response

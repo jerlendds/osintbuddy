@@ -2,13 +2,14 @@ import os
 import secrets
 from typing import Any, Dict, List, Optional, Union
 
+from fastapi import FastAPI
+from fastapi.routing import APIRoute
 from pydantic import (
     AnyHttpUrl,
     HttpUrl,
     PostgresDsn,
     validator
 )
-
 from pydantic_settings import BaseSettings
 
 
@@ -22,8 +23,8 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = secrets.token_urlsafe(32)
     ADMIN_BACKEND_SECRET_KEY: str = secrets.token_urlsafe(32)
-    # 60 minutes * 24 hours * 8 days = 8 days
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
+    # 60 minutes * 6 hours
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 6
     BACKEND_CORS_ORIGINS: List[str] = os.getenv('BACKEND_CORS_ORIGINS')
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
@@ -60,9 +61,29 @@ class Settings(BaseSettings):
     JANUSGRAPH_PORT: int = 8182
 
     SENTRY_DSN: str = None
+
+    SUPERUSER_EMAIL: str = "admin@example.com"
+    SUPERUSER_PASSWORD: str = "password"
+    SUPERUSER_USERNAME: str = "sudo"
+    SUPERUSER_FULL_NAME: str = "Super Admin"
+
+    BACKEND_LOG_LEVEL: str = "info"
+    UVICORN_HOST: str = "0.0.0.0"
     
     class Config:
         case_sensitive = True
 
 
 settings = Settings()
+
+
+def use_route_names_as_operation_ids(app: FastAPI) -> None:
+    """
+    Simplify operation IDs so that generated API clients have simpler function
+    names.
+
+    Should be called only after all routes have been added.
+    """
+    for route in app.routes:
+        if isinstance(route, APIRoute):
+            route.operation_id = route.name

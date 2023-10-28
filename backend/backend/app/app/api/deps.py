@@ -1,9 +1,10 @@
-from typing import Generator
+from typing import Generator, Annotated
 from contextlib import contextmanager
 import boto3
 from jose import jwt
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, HTTPException, status, Security
+from fastapi.security import OAuth2PasswordBearer, SecurityScopes
+from starlette.requests import Request
 from sqlalchemy.orm import Session
 from pydantic import ValidationError
 import undetected_chromedriver as uc
@@ -14,11 +15,23 @@ from app.core import security
 from app.db.session import SessionLocal
 from app import crud, models, schemas
 from app.core.config import settings
+from app.core.logger import get_logger
 
+log = get_logger("api.deps")
 
-reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_V1_STR}/login/access-token"
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl=f"{settings.API_V1_STR}/signin",
 )
+
+async def get_user_from_session(request: Request):
+    try:
+        sdk = request.app.state.CASDOOR_SDK
+        user_jwt = request.headers.get("authorization", "").replace("Bearer ", "")
+        user = sdk.parse_jwt_token(user_jwt)
+        return schemas.CasdoorUser.validate(user)
+    except Exception as e:
+        log.error(e)
+    raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 def get_db() -> Generator:
@@ -29,9 +42,7 @@ def get_db() -> Generator:
         db.close()
 
 
-def get_s3(
-    # current_user: models.User = Depends(get_current_active_user),
-):
+def get_s3():
     kwargs = {
         "endpoint_url": "http://s3:8333", 
         "aws_access_key_id": "accessKey1",
@@ -39,43 +50,6 @@ def get_s3(
     }
     s3 = boto3.resource("s3", **kwargs)
     return s3
-
-
-def get_current_user(
-    db: Session = Depends(get_db), token: str = Depends(reusable_oauth2)
-) -> models.User:
-    try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
-        )
-        token_data = schemas.TokenPayload(**payload)
-    except (jwt.JWTError, ValidationError):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Could not validate credentials",
-        )
-    user = crud.user.get(db, id=token_data.sub)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
-
-
-def get_current_active_user(
-    current_user: models.User = Depends(get_current_user),
-) -> models.User:
-    if not crud.user.is_active(current_user):
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user
-
-
-def get_current_active_superuser(
-    current_user: models.User = Depends(get_current_user),
-) -> models.User:
-    if not crud.user.is_superuser(current_user):
-        raise HTTPException(
-            status_code=400, detail="The user doesn't have enough privileges"
-        )
-    return current_user
 
 
 @contextmanager

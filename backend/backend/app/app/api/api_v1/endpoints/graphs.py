@@ -1,6 +1,6 @@
 import uuid
 import asyncio
-
+from typing import List, Any, Annotated
 import boto3
 from fastapi import (
     APIRouter,
@@ -14,108 +14,105 @@ from sqlalchemy.orm import Session
 from app.api import deps
 from app import crud, schemas
 from app.core.logger import get_logger
-from app.db.janus import ProjectGraphConnection
+from app.db.janus import ProjectGraphConnection, janus_create_db
 
 log = get_logger("api_v1.endpoints.graphs")
 router = APIRouter(prefix="/graphs")
 
 
-@router.get('/{graph_id}', operation_id="get_graph")
-async def get_project(
+@router.get(
+    '/{graph_id}',
+    response_model=schemas.Graph
+)
+async def get_graph(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
     graph_id: str,
     db: Session = Depends(deps.get_db),
 ):
-    graph_project = crud.projects.get_by_uuid(
+    graph = crud.graphs.get_by_uuid(
         db=db,
         uuid=graph_id
     )
-    return {"graph": graph_project}
+    return graph
 
 
-@router.put('/{graph_id}/favorite', operation_id="update_favorite_graph_uuid")
-async def get_project(
+@router.put('/{graph_id}/favorite')
+async def update_favorite_graph_uuid(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
     graph_id: str,
     is_favorite: bool = False,
     db: Session = Depends(deps.get_db),
 ):
-    db_obj = crud.projects.get_by_uuid(
+    db_obj = crud.graphs.get_by_uuid(
         db=db,
         uuid=graph_id
     )
-    updated_graph = crud.projects.update_favorite_by_uuid(db, db_obj=db_obj, is_favorite=is_favorite)
+    updated_graph = crud.graphs.update_favorite_by_uuid(db, db_obj=db_obj, is_favorite=is_favorite)
     return updated_graph
 
-@router.get('', operation_id="get_graphs")
-async def get_project(
+@router.get(
+    "",
+    response_model=schemas.GraphsList
+)
+async def get_graphs(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
-    is_favorite: bool = False
+    is_favorite: bool = False,
 ):
     if limit > 50:
         limit = 50
-    db_projects = crud.projects.get_many_by_favorites(
+    db_graphs = crud.graphs.get_many_by_favorites(
         db=db,
         skip=skip,
         limit=limit,
         is_favorite=is_favorite
     )
-    return {"projects": db_projects, "count": crud.projects.count_by_favorites(db, is_favorite)[0][0]}
+    return {
+        "graphs": db_graphs, 
+        "count": crud.graphs.count_by_favorites(db, is_favorite)[0][0]
+    }
 
 
-@router.post('', operation_id="create_graph")
-async def create_project(
-    name: str,
+@router.post(
+    '',
+    response_model=schemas.Graph
+)
+async def create_graph(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    obj_in: schemas.GraphCreate,
     db: Session = Depends(deps.get_db),
-    s3 = Depends(deps.get_s3),
-    description: str = '',
 ):
-    project_uuid = uuid.uuid4().hex
-    create_project_graph = f"""
-map = new HashMap<>()
-map.put('storage.backend', 'cql')
-map.put('storage.hostname', 'sdb:9042')
-map.put('index.search.backend', 'solr')
-map.put('index.search.solr.mode', 'http')
-map.put('index.search.solr.http-urls', 'http://index:8983/solr')
-map.put('graph.graphname', 'project_{project_uuid}')
-ConfiguredGraphFactory.createConfiguration(new MapConfiguration(map))
-ConfiguredGraphFactory.open('project_{project_uuid}')
-    """
-    obj_in = schemas.ProjectCreate(
-        name=name,
-        description=description,
-        uuid=project_uuid
-    )
-    new_project = crud.projects.create(db=db, obj_in=obj_in)
-    cluster = await Cluster.open(
-        asyncio.get_event_loop(),
-        **{'hosts': ['janus'], 'port': 8182}
-    )
     try:
-        log.info(s3.list_buckets())
+        obj_out = crud.graphs.create(db=db, obj_in=obj_in)
+        cluster = await Cluster.open(
+            asyncio.get_event_loop(),
+            **{'hosts': ['janus'], 'port': 8182}
+        )
         client = await cluster.connect(hostname='janus')
-        await client.submit(create_project_graph)
-    except GremlinServerError as e:
-        log.error(e)
-    finally:
-        await cluster.close()
-        return new_project
+        await client.submit(janus_create_db(obj_out.uuid.hex))
+        return obj_out
+    except (Exception, GremlinServerError) as error:
+        log.error(error)
+        raise HTTPException(status_code=422, detail='error')
 
 
-@router.delete('', operation_id = "delete_graph")
-async def delete_project(
+@router.delete('')
+async def delete_graph(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
     uuid: str,
     db: Session = Depends(deps.get_db),
 ):
     if uuid:
-        crud.projects.remove_by_uuid(db=db, uuid=uuid)
+        crud.graphs.remove_by_uuid(db=db, uuid=uuid)
     else:
         raise HTTPException(status_code=422, detail='UUID is a required field')
 
 
-@router.get('/{graph_id}/stats', operation_id="get_graph_stats")
-async def get_unique_graph_labels(
+@router.get('/{graph_id}/stats')
+async def get_graph_stats(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
     graph_id: str,
     db: Session = Depends(deps.get_db)
 ):
@@ -123,25 +120,25 @@ async def get_unique_graph_labels(
         raise HTTPException(status_code=422, detail='graph_id is a required field')
     async with ProjectGraphConnection(graph_id) as g:
         unique_entities = await g.V().label().dedup().toList()
-        total_entites = await g.V().count().toList()
+        total_entities = await g.V().count().toList()
         total_relations = await g.E().count().toList()
         
         unique_entity_counts = {"series": [], "labels": []}
-        unique_oute_counts = {"series": [], "labels": []}
+        unique_out_edge_counts = {"series": [], "labels": []}
         
         for entity in unique_entities:
           entity_count = await g.V().hasLabel(entity).count().toList()
           unique_entity_counts["series"].append(entity_count[0])
           unique_entity_counts["labels"].append(entity)
 
-          oute_count = await g.V().hasLabel(entity).outE().count().toList()
-          unique_oute_counts['series'].append(oute_count[0])
-          unique_oute_counts['labels'].append(entity)
+          out_edge_count = await g.V().hasLabel(entity).outE().count().toList()
+          unique_out_edge_counts['series'].append(out_edge_count[0])
+          unique_out_edge_counts['labels'].append(entity)
           
         return {
             "entities": unique_entities,
-            "total_entities": total_entites[0],
+            "total_entities": total_entities[0],
             "total_relations": total_relations[0],
             "unique_entity_counts": unique_entity_counts,
-            "entity_oute_counts": unique_oute_counts
+            "entity_oute_counts": unique_out_edge_counts
         }

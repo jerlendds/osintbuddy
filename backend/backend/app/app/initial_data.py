@@ -2,9 +2,12 @@ import logging
 
 from app.db.init_db import init_db
 from app.db.session import SessionLocal
+from app.core.logger import get_logger
+from app import schemas, crud
+from app.core.config import settings
 
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(__name__)
+
+log = get_logger(__name__)
 
 
 def init() -> None:

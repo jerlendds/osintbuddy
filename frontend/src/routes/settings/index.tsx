@@ -12,6 +12,10 @@ import { Formik, Form, Field } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import { InquiryHeader } from "@/components/Headers";
 import { sdk } from "@/app/api";
+import { GraphsList } from "@/app/openapi";
+import Graph from "graphology";
+import { useAppDispatch } from "@/app/hooks";
+import { createGraph } from "@/features/dashboard/dashboardSlice";
 
 interface CreateGraphForm {
   name: string;
@@ -22,16 +26,14 @@ export const CreateCasesForm: React.FC<{ closeModal: Function }> = ({
   closeModal,
 }) => {
   const initialValues: CreateGraphForm = { name: "", description: "" };
-
+  const dispatch = useAppDispatch()
   return (
     <div>
       <Formik
         initialValues={initialValues}
-        onSubmit={(values: CreateGraphForm, actions) => {
-          sdk.graphs.createGraph(values.name, values.description)
-            .catch((error: Error) => console.error(error))
-
-          actions.setSubmitting(false);
+        onSubmit={(values: CreateGraphForm, { setSubmitting }) => {
+          dispatch(createGraph(values))
+          setSubmitting(false);
           closeModal();
         }}
       >
@@ -276,7 +278,7 @@ export function CasesTable({
   setIsOpen: Function;
 }) {
   // We'll start our table without any data
-  const [data, setData] = React.useState([]);
+  const [data, setData] = React.useState<Graph[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [pageCount, setPageCount] = React.useState(0);
   const fetchIdRef = React.useRef(0);
@@ -287,15 +289,10 @@ export function CasesTable({
       setLoading(true);
       sdk.graphs.getGraphs(pageIndex, pageSize)
         .then((data) => {
-          if (data) {
-            setPageCount(Math.ceil(data.dorksCount / pageSize));
-            setData(data);
-            setLoading(false);
-          } else {
-            setLoading(false);
-          }
-        })
-        .catch((error) => {
+          setPageCount(Math.ceil(data.count / pageSize));
+          setData(data.graphs);
+          setLoading(false);
+        }).catch((error) => {
           console.error(error);
           setLoading(false);
         });

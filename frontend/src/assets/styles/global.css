@@ -5,6 +5,24 @@
 @import './tables.css';
 @import './charts.css';
 
+@font-face {
+  font-family: 'Lexend';
+  src: url('@/assets/fonts/Lexend-Regular.woff2') format('woff2'),
+      url('@/assets/fonts/Lexend-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('@/assets/fonts/Inter-Regular.woff2') format('woff2'),
+      url('@/assets/fonts/Inter-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 *,
 :after,
 :before {
@@ -249,6 +267,6 @@ input[type='file'] {
 }
 
 .cm-line span {
-  @apply !font-code text-sm;
+  @apply  text-sm;
 }
 /* end react-grid-layout and codemirror */

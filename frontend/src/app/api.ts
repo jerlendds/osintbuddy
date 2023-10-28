@@ -18,19 +18,16 @@ const api = axios.create({
 });
 
 const setHeader = () => {
-  const user = JSON.parse(localStorage.getItem(LS_USER_AUTH_KEY) || '{}');
-  if (user && user.token) {
-    api.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
-    return `Bearer ${user.token}`;
+  const accessToken = sessionStorage.getItem('accessToken')
+  if (accessToken) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${sessionStorage.getItem('accessToken')}`;
+    return accessToken;
   }
-  return null;
 };
 
-setHeader();
-
-// TODO: Move all api calls to new SDK
 export const sdk = new obSDK({
-  BASE: BASE_URL
+  BASE: BASE_URL,
+  TOKEN: setHeader(),
 })
 
 export {  BASE_URL, LS_USER_AUTH_KEY, WS_URL, API_PREFIX, setHeader };

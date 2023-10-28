@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 export default function LandingPage(): React.ReactElement {
   return (
+
     <>
       <div className='overflow-hidden bg-slate-900 mt-[-4.5rem] pb-32 pt-[4.5rem] lg:pt-[4.75rem]'>
         <div className='pt-16 sm:px-2 lg:relative  lg:px-0'>
@@ -26,13 +27,16 @@ export default function LandingPage(): React.ReactElement {
                   Fetch data from different sources and returns the results as visual entities that you can explore.
                 </p>
                 <div className='mt-8 flex gap-4 md:justify-center lg:justify-start'>
-                  <Link
-                    to='/app/inquiries/graphs'
-                    replace
+                  <button
+                    // to='/app/dashboard/graphs'
+                    // replace
+                    onClick={() => {
+                      window.location.href = window.sdk.getSigninUrl();
+                    }}
                     className='rounded-full bg-sky-300 py-2 px-4 text-sm font-semibold text-slate-900 hover:bg-sky-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300/50 active:bg-sky-500'
                   >
                     Login
-                  </Link>
+                  </button>
                   <a
                     href='https://github.com/jerlendds/osintbuddy'
                     target='_blank'

@@ -72,12 +72,12 @@ export function formatAMPM(date: Date) {
   return strTime;
 }
 
-export function formatPGDate(date: string, showAt: boolean = false) {
+export function formatPGDate(date: string, showAt: boolean = false): string {
   if (date) {
     const dateStr = date.replace(' ', 'T')
-    return `${new Date(dateStr).toDateString()}
+    return `${new Date(dateStr).toLocaleDateString()}
      ${showAt ? 'at' : ''}
      ${formatAMPM(new Date(dateStr))}`
   }
-  return null
+  return ''
 }

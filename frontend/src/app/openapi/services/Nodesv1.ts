@@ -24,7 +24,7 @@ export class Nodesv1 {
   }
 
   /**
-   * Get Node Transforms
+   * Get Entity Transforms
    * @param label
    * @returns any Successful Response
    * @throws ApiError
@@ -45,7 +45,7 @@ export class Nodesv1 {
   }
 
   /**
-   * Get Entity From Drop
+   * Create Graph Entity
    * @param requestBody
    * @returns any Successful Response
    * @throws ApiError

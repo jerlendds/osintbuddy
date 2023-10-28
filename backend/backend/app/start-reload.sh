@@ -26,13 +26,5 @@ else
     echo "There is no script $PRE_START_PATH"
 fi
 
-# Start Uvicorn with live reload
-# uvicorn service:app --host 0.0.0.0 --port 2222 --header server:app \
-# --reload \
-# --reload-dir /service/
-# uvicorn service:app --host 0.0.0.0 --port 2222 --no-server-header \
-# --reload \
-# --reload-dir /service/
 
 python3 ./app/start.py "app.main:app"
-# exec uvicorn --loop asyncio --workers 4 --reload --reload-dir app --header server:app --host $HOST --port $PORT --log-level $LOG_LEVEL "$APP_MODULE"

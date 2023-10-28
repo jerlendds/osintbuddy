@@ -1,6 +1,6 @@
 import asyncio
 from contextlib import asynccontextmanager
-from typing import List, Callable, Tuple, Any, AsyncIterator
+from typing import List, Callable, Tuple, Any, AsyncIterator, Annotated
 from fastapi import (
     APIRouter,
     WebSocket,
@@ -38,9 +38,9 @@ async def fetch_node_transforms(plugin_label):
 
 @router.get(
     "/refresh",
-    operation_id="refresh_plugins"
 )
 async def refresh_plugins(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
     db: Session = Depends(deps.get_db)
 ):
     Registry.plugins = []
@@ -53,9 +53,11 @@ async def refresh_plugins(
 
 @router.get(
     "/transforms",
-    operation_id="get_entity_transforms"
 )
-async def get_node_transforms(label: str):
+async def get_entity_transforms(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    label: str
+):
     if transforms := await fetch_node_transforms(label):
         return {
             "type": label,
@@ -69,9 +71,11 @@ async def get_node_transforms(label: str):
 
 @router.post(
     '/',
-    operation_id="create_graph_entity"
 )
-async def get_entity_from_drop(node: schemas.CreateNode):
+async def create_graph_entity(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    node: schemas.CreateNode
+):
     plugin = await Registry.get_plugin(plugin_label=node.label)
     if plugin:
         blueprint = plugin.blueprint()

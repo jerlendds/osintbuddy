@@ -28,7 +28,7 @@ export function NewTemplateForm({
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
-        sdk.scans.createScanMachineApiV1ScansMachinesPost(values)
+        sdk.scans.createScanMachine(values)
           .then((data) => {
             toast.info(`Created the ${data?.name || ""} scan machine`);
             closeModal();
