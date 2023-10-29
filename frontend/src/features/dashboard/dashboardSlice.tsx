@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { RootState } from '@/app/store';
-import { sdk } from '@/app/api';
+import sdk from '@/app/api';
 import { Entitiesv1, Graph, GraphCreate } from '@/app/openapi';
 import Entities from '../../routes/dashboard/Entities';
 

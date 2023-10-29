@@ -24,7 +24,7 @@ import {
 import { useComponentVisible, useEffectOnce } from '@/components/utils';
 import DisplayOptions from './_components/DisplayOptions';
 import { MiniEditDialog } from './_components/BaseMiniNode';
-import { sdk, WS_URL } from '@/app/api';
+import sdk, { WS_URL } from '@/app/api';
 import CommandPallet from './_components/CommandPallet';
 
 const keyMap = {

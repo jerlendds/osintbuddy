@@ -2,7 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { RootState } from '@/app/store';
 import { CasdoorUser } from '@/app/openapi';
-import { LS_USER_AUTH_KEY } from '@/app/api';
+import { LS_USER_KEY } from '@/app/api';
+import { useLocalStorage } from '@/components/utils';
 
 export interface Account {
   showSidebar: boolean;
@@ -10,31 +11,32 @@ export interface Account {
   user: CasdoorUser | null;
 }
 
-let INIT_DATA: any = localStorage.getItem(LS_USER_AUTH_KEY)
-if (INIT_DATA === null) {
-  INIT_DATA = { isAuthenticated: false, user: null }
-} else {
-  INIT_DATA = JSON.parse(INIT_DATA as string)
-}
+let ACCOUNT_INIT = useLocalStorage(LS_USER_KEY)
+if (!ACCOUNT_INIT) ACCOUNT_INIT = useLocalStorage(LS_USER_KEY, { isAuthenticated: false, user: null })
 
 const initialState: Account = {
-  isAuthenticated: INIT_DATA?.isAuthenticated,
+  isAuthenticated: ACCOUNT_INIT?.isAuthenticated,
   showSidebar: true,
-  user: INIT_DATA?.user
+  user: ACCOUNT_INIT?.user
 };
 
 export const account = createSlice({
-  name: 'settings',
+  name: 'account',
   initialState,
   reducers: {
     setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
       state.isAuthenticated = action.payload
       if (action.payload === false) {
         state.user = null
+        localStorage.removeItem(LS_USER_KEY)
       }
     },
     setUser: (state, action: PayloadAction<CasdoorUser | null>) => {
       state.user = action.payload
+      if (action.payload !== null) {
+        state.isAuthenticated = true
+        useLocalStorage(LS_USER_KEY, { isAuthenticated: true, user: action.payload})
+      }
     },
     closeSidebar: (state) => {
       state.showSidebar = false;

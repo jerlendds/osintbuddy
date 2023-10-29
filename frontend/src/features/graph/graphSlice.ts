@@ -13,7 +13,7 @@ import {
   addEdge,
   MarkerType,
 } from 'reactflow';
-import { sdk } from '@/app/api';
+import sdk from '@/app/api';
 
 export type ProjectViewModes = 'base' | 'mini'
 

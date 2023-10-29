@@ -9,7 +9,7 @@ import classNames from "classnames";
 import GraphPanel from "./_components/GraphPanel";
 import EntitiesPanel from "./_components/EntityPanel";
 import { useEffectOnce } from "@/components/utils";
-import { sdk } from "@/app/api";
+import sdk from '@/app/api';
 import { CasdoorUser } from "@/app/openapi";
 
 interface DashboardTabsProps {

@@ -1,4 +1,4 @@
-import { sdk } from "@/app/api";
+import sdk from '@/app/api';
 import { formatPGDate, useEffectOnce } from "@/components/utils";
 import { ChevronDownIcon, StarIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";

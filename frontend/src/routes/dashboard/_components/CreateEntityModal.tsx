@@ -1,4 +1,4 @@
-import { sdk } from '@/app/api';
+import sdk from '@/app/api';
 import { Dialog, Transition } from '@headlessui/react';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { useTour } from '@reactour/tour';

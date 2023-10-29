@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom"
 import 'chartist/dist/index.css';
 import { BarChart } from "chartist"
 import CaseNotes from "@/components/Notes/CaseNotes"
-import { sdk } from "@/app/api";
+import sdk from '@/app/api';
 
 export default function GraphDetails() {
   const params: any = useParams()

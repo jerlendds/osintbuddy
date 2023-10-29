@@ -20,7 +20,7 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { isSidebarOpen, selectIsAuthenticated, selectUser, setIsAuthenticated, setSidebar, setUser } from "@/features/account/accountSlice";
 import IncidentCard from "@/components/IncidentCard";
 import { useEffectOnce } from "@/components/utils";
-import { LS_USER_AUTH_KEY, sdk } from "@/app/api";
+import sdk, { LS_USER_KEY } from "@/app/api";
 
 const navigation = [
   { name: "Dashboard", to: "/app/dashboard/graphs", icon: InboxIcon },
@@ -61,7 +61,6 @@ export default function AppLayout() {
     sdk.users.getAccount()
       .then((user) => {
         dispatch(setUser(user))
-        localStorage.setItem(LS_USER_AUTH_KEY, JSON.stringify({ isAuthenticated: true, user }))
       })
       .catch((error) => {
         console.error(error)

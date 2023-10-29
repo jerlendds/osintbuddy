@@ -11,7 +11,7 @@ import classNames from "classnames";
 import { Formik, Form, Field } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import { InquiryHeader } from "@/components/Headers";
-import { sdk } from "@/app/api";
+import sdk from '@/app/api';
 import { GraphsList } from "@/app/openapi";
 import Graph from "graphology";
 import { useAppDispatch } from "@/app/hooks";

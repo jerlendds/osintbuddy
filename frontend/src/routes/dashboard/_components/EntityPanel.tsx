@@ -3,7 +3,7 @@ import { ChevronDownIcon, StarIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { sdk } from "@/app/api";
+import sdk from '@/app/api';
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { getEntities, selectDashboardEntities } from "@/features/dashboard/dashboardSlice";
 

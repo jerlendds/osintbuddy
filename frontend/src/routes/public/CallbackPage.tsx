@@ -1,4 +1,4 @@
-import { BASE_URL, LS_USER_AUTH_KEY } from "@/app/api";
+import { BASE_URL, LS_USER_KEY } from "@/app/api";
 import { useAppDispatch } from "@/app/hooks";
 import { useEffectOnce } from "@/components/utils";
 import { setIsAuthenticated, setUser } from "@/features/account/accountSlice";
@@ -24,13 +24,11 @@ export default function CallbackPage() {
           type: "SilentSignin",
           data: "success"
         }, "*");
-
-        localStorage.setItem(LS_USER_AUTH_KEY, JSON.stringify({ isAuthenticated: true, user: null }))
         dispatch(setIsAuthenticated(true))
         navigate("/app/dashboard/graphs", { replace: true })
       } else {
         console.error(res)
-        localStorage.removeItem(LS_USER_AUTH_KEY)
+        localStorage.removeItem(LS_USER_KEY)
         dispatch(setIsAuthenticated(false))
         navigate("/", { replace: true })
       }

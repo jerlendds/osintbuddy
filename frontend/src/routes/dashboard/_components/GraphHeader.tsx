@@ -1,4 +1,4 @@
-import { sdk } from "@/app/api";
+import sdk from '@/app/api';
 import { useAppDispatch } from "@/app/hooks";
 import { formatPGDate } from "@/components/utils";
 import { deleteGraph } from "@/features/dashboard/dashboardSlice";

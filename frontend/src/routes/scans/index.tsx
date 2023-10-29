@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import CreateScanModal from "./_components/CreateScanModal";
 import { useRef, useState } from "react";
 import { useEffectOnce } from "@/components/utils";
-import { sdk } from "@/app/api";
+import sdk from '@/app/api';
 
 interface SettingCardProps {
   title: string;

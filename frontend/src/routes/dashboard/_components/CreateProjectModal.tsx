@@ -1,4 +1,4 @@
-import { sdk } from '@/app/api';
+import sdk from '@/app/api';
 import { useAppDispatch } from '@/app/hooks';
 import { GraphCreate } from '@/app/openapi';
 import { createGraph } from '@/features/dashboard/dashboardSlice';

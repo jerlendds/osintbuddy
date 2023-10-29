@@ -10,7 +10,7 @@ import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import { Icon } from "../Icons";
-import { sdk } from "@/app/api";
+import sdk from '@/app/api';
 
 export const tokyoNightTheme = tokyoNightInit({
   settings: {
