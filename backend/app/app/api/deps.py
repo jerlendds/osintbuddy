@@ -25,9 +25,7 @@ oauth2_scheme = OAuth2PasswordBearer(
 )
 
 
-async def get_user_from_session(
-    request: Request,
-):
+async def get_user_from_session(request: Request):
     if user := request.session.get("member"):
         return user
     raise HTTPException(status_code=401, detail="Unauthorized")

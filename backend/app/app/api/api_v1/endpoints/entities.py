@@ -22,7 +22,10 @@ log = get_logger("api_v1.endpoints.entities")
 router = APIRouter(prefix="/entities")
 
 
-@router.get("/{entity_uuid}")
+@router.get(
+    "/{entity_uuid}",
+    response_model=schemas.Entity
+)
 async def get_entity(
     user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
     entity_uuid: str,
@@ -30,31 +33,6 @@ async def get_entity(
 ):
     entities = crud.entities.get_by_uuid(db=db, uuid=UUID(entity_uuid))
     return entities
-
-
-@router.post("")
-async def create_entity(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
-    entity: schemas.PostEntityCreate,
-    db: Session = Depends(deps.get_db)
-):
-    return crud.entities.create(db, obj_in=schemas.EntityCreate(
-        label=entity.label,
-        author=entity.author,
-        description=entity.description,
-    ))
-
-
-@router.put("/{entity_id}")
-async def update_entity_by_uuid(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
-    entity_id: str,
-    obj_in: schemas.EntityBase,
-    db: Session = Depends(deps.get_db)
-):
-    db_obj = crud.entities.get_by_uuid(db=db, uuid=entity_id)
-    entity = crud.entities.update(db=db, db_obj=db_obj, obj_in=obj_in)
-    return entity
 
       
 @router.get("")
@@ -82,9 +60,32 @@ async def get_entities(
     }
 
 
-@router.delete(
-    "/{entity_id}",
-)
+@router.post("")
+async def create_entity(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    entity: schemas.PostEntityCreate,
+    db: Session = Depends(deps.get_db)
+):
+    return crud.entities.create(db, obj_in=schemas.EntityCreate(
+        label=entity.label,
+        author=entity.author,
+        description=entity.description,
+    ))
+
+
+@router.put("/{entity_id}")
+async def update_entity_by_uuid(
+    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    entity_id: str,
+    obj_in: schemas.EntityBase,
+    db: Session = Depends(deps.get_db)
+):
+    db_obj = crud.entities.get_by_uuid(db=db, uuid=entity_id)
+    entity = crud.entities.update(db=db, db_obj=db_obj, obj_in=obj_in)
+    return entity
+
+
+@router.delete("/{entity_id}")
 async def delete_entity(
     user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
     entity_id: str,
