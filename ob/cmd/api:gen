@@ -4,7 +4,7 @@
 run_api_gen () {
     heading "Generating client SDK..."
     cd ../frontend && \
-    yarn swagger:codegen && \
+    yarn client:gen && \
     success
 }
 

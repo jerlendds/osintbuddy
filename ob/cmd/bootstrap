@@ -153,6 +153,8 @@ run_bootstrap() {
     heading "Building containers..."
     ob_compose build
     success
+    heading "Installing UI dependencies.."
+    cd ../frontend/ && yarn install
     info "You can now launch OSINTBuddy with \`./launcher start\`"
 }
 

@@ -4,18 +4,16 @@ services:
   ui:
     tty: true
     container_name: "ob_dev_ui"
+    image: node:18-alpine
     build:
-      context: ../frontend
       args:
         REACT_APP_BASE_URL: $REACT_APP_BASE_URL
         NODE_ENV: development
-    command: [ "/app/entrypoint.sh" ]
+    command: sh -c "cd /app/ && yarn && yarn ui:dev"
     volumes:
-      - ../frontend/:/app
+      - ../frontend/:/app/
     ports:
       - "${FRONTEND_PORT-3000}:3000"
-    environment:
-      NODE_ENV: development
     env_file:
       - .env.alpha
   backend:
@@ -127,7 +125,6 @@ services:
     ports:
       - 9000:9000
       - 9001:9001
-    command: 'server -master.port=9333 -volume.port=8080 -dir="/ob-data" --console-address ":9001"'
     env_file:
       - .env.alpha
 

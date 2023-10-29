@@ -5,6 +5,32 @@ module.exports = {
   plugins: [
     {
       plugin: cracoSwcPlugin,
+      options: {
+        swcLoaderOptions: {
+          jsc: {
+            externalHelpers: true,
+            target: 'es2015',
+            parser: {
+              syntax: 'typescript',
+              tsx: true,
+              dynamicImport: true,
+              exportDefaultFrom: true,
+              privateMethod: false,
+              functionBind: false,
+              exportNamespaceFrom: false,
+              decorators: false,
+              decoratorsBeforeExport: false,
+              topLevelAwait: false,
+              importMeta: false
+            },
+            transform: {
+              react: {
+                runtime: 'automatic'
+              }
+            }
+          },
+        },
+      },
     }
   ],
   webpack: {
