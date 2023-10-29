@@ -19,7 +19,9 @@
 > one begins to twist facts to suit theories, instead of theories to suit facts.*
 
 
-<span style="display: inline-block; width:830px"> [Discord](https://discord.gg/gsbbYHA3K3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [forum.osintbuddy.com](https://forum.osintbuddy.com)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  [osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins) </span>
+-------
+| &nbsp;&nbsp; [jerlendds/osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins) &nbsp;&nbsp; | [osintbuddy.com](https://osintbuddy.com) | &nbsp;&nbsp; [forum.osintbuddy.com](https://forum.osintbuddy.com) &nbsp;&nbsp; | &nbsp;&nbsp; [jerlendds/osintbuddy-core-plugins](https://github.com/jerlendds/osintbuddy-core-plugins) &nbsp;&nbsp; |
+<span style="display: inline-block; width:830px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   </span>
 
 
   ## Introducing OSINTBuddy
@@ -31,11 +33,12 @@
       Python developer to quickly integrate new data sources.
   </p>
 
-  > 🚧 *Work in progress*
-
+  🚧 *Work in progress*
 <br/>
 
 ![ob-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/9a22223f-7477-4268-be85-46b94dd875bb)
+  
+  ⚠️ Actively searching for contributors, if you want to help, please contact me on the [osintbuddy discord](https://discord.gg/gsbbYHA3K3) ⚠️
 
   ---
 </p>
@@ -171,12 +174,15 @@ Contributions are what make the open source community such an amazing place to l
 5. Open a Pull Request
 
 
-## [↑](#introducing-osintbuddy)Sponsor OSINTBuddy 
-Help us keep the OSINTBuddy project free and maintained forever.
-Sponsor the OSINTBuddy project for unique benefits. Learn more on the [OSINTBuddy OpenCollective project page](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
+## [↑](#introducing-osintbuddy)License
 
-[![Yearly OpenCollective Income](https://badgen.net/opencollective/yearly/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
-[![OpenCollective Backers](https://badgen.net/opencollective/backers/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
+Licensed under the GNU Affero General Public License v3.0.
+
+Copyright 2023 jerlendds. [GNU AGPL v3](https://choosealicense.com/licenses/apache-2.0/).
+
+*Note: the [OSINTBuddy PyPi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*.
+
+Patched `aiogremlin` library: [jerlendds/gremlinpy](https://github.com/jerlendds/gremlinpy/)
 
 
 
@@ -185,19 +191,13 @@ Sponsor the OSINTBuddy project for unique benefits. Learn more on the [OSINTBudd
 [Open an issue](https://github.com/jerlendds/osintbuddy/issues/new?assignees=jerlendds&labels=Type%3A+Suggestion&projects=&template=feature.md&title=%5BFEATURE+REQUEST%5D+Your_feature_request_here) if you need to get in touch with me or send an email to <a href="mailto:jerlendds@osintbuddy.com">jerlendds@osintbuddy.com</a>.
 
 
-- osintbuddy: [github.com/jerlendds/osintbuddy](https://github.com/jerlendds/osintbuddy)
-- osintbuddy-core-plugins: [github.com/jerlendds/osintbuddy-core-plugins](https://github.com/jerlendds/osintbuddy-core-plugins)
-- osintbuddy-plugins: [github.com/jerlendds/osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins) - [pypi.org/project/osintbuddy](https://pypi.org/project/osintbuddy/)
-- patched `aiogremlin` library: [github.com/jerlendds/gremlinpy](https://github.com/jerlendds/gremlinpy/)
+## [↑](#introducing-osintbuddy)Sponsor OSINTBuddy 
+Help us keep the OSINTBuddy project free and maintained forever.
+Sponsor the OSINTBuddy project for unique benefits. Learn more on the [OSINTBuddy OpenCollective project page](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
 
+[![Yearly OpenCollective Income](https://badgen.net/opencollective/yearly/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
+[![OpenCollective Backers](https://badgen.net/opencollective/backers/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
 
-## [↑](#introducing-osintbuddy)License
-
-Licensed under the GNU Affero General Public License v3.0.
-
-Copyright 2023 jerlendds. [GNU AGPL v3](https://choosealicense.com/licenses/apache-2.0/).
-
-*Note: the [OSINTBuddy PyPi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*.
 
 
 [contributors-shield]: https://img.shields.io/github/contributors/jerlendds/osintbuddy.svg?style=for-the-badge
