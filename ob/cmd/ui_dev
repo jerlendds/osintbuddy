@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+. cmd/env
+
+run_uidev() {
+    unset ERR
+    cmd/api:gen || ERR=$?
+    if [[ $ERR > 0 ]]; then
+        error "We ran into an error generating the frontends API client. Is the backend running?"
+    fi
+    success "Starting frontend:"
+    info "      http://localhost:3000"
+    ob_compose stop ui > /dev/null 2>&1
+    source "./.env.alpha"
+    ls -a
+    echo "envs vars: $REACT_APP_BASE_URL"
+    cd ../frontend
+    export REACT_APP_BASE_URL=$REACT_APP_BASE_URL; yarn ui:dev
+    exit 0
+}
+
+run_uidev

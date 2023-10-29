@@ -6,11 +6,16 @@ services:
     container_name: "ob_dev_ui"
     build:
       context: ../frontend
+      args:
+        REACT_APP_BASE_URL: $REACT_APP_BASE_URL
+        NODE_ENV: development
+    command: [ "/app/entrypoint.sh" ]
     volumes:
-      - ../frontend/:/app/
-      - ../frontend/node_modules:/app/node_modules
+      - ../frontend/:/app
     ports:
       - "${FRONTEND_PORT-3000}:3000"
+    environment:
+      NODE_ENV: development
     env_file:
       - .env.alpha
   backend:
@@ -18,7 +23,7 @@ services:
     container_name: "ob_dev_backend"
     command: ["/bin/sh", "-c", "./start-reload.sh"]
     build:
-      context: ../backend/backend
+      context: ../backend
       dockerfile: backend.Dockerfile
     healthcheck:
         test: ["CMD", "curl", "-f", "http://localhost:${BACKEND_PORT:-8000}/status"]
@@ -26,7 +31,7 @@ services:
         timeout: 2s
         retries: 5
     volumes:
-      - ../backend/backend/app:/app/
+      - ../backend/app:/app/
     depends_on:
       - db
     environment:
@@ -101,7 +106,7 @@ services:
     tty: true
     container_name: "ob_dev_worker"
     build:
-      context: ../backend/backend
+      context: ../backend
       dockerfile: worker.Dockerfile
     command: ./worker-start.sh
     env_file:

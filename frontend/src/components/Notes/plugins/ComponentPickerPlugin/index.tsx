@@ -36,7 +36,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import useModal from '../../hooks/useModal';
-import catTypingGif from '../../images/cat-typing.gif';
 import { EmbedConfigs } from '../AutoEmbedPlugin';
 import { INSERT_COLLAPSIBLE_COMMAND } from '../CollapsiblePlugin';
 import { InsertEquationDialog } from '../EquationsPlugin';
@@ -278,15 +277,7 @@ function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
           <InsertEquationDialog activeEditor={editor} onClose={onClose} />
         )),
     }),
-    new ComponentPickerOption('GIF', {
-      icon: <i className="icon gif" />,
-      keywords: ['gif', 'animate', 'image', 'file'],
-      onSelect: () =>
-        editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
-          altText: 'Cat typing on a laptop',
-          src: catTypingGif,
-        }),
-    }),
+
     new ComponentPickerOption('Image', {
       icon: <i className="icon image" />,
       keywords: ['image', 'photo', 'picture', 'file'],

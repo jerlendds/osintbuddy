@@ -10,6 +10,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { CasdoorUser } from './models/CasdoorUser';
 export type { CreateNode } from './models/CreateNode';
 export type { EntityBase } from './models/EntityBase';
 export type { Graph } from './models/Graph';
@@ -18,9 +19,11 @@ export type { GraphsList } from './models/GraphsList';
 export type { HTTPValidationError } from './models/HTTPValidationError';
 export type { PostEntityCreate } from './models/PostEntityCreate';
 export type { ScanMachineCreate } from './models/ScanMachineCreate';
+export type { Status } from './models/Status';
 export type { ValidationError } from './models/ValidationError';
 export type { XYPosition } from './models/XYPosition';
 
+export { $CasdoorUser } from './schemas/$CasdoorUser';
 export { $CreateNode } from './schemas/$CreateNode';
 export { $EntityBase } from './schemas/$EntityBase';
 export { $Graph } from './schemas/$Graph';
@@ -29,6 +32,7 @@ export { $GraphsList } from './schemas/$GraphsList';
 export { $HTTPValidationError } from './schemas/$HTTPValidationError';
 export { $PostEntityCreate } from './schemas/$PostEntityCreate';
 export { $ScanMachineCreate } from './schemas/$ScanMachineCreate';
+export { $Status } from './schemas/$Status';
 export { $ValidationError } from './schemas/$ValidationError';
 export { $XYPosition } from './schemas/$XYPosition';
 
@@ -38,3 +42,4 @@ export { Graphsv1 } from './services/Graphsv1';
 export { Loginv1 } from './services/Loginv1';
 export { Nodesv1 } from './services/Nodesv1';
 export { Scansv1 } from './services/Scansv1';
+export { Usersv1 } from './services/Usersv1';

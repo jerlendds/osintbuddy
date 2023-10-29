@@ -22,7 +22,8 @@
 <span style="display: inline-block; width:830px"> [Discord](https://discord.gg/gsbbYHA3K3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [forum.osintbuddy.com](https://forum.osintbuddy.com)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  [osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins) </span>
 
 
-  <h2><b>Introducing OSINTBuddy</b></h2>
+  ## Introducing OSINTBuddy
+
   <p>
       Welcome to the OSINTBuddy project where you can connect, combine,
       and get insights from unstructured and public data as results that
@@ -90,18 +91,14 @@ We've decided to do something about it. The rapid developments in technologies s
 ### Key Features
 - Simplified data fetching from multiple sources.
 - Visual representation of fetched data for easy understanding.
-- A powerful development platform that is open for contributions.
-- New plugin-based system for transforming data, check out the [osintbuddy](https://pypi.org/project/osintbuddy/) package. Documentation is coming soon.
+- A development platform that is open for contributions.
+- Plugin-based system for transforming data, check out the [osintbuddy](https://pypi.org/project/osintbuddy/) package.
 
 
 
-## [↑](#what-is-osintbuddycom)Getting Started
+## Getting Started
 
 To start using OSINTBuddy, follow these simple installation steps:
-
-<!-- @todo make this easier for windows users...
-https://willi.am/blog/2016/08/11/docker-for-windows-dealing-with-windows-line-endings/
- -->
 
 ### Installation
 1. Clone the repo and submodules
@@ -115,11 +112,11 @@ https://willi.am/blog/2016/08/11/docker-for-windows-dealing-with-windows-line-en
     - [Learn how to install Docker on Linux](https://docs.docker.com/desktop/install/linux-install/)
 3. Start the stack with Docker: 
    ```sh
-   # run ./launcher with no arguments for help  
-   ./launcher bootstrap
-   ./launcher start
+   # ./launcher               # display usage information.
+     ./launcher bootstrap     # ensure the environment is setup correctly; build images.
+     ./launcher start         # start the osintbuddy stack.
    ```
-   - **Note:** the stack will take a few minutes to startup while solr and scylladb configure themselves for JanusGraph. If you try to connect before all the databases are ready you will encounter errors.
+   - **Note:** the stack will take a few minutes to startup while Solr and ScyllaDB configure themselves for JanusGraph. If you try to connect before all the databases are ready you will encounter errors.
 
 - **URLs**
   - Frontend: http://localhost:3000
@@ -128,18 +125,18 @@ https://willi.am/blog/2016/08/11/docker-for-windows-dealing-with-windows-line-en
   - Documentation: http://localhost:8000/docs
 - Access OSINTBuddy through the URLs provided for the frontend, backend, and documentation.
 
-## [↑](#what-is-osintbuddycom)Roadmap
+## [↑](#introducing-osintbuddy)Roadmap
  
 ~~See our [trello board](https://trello.com/b/99Q70frX/) 
 for a list of our upcoming features.~~
 
-See the forum: [forum.osintbuddy.com](https://forum.osintbuddy.com), for a list of our upcoming features, potential ideas, and more. (*Note: We're currently in the process of setting up the forum and moving trello issues over. We're not sure when this will be completed. For the time being you can count on dev log updates being on the forum from now on.*)
+See the forum: [forum.osintbuddy.com](https://forum.osintbuddy.com), for a list of our upcoming features, potential ideas, and more (*Note: We're currently in the process of setting up the forum and moving trello issues over. We're not sure when this will be completed. For the time being you can count on dev log updates being on the forum from now on*).
 
 
 See the [open issues](https://github.com/jerlendds/osintbuddy/issues)
 for a list of requested features (and known issues).
 
-## [↑](#what-is-osintbuddycom)Progress Notes
+### [↑](#introducing-osintbuddy)Progress Notes
 
 - [x] Website node
 - [x] Google search node
@@ -153,13 +150,17 @@ for a list of requested features (and known issues).
 - [x] Added a plugin system
 - [x] Updated plugin system to be easier to work with
 - [x] Implemented automatic saving for project graphs
- 
--  For this update you'll have to rebuild your docker containers (`./launcher build`)! After a long wait you'll be rewarded with a new UX, an updated plugin system now running as its own service, Casdoor managed auth for signing in/up, a new CLI tool, `ob` for managing plugin development, and another CLI `./launcher` for managing the OSINTBuddy stack: `launcher`! 
+- [x] Added `ob` and `launcher` CLI tools
+- [x] Added Casdoor for auth
+- [x] Improved UI/UX
+- [] Added wizards for plugin create and custom `.env` setup
+- [] Moved plugin system to its own service
 
-[osintbuddy](https://pypi.org/project/osintbuddy/)  
+
+For this update you'll have to rebuild your docker containers (`./launcher build`)! After a long wait you'll be rewarded with a new UX, an updated plugin system now running as its own service, Casdoor managed auth for signing in/up, a new CLI tool, `ob`, for managing plugin development and the plugin server, and another CLI `./launcher` for managing the OSINTBuddy stack. 
 
 
-## [↑](#what-is-osintbuddycom)Contributing
+## [↑](#introducing-osintbuddy)Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -170,7 +171,27 @@ Contributions are what make the open source community such an amazing place to l
 5. Open a Pull Request
 
 
-## [↑](#what-is-osintbuddycom)License
+## [↑](#introducing-osintbuddy)Sponsor OSINTBuddy 
+Help us keep the OSINTBuddy project free and maintained forever.
+Sponsor the OSINTBuddy project for unique benefits. Learn more on the [OSINTBuddy OpenCollective project page](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
+
+[![Yearly OpenCollective Income](https://badgen.net/opencollective/yearly/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
+[![OpenCollective Backers](https://badgen.net/opencollective/backers/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
+
+
+
+## [↑](#introducing-osintbuddy)Contact
+
+[Open an issue](https://github.com/jerlendds/osintbuddy/issues/new?assignees=jerlendds&labels=Type%3A+Suggestion&projects=&template=feature.md&title=%5BFEATURE+REQUEST%5D+Your_feature_request_here) if you need to get in touch with me or send an email to <a href="mailto:jerlendds@osintbuddy.com">jerlendds@osintbuddy.com</a>.
+
+
+- osintbuddy: [github.com/jerlendds/osintbuddy](https://github.com/jerlendds/osintbuddy)
+- osintbuddy-core-plugins: [github.com/jerlendds/osintbuddy-core-plugins](https://github.com/jerlendds/osintbuddy-core-plugins)
+- osintbuddy-plugins: [github.com/jerlendds/osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins) - [pypi.org/project/osintbuddy](https://pypi.org/project/osintbuddy/)
+- patched `aiogremlin` library: [github.com/jerlendds/gremlinpy](https://github.com/jerlendds/gremlinpy/)
+
+
+## [↑](#introducing-osintbuddy)License
 
 Licensed under the GNU Affero General Public License v3.0.
 
@@ -178,23 +199,6 @@ Copyright 2023 jerlendds. [GNU AGPL v3](https://choosealicense.com/licenses/apac
 
 *Note: the [OSINTBuddy PyPi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*.
 
-
-## [↑](#what-is-osintbuddycom)Contact
-
-[Open an issue](https://github.com/jerlendds/osintbuddy/issues/new?assignees=jerlendds&labels=Type%3A+Suggestion&projects=&template=feature.md&title=%5BFEATURE+REQUEST%5D+Your_feature_request_here) if you need to get in touch with me or send an email to <a href="mailto:jerlendds@osintbuddy.com">jerlendds@osintbuddy.com</a>.
-
-
-- osintbuddy: [github.com/jerlendds/osintbuddy](https://github.com/jerlendds/osintbuddy)
-- osintbuddy-core-plugins: [github.com/jerlendds/osintbuddy-core-plugins](https://github.com/jerlendds/osintbuddy-core-plugins)
-- osintbuddy-plugins: [github.com/jerlendds/osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins)
-- patched `aiogremlin` library: [github.com/jerlendds/gremlinpy](https://github.com/jerlendds/gremlinpy/)
-
-## [↑](#what-is-osintbuddycom)Sponsor OSINTBuddy 
-Help us keep the OSINTBuddy project free and maintained forever.
-Sponsor the OSINTBuddy project for unique benefits. Learn more on the [OSINTBuddy OpenCollective project page](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
-
-[![Yearly OpenCollective Income](https://badgen.net/opencollective/yearly/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
-[![OpenCollective Backers](https://badgen.net/opencollective/backers/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
 
 [contributors-shield]: https://img.shields.io/github/contributors/jerlendds/osintbuddy.svg?style=for-the-badge
 [contributors-url]: https://github.com/jerlendds/osintbuddy/graphs/contributors
@@ -204,3 +208,4 @@ Sponsor the OSINTBuddy project for unique benefits. Learn more on the [OSINTBudd
 [stars-url]: https://github.com/jerlendds/osintbuddy/stargazers
 [issues-shield]: https://img.shields.io/github/issues/jerlendds/osintbuddy.svg?style=for-the-badge
 [issues-url]: https://github.com/jerlendds/osintbuddy/issues
+

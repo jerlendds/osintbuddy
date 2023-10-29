@@ -70,9 +70,9 @@ export default function OsintPage() {
   function addEdge(
     source,
     target,
-    sourceHandle?: string = 'r1',
-    targetHandle?: string = 'l2',
-    type?: string = 'default'
+    sourceHandle: string = 'r1',
+    targetHandle: string = 'l2',
+    type: string = 'default'
   ): void {
     dispatch(
       createEdge({

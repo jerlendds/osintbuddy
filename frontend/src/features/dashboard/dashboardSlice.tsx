@@ -146,8 +146,8 @@ export const dashboard = createSlice({
       })
       .addCase(getGraphs.fulfilled, (state, action) => {
         if (action.payload.isFavorite) {
-          state.favoriteGraphs = action.payload.data.graphs
-          state.favoriteGraphsCount = action.payload.data.count
+          state.favoriteGraphs = action.payload.data?.graphs
+          state.favoriteGraphsCount = action.payload?.data.count
         } else {
           state.graphs = action.payload.data.graphs
           state.graphsCount = action.payload.data.count

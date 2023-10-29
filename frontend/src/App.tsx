@@ -9,7 +9,7 @@ const config: SdkConfig = {
   organizationName: "org_ob",
   appName: "application_ob",
   redirectPath: "/callback",
-  signinPath: "/api/v1/sign-in",
+  signinPath: "/api/v1/auth/sign-in",
 }
 window.sdk = new SDK(config)
 

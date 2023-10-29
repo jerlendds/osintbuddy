@@ -2,7 +2,11 @@
 . cmd/env
 
 start() {
-    ob_compose up -d
+    if [[ ! -z "$OB_CMD_ARGS" ]]; then
+        ob_compose up -d $OB_CMD_ARGS
+    else
+        ob_compose up -d
+    fi
 }
 
 
@@ -13,7 +17,12 @@ run_start() {
         error "We ran into an error starting OSINTBuddy. Please file an issue on Github."
         exit 1
     else
-        ob_compose logs -f
+        if [[ ! -z "$OB_CMD_ARGS" ]]; then
+            ob_compose logs -f $OB_CMD_ARGS
+        else
+            ob_compose logs -f
+        fi
+        
         success "Starting OSINTBuddy..."
         success "After JanusGraph connects to ScyllaDB and Solr, the app is ready for use."
         success "Please allow a few minutes for JanusGraph to finish starting up."

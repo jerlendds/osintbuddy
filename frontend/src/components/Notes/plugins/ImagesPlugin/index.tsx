@@ -27,9 +27,6 @@ import {
 } from 'lexical';
 import { useEffect, useRef, useState } from 'react';
 import * as React from 'react';
-
-import landscapeImage from '../../images/landscape.jpg';
-import yellowFlowerImage from '../../images/yellow-flower.jpg';
 import {
   $createImageNode,
   $isImageNode,
@@ -167,24 +164,7 @@ export function InsertImageDialog({
     <>
       {!mode && (
         <DialogButtonsList>
-          <Button
-            data-test-id="image-modal-option-sample"
-            onClick={() =>
-              onClick(
-                hasModifier.current
-                  ? {
-                    altText:
-                      'Daylight fir trees forest glacier green high ice landscape',
-                    src: landscapeImage,
-                  }
-                  : {
-                    altText: 'Yellow flower in tilt shift lens',
-                    src: yellowFlowerImage,
-                  },
-              )
-            }>
-            Sample
-          </Button>
+
           <Button
             data-test-id="image-modal-option-url"
             onClick={() => setMode('url')}>

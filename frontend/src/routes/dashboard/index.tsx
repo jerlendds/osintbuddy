@@ -9,6 +9,8 @@ import classNames from "classnames";
 import GraphPanel from "./_components/GraphPanel";
 import EntitiesPanel from "./_components/EntityPanel";
 import { useEffectOnce } from "@/components/utils";
+import { sdk } from "@/app/api";
+import { CasdoorUser } from "@/app/openapi";
 
 interface DashboardTabsProps {
   tabs: JSX.Element
@@ -29,13 +31,9 @@ function DashboardTabs({ tabs, panels }: DashboardTabsProps) {
 }
 export default function DashboardPage() {
   useEffectOnce(() => {
-    // fetch(`http://localhost:8000/api/v1/get-account`, {
-    //   method: 'GET',
-    //   credentials: 'include',
-    // }).then(res => {
-    //   console.log(res)
-    //   return res.json()
-    // });
+    sdk.users.getAccount()
+      .then((user: CasdoorUser) => console.log(user))
+      .catch((error: Error) => console.error(error))
   })
 
   const [activeInquiryTab, setActiveInquiryTab] = useState<'graphs' | 'entities' | 'market'>('graphs')

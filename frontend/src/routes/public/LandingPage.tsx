@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { HeroBackground } from '@/components/Icons';
 import blurCyanImage from '@images/blur-cyan.png';
 import blurIndigoImage from '@images/blur-indigo.png';
-import { Link } from 'react-router-dom';
 
 export default function LandingPage(): React.ReactElement {
   return (
-
     <>
       <div className='overflow-hidden bg-slate-900 mt-[-4.5rem] pb-32 pt-[4.5rem] lg:pt-[4.75rem]'>
         <div className='pt-16 sm:px-2 lg:relative  lg:px-0'>
@@ -28,8 +26,6 @@ export default function LandingPage(): React.ReactElement {
                 </p>
                 <div className='mt-8 flex gap-4 md:justify-center lg:justify-start'>
                   <button
-                    // to='/app/dashboard/graphs'
-                    // replace
                     onClick={() => {
                       window.location.href = window.sdk.getSigninUrl();
                     }}
@@ -37,13 +33,14 @@ export default function LandingPage(): React.ReactElement {
                   >
                     Login
                   </button>
-                  <a
-                    href='https://github.com/jerlendds/osintbuddy'
-                    target='_blank'
+                  <button
+                    onClick={() => {
+                      window.location.href = window.sdk.getSignupUrl();
+                    }}
                     className='rounded-full bg-slate-800 py-2 px-4 text-sm font-medium text-white hover:bg-slate-700 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/50 active:text-slate-400'
                   >
-                    View on GitHub
-                  </a>
+                    Sign up
+                  </button>
                 </div>
               </div>
             </div>

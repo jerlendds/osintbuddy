@@ -33,7 +33,7 @@
       ```bash
       cd frontend
       yarn
-      yarn start
+      yarn ui:dev
       ```
 
   3. From the `osintbuddy` directory, start the rest of the stack:

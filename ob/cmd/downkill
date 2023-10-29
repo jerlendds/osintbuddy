@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. cmd/env
+
+run_down_kill() {
+    source cmd/container_ids
+    $docker_path kill $ID_OB_UI $ID_OB_BACKEND $ID_OB_REDIS $ID_OB_DB $ID_OB_JANUS $ID_OB_SDB $ID_OB_INDEX $ID_OB_WORKER $ID_OB_CLEARLY $ID_OB_S3
+    ob_compose down
+}
+
+run_down_kill

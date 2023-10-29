@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
@@ -9,18 +9,18 @@ import {
   FolderOpenIcon,
   InboxIcon,
   PlusIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { TourProvider } from "@reactour/tour";
-import { ViewfinderCircleIcon } from "@heroicons/react/20/solid";
 import classNames from "classnames";
 import { ReactComponent as OSINTBuddyLogo } from "@images/logo.svg";
 import HamburgerMenu from "@/components/HamburgerMenu";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { isSidebarOpen, setSidebar } from "@/features/settings/settingsSlice";
+import { isSidebarOpen, selectIsAuthenticated, selectUser, setIsAuthenticated, setSidebar, setUser } from "@/features/account/accountSlice";
 import IncidentCard from "@/components/IncidentCard";
+import { useEffectOnce } from "@/components/utils";
+import { LS_USER_AUTH_KEY, sdk } from "@/app/api";
 
 const navigation = [
   { name: "Dashboard", to: "/app/dashboard/graphs", icon: InboxIcon },
@@ -42,6 +42,7 @@ const graphTourSteps: any = [
 ];
 
 export default function AppLayout() {
+  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
   const showSidebar: boolean = useAppSelector((state) => isSidebarOpen(state));
@@ -49,9 +50,27 @@ export default function AppLayout() {
   const [currentStep, setCurrentStep] = useState(0);
   const cancelButtonRef = useRef(null);
 
+  const isAuthenticated = useAppSelector(state => selectIsAuthenticated(state));
+  const user = useAppSelector(state => selectUser(state));
+
   const toggleSidebar = () => {
     dispatch(setSidebar(!showSidebar));
   };
+
+  useEffectOnce(() => {
+    sdk.users.getAccount()
+      .then((user) => {
+        dispatch(setUser(user))
+        localStorage.setItem(LS_USER_AUTH_KEY, JSON.stringify({ isAuthenticated: true, user }))
+      })
+      .catch((error) => {
+        console.error(error)
+        dispatch(setIsAuthenticated(false))
+      })
+  })
+
+  console.log(isAuthenticated, user)
+  if (!isAuthenticated) navigate('/', { replace: true })
 
   return (
     <>

@@ -65,12 +65,12 @@ prepare_windows() {
     git_autocrlf=$(git config --get core.autocrlf)
     
     info "Windows Tip: \n\t\t\thttps://tabby.sh/ configured with a git bash profile is recommended for development"
-    
     if [[ ! -z "$git_autocrlf" ]] && [[ "$git_autocrlf" == "true" ]]; then
         warning "Misconfiguration detected! For this project to work you need unix line endings (https://stackoverflow.com/a/13154031).\n\t\t\tTo fix this error try running the following commands:"
         info "      1. cd .. && rm -dr osintbuddy"
         info "      2. git config --global core.autocrlf false"
         info "      3. git clone --depth=1 --recurse-submodules https://github.com/jerlendds/osintbuddy.git"
+        info "Windows Tip: https://willi.am/blog/2016/08/11/docker-for-windows-dealing-with-windows-line-endings/"
         abort
     else
         success "Unix line endings detected!"

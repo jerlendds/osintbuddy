@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+. cmd/env
+
+run_setup_dev () {
+    cd ../
+    if [ -d "venv" ]; then
+        rm -dr venv
+    fi
+    python3 -m venv venv
+    . venv/bin/activate
+    python3 -m pip install --upgrade pip
+    pip install -r backend/backend/requirements.txt
+    pip install backend/backend/osintbuddy-plugins
+}
+
+run_setup_dev
+

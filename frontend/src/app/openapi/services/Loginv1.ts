@@ -2,6 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Status } from '../models/Status';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 
@@ -10,29 +12,17 @@ export class Loginv1 {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
 
   /**
-   * Get Account
-   * @returns any Successful Response
-   * @throws ApiError
-   */
-  public getAccount(): CancelablePromise<any> {
-    return this.httpRequest.request({
-      method: 'GET',
-      url: '/api/v1/get-account',
-    });
-  }
-
-  /**
    * Post Signin
    * @param code
-   * @returns any Successful Response
+   * @returns Status Successful Response
    * @throws ApiError
    */
   public postSignin(
     code: string,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<Status> {
     return this.httpRequest.request({
       method: 'POST',
-      url: '/api/v1/sign-in',
+      url: '/api/v1/auth/sign-in',
       query: {
         'code': code,
       },
@@ -44,13 +34,13 @@ export class Loginv1 {
 
   /**
    * Post Signout
-   * @returns any Successful Response
+   * @returns Status Successful Response
    * @throws ApiError
    */
-  public postSignout(): CancelablePromise<any> {
+  public postSignout(): CancelablePromise<Status> {
     return this.httpRequest.request({
       method: 'POST',
-      url: '/api/v1/sign-out',
+      url: '/api/v1/auth/sign-out',
     });
   }
 
