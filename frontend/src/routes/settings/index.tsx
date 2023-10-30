@@ -1,21 +1,14 @@
 import { EyeIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import React from "react";
-import {
-  useTable,
-  usePagination,
-  type Column,
-  type CellProps,
-  CellValue,
-} from "react-table";
-import classNames from "classnames";
+import { useTable, usePagination, type Column } from "react-table";
 import { Formik, Form, Field } from "formik";
-import { Link, useNavigate } from "react-router-dom";
-import { InquiryHeader } from "@/components/Headers";
-import sdk from '@/app/api';
-import { GraphsList } from "@/app/openapi";
+import { Link } from "react-router-dom";
+import classNames from "classnames";
 import Graph from "graphology";
+import sdk from '@/app/api';
+import { InquiryHeader } from "@/components/Headers";
 import { useAppDispatch } from "@/app/hooks";
 import { createGraph } from "@/features/dashboard/dashboardSlice";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface CreateGraphForm {
   name: string;
@@ -115,21 +108,12 @@ function Table({
   pageCount: controlledPageCount,
   setIsOpen,
 }: TableProps) {
-  const navigate = useNavigate();
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     prepareRow,
     page,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
     state: { pageIndex, pageSize },
   } = useTable(
     {
@@ -161,17 +145,17 @@ function Table({
                 <EyeIcon className="w-5 h-5 text-slate-200 mr-2" />
                 <span className="text-slate-200 font-display">
                   Investigate
-                </span>{" "}
+                </span>
               </Link>
               <button
                 className={classNames(
                   "text-danger-500 ml-2 flex items-center justify-between  text-sm font-display hover:text-slate-200 border-danger-500 border-2 py-1 rounded-full px-3 bg-danger-500 hover:border-danger-300 transition-colors duration-75 ease-in"
                 )}
               >
-                <TrashIcon className="w-5 h-5 text-slate-200 mr-2" />{" "}
+                <TrashIcon className="w-5 h-5 text-slate-200 mr-2" />
                 <span className="text-slate-200 font-display flex items-start">
                   Delete
-                </span>{" "}
+                </span>
               </button>
             </div>
           ),
@@ -180,12 +164,10 @@ function Table({
     }
   );
 
-  // Listen for changes in pagination and use the state to fetch our new data
-  React.useEffect(() => {
+  useEffect(() => {
     fetchData({ pageIndex, pageSize });
   }, [fetchData, pageIndex, pageSize]);
 
-  // Render the UI for your table
   return (
     <>
       <table
@@ -277,13 +259,12 @@ export function CasesTable({
   columns: any;
   setIsOpen: Function;
 }) {
-  // We'll start our table without any data
-  const [data, setData] = React.useState<Graph[]>([]);
-  const [loading, setLoading] = React.useState(false);
-  const [pageCount, setPageCount] = React.useState(0);
-  const fetchIdRef = React.useRef(0);
+  const [data, setData] = useState<Graph[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [pageCount, setPageCount] = useState(0);
+  const fetchIdRef = useRef(0);
 
-  const fetchData = React.useCallback(({ pageSize, pageIndex }: FetchProps) => {
+  const fetchData = useCallback(({ pageSize, pageIndex }: FetchProps) => {
     const fetchId = ++fetchIdRef.current;
     if (fetchId === fetchIdRef.current) {
       setLoading(true);
