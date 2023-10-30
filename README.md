@@ -28,17 +28,17 @@
 
   <p>
       Welcome to the OSINTBuddy project where you can connect, combine,
-      and get insights from unstructured and public data as results that
+      and get insight from unstructured and public data as results that
       can be explored step-by-step. An easy-to-use plugin system allows any
       Python developer to quickly integrate new data sources.
   </p>
 
-  🚧 *Work in progress*
+  🚧  <ins>Work in progress</ins>  🚧
 <br/>
 
-![ob-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/9a22223f-7477-4268-be85-46b94dd875bb)
+  ![ob-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/9a22223f-7477-4268-be85-46b94dd875bb)
   
-  ⚠️ Actively searching for contributors, if you want to help, please contact me on the [osintbuddy discord](https://discord.gg/gsbbYHA3K3) ⚠️
+  ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum](https://forum.osintbuddy.com)** or on the **[discord](https://discord.gg/gsbbYHA3K3)** ⚠️
 
   ---
 </p>
@@ -113,10 +113,10 @@ To start using OSINTBuddy, follow these simple installation steps:
     - [Learn how to install Docker on Mac](https://docs.docker.com/desktop/install/mac-install/)
     - [Learn how to install Docker on Windows](https://docs.docker.com/desktop/install/windows-install/)
     - [Learn how to install Docker on Linux](https://docs.docker.com/desktop/install/linux-install/)
-3. Start the stack with Docker: 
+3. Start the stack with Docker:
    ```sh
    # ./launcher               # display usage information.
-     ./launcher bootstrap     # ensure the environment is setup correctly; build images.
+     ./launcher bootstrap     # first time? build images; setup ui and backend dependencies;
      ./launcher start         # start the osintbuddy stack.
    ```
    - **Note:** the stack will take a few minutes to startup while Solr and ScyllaDB configure themselves for JanusGraph. If you try to connect before all the databases are ready you will encounter errors.
@@ -156,9 +156,12 @@ for a list of requested features (and known issues).
 - [x] Added `ob` and `launcher` CLI tools
 - [x] Added Casdoor for auth
 - [x] Improved UI/UX
-- [] Added wizards for plugin create and custom `.env` setup
-- [] Moved plugin system to its own service
 
+ [] Add wizards for plugin create and custom `.env` setup
+
+ [] Rework plugin system to its own service
+
+ [] Add playwright and start reworking existing selenium based plugins  
 
 For this update you'll have to rebuild your docker containers (`./launcher build`)! After a long wait you'll be rewarded with a new UX, an updated plugin system now running as its own service, Casdoor managed auth for signing in/up, a new CLI tool, `ob`, for managing plugin development and the plugin server, and another CLI `./launcher` for managing the OSINTBuddy stack. 
 
@@ -183,7 +186,6 @@ Copyright 2023 jerlendds. [GNU AGPL v3](https://choosealicense.com/licenses/apac
 *Note: the [OSINTBuddy PyPi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*.
 
 Patched `aiogremlin` library: [jerlendds/gremlinpy](https://github.com/jerlendds/gremlinpy/)
-
 
 
 ## [↑](#introducing-osintbuddy)Contact
