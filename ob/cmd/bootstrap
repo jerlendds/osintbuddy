@@ -25,7 +25,6 @@ compare_version() {
 }
 
 
-
 check_images () {
     # TODO: fix me
     test_solr=`$docker_path images | awk '{print $1 ":" $2 }' | grep "$SOLR_IMAGE"`
@@ -146,6 +145,19 @@ check_prereqs() {
     fi
 }
 
+setup_python_env() {
+    cd .. && python3 -m venv venv && \
+    . venv/bin/activate && \
+    pip install backend/requirements.txt && \
+    pip install backend/osintbuddy-plugins
+    info "Activate your virtual environment: . venv/bin/activate"
+}
+
+setup_ui_env() {
+    cd ../frontend/ && yarn install
+    info "Generate the UI API client with: ./launcher api:gen"
+}
+
 run_bootstrap() {
     trap 'abort' INT
     heading "Checking for prerequisities..."
@@ -154,8 +166,10 @@ run_bootstrap() {
     ob_compose build
     success
     heading "Installing UI dependencies.."
-    cd ../frontend/ && yarn install
-    info "You can now launch OSINTBuddy with \`./launcher start\`"
+    setup_ui_env
+    heading "Installing backend dependencies..."
+    setup_python_env
+    info "You can now launch OSINTBuddy: ./launcher start"
 }
 
 run_bootstrap
