@@ -7,7 +7,7 @@ docker_path=`which docker`
 git_path=`which git`
 alias ob_compose="$docker_path compose -f $config_file"
 
-# Colors...
+# Colored logs...
 function heading() { printf "$(c B1)[OSINTBuddy: $OB_CMD] ${WHITE}${1}${reset}\n"; }
 function warning() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${magenta}${1}${reset}\n"; }
 function error() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${red}${1}${reset}\n"; }
