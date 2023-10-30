@@ -7,7 +7,7 @@ import type { CasdoorUser } from '../models/CasdoorUser';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 
-export class Usersv1 {
+export class Accountsv1 {
 
   constructor(public readonly httpRequest: BaseHttpRequest) {}
 

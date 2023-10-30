@@ -4,41 +4,115 @@
 /* eslint-disable */
 export const $CasdoorUser = {
   properties: {
+    owner: {
+      type: 'string',
+    },
+    type: {
+      type: 'string',
+    },
+    signupApplication: {
+      type: 'string',
+    },
     id: {
       type: 'string',
       isRequired: true,
       format: 'uuid',
     },
     sub: {
-      type: 'string',
+      type: 'any-of',
+      contains: [{
+        type: 'string',
+        format: 'uuid',
+      }, {
+        type: 'null',
+      }],
+    },
+    exp: {
+      type: 'any-of',
+      contains: [{
+        type: 'number',
+      }, {
+        type: 'null',
+      }],
+    },
+    nbf: {
+      type: 'any-of',
+      contains: [{
+        type: 'number',
+      }, {
+        type: 'null',
+      }],
+    },
+    iat: {
+      type: 'any-of',
+      contains: [{
+        type: 'number',
+      }, {
+        type: 'null',
+      }],
+    },
+    jti: {
+      type: 'any-of',
+      contains: [{
+        type: 'string',
+      }, {
+        type: 'null',
+      }],
+    },
+    aud: {
+      type: 'array',
+      contains: {
+        type: 'string',
+      },
+    },
+    avatar: {
+      type: 'any-of',
+      contains: [{
+        type: 'string',
+      }, {
+        type: 'null',
+      }],
       isRequired: true,
-      format: 'uuid',
+    },
+    avatarType: {
+      type: 'any-of',
+      contains: [{
+        type: 'string',
+      }, {
+        type: 'null',
+      }],
+      isRequired: true,
+    },
+    permanentAvatar: {
+      type: 'any-of',
+      contains: [{
+        type: 'string',
+      }, {
+        type: 'null',
+      }],
+      isRequired: true,
+    },
+    firstName: {
+      type: 'any-of',
+      contains: [{
+        type: 'string',
+      }, {
+        type: 'null',
+      }],
+    },
+    lastName: {
+      type: 'any-of',
+      contains: [{
+        type: 'string',
+      }, {
+        type: 'null',
+      }],
     },
     name: {
       type: 'string',
       isRequired: true,
     },
     displayName: {
-      type: 'string',
-      isRequired: true,
-    },
-    firstName: {
-      type: 'string',
-      isRequired: true,
-    },
-    lastName: {
-      type: 'string',
-      isRequired: true,
-    },
-    avatar: {
-      type: 'string',
-      isRequired: true,
-    },
-    avatarType: {
-      type: 'string',
-      isRequired: true,
-    },
-    permanentAvatar: {
       type: 'string',
       isRequired: true,
     },
@@ -51,82 +125,96 @@ export const $CasdoorUser = {
       isRequired: true,
     },
     phone: {
-      type: 'string',
+      type: 'any-of',
+      contains: [{
+        type: 'string',
+      }, {
+        type: 'null',
+      }],
       isRequired: true,
     },
     countryCode: {
-      type: 'string',
+      type: 'any-of',
+      contains: [{
+        type: 'string',
+      }, {
+        type: 'null',
+      }],
       isRequired: true,
     },
     region: {
-      type: 'string',
+      type: 'any-of',
+      contains: [{
+        type: 'string',
+      }, {
+        type: 'null',
+      }],
       isRequired: true,
     },
     location: {
-      type: 'string',
+      type: 'any-of',
+      contains: [{
+        type: 'string',
+      }, {
+        type: 'null',
+      }],
       isRequired: true,
     },
     bio: {
-      type: 'string',
+      type: 'any-of',
+      contains: [{
+        type: 'string',
+      }, {
+        type: 'null',
+      }],
       isRequired: true,
     },
     language: {
-      type: 'string',
-      isRequired: true,
-    },
-    aud: {
-      type: 'array',
-      contains: {
+      type: 'any-of',
+      contains: [{
         type: 'string',
-      },
-    },
-    exp: {
-      type: 'number',
-      isRequired: true,
-    },
-    nbf: {
-      type: 'number',
-      isRequired: true,
-    },
-    iat: {
-      type: 'number',
-      isRequired: true,
-    },
-    jti: {
-      type: 'string',
-      isRequired: true,
+      }, {
+        type: 'null',
+      }],
     },
     isOnline: {
-      type: 'boolean',
-      isRequired: true,
+      type: 'any-of',
+      contains: [{
+        type: 'boolean',
+      }, {
+        type: 'null',
+      }],
     },
     isAdmin: {
-      type: 'boolean',
-      isRequired: true,
+      type: 'any-of',
+      contains: [{
+        type: 'boolean',
+      }, {
+        type: 'null',
+      }],
     },
     isForbidden: {
-      type: 'boolean',
-      isRequired: true,
+      type: 'any-of',
+      contains: [{
+        type: 'boolean',
+      }, {
+        type: 'null',
+      }],
     },
     isDeleted: {
-      type: 'boolean',
-      isRequired: true,
+      type: 'any-of',
+      contains: [{
+        type: 'boolean',
+      }, {
+        type: 'null',
+      }],
     },
-    owner: {
-      type: 'string',
-    },
-    type: {
-      type: 'string',
-    },
-    signupApplication: {
-      type: 'string',
-    },
-    createdTime: {
+    updatedTime: {
       type: 'string',
       isRequired: true,
       format: 'date-time',
     },
-    updatedTime: {
+    createdTime: {
       type: 'string',
       isRequired: true,
       format: 'date-time',

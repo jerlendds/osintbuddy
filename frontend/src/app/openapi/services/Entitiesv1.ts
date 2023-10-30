@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Entity } from '../models/Entity';
 import type { EntityBase } from '../models/EntityBase';
 import type { PostEntityCreate } from '../models/PostEntityCreate';
 
@@ -15,38 +16,18 @@ export class Entitiesv1 {
   /**
    * Get Entity
    * @param entityUuid
-   * @returns any Successful Response
+   * @returns Entity Successful Response
    * @throws ApiError
    */
   public getEntity(
     entityUuid: string,
-  ): CancelablePromise<any> {
+  ): CancelablePromise<Entity> {
     return this.httpRequest.request({
       method: 'GET',
       url: '/api/v1/entities/{entity_uuid}',
       path: {
         'entity_uuid': entityUuid,
       },
-      errors: {
-        422: `Validation Error`,
-      },
-    });
-  }
-
-  /**
-   * Create Entity
-   * @param requestBody
-   * @returns any Successful Response
-   * @throws ApiError
-   */
-  public createEntity(
-    requestBody: PostEntityCreate,
-  ): CancelablePromise<any> {
-    return this.httpRequest.request({
-      method: 'POST',
-      url: '/api/v1/entities',
-      body: requestBody,
-      mediaType: 'application/json',
       errors: {
         422: `Validation Error`,
       },
@@ -74,6 +55,26 @@ export class Entitiesv1 {
         'limit': limit,
         'is_favorite': isFavorite,
       },
+      errors: {
+        422: `Validation Error`,
+      },
+    });
+  }
+
+  /**
+   * Create Entity
+   * @param requestBody
+   * @returns any Successful Response
+   * @throws ApiError
+   */
+  public createEntity(
+    requestBody: PostEntityCreate,
+  ): CancelablePromise<any> {
+    return this.httpRequest.request({
+      method: 'POST',
+      url: '/api/v1/entities',
+      body: requestBody,
+      mediaType: 'application/json',
       errors: {
         422: `Validation Error`,
       },
