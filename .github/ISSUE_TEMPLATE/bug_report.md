@@ -7,27 +7,32 @@ assignees: jerlendds
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**Bug Description:**
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+A clear and concise description of what the bug is...
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+**How to Reproduce:**
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+1. 
+2. 
+3. 
 
 
-**Additional context**
-Add any other context about the problem here.
+**Expected behavior:**
+
+...
+
+**Screenshots & Logs:**
+
+Please run `./launcher debug:send` to upload and get a public link to your log files.
+This will help us with debugging and solving any issues.
+
+**Environment:**
+ - OS: Linux 
+ - Browser: Firefox
+
+
+**Additional context:**
+
+...
+
