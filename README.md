@@ -20,7 +20,7 @@
 
 
 -------
-| &nbsp;&nbsp; [osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins) &nbsp;&nbsp; | [osintbuddy.com](https://osintbuddy.com) | &nbsp;&nbsp; [forum.osintbuddy.com](https://forum.osintbuddy.com) &nbsp;&nbsp; | &nbsp;&nbsp; [osintbuddy-core-plugins](https://github.com/jerlendds/osintbuddy-core-plugins) &nbsp;&nbsp; |
+| &nbsp;&nbsp; [osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins) &nbsp;&nbsp; | &nbsp;&nbsp; [osintbuddy.com](https://osintbuddy.com) &nbsp;&nbsp; | &nbsp;&nbsp; [forum.osintbuddy.com](https://forum.osintbuddy.com) &nbsp;&nbsp; | &nbsp;&nbsp; [osintbuddy-core-plugins](https://github.com/jerlendds/osintbuddy-core-plugins) &nbsp;&nbsp; |
 <span style="display: inline-block; width:830px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   </span>
 
 
