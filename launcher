@@ -1,12 +1,14 @@
 #!/usr/bin/env sh
 export OB_CMD=$1;
 export OB_CMD_ARGS=$2;
+export OB_DIR="$(pwd)/ob"
 
-export OB_DIR="$(dirname $0)/ob"
-cd $OB_DIR
-
-if [ -f cmd/env ]; then
+if [ -f ./ob/cmd/env ]; then
+    cd $OB_DIR
     source cmd/env;
+else
+    echo "Error! Please run the ./launcher only from the root osintbuddy directory."
+    exit 1
 fi
 
 # localhost:8080/login/oauth/authorize?client_id=&response_type=&redirect_uri=&scope=read&state=
