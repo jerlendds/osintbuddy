@@ -8,8 +8,15 @@ export default function CallbackPage() {
   const navigate = useNavigate();
   const location = useLocation()
   const params: JSONObject = new URLSearchParams(location.search)
-
   const dispatch = useAppDispatch()
+
+  function inIframe() {
+    try {
+      return window !== window.parent;
+    } catch (e) {
+      return true;
+    }
+  }
 
   function login() {
     window.sdk.signin(
@@ -17,8 +24,8 @@ export default function CallbackPage() {
       '/api/v1/auth/sign-in',
       params.code,
       params.state
-    ).then((res: JSONObject) => {
-      if (res?.status === "ok") {
+    ).then((resp: JSONObject) => {
+      if (resp?.status === "ok") {
         if (inIframe()) window.parent.postMessage({
           tag: "Casdoor",
           type: "SilentSignin",
@@ -27,20 +34,11 @@ export default function CallbackPage() {
         dispatch(setIsAuthenticated(true))
         navigate("/app/dashboard/graphs", { replace: true })
       } else {
-        console.error(res)
-        localStorage.removeItem(LS_USER_KEY)
+        console.error(resp)
         dispatch(setIsAuthenticated(false))
         navigate("/", { replace: true })
       }
     })
-  }
-
-  function inIframe() {
-    try {
-      return window !== window.parent;
-    } catch (e) {
-      return true;
-    }
   }
 
   useEffectOnce(() => {

@@ -31,7 +31,7 @@ function DashboardTabs({ tabs, panels }: DashboardTabsProps) {
 }
 export default function DashboardPage() {
   useEffectOnce(() => {
-    sdk.users.getAccount()
+    sdk.accounts.getAccount()
       .then((user: CasdoorUser) => console.log(user))
       .catch((error: Error) => console.error(error))
   })

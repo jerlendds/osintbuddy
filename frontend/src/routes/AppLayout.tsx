@@ -58,7 +58,7 @@ export default function AppLayout() {
   };
 
   useEffectOnce(() => {
-    sdk.users.getAccount()
+    sdk.accounts.getAccount()
       .then((user) => {
         dispatch(setUser(user))
       })
