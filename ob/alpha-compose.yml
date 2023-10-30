@@ -5,10 +5,6 @@ services:
     tty: true
     container_name: "ob_dev_ui"
     image: node:18-alpine
-    build:
-      args:
-        REACT_APP_BASE_URL: $REACT_APP_BASE_URL
-        NODE_ENV: development
     command: sh -c "cd /app/ && yarn && yarn ui:dev"
     volumes:
       - ../frontend/:/app/
@@ -100,25 +96,25 @@ services:
     env_file:
       - .env.alpha
   # TODO: Fix worker and clearly
-  worker:
-    tty: true
-    container_name: "ob_dev_worker"
-    build:
-      context: ../backend
-      dockerfile: worker.Dockerfile
-    command: ./worker-start.sh
-    env_file:
-      - .env.alpha
-  clearly:
-    tty: true
-    image: "${CLEARLY_IMAGE-rsalmei/clearly:latest}"
-    container_name: "ob_dev_clearly"
-    ports:
-      - "${CLEARLY_PORT-12223}:12223"
-    command:
-      - "server $(CELERY_BROKER_URL) --backend "
-    env_file:
-      - .env.alpha
+  # worker:
+  #   tty: true
+  #   container_name: "ob_dev_worker"
+  #   build:
+  #     context: ../backend
+  #     dockerfile: worker.Dockerfile
+  #   command: ./worker-start.sh
+  #   env_file:
+  #     - .env.alpha
+  # clearly:
+  #   tty: true
+  #   image: "${CLEARLY_IMAGE-rsalmei/clearly:latest}"
+  #   container_name: "ob_dev_clearly"
+  #   ports:
+  #     - "${CLEARLY_PORT-12223}:12223"
+  #   command:
+  #     - "server $(CELERY_BROKER_URL) --backend "
+  #   env_file:
+  #     - .env.alpha
   s3: # TODO: Add option to use ob/_seaweedfs/* eventually
     image: "${S3_IMAGE-minio/minio:RELEASE.2023-10-16T04-13-43Z}"
     container_name: "ob_dev_s3"
@@ -128,7 +124,7 @@ services:
     env_file:
       - .env.alpha
 
-# TODO: Move important stuff to secrets...
+# TODO: Move important vars to secrets...
 # secrets:
 #   POSTGRES_PASSWORD:
 #     file: ./???

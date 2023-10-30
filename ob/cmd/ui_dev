@@ -10,9 +10,9 @@ run_uidev() {
     success "Starting frontend:"
     info "      http://localhost:3000"
     ob_compose stop ui > /dev/null 2>&1
-    source "./.env.alpha"
+    source $COMPOSE_ENV_FILES
     ls -a
-    echo "envs vars: $REACT_APP_BASE_URL"
+    echo "REACT_APP_BASE_URL (used by ui to call backend): $REACT_APP_BASE_URL"
     cd ../frontend
     export REACT_APP_BASE_URL=$REACT_APP_BASE_URL; yarn ui:dev
     exit 0

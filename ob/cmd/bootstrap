@@ -145,31 +145,44 @@ check_prereqs() {
     fi
 }
 
+
 setup_python_env() {
-    cd .. && python3 -m venv venv && \
-    . venv/bin/activate && \
-    pip install backend/requirements.txt && \
-    pip install backend/osintbuddy-plugins
-    info "Activate your virtual environment: . venv/bin/activate"
+    if [ -d "./venv" ]; then
+        warning "Existing venv detected! Skipping python venv setup..."
+    else
+        cd ..
+        python3 -m venv venv && \
+        . venv/bin/activate && \
+        pip install --upgrade pip && \
+        pip install -r backend/requirements.txt && \
+        pip install backend/osintbuddy-plugins
+    fi
+    info "Activate virtual environment:    . venv/bin/activate"
+    cd "$OB_DIR"
 }
+
 
 setup_ui_env() {
     cd ../frontend/ && yarn install
     info "Generate the UI API client with: ./launcher api:gen"
+    cd "$OB_DIR"
 }
+
 
 run_bootstrap() {
     trap 'abort' INT
     heading "Checking for prerequisities..."
     check_prereqs
-    heading "Building containers..."
-    ob_compose build
-    success
-    heading "Installing UI dependencies.."
-    setup_ui_env
+    
     heading "Installing backend dependencies..."
     setup_python_env
-    info "You can now launch OSINTBuddy: ./launcher start"
+    
+    heading "Installing UI dependencies.."
+    setup_ui_env
+    
+    heading "Pulling and building containers..."
+    ob_compose build
+    success "You can now launch OSINTBuddy:   ./launcher start"
 }
 
 run_bootstrap

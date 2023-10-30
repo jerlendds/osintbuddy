@@ -4,7 +4,7 @@
 
 run_stop() {
     if [ ! -z "$OB_CMD" ] & [ ! -z "$OB_CMD_ARGS" ]; then
-        ob_compose stop $OB_CMD_ARGS
+        ob_compose stop "$OB_CMD_ARGS"
         exit 0
     else
         ob_compose stop

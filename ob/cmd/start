@@ -19,11 +19,11 @@ run_start() {
     else
         if [[ ! -z "$OB_CMD_ARGS" ]]; then
             success "Starting OSINTBuddy $OB_CMD_ARGS..."
-            ob_compose logs -f $OB_CMD_ARGS
+            # ob_compose logs -f $OB_CMD_ARGS
             
         else
-            success "Starting OSINTBuddy $OB_CMD_ARGS..."
-            ob_compose logs -f
+            success "Starting OSINTBuddy..."
+            # ob_compose logs -f
             success "After JanusGraph connects to ScyllaDB and Solr, the app is ready for use."
             success "Please allow a few minutes for JanusGraph to finish starting up."
             echo ""

@@ -1,11 +1,16 @@
 #!/usr/bin/env sh
-
+# used in ./ob/cmd/* scripts ran by ./launcher
 source cmd/_colors
 
-config_file="alpha-compose.yml"
-docker_path=`which docker`
-git_path=`which git`
-alias ob_compose="$docker_path compose -f $config_file"
+export docker_path=`which docker`
+export git_path=`which git`
+alias ob_compose="$docker_path compose"
+
+# https://docs.docker.com/compose/environment-variables/envvars/
+# export COMPOSE_PROJECT_NAME="ob_alpha"
+export DOCKER_RESTART_POLICY=yes
+export COMPOSE_ENV_FILES="$(pwd)/.env.alpha"
+export COMPOSE_FILE="$(pwd)/alpha-compose.yml"
 
 # Colored logs...
 function heading() { printf "$(c B1)[OSINTBuddy: $OB_CMD] ${WHITE}${1}${reset}\n"; }
@@ -14,4 +19,3 @@ function error() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${red}${1}${reset}\n"; }
 function success() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${green}${1:-Completed successfully!}${reset}\n"; }
 function info() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${CYAN}${1:-''}${reset}\n"; }
 function abort() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${RED}${1:-Aborting!}${reset}\n\n"; exit 1; }
-
