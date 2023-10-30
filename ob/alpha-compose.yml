@@ -20,7 +20,7 @@ services:
       context: ../backend
       dockerfile: backend.Dockerfile
     healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:${BACKEND_PORT:-8000}/status"]
+        test: ["CMD", "curl", "-f", "http://localhost:${BACKEND_PORT:-48997}/status"]
         interval: 10s
         timeout: 2s
         retries: 5
@@ -43,14 +43,15 @@ services:
     links:
       - backend
     ports:
-      - 8080:8080
+      - 45910:45910
     volumes:
       - ./_casdoor/conf:/conf
+      # - ./_casdoor/init_data.json:/init_data.json
   redis:
     image: ${REDIS_IMAGE-redis:alpine3.18}
     container_name: "ob_dev_redis"
     ports:
-      - "${REDIS_PORT-6379}:6379"
+      - "${REDIS_PORT-63379}:6379"
     command: redis-server
   db:
     image: "${POSTGRES_IMAGE-postgres:15.4}"
@@ -60,7 +61,7 @@ services:
     env_file:
       - .env.alpha
     ports:
-      - "${POSTGRES_PORT-5432}:5432"
+      - "${POSTGRES_PORT-55432}:5432"
   janus:
     container_name: "ob_dev_janus"
     build:

@@ -52,7 +52,7 @@
     "ui:dev": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "client:gen": "rm -f -dr ./src/app/openapi && mkdir ./src/app/openapi && openapi --name obSDK -i http://localhost:8000/api/v1/openapi.json --output ./src/app/openapi --exportModels true --exportSchemas true --indent 2 --postfixServices v1"
+    "client:gen": "rm -f -dr ./src/app/openapi && mkdir ./src/app/openapi && openapi --name obSDK -i http://localhost:48997/api/v1/openapi.json --output ./src/app/openapi --exportModels true --exportSchemas true --indent 2 --postfixServices v1"
   },
   "eslintConfig": {
     "extends": [

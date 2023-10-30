@@ -46,5 +46,5 @@
       # generate api client:      yarn client:gen (only works if the backend is up)
       ```
       - Frontend: [http://localhost:3000](http://localhost:3000)
-      - Backend: [http://localhost:8000/](http://localhost:8000/)
-      - Casdoor: [http://localhost:8080/](http://localhost:8080/)
+      - Backend: [http://localhost:48997/](http://localhost:48997/)
+      - Casdoor: [http://localhost:45910/](http://localhost:45910/)

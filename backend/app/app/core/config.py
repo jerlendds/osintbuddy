@@ -35,7 +35,7 @@ class Settings(BaseSettings):
             return v
         raise ValueError(v)
 
-    POSTGRES_PORT: str = "5432"
+    POSTGRES_PORT: str = "55432"
     POSTGRES_SERVER: str
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
@@ -63,6 +63,13 @@ class Settings(BaseSettings):
     SENTRY_DSN: str = None
 
     BACKEND_LOG_LEVEL: str = "info"
+
+    CASDOOR_ENDPOINT: str
+    REACT_APP_CASDOOR_CLIENT_ID: str
+    REACT_APP_CASDOOR_ORG_NAME: str
+    REACT_APP_CASDOOR_APP_NAME: str
+    CASDOOR_CLIENT_SECRET: str
+    CASDOOR_CERT: str
     
     class Config:
         case_sensitive = True

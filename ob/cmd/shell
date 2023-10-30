@@ -2,8 +2,8 @@
 . cmd/env
 
 run_shell() {
-    echo "Launching the $OB_CMD_ARGS shell"
-    ob_compose exec $OB_CMD_ARGS sh
+    heading "Running $OB_CMD_OPT1 inside $OB_CMD_ARGS"
+    ob_compose exec $OB_CMD_ARGS $OB_CMD_OPT1
     exit 0
 }
 

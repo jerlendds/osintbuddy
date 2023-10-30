@@ -125,9 +125,9 @@ To start using OSINTBuddy, follow these simple installation steps:
 
 - **URLs**
   - Frontend: http://localhost:3000
-  - Casdoor: http://localhost:8080
-  - Backend: http://localhost:8000/api
-  - Documentation: http://localhost:8000/docs
+  - Casdoor: http://localhost:45910
+  - Backend: http://localhost:48997/api
+  - Documentation: http://localhost:48997/docs
 - Access OSINTBuddy through the URLs provided for the frontend, backend, and documentation.
 
 ## [↑](#introducing-osintbuddy)Roadmap

@@ -1,0 +1,334 @@
+{
+  "organizations": [
+    {
+      "owner": "",
+      "name": "",
+      "displayName": "",
+      "websiteUrl": "",
+      "favicon": "",
+      "passwordType": "plain",
+      "passwordSalt": "",
+      "passwordOptions": ["AtLeast6"],
+      "countryCodes": ["US", "GB", "ES", "FR", "DE", "CN", "JP", "KR", "VN", "ID", "SG", "IN", "IT", "MY", "TR", "DZ", "IL", "PH", "NL", "PL", "FI", "SE", "UA", "KZ"],
+      "defaultAvatar": "",
+      "defaultApplication": "",
+      "tags": [],
+      "languages": ["en", "zh", "es", "fr", "de", "id", "ja", "ko", "ru", "vi", "it", "ms", "tr","ar", "he", "nl", "pl", "fi", "sv", "uk", "kk", "fa"],
+      "masterPassword": "password",
+      "defaultPassword": "password",
+      "initScore": 2000,
+      "enableSoftDeletion": false,
+      "isProfilePublic": true,
+      "accountItems": []
+    }
+  ],
+  "applications": [
+    {
+      "owner": "",
+      "name": "",
+      "displayName": "",
+      "logo": "",
+      "homepageUrl": "",
+      "organization": "",
+      "cert": "",
+      "enablePassword": true,
+      "enableSignUp": true,
+      "clientId": "31d844a5e0d77ac99094",
+      "clientSecret": "aef9074243ee936d41f013cd6f2aa6076e802769",
+      "providers": [
+        {
+          "name": "",
+          "canSignUp": true,
+          "canSignIn": true,
+          "canUnlink": false,
+          "prompted": false,
+          "alertType": "None"
+        }
+      ],
+      "signupItems": [
+        {
+          "name": "ID",
+          "visible": false,
+          "required": true,
+          "prompted": false,
+          "rule": "Random"
+        },
+        {
+          "name": "Username",
+            "visible": true,
+            "required": true,
+            "prompted": false,
+            "rule": "None"
+        },
+        {
+          "name": "Display name",
+            "visible": true,
+            "required": true,
+            "prompted": false,
+            "rule": "None"
+        },
+        {
+          "name": "Password",
+            "visible": true,
+            "required": true,
+            "prompted": false,
+            "rule": "None"
+        },
+        {
+          "name": "Confirm password",
+            "visible": true,
+            "required": true,
+            "prompted": false,
+            "rule": "None"
+        },
+        {
+          "name": "Email",
+            "visible": true,
+            "required": true,
+            "prompted": false,
+            "rule": "None"
+        },
+        {
+          "name": "Phone",
+            "visible": true,
+            "required": true,
+            "prompted": false,
+            "rule": "None"
+        },
+        {
+          "name": "Agreement",
+            "visible": true,
+            "required": true,
+            "prompted": false,
+            "rule": "None"
+        }
+      ],
+      "redirectUris": [""],
+      "expireInHours": 168
+    }
+  ],
+  "users": [
+    {
+      "owner": "",
+      "name": "",
+      "type": "normal-user",
+      "password": "",
+      "displayName": "",
+      "avatar": "",
+      "email": "",
+      "phone": "",
+      "countryCode": "",
+      "address": [],
+      "affiliation": "",
+      "tag": "",
+      "score": 2000,
+      "ranking": 1,
+      "isAdmin": true,
+      "isForbidden": false,
+      "isDeleted": false,
+      "signupApplication": "",
+      "createdIp": ""
+    }
+  ],
+  "providers": [
+    {
+      "owner": "",
+      "name": "",
+      "displayName": "",
+      "category": "",
+      "type": ""
+    }
+  ],
+  "certs": [
+    {
+      "owner": "",
+      "name": "",
+      "displayName": "",
+      "scope": "JWT",
+      "type": "x509",
+      "cryptoAlgorithm": "RS256",
+      "bitSize": 4096,
+      "expireInYears": 20,
+      "certificate": "",
+      "privateKey": ""
+    }
+  ],
+  "ldaps": [
+    {
+      "id": "",
+      "owner": "",
+      "serverName": "",
+      "host": "",
+      "port": 389,
+      "username": "",
+      "password": "",
+      "baseDn": "",
+      "autoSync": 0,
+      "lastSync": ""
+    }
+  ],
+  "models": [
+    {
+      "owner": "",
+      "name": "",
+      "modelText": "",
+      "displayName": ""
+    }
+  ],
+  "permissions": [
+    {
+      "actions": [],
+      "displayName": "",
+      "effect": "",
+      "isEnabled": true,
+      "model": "",
+      "name": "",
+      "owner": "",
+      "resourceType": "",
+      "resources": [],
+      "roles": [],
+      "users": []
+    }
+  ],
+  "payments": [
+    {
+      "currency": "",
+      "detail": "",
+      "displayName": "",
+      "invoiceRemark": "",
+      "invoiceTaxId": "",
+      "invoiceTitle": "",
+      "invoiceType": "",
+      "invoiceUrl": "",
+      "message": "",
+      "name": "",
+      "organization": "",
+      "owner": "",
+      "payUrl": "",
+      "personEmail": "",
+      "personIdCard": "",
+      "personName": "",
+      "personPhone": "",
+      "price": 0,
+      "productDisplayName": "",
+      "productName": "",
+      "provider": "",
+      "returnUrl": "",
+      "state": "",
+      "tag": "",
+      "type": "",
+      "user": ""
+    }
+  ],
+  "products": [
+    {
+      "currency": "",
+      "detail": "",
+      "displayName": "",
+      "image": "",
+      "name": "",
+      "owner": "",
+      "price": 0,
+      "providers": [],
+      "quantity": 0,
+      "returnUrl": "",
+      "sold": 0,
+      "state": "",
+      "tag": ""
+    }
+  ],
+  "resources": [
+    {
+      "owner": "",
+      "name": "",
+      "user": "",
+      "provider": "",
+      "application": "",
+      "tag": "",
+      "parent": "",
+      "fileName": "",
+      "fileType": "",
+      "fileFormat": "",
+      "url": "",
+      "description": ""
+    }
+  ],
+  "roles": [
+    {
+      "displayName": "",
+      "isEnabled": true,
+      "name": "",
+      "owner": "",
+      "roles": [],
+      "users": []
+    }
+  ],
+  "syncers": [
+    {
+      "affiliationTable": "",
+      "avatarBaseUrl": "",
+      "database": "",
+      "databaseType": "",
+      "errorText": "",
+      "host": "",
+      "isEnabled": false,
+      "name": "",
+      "organization": "",
+      "owner": "",
+      "password": "",
+      "port": 0,
+      "syncInterval": 0,
+      "table": "",
+      "tableColumns": [
+        {
+          "casdoorName": "",
+          "isHashed": true,
+          "name": "",
+          "type": "",
+          "values": []
+        }
+      ],
+      "tablePrimaryKey": "",
+      "type": "",
+      "user": ""
+    }
+  ],
+  "tokens": [
+    {
+      "accessToken": "",
+      "application": "",
+      "code": "",
+      "codeChallenge": "",
+      "codeExpireIn": 0,
+      "codeIsUsed": true,
+      "createdTime": "",
+      "expiresIn": 0,
+      "name": "",
+      "organization": "",
+      "owner": "",
+      "refreshToken": "",
+      "scope": "",
+      "tokenType": "",
+      "user": ""
+    }
+  ],
+  "webhooks": [
+    {
+      "contentType": "",
+      "events": [],
+      "headers": [
+        {
+          "name": "",
+          "value": ""
+        }
+      ],
+      "isEnabled": true,
+      "isUserExtended": true,
+      "method": "",
+      "name": "",
+      "organization": "",
+      "owner": "",
+      "url": ""
+    }
+  ]
+}

@@ -20,7 +20,6 @@ run_start() {
         if [[ ! -z "$OB_CMD_ARGS" ]]; then
             success "Starting OSINTBuddy $OB_CMD_ARGS..."
             # ob_compose logs -f $OB_CMD_ARGS
-            
         else
             success "Starting OSINTBuddy..."
             # ob_compose logs -f
@@ -29,10 +28,10 @@ run_start() {
             echo ""
             info "To monitor when JanusGraph is ready, run: ./launcher logs janus"
             info "Once ready you can access OSINTBuddy through the following URLs:"
-            info "      http://localhost:3000       - frontend"
-            info "      http://localhost:8080       - casdoor"
-            info "      http://localhost:8000/api   - backend"
-            info "      http://localhost:8000/docs  - docs"
+            info "      http://localhost:3000        - frontend"
+            info "      http://localhost:45910       - casdoor"
+            info "      http://localhost:48997/api   - backend"
+            info "      http://localhost:48997/docs  - docs"
         fi
         exit 0
     fi

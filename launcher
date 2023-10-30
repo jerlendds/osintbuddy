@@ -1,6 +1,10 @@
 #!/usr/bin/env sh
 export OB_CMD=$1;
 export OB_CMD_ARGS=$2;
+export OB_CMD_OPT1=${3:-""};
+export OB_CMD_OPT2=${4:-""};
+export OB_CMD_OPT3=${5:-""};
+
 export OB_DIR="$(pwd)/ob"
 
 if [ -f ./ob/cmd/env ]; then
@@ -11,7 +15,7 @@ else
     exit 1
 fi
 
-# localhost:8080/login/oauth/authorize?client_id=&response_type=&redirect_uri=&scope=read&state=
+# localhost:45910/login/oauth/authorize?client_id=&response_type=&redirect_uri=&scope=read&state=
 usage_containers () {
     echo ""
     echo -e "$(c 0uY)   CONTAINERS: CONTAINER DESCRIPTION.$(c)"
@@ -45,7 +49,7 @@ usage () {
     echo -e "    $(c YsB)bootstrap$(c):   Initialize and download dependencies and check for environment misconfigurations"
     echo -e "    $(c YsB)debug:send$(c):  Upload all logs to https://paste.c-net.org for help with debugging"
     echo -e "    $(c YsB)cleanup$(c):     Remove docker volumes."
-    echo -e "    $(c YsB)shell$(c):       Enter a containers shell."
+    echo -e "    $(c YsB)exec$(c):        Execute commands for a container."
     echo -e "    $(c YsB)migrate$(c):     Generate a migration."
     echo -e "    $(c YsB)python$(c):      Open a python shell on the backend."
     echo -e "    $(c YsB)ui$(c):          Stop the UI container and launch the frontend locally."
@@ -95,7 +99,7 @@ case "$OB_CMD" in
         cmd/stop
         cmd/cleanup
     ;;
-    shell)
+    exec)
         cmd/shell
     ;;
     python)

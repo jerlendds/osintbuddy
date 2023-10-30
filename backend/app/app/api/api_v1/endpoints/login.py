@@ -25,10 +25,11 @@ async def post_signin(code: str, request: Request):
     except Exception as e:
         log.error("Error in login.post_signin:")
         log.error(e)
-        return HTTPException(
-            status_code=422,
-            detail="A sign in error has occurred."
-        )
+        return {"status": "error"}
+        # return HTTPException(
+        #     status_code=422,
+        #     detail="A sign in error has occurred."
+        # )
 
 
 @router.post("/sign-out", response_model=schemas.Status)
