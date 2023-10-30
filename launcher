@@ -105,6 +105,9 @@ case "$OB_CMD" in
     setup:dev)
         cmd/setup:dev
     ;;
+    ps)
+        cmd/ps
+    ;;
     containers)
         usage_containers
     ;;

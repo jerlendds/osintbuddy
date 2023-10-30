@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+. cmd/env
+
+run_ps () {
+    $docker_path ps
+    # $docker_path ps --format "
+    # id:  {{.ID}}
+    # container:  {{.Names}}
+    # image:  {{.Image}}
+    #         state: {{- pad .State 1 0}}
+    #         status: {{- pad .Status 1 0}}
+    # "
+}
+run_ps
