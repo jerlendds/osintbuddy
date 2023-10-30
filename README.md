@@ -107,6 +107,8 @@ To start using OSINTBuddy, follow these simple installation steps:
 1. Clone the repo and submodules
    ```sh
    git clone --depth=1 --recurse-submodules https://github.com/jerlendds/osintbuddy.git
+   # using ssh?
+   # git clone --depth=1 --recurse-submodules git@github.com:jerlendds/osintbuddy.git 
    cd osintbuddy
    ```
 2. Install Docker
