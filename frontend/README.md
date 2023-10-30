@@ -18,27 +18,33 @@
 - [react-toastify](https://www.npmjs.com/package/react-toastify)
 - [tagify](https://github.com/yairEO/tagify)
 - [react-grid-layout](https://github.com/react-grid-layout/react-grid-layout)
-- 
+- [sigmajs](https://www.sigmajs.org/)
+- [i18next](https://www.npmjs.com/package/i18next)
+- [chartist](https://www.npmjs.com/package/chartist)
+- [casdoor-js-sdk](https://www.npmjs.com/package/casdoor-js-sdk)
 
 # Getting Started
 
   1. Clone the repo
       ```bash
-      # git clone https://github.com/jerlendds/osintbuddy.git
-      git clone git@github.com:jerlendds/osintbuddy.git 
+      git clone --depth=1 --recurse-submodules https://github.com/jerlendds/osintbuddy.git 
       cd osintbuddy
       ```
 
   2. Install the dependencies. From the `osintbuddy` directory run:
       ```bash
-      cd frontend
-      yarn
-      yarn ui:dev
+      ./launcher bootstrap
+      # alternatively from the frontend directory try:  yarn && yarn ui:dev
       ```
 
-  3. From the `osintbuddy` directory, start the rest of the stack:
+  3. From the `osintbuddy` directory, start the stack:
       ```bash
-      docker compose up backend microservice db
+      ./launcher start
+      # restart the ui:          ./launcher restart ui
+      # stop the ui:             ./launcher stop ui
+      # kill the stack:          ./launcher kill
+      # generate api client:      yarn client:gen (only works if the backend is up)
       ```
-      - Backend: [http://localhost:8000/](http://localhost:8000/)
       - Frontend: [http://localhost:3000](http://localhost:3000)
+      - Backend: [http://localhost:8000/](http://localhost:8000/)
+      - Casdoor: [http://localhost:8080/](http://localhost:8080/)
