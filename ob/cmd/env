@@ -19,3 +19,12 @@ function error() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${red}${1}${reset}\n"; }
 function success() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${green}${1:-Completed successfully!}${reset}\n"; }
 function info() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${CYAN}${1:-''}${reset}\n"; }
 function abort() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${RED}${1:-Aborting!}${reset}\n\n"; exit 1; }
+
+
+function print_access_urls() {
+    info "Once ready you can access OSINTBuddy through the following URLs:"
+    info "      http://localhost:3000        - frontend"
+    info "      http://localhost:45910       - casdoor"
+    info "      http://localhost:48997/api   - backend"
+    info "      http://localhost:48997/docs  - docs"
+}
