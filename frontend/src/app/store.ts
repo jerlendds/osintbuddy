@@ -3,7 +3,7 @@ import account, { signOut } from '@/features/account/accountSlice';
 import graph from '@/features/graph/graphSlice';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { api } from './api';
-import { authMiddleware, rtkQueryAuthHandler } from './middleware';
+import { rtkQueryAuthHandler } from './middleware';
 
 const reducer = combineReducers({
   [api.reducerPath]: api.reducer,
