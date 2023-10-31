@@ -3,7 +3,7 @@ import account, { signOut } from '@/features/account/accountSlice';
 import graph from '@/features/graph/graphSlice';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { api } from './api';
-import { authMiddleware, rtkQueryErrorLogger } from './middleware';
+import { authMiddleware, rtkQueryAuthHandler } from './middleware';
 
 const reducer = combineReducers({
   [api.reducerPath]: api.reducer,
@@ -13,7 +13,7 @@ const reducer = combineReducers({
 
 export const store = configureStore({
   reducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware).concat(rtkQueryErrorLogger)
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware).concat(rtkQueryAuthHandler)
 });
 
 setupListeners(store.dispatch)
