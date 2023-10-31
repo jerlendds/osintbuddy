@@ -1,14 +1,10 @@
 import asyncio
 from typing import Annotated
-from fastapi import (
-    APIRouter,
-    HTTPException,
-    Depends
-)
+from fastapi import APIRouter, HTTPException, Depends
 from gremlinpy import Cluster
 from gremlinpy.exception import GremlinServerError
 from sqlalchemy.orm import Session
-
+from starlette import status
 from app.api import deps
 from app import crud, schemas
 from app.core.logger import get_logger
@@ -28,11 +24,19 @@ async def get_graph(
     graph_id: str,
     db: Session = Depends(deps.get_db),
 ):
-    graph = crud.graphs.get_by_uuid(
-        db=db,
-        uuid=graph_id
-    )
-    return graph
+    try:
+        graph = crud.graphs.get_by_uuid(
+            db=db,
+            uuid=graph_id
+        )
+        return graph
+    except Exception as e:
+        log.error('Error inside graphs.get_graph:')
+        log.error(e)
+        raise HTTPException(status_code=
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="There was an error fetching graphs. Please try reloading the page"
+        )
 
 
 @router.put('/{graph_id}/favorite')
@@ -42,37 +46,63 @@ async def update_favorite_graph_uuid(
     is_favorite: bool = False,
     db: Session = Depends(deps.get_db),
 ):
-    db_obj = crud.graphs.get_by_uuid(
-        db=db,
-        uuid=graph_id
-    )
-    updated_graph = crud.graphs.update_favorite_by_uuid(db, db_obj=db_obj, is_favorite=is_favorite)
-    return updated_graph
+    try:
+        db_obj = crud.graphs.get_by_uuid(
+            db=db,
+            uuid=graph_id
+        )
+        updated_graph = crud.graphs.update_favorite_by_uuid(db, db_obj=db_obj, is_favorite=is_favorite)
+        return updated_graph
+    except Exception as e:
+        log.error('Error inside graphs.update_favorite_graph_uuid:')
+        log.error(e)
+        raise HTTPException(status_code=
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="There was an error bookmarking your graphs. Please try reloading the page"
+        )
+
 
 @router.get(
     "",
-    response_model=schemas.GraphsList
+    response_model=schemas.GraphsList,
 )
 async def get_graphs(
     user: schemas.CasdoorUser = Depends(deps.get_user_from_session),
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
-    is_favorite: bool = False,
-):
-    if limit > 50:
-        limit = 50
-    db_graphs = crud.graphs.get_many_by_favorites(
-        db=db,
-        skip=skip,
-        limit=limit,
-        is_favorite=is_favorite
-    )
-    return {
-        "graphs": db_graphs, 
-        "count": crud.graphs.count_by_favorites(db, is_favorite)[0][0]
-    }
+    is_favorite: bool = False
+) -> schemas.GraphsList:
+    try:
+        return crud.graphs.get_user_graphs_by_favorites(db, user, skip, limit, is_favorite=is_favorite)
+    except Exception as e:
+        log.error('Error inside graphs.get_graphs:')
+        log.error(e)
+        raise HTTPException(status_code=
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="There was an error fetching graphs. Please try reloading the page"
+        )
 
+
+@router.get(
+    "/favorites",
+    response_model=schemas.GraphsList
+)
+async def get_favorite_graphs(
+    user: schemas.CasdoorUser = Depends(deps.get_user_from_session),
+    db: Session = Depends(deps.get_db),
+    skip: int = 0,
+    limit: int = 100,
+):
+    try:
+        return crud.graphs.get_user_graphs_by_favorites(db, user, skip, limit)
+    except Exception as e:
+        log.error('Error inside graphs.get_favorite_graphs:')
+        log.error(e)
+        raise HTTPException(status_code=
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="There was an error fetching graphs. Please try reloading the page"
+        )
 
 
 @router.post(
@@ -93,9 +123,13 @@ async def create_graph(
         client = await cluster.connect(hostname='janus')
         await client.submit(janus_create_db(obj_out.uuid.hex))
         return obj_out
-    except (Exception, GremlinServerError) as error:
-        log.error(error)
-        raise HTTPException(status_code=422, detail='error')
+    except Exception as e:
+        log.error('Error inside graphs.create_graph:')
+        log.error(e)
+        raise HTTPException(status_code=
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="There was an error creating your graph. Please try again"
+        )
 
 
 @router.delete('')
@@ -104,10 +138,16 @@ async def delete_graph(
     uuid: str,
     db: Session = Depends(deps.get_db),
 ):
-    if uuid:
+    try:
         crud.graphs.remove_by_uuid(db=db, uuid=uuid)
-    else:
-        raise HTTPException(status_code=422, detail='UUID is a required field')
+        return
+    except Exception as e:
+        log.error('Error inside graphs.delete_graph:')
+        log.error(e)
+        raise HTTPException(status_code=
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="There was an error deleting your graph. Please try again"
+        )
 
 
 @router.get('/{graph_id}/stats')
@@ -116,29 +156,35 @@ async def get_graph_stats(
     graph_id: str,
     db: Session = Depends(deps.get_db)
 ):
-    if not graph_id:
-        raise HTTPException(status_code=422, detail='graph_id is a required field')
-    async with ProjectGraphConnection(graph_id) as g:
-        unique_entities = await g.V().label().dedup().toList()
-        total_entities = await g.V().count().toList()
-        total_relations = await g.E().count().toList()
-        
-        unique_entity_counts = {"series": [], "labels": []}
-        unique_out_edge_counts = {"series": [], "labels": []}
-        
-        for entity in unique_entities:
-          entity_count = await g.V().hasLabel(entity).count().toList()
-          unique_entity_counts["series"].append(entity_count[0])
-          unique_entity_counts["labels"].append(entity)
+    try:
+        async with ProjectGraphConnection(graph_id) as g:
+            unique_entities = await g.V().label().dedup().toList()
+            total_entities = await g.V().count().toList()
+            total_relations = await g.E().count().toList()
+            
+            unique_entity_counts = {"series": [], "labels": []}
+            unique_out_edge_counts = {"series": [], "labels": []}
+            
+            for entity in unique_entities:
+                entity_count = await g.V().hasLabel(entity).count().toList()
+                unique_entity_counts["series"].append(entity_count[0])
+                unique_entity_counts["labels"].append(entity)
 
-          out_edge_count = await g.V().hasLabel(entity).outE().count().toList()
-          unique_out_edge_counts['series'].append(out_edge_count[0])
-          unique_out_edge_counts['labels'].append(entity)
-          
-        return {
-            "entities": unique_entities,
-            "total_entities": total_entities[0],
-            "total_relations": total_relations[0],
-            "unique_entity_counts": unique_entity_counts,
-            "entity_oute_counts": unique_out_edge_counts
-        }
+                out_edge_count = await g.V().hasLabel(entity).outE().count().toList()
+                unique_out_edge_counts['series'].append(out_edge_count[0])
+                unique_out_edge_counts['labels'].append(entity)
+
+            return {
+                "entities": unique_entities,
+                "total_entities": total_entities[0],
+                "total_relations": total_relations[0],
+                "unique_entity_counts": unique_entity_counts,
+                "entity_oute_counts": unique_out_edge_counts
+            }
+    except Exception as e:
+        log.error('Error inside graphs.get_graphs:')
+        log.error(e)
+        raise HTTPException(status_code=
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="There was an error fetching graphs. Please try reloading the page"
+        )

@@ -47,10 +47,7 @@ async def get_entities(
         is_favorite=is_favorite
     )
     return {
-        "entities": [
-            schemas.Entity.model_validate(next(iter(entity._mapping.values()))) 
-            for entity in db_entities
-        ],
+        "entities": db_entities,
         "count":  crud.entities.count_by_favorites(db, is_favorite)[0][0]
     }
 
