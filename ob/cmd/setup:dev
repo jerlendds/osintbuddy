@@ -9,8 +9,8 @@ run_setup_dev () {
     python3 -m venv venv
     . venv/bin/activate
     python3 -m pip install --upgrade pip
-    pip install -r backend/backend/requirements.txt
-    pip install backend/backend/osintbuddy-plugins
+    pip install -r backend/requirements.txt
+    pip install backend/osintbuddy-plugins
 }
 
 run_setup_dev

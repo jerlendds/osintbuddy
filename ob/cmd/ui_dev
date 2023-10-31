@@ -14,7 +14,12 @@ run_uidev() {
     ls -a
     echo "REACT_APP_BASE_URL (used by ui to call backend): $REACT_APP_BASE_URL"
     cd ../frontend
-    export REACT_APP_BASE_URL=$REACT_APP_BASE_URL; yarn ui:dev
+    export REACT_APP_BASE_URL=$REACT_APP_BASE_URL
+    export REACT_APP_CASDOOR_ENDPOINT=$REACT_APP_CASDOOR_ENDPOINT
+    export REACT_APP_CASDOOR_CLIENT_ID=$REACT_APP_CASDOOR_CLIENT_ID
+    export REACT_APP_CASDOOR_ORG_NAME=$REACT_APP_CASDOOR_ORG_NAME
+    export REACT_APP_CASDOOR_APP_NAME=$REACT_APP_CASDOOR_APP_NAME
+    yarn ui:dev
     exit 0
 }
 

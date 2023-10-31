@@ -14,7 +14,7 @@ run_migration() {
         ob_compose exec backend sh -c "/usr/sbin/useradd $USER > /dev/null 2>&1"
         ob_compose exec backend sh -c "chown $USER:$USER  -R alembic/versions/*.py"
         success
-        info "View migrations at: ./backend/backend/app/alembic/versions"
+        info "View migrations at: ./backend/app/alembic/versions"
         exit 0
     else
         error "Error: A short message summarizing your changes is required to create an alembic migration:"

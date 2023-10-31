@@ -27,11 +27,7 @@ run_start() {
             success "Please allow a few minutes for JanusGraph to finish starting up."
             echo ""
             info "To monitor when JanusGraph is ready, run: ./launcher logs janus"
-            info "Once ready you can access OSINTBuddy through the following URLs:"
-            info "      http://localhost:3000        - frontend"
-            info "      http://localhost:45910       - casdoor"
-            info "      http://localhost:48997/api   - backend"
-            info "      http://localhost:48997/docs  - docs"
+            print_access_urls
         fi
         exit 0
     fi
