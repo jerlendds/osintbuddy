@@ -19,8 +19,7 @@ PySocks==1.7.1
 python-jose==3.3.0
 python-multipart==0.0.6
 redis==4.5.4
-sqlalchemy-json==0.7.0
-SQLAlchemy-Utils==0.41.1
+
 tenacity==8.2.2
 ujson==5.8.0
 undetected-chromedriver==3.4.7
