@@ -7,8 +7,8 @@ format_python() {
 }
 
 format_all_python() {
-    format_python backend/backend/app/app/**/*;
-    echo -e "\033[32;1m[SUCCESS]\033[0m Formatted backend/backend/app/app/**/* files"
+    format_python backend/app/app/**/*;
+    echo -e "\033[32;1m[SUCCESS]\033[0m Formatted backend/app/app/**/* files"
 }
 
 [[ "$VIRTUAL_ENV" == "" ]]; INVENV=$?
