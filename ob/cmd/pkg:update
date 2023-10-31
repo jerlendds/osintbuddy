@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+. cmd/env
+
+pkg_update () {
+    cd ../
+    if [ -d "venv" ]; then
+        ob_compose exec backend pip install osintbuddy-plugins
+
+        . venv/bin/activate
+        pip install backend/osintbuddy-plugins
+        
+        success "The osintbuddy Python package has been updated locally and in docker!"
+    else
+        error "Error: Python venv not found!"
+        info "Try running the following command to configure your environment:"
+        info "      ./launcher bootstrap"
+        exit 1
+    fi
+}
+
+pkg_update
+

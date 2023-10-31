@@ -111,10 +111,16 @@ case "$OB_CMD" in
     setup:dev)
         cmd/setup:dev
     ;;
+    pkg:update)
+        cmd/pkg:update
+    ;;
     ps)
         cmd/ps
     ;;
     containers)
         usage_containers
+    ;;
+    show)
+        print_access_urls
     ;;
 esac
