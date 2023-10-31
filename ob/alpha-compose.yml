@@ -46,7 +46,7 @@ services:
       - 45910:45910
     volumes:
       - ./_casdoor/conf:/conf
-      # - ./_casdoor/init_data.json:/init_data.json
+      - ./_casdoor/init_data.json:/init_data.json
   redis:
     image: ${REDIS_IMAGE-redis:alpine3.18}
     container_name: "ob_dev_redis"
