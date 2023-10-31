@@ -22,7 +22,7 @@ from app.core.logger import get_logger
 from osintbuddy import Registry, PluginUse, load_plugins
 from osintbuddy.errors import OBPluginError
 from osintbuddy.utils import to_snake_case
-from app.api.utils import MAP_KEY, chunks
+from osintbuddy.utils import MAP_KEY, chunks
 from app.db.janus import ProjectGraphConnection
 
 log = get_logger("api_v1.endpoints.nodes")

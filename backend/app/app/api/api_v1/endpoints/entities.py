@@ -1,21 +1,14 @@
-import datetime
 from uuid import UUID
 from typing import Annotated 
-import json
-import ujson
 from fastapi import (
     APIRouter,
     HTTPException,
     Depends,
 )
-from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
-from sqlalchemy import Row
 from app.api import deps
-from app import crud, schemas, models
+from app import crud, schemas
 from app.core.logger import get_logger
-from app.api.utils import plugin_source_template
-from app.db.encoder import SAEncoder
 
 
 log = get_logger("api_v1.endpoints.entities")
@@ -34,7 +27,9 @@ async def get_entity(
     entities = crud.entities.get_by_uuid(db=db, uuid=UUID(entity_uuid))
     return entities
 
-      
+
+
+
 @router.get("")
 async def get_entities(
     user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],

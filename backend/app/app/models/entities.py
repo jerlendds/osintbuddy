@@ -8,10 +8,6 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
 
-# Endpoints that use entities can be found here:
-#
-#        backend/backend/app/app/api/api_v1/endpoints/entities.py
-
 class Entities(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     uuid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), default=uuid.uuid4)

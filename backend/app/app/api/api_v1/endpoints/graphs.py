@@ -1,7 +1,5 @@
-import uuid
 import asyncio
-from typing import List, Any, Annotated
-import boto3
+from typing import Annotated
 from fastapi import (
     APIRouter,
     HTTPException,

@@ -8,7 +8,7 @@ from app.core.config import settings
 # make sure all SQL Alchemy models are imported (app.db.base) before initializing DB
 from .base import *  # noqa
 
-log = get_logger(name=__name__)
+log = get_logger(__name__)
 
 core_ob_url = 'https://raw.githubusercontent.com/jerlendds/osintbuddy-core-plugins/main/plugins/'
 core_plugins = {

@@ -5,7 +5,7 @@ from app.core.config import settings
 from app.core.logger import get_logger
 
 
-logger = get_logger(name="titan")
+logger = get_logger("titan")
 
 
 @app.task(acks_late=True)
