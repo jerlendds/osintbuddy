@@ -1,4 +1,3 @@
-import sdk from '@/app/api';
 import { Dialog, Switch, Transition } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useTour } from "@reactour/tour";
@@ -28,24 +27,7 @@ export function NewTemplateForm({
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
-        sdk.scans.createScanMachine(values)
-          .then((data) => {
-            toast.info(`Created the ${data?.name || ""} scan machine`);
-            closeModal();
-            refreshData();
-          })
-          .catch((err) => {
-            if (err.code === "ERR_NETWORK") {
-              toast.warn(
-                "We ran into an error fetching your projects. Is the backend running and are you connected on localhost? (update the BACKEND_CORS_ORIGINS in your .env if you're on an interface that's not localhost)",
-                {
-                  autoClose: 10000,
-                }
-              );
-            } else {
-              toast.error(`Error: ${err}`);
-            }
-          });
+
         setSubmitting(false);
       }}
     >

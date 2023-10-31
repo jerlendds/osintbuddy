@@ -1,11 +1,10 @@
 import GraphHeader from "./_components/GraphHeader"
-import { useEffectOnce } from "@/components/utils"
+import { useEffectOnce } from "@/app/hooks";
 import { useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 import 'chartist/dist/index.css';
 import { BarChart } from "chartist"
 import CaseNotes from "@/components/Notes/CaseNotes"
-import sdk from '@/app/api';
 
 export default function GraphDetails() {
   const params: any = useParams()
@@ -13,13 +12,7 @@ export default function GraphDetails() {
   const [graphStats, setGraphStats] = useState<any>(null);
 
   useEffect(() => {
-    sdk.graphs.getGraph(params.graphId)
-      .then((data) => {
-        setActiveGraph(data)
-      })
-    sdk.graphs.getGraphStats(params.graphId)
-      .then((data) => setGraphStats(data))
-      .catch((error) => error)
+
   }, [params?.graphId])
 
   const uniqueChartRef = useRef(null);

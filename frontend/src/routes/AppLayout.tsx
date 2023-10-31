@@ -1,26 +1,17 @@
-import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Dialog, Transition } from "@headlessui/react";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  CogIcon,
-  DocumentMagnifyingGlassIcon,
-  FolderOpenIcon,
-  InboxIcon,
-  PlusIcon,
-} from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, ChevronRightIcon, CogIcon, DocumentMagnifyingGlassIcon, FolderOpenIcon, InboxIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { TourProvider } from "@reactour/tour";
 import classNames from "classnames";
 import { ReactComponent as OSINTBuddyLogo } from "@images/logo.svg";
 import HamburgerMenu from "@/components/HamburgerMenu";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { isSidebarOpen, selectIsAuthenticated, selectUser, setIsAuthenticated, setSidebar, setUser } from "@/features/account/accountSlice";
+import { useAppDispatch, useAppSelector, useEffectOnce } from "@/app/hooks";
+import { isSidebarOpen, selectIsAuthenticated, setIsAuthenticated, setSidebar } from "@/features/account/accountSlice";
 import IncidentCard from "@/components/IncidentCard";
-import { useEffectOnce } from "@/components/utils";
-import sdk, { LS_USER_KEY } from "@/app/api";
+import { api } from "@/app/api";
 
 const navigation = [
   { name: "Dashboard", to: "/app/dashboard/graphs", icon: InboxIcon },
@@ -51,25 +42,23 @@ export default function AppLayout() {
   const cancelButtonRef = useRef(null);
 
   const isAuthenticated = useAppSelector(state => selectIsAuthenticated(state));
-  const user = useAppSelector(state => selectUser(state));
 
   const toggleSidebar = () => {
     dispatch(setSidebar(!showSidebar));
   };
 
-  useEffectOnce(() => {
-    sdk.accounts.getAccount()
-      .then((user) => {
-        dispatch(setUser(user))
-      })
-      .catch((error) => {
-        console.error(error)
-        dispatch(setIsAuthenticated(false))
-      })
-  })
 
-  console.log(isAuthenticated, user)
-  if (!isAuthenticated) navigate('/', { replace: true })
+  const { data: user, isLoading } = api.useGetAccountQuery()
+
+
+  console.log('casdoor conf', user, isLoading)
+
+  // const { data, error, isLoading } = ob.useGetAccountQuery();
+
+  // console.log('ob.getAccount data', data)
+  // console.log('ob.getAccount error: ', error)
+  // console.log('ob.getAccount isLoading: ', isLoading)
+  if (!isAuthenticated) return <Navigate to="/" replace />
 
   return (
     <>

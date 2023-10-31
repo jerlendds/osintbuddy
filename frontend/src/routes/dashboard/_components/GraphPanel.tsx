@@ -1,11 +1,10 @@
-import sdk from '@/app/api';
-import { formatPGDate, useEffectOnce } from "@/components/utils";
+import { api } from '@/app/api';
+import { formatPGDate } from "@/app/utilities";
 import { ChevronDownIcon, StarIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
-import { useCallback, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { getGraphs, selectDashboardGraphs, updateGraphFavorite } from "@/features/dashboard/dashboardSlice";
+import { useAppDispatch } from "@/app/hooks";
 
 
 export function GraphLoaderCard() {
@@ -34,25 +33,41 @@ export default function GraphPanel() {
 
   const dispatch = useAppDispatch()
 
-  // TODO: Implement virtualized scrolling
-  const fetchGraphs = () => {
-    dispatch(getGraphs({ pageSize: 20, pageIndex: 0, isFavorite: false }))
-    dispatch(getGraphs({ pageSize: 20, pageIndex: 0, isFavorite: true }))
-  }
+  const {
+    data: favoriteGraphsData = { graphs: [], count: 0 },
+    isLoading: isLoadingFavoriteGraphs,
+    error: isFavoriteGraphsError
+  } = api.useGetGraphsQuery({ skip: 0, limit: 50, isFavorite: true })
 
-  useEffectOnce(() => {
-    fetchGraphs()
-  })
+  const favoriteGraphs = useMemo(() => {
+    const sortedGraphs = favoriteGraphsData.graphs.slice()
+    sortedGraphs.sort((a, b) => b.created.localeCompare(a.created))
+    return sortedGraphs
+  }, [favoriteGraphsData])
 
+  console.log("API", api)
 
-  const { graphs, favoriteGraphs, isLoadingGraphs, isLoadingFavoriteGraphs, isGraphsError, isFavoriteGraphsError } = useAppSelector(state => selectDashboardGraphs(state))
+  const {
+    data: graphsData = { graphs: [], count: 0 },
+    isLoading: isLoadingGraphs,
+    error: isGraphsError
+  } = api.useGetGraphsQuery({ skip: 0, limit: 50, isFavorite: true })
+
+  const graphs = useMemo(() => {
+    if (graphsData) {
+      const sortedGraphs = graphsData.graphs.slice()
+      sortedGraphs.sort((a, b) => b.created.localeCompare(a.created))
+      return sortedGraphs
+    }
+  }, [graphsData])
+
 
   const MAX_DESCRIPTION_LENGTH = 63
 
   const updateFavorites = (
     uuid: string,
     isFavorite: boolean
-  ) => dispatch(updateGraphFavorite({ uuid, isFavorite }))
+  ) => null
 
   return (
     <section >
@@ -76,11 +91,11 @@ export default function GraphPanel() {
         )}
         {showFavoriteGraphs && !isLoadingFavoriteGraphs && (
           <div className="mt-2 h-full overflow-y-scroll overflow-x-hidden">
-            {favoriteGraphs?.map((graph: JSONObject) => {
+            {favoriteGraphs.map((graph) => {
               return <> <button key={graph.uuid} onClick={() => navigate(`graphs/${graph.uuid}`)} className={classNames("mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center ", params?.graphId === graph.uuid && "!border-dark-400 bg-dark-900 translate-x-px")}>
                 <div className="flex w-full flex-col items-start mr-3 space-y-1">
                   <p className={classNames("text-sm font-medium leading-none", params?.graphId === graph.uuid && "text-slate-400")}>{graph.name}</p>
-                  <p className={classNames("text-xs font-medium leading-none text-slate-600 mt-1 text-left", params?.graphId === graph.uuid && "!text-slate-500")}>{graph?.description?.length >= MAX_DESCRIPTION_LENGTH ? `${graph.description.slice(0, MAX_DESCRIPTION_LENGTH)}...` : graph.description}</p>
+                  <p className={classNames("text-xs font-medium leading-none text-slate-600 mt-1 text-left", params?.graphId === graph.uuid && "!text-slate-500")}>{graph?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${graph?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : graph.description}</p>
                   <p className={classNames("text-xs font-medium leading-none text-slate-600 mt-1.5 text-left", params?.graphId === graph.uuid && "!text-slate-500")}>Last seen {formatPGDate(graph.last_seen)}</p>
                 </div>
                 <StarIcon onClick={() => {
@@ -111,12 +126,12 @@ export default function GraphPanel() {
         )}
         {showAllGraphs && !isLoadingGraphs && (
           <div className="mt-2 h-full overflow-y-scroll overflow-x-hidden">
-            {graphs?.map((graph: JSONObject) => {
+            {graphs?.map((graph) => {
               return (
                 <button key={graph?.uuid} onClick={() => navigate(`graphs/${graph?.uuid}`)} className={classNames("mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center ", params?.graphId === graph?.uuid && "!border-dark-400 bg-dark-900 translate-x-px")}>
                   <div className="flex w-full flex-col items-start mr-3 space-y-1.5">
                     <p className={classNames("text-sm font-medium leading-none", params?.graphId === graph?.uuid && "text-slate-400")}>{graph?.name}</p>
-                    <p className={classNames("text-xs font-medium leading-none text-slate-600  text-left", params?.graphId === graph?.uuid && "!text-slate-500")}>{graph?.description?.length >= MAX_DESCRIPTION_LENGTH ? `${graph?.description.slice(0, MAX_DESCRIPTION_LENGTH)}...` : graph?.description}</p>
+                    <p className={classNames("text-xs font-medium leading-none text-slate-600  text-left", params?.graphId === graph?.uuid && "!text-slate-500")}>{graph?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${graph?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : graph?.description}</p>
                     <p className={classNames("text-xs font-medium leading-none text-slate-600  text-left", params?.graphId === graph?.uuid && "!text-slate-500")}>Last seen {formatPGDate(graph?.last_seen)}</p>
                   </div>
                   <StarIcon

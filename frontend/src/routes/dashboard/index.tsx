@@ -2,15 +2,12 @@ import { Fragment, useRef, useState } from "react";
 import CreateProjectModal from "./_components/CreateProjectModal";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { selectActiveTab, setActiveTab } from "@/features/dashboard/dashboardSlice";
 import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Tab } from "@headlessui/react";
 import classNames from "classnames";
 import GraphPanel from "./_components/GraphPanel";
 import EntitiesPanel from "./_components/EntityPanel";
-import { useEffectOnce } from "@/components/utils";
-import sdk from '@/app/api';
-import { CasdoorUser } from "@/app/openapi";
+import { selectActiveTab, setActiveTab } from "@/features/account/accountSlice";
 
 interface DashboardTabsProps {
   tabs: JSX.Element
@@ -30,20 +27,13 @@ function DashboardTabs({ tabs, panels }: DashboardTabsProps) {
   )
 }
 export default function DashboardPage() {
-  useEffectOnce(() => {
-    sdk.accounts.getAccount()
-      .then((user: CasdoorUser) => console.log(user))
-      .catch((error: Error) => console.error(error))
-  })
-
-  const [activeInquiryTab, setActiveInquiryTab] = useState<'graphs' | 'entities' | 'market'>('graphs')
+  const activeTab = useAppSelector(state => selectActiveTab(state))
 
   let [showCreateGraphModal, setShowCreateGraphModal] = useState(false);
   const cancelCreateGraphRef = useRef<HTMLElement>(null);
 
   const dispatch = useAppDispatch()
 
-  const activeTab = useAppSelector(state => selectActiveTab(state))
 
   const navigate = useNavigate()
 

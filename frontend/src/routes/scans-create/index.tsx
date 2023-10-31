@@ -23,7 +23,7 @@ import { toast } from "react-toastify";
 // @ts-nocheck
 import { useRef } from "react";
 import "reactflow/dist/style.css";
-import { useComponentVisible, useEffectOnce } from "@/components/utils";
+import { useComponentVisible, useEffectOnce } from "@/app/hooks";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { GripIcon, Icon } from "@/components/Icons";
 import classNames from "classnames";

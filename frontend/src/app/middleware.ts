@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
  * When unauthorized sign out the user 
  * (which auto redirects to /)
 */
-export const rtkQueryErrorLogger: Middleware =
+export const rtkQueryAuthHandler: Middleware =
   (api: MiddlewareAPI) => (next) => (action) => {
     if (isRejectedWithValue(action)) {
       if (action.payload.status === 401) {

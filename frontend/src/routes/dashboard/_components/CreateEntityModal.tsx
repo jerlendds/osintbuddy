@@ -1,4 +1,3 @@
-import sdk from '@/app/api';
 import { Dialog, Transition } from '@headlessui/react';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { useTour } from '@reactour/tour';
@@ -33,24 +32,7 @@ export function CreateEntityForm({ closeModal, updateTable }: JSONObject) {
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
-        sdk.entities.createEntity(values)
-          .then((data) => {
-            updateTable(data);
-            toast.info(`Created the ${data?.name || ''} entity`);
-            closeModal();
-          })
-          .catch((err) => {
-            if (err.code === 'ERR_NETWORK') {
-              toast.warn(
-                "We ran into an error fetching your projects. Please try again by refreshing the page",
-                {
-                  autoClose: 10000,
-                }
-              );
-            } else {
-              toast.error(`Error: ${err}`);
-            }
-          });
+
         setSubmitting(false);
       }}
     >

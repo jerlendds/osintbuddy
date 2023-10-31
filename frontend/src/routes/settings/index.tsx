@@ -4,10 +4,8 @@ import { Formik, Form, Field } from "formik";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import Graph from "graphology";
-import sdk from '@/app/api';
 import { InquiryHeader } from "@/components/Headers";
 import { useAppDispatch } from "@/app/hooks";
-import { createGraph } from "@/features/dashboard/dashboardSlice";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 interface CreateGraphForm {
@@ -25,7 +23,7 @@ export const CreateCasesForm: React.FC<{ closeModal: Function }> = ({
       <Formik
         initialValues={initialValues}
         onSubmit={(values: CreateGraphForm, { setSubmitting }) => {
-          dispatch(createGraph(values))
+          // dispatch(createGraph(values))
           setSubmitting(false);
           closeModal();
         }}
@@ -268,15 +266,7 @@ export function CasesTable({
     const fetchId = ++fetchIdRef.current;
     if (fetchId === fetchIdRef.current) {
       setLoading(true);
-      sdk.graphs.getGraphs(pageIndex, pageSize)
-        .then((data) => {
-          setPageCount(Math.ceil(data.count / pageSize));
-          setData(data.graphs);
-          setLoading(false);
-        }).catch((error) => {
-          console.error(error);
-          setLoading(false);
-        });
+
     }
   }, []);
 

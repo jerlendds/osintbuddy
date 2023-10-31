@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { selectActiveEntity, setActiveEntityId } from "@/features/dashboard/dashboardSlice";
 import EntityEditor from "../../components/EntityEditor/EntityEditor";
 
 

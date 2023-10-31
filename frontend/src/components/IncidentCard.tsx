@@ -2,7 +2,6 @@ import { Fragment, useEffect, useState } from 'react';
 import { Combobox, Switch, Transition } from '@headlessui/react';
 import { ChevronUpDownIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
-import sdk from '@/app/api';
 
 export default function IncidentCard({ closeModal }: JSONObject) {
   const [query, setQuery] = useState('');

@@ -1,7 +1,4 @@
-import sdk from '@/app/api';
 import { useAppDispatch } from '@/app/hooks';
-import { GraphCreate } from '@/app/openapi';
-import { createGraph } from '@/features/dashboard/dashboardSlice';
 import { Dialog, Switch, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { useTour } from '@reactour/tour';
@@ -30,7 +27,7 @@ export function NewProjectForm({ closeModal, updateTable }: JSONObject) {
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
-        dispatch(createGraph(values))
+        // dispatch(createGraph(values))
         setSubmitting(false)
       }}
     >
@@ -177,7 +174,7 @@ export default function CreateProjectModal({
             >
               <Dialog.Panel className='relative max-w-2xl w-full transform overflow-hidden rounded-lg  text-left shadow-xl transition-all '>
                 <NewProjectForm
-                  updateTable={(project: GraphCreate) => dispatch(createGraph(project))}
+                  updateTable={(project: any) => null}
                   closeModal={() => closeModal()}
                 />
               </Dialog.Panel>

@@ -3,14 +3,10 @@ import CodeMirror, { Extension } from "@uiw/react-codemirror";
 import { tags as t } from "@lezer/highlight";
 import { python } from "@codemirror/lang-python";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useEffectOnce } from "../utils";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { selectActiveEntity, setActiveEntityId } from "@/features/dashboard/dashboardSlice";
 import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import { Icon } from "../Icons";
-import sdk from '@/app/api';
 
 export const tokyoNightTheme = tokyoNightInit({
   settings: {
@@ -47,7 +43,6 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 
 export default function EntityEditor({ activeEntity }: JSONObject) {
-  const dispatch = useAppDispatch()
 
   const [isEntityDraggable, setEntityDraggable] = useState(false);
   const [code, setCode] = useState(activeEntity?.source)

@@ -9,7 +9,7 @@ import EntityOptions from './_components/EntityOptions';
 import ContextMenu from './_components/ContextMenu';
 import { toast } from 'react-toastify';
 import ProjectGraph from './_components/ProjectGraph';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector, useComponentVisible, useEffectOnce } from '@/app/hooks';
 import {
   ProjectViewModes,
   createEdge,
@@ -21,10 +21,9 @@ import {
   selectNode,
   selectViewMode,
 } from '@/features/graph/graphSlice';
-import { useComponentVisible, useEffectOnce } from '@/components/utils';
 import DisplayOptions from './_components/DisplayOptions';
 import { MiniEditDialog } from './_components/BaseMiniNode';
-import sdk, { WS_URL } from '@/app/api';
+import sdk, { WS_URL } from '@/app/baseApi';
 import CommandPallet from './_components/CommandPallet';
 
 const keyMap = {
@@ -113,21 +112,21 @@ export default function OsintPage() {
   };
 
   const updateNodeOptions = () => {
-    sdk.nodes.refreshPlugins().then((data) => {
-      const options =
-        data?.plugins
-          ?.filter((option: any) => option)
-          .map((option: string) => {
-            return {
-              event: option.label,
-              title: option.label,
-              description: option.description,
-              author: option.author,
-            };
-          }) || [];
-      return options;
-    }).then((options) => setNodeOptions(options))
-      .catch((error: Error) => console.error(error))
+    // sdk.nodes.refreshPlugins().then((data) => {
+    //   const options =
+    //     data?.plugins
+    //       ?.filter((option: any) => option)
+    //       .map((option: string) => {
+    //         return {
+    //           event: option.label,
+    //           title: option.label,
+    //           description: option.description,
+    //           author: option.author,
+    //         };
+    //       }) || [];
+    //   return options;
+    // }).then((options) => setNodeOptions(options))
+    //   .catch((error: Error) => console.error(error))
 
   };
 
@@ -215,15 +214,15 @@ export default function OsintPage() {
       x: event.clientX - 20,
     });
     setCtxSelection(node);
-    sdk.nodes.getEntityTransforms(node.data.label)
-      .then((data) => {
-        console.log('entityTransforms', data)
-        setTransforms(data.transforms);
-      })
-      .catch((error) => {
-        toast.warn(`We found no transforms while trying to load the plugin ${node.data.label}.`);
-        setTransforms([]);
-      });
+    // sdk.nodes.getEntityTransforms(node.data.label)
+    //   .then((data) => {
+    //     console.log('entityTransforms', data)
+    //     setTransforms(data.transforms);
+    //   })
+    //   .catch((error) => {
+    //     toast.warn(`We found no transforms while trying to load the plugin ${node.data.label}.`);
+    //     setTransforms([]);
+    //   });
     setShowMenu(true);
   };
 

@@ -10,8 +10,7 @@ import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
 import CreateScanModal from "./_components/CreateScanModal";
 import { useRef, useState } from "react";
-import { useEffectOnce } from "@/components/utils";
-import sdk from '@/app/api';
+import { useEffectOnce } from "@/app/hooks";
 
 interface SettingCardProps {
   title: string;
@@ -84,14 +83,8 @@ export default function ScansPage() {
 
   const [scanMachines, setScanMachines] = useState([]);
 
-  const getScanMachineData = (limit = 100, skip = 0) => {
-    return sdk.scans.getScanMachines(skip, limit).then((data) => {
-      setScanMachines(data);
-    }).catch((error: Error) => console.error(error));
-  };
 
   useEffectOnce(() => {
-    getScanMachineData();
   });
 
   return (
@@ -135,7 +128,7 @@ export default function ScansPage() {
         closeModal={closeModal}
         isOpen={isModalOpen}
         cancelCreateRef={cancelCreateRef}
-        refreshData={() => getScanMachineData()}
+        refreshData={() => null}
       />
     </>
   );
