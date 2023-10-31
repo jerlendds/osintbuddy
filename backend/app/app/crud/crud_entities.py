@@ -42,15 +42,7 @@ class CRUDEntities(CRUDBase[
     def get_many_by_favorites(
         self, db: Session, *, skip: int = 0, limit: int = 100, is_favorite: bool = False
     ) -> List[ModelType]:
-        if is_favorite:
-            
-            return db.execute(select(self.model).where(
-                self.model.is_favorite == is_favorite
-            ).offset(skip).limit(limit)).all()
-        return db.execute(select(self.model).where(
-            (self.model.is_favorite == None) |
-            (self.model.is_favorite == False)
-        ).offset(skip).limit(limit)).all()
+        return db.query(self.model).where(self.model.is_favorite == is_favorite).offset(skip).limit(limit).all()
 
     def count_by_favorites(self, db: Session, is_favorite: bool = False) -> int:
         if isinstance(is_favorite, bool) and is_favorite:
