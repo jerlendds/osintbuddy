@@ -13,7 +13,6 @@ import {
   addEdge,
   MarkerType,
 } from 'reactflow';
-import sdk from '@/app/api';
 
 export type ProjectViewModes = 'base' | 'mini'
 
@@ -42,11 +41,12 @@ const initialState: Graph = {
 export const fetchNodeBlueprint = createAsyncThunk(
   'graph/saveNewNode',
   async ({ label, position, uuid }: { label: string; position: XYPosition; uuid: string }) => {
-    return await sdk.nodes.createGraphEntity({
-        label,
-        position,
-        graphId: uuid,
-      })
+    return null
+    // return await sdk.nodes.createGraphEntity({
+    //     label,
+    //     position,
+    //     graphId: uuid,
+    //   })
   }
 );
 
@@ -208,7 +208,7 @@ export const graph = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(fetchNodeBlueprint.fulfilled, (state, action) => {
-      state.nodes.push({ ...action.payload, type: state.viewMode});
+      // state.nodes.push({ ...action.payload, type: state.viewMode});
     }),
       builder.addCase(saveNode.fulfilled, (state, action) => {
         state.nodes.push(action.payload);
