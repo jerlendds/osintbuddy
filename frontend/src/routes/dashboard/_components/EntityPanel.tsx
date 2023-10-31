@@ -3,7 +3,7 @@ import { useEffectOnce } from "@/app/hooks";
 import { formatPGDate } from "@/app/utilities";
 import { ChevronDownIcon, StarIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export function GraphLoaderCard() {
@@ -33,15 +33,16 @@ interface GraphPanelProps {
 export function FavoriteEntities({ showFavoriteEntities, setShowFavoriteEntities }: any) {
   const navigate = useNavigate();
   const params: JSONObject = useParams();
+  const favoriteEntities: any = []
+  const isLoadingFavoriteEntities = false
+  const isFavoriteEntitiesError = false
+  const isSuccess = true
+  // const {
+  //   data: ,
+  //   isLoading: ,
+  //   isError: ,
 
-  const {
-    data: favoriteEntities,
-    isLoading: isLoadingFavoriteEntities,
-    isError: isFavoriteEntitiesError,
-    isSuccess
-  } = api.useGetEntitiesQuery({ skip: 0, limit: 50, isFavorite: true })
-
-  console.log(favoriteEntities, isSuccess, isLoadingFavoriteEntities, isFavoriteEntitiesError)
+  // } = api.useGetEntitiesQuery({ skip: 0, limit: 50, isFavorite: false })
 
   return (
     <>
@@ -107,11 +108,25 @@ export default function EntitiesPanel() {
   const [showAllEntities, setShowAllEntities] = useState(true);
 
   const {
-    data: entities,
+    data = { entities: [], count: 0 },
+    isLoading,
+    isError,
+  } = api.useGetEntitiesQuery({ skip: 0, limit: 50, isFavorite: true })
+
+  console.log('f', data, isLoading, isError)
+  const {
+    data: entitiesData = { entities: [], count: 0 },
     isLoading: isLoadingEntities,
     isError: isEntitiesError,
-
   } = api.useGetEntitiesQuery({ skip: 0, limit: 50, isFavorite: false })
+
+  console.log(isLoadingEntities, isEntitiesError)
+
+  const entities = useMemo(() => {
+    const sortedEntities = entitiesData.entities.slice()
+    sortedEntities.sort((a: any, b: any) => b.created.localeCompare(a.created))
+    return sortedEntities
+  }, [entitiesData])
 
   return (
     <section>

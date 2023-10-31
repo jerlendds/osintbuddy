@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch } from "@/app/hooks";
+import { GetFavoriteGraphsApiResponse } from '../../../app/api';
 
 
 export function GraphLoaderCard() {
@@ -34,10 +35,12 @@ export default function GraphPanel() {
   const dispatch = useAppDispatch()
 
   const {
-    data: favoriteGraphsData = { graphs: [], count: 0 },
+    data: favoriteGraphsData = { graphs: [], count: 0, isFavorite: true },
     isLoading: isLoadingFavoriteGraphs,
     error: isFavoriteGraphsError
-  } = api.useGetGraphsQuery({ skip: 0, limit: 50, isFavorite: true })
+  } = api.useGetGraphsQuery({ skip: 0, limit: 50 })
+
+  console.log(favoriteGraphsData)
 
   const favoriteGraphs = useMemo(() => {
     const sortedGraphs = favoriteGraphsData.graphs.slice()
@@ -45,13 +48,11 @@ export default function GraphPanel() {
     return sortedGraphs
   }, [favoriteGraphsData])
 
-  console.log("API", api)
-
   const {
     data: graphsData = { graphs: [], count: 0 },
     isLoading: isLoadingGraphs,
     error: isGraphsError
-  } = api.useGetGraphsQuery({ skip: 0, limit: 50, isFavorite: true })
+  } = api.useGetGraphsQuery({ skip: 0, limit: 50, isFavorite: false })
 
   const graphs = useMemo(() => {
     if (graphsData) {

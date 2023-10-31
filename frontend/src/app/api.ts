@@ -57,6 +57,15 @@ const injectedRtkApi = api.injectEndpoints({
         params: { uuid: queryArg.uuid },
       }),
     }),
+    getFavoriteGraphs: build.query<
+      GetFavoriteGraphsApiResponse,
+      GetFavoriteGraphsApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/v1/graphs/favorites`,
+        params: { skip: queryArg.skip, limit: queryArg.limit },
+      }),
+    }),
     getGraphStats: build.query<GetGraphStatsApiResponse, GetGraphStatsApiArg>({
       query: (queryArg) => ({
         url: `/api/v1/graphs/${queryArg.graphId}/stats`,
@@ -170,7 +179,7 @@ const injectedRtkApi = api.injectEndpoints({
 });
 export { injectedRtkApi as api };
 export type GetCasdoorConfigApiResponse =
-  /** status 200 Successful Response */ Status;
+  /** status 200 Successful Response */ any;
 export type GetCasdoorConfigApiArg = void;
 export type PostSigninApiResponse = /** status 200 Successful Response */
   | Status
@@ -210,6 +219,12 @@ export type CreateGraphApiArg = {
 export type DeleteGraphApiResponse = /** status 200 Successful Response */ any;
 export type DeleteGraphApiArg = {
   uuid: string;
+};
+export type GetFavoriteGraphsApiResponse =
+  /** status 200 Successful Response */ GraphsList;
+export type GetFavoriteGraphsApiArg = {
+  skip?: number;
+  limit?: number;
 };
 export type GetGraphStatsApiResponse =
   /** status 200 Successful Response */ any;
@@ -388,6 +403,7 @@ export const {
   useGetGraphsQuery,
   useCreateGraphMutation,
   useDeleteGraphMutation,
+  useGetFavoriteGraphsQuery,
   useGetGraphStatsQuery,
   useGetEntityQuery,
   useGetEntitiesQuery,
