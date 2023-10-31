@@ -1,31 +1,22 @@
-from typing import Generator, Annotated, Optional
+from typing import Generator
 from contextlib import contextmanager
+
 import boto3
-import datetime
-from fastapi import Depends, HTTPException, status, Security, Response, Request, Cookie
-from fastapi.responses import JSONResponse
-from fastapi.security import OAuth2PasswordBearer, SecurityScopes
-from fastapi.responses import JSONResponse
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from pydantic import ValidationError
 import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from casdoor import AsyncCasdoorSDK
+
 from app.db.session import SessionLocal
-from app import crud, models, schemas
-from app.core.config import settings
 from app.core.logger import get_logger
-from fastapi.encoders import jsonable_encoder
+from app.api.utils import APIRequest
 
 
 log = get_logger("api.deps")
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_V1_STR}/signin",
-)
 
 
-async def get_user_from_session(request: Request):
+async def get_user_from_session(request: APIRequest):
     if user := request.session.get("member"):
         return user
     raise HTTPException(status_code=401, detail="Unauthorized")
