@@ -52,7 +52,8 @@
     "ui:dev": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "client:gen": "rm -f -dr ./src/app/openapi && mkdir ./src/app/openapi && openapi --name obSDK -i http://localhost:48997/api/v1/openapi.json --output ./src/app/openapi --exportModels true --exportSchemas true --indent 2 --postfixServices v1"
+    "client:openapi:gen:deprecated": "rm -f -dr ./src/app/openapi && mkdir ./src/app/openapi && openapi --name obSDK -i http://localhost:48997/api/v1/openapi.json --output ./src/app/openapi --exportModels true --exportSchemas true --indent 2 --postfixServices v1",
+    "client:gen": "npx @rtk-query/codegen-openapi openapi-config.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -75,6 +76,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@craco/craco": "^7.1.0",
+    "@rtk-query/codegen-openapi": "^1.1.3",
     "@swc/helpers": "^0.5.1",
     "@tailwindcss/typography": "^0.5.9",
     "@testing-library/jest-dom": "^5.16.5",

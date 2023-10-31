@@ -2,16 +2,10 @@ import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from '@/routes/AppRoutes';
 import SDK from 'casdoor-js-sdk'
 import { SdkConfig } from 'casdoor-js-sdk/lib/esm/sdk'
+import { CASDOOR_CONFIG } from './app/baseApi';
 
-const config = {
-  serverUrl: process.env.REACT_APP_CASDOOR_ENDPOINT,
-  clientId: process.env.REACT_APP_CASDOOR_CLIENT_ID,
-  organizationName: process.env.REACT_APP_CASDOOR_ORG_NAME,
-  appName: process.env.REACT_APP_CASDOOR_APP_NAME,
-  redirectPath: "/callback",
-  signinPath: "/api/v1/auth/sign-in",
-}
-window.sdk = new SDK(config as SdkConfig)
+if (process.env.NODE_ENV === 'development') console.info("ENVIRONMENT:\n", process.env)
+window.sdk = new SDK(CASDOOR_CONFIG)
 
 function App() {
   return (

@@ -1,11 +1,10 @@
 
 import os
-from casdoor import AsyncCasdoorSDK
+from casdoor import CasdoorSDK # AsyncCasdoorSDK
 from app.core.config import settings
 
-print('settings.CASDOOR_CERT', settings.CASDOOR_CERT)
 class Config:
-    CASDOOR_SDK = AsyncCasdoorSDK(
+    CASDOOR_SDK = CasdoorSDK(
         endpoint=settings.CASDOOR_ENDPOINT,
         client_id=settings.REACT_APP_CASDOOR_CLIENT_ID,
         client_secret=settings.CASDOOR_CLIENT_SECRET,

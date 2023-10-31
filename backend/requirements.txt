@@ -27,4 +27,4 @@ undetected-chromedriver==3.4.7
 validators==0.20.0
 watchfiles==0.19.0
 
-gremlinpy @ git+https://github.com/jerlendds/gremlinpy.git@7d3033e6a55ed9cb1f982ec3b58ca233e01c58e3
+gremlinpy @ git+https://github.com/jerlendds/gremlinpy.git@eaba7dca12ad0156eb0d6d8ba2eb5751551c6a6d

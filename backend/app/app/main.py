@@ -72,10 +72,11 @@ app.add_middleware(
     secret_key=CasdoorConfig.SECRET_KEY,
     max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES
 )
-app.state.CASDOOR_SDK = CasdoorConfig().CASDOOR_SDK
-app.state.REDIRECT_URI = CasdoorConfig().REDIRECT_URI
-app.state.SECRET_TYPE = CasdoorConfig().SECRET_TYPE
-app.state.SECRET_KEY = CasdoorConfig().SECRET_KEY
+casdoor_config = CasdoorConfig()
+app.state.CASDOOR_SDK = casdoor_config.CASDOOR_SDK
+app.state.REDIRECT_URI = casdoor_config.REDIRECT_URI
+app.state.SECRET_TYPE = casdoor_config.SECRET_TYPE
+app.state.SECRET_KEY = casdoor_config.SECRET_KEY
 
 
 use_route_names_as_operation_ids(app)

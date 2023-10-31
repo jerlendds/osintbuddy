@@ -1,19 +1,24 @@
-import { configureStore, ThunkAction, Action, combineReducers } from '@reduxjs/toolkit';
-import account from '@/features/account/accountSlice';
+import { configureStore, ThunkAction, Action, combineReducers, Middleware} from '@reduxjs/toolkit';
+import account, { signOut } from '@/features/account/accountSlice';
 import graph from '@/features/graph/graphSlice';
-import dashboard from '@/features/dashboard/dashboardSlice';
+import { setupListeners } from '@reduxjs/toolkit/query';
+import { api } from './api';
+import { authMiddleware, rtkQueryErrorLogger } from './middleware';
 
 const reducer = combineReducers({
-  dashboard,
+  [api.reducerPath]: api.reducer,
   account,
   graph,
 });
 
 export const store = configureStore({
   reducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware).concat(rtkQueryErrorLogger)
 });
 
+setupListeners(store.dispatch)
+
+export type RootState = ReturnType<typeof reducer>;
 export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action<string>>;
+

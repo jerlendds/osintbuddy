@@ -1,7 +1,9 @@
-import { BASE_URL, LS_USER_KEY } from "@/app/api";
+import { api } from "@/app/api";
+import { BASE_URL, LS_USER_KEY, lUserDefault } from "@/app/baseApi";
 import { useAppDispatch } from "@/app/hooks";
-import { useEffectOnce } from "@/components/utils";
-import { setIsAuthenticated, setUser } from "@/features/account/accountSlice";
+import { lStorage } from "@/app/utilities";
+import { setIsAuthenticated } from "@/features/account/accountSlice";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function CallbackPage() {
@@ -26,24 +28,26 @@ export default function CallbackPage() {
       params.state
     ).then((resp: JSONObject) => {
       if (resp?.status === "ok") {
+        lStorage(LS_USER_KEY, lUserDefault(true))
+        dispatch(setIsAuthenticated(true))
         if (inIframe()) window.parent.postMessage({
           tag: "Casdoor",
           type: "SilentSignin",
           data: "success"
         }, "*");
-        dispatch(setIsAuthenticated(true))
         navigate("/app/dashboard/graphs", { replace: true })
       } else {
         console.error(resp)
+        localStorage.removeItem(LS_USER_KEY)
         dispatch(setIsAuthenticated(false))
         navigate("/", { replace: true })
       }
     })
   }
 
-  useEffectOnce(() => {
+  useEffect(() => {
     login()
-  })
+  }, [])
 
   return <></>
 }
