@@ -78,6 +78,20 @@ prepare_windows() {
 
 
 check_prereqs() {
+    node_min_version='18.0.0'
+    node_rec_version='18.18.2'
+    
+    docker_min_version='23.0.0'
+    docker_rec_version='24.0.7'
+    
+    git_min_version='1.8.0'
+    git_rec_version='2.42.0'
+    
+    python_min_version='3.11.0'
+    python_rec_version='3.11.4'
+    
+    # 0. TODO: Install windows and test git crlf config...
+    # (Please, someone else do this, I really don't want to install windows..)
     if [[ $(grep -i Microsoft /proc/version) ]]; then
         heading "Windows detected! Checking for environment issues..."
         prepare_windows
@@ -106,7 +120,36 @@ check_prereqs() {
         exit 1
     fi
     
-    # 3. docker images are downloadeded
+    # 3. running recommended node version
+    test=($(node --version))
+    test=${test[0]//v/}  # Get version alone and strip the prefixed v
+    
+    if compare_version "${node_min_version}" "${test}"; then
+        echo "ERROR: Node version ${test} not supported, please upgrade to at least ${node_min_version}, or recommended ${node_rec_version}"
+        exit 1
+    fi
+    
+    # Recommend best Node version
+    if compare_version "${node_rec_version}" "${test}"; then
+        warning "WARNING: Node version ${test} is old and may cause issues, recommend upgrade to ${node_rec_version} or newer."
+    fi
+    
+    # 4. running recommended Python version
+    test=($(python --version))
+    test=${test[1]///}  # Get version alone and strip the prefixed v
+    
+    if compare_version "${python_min_version}" "${test}"; then
+        echo "ERROR: Python version ${test} not supported, please upgrade to at least ${python_min_version}, or recommended ${python_rec_version}"
+        exit 1
+    fi
+    
+    # Recommend best Python version
+    if compare_version "${python_rec_version}" "${test}"; then
+        warning "WARNING: Python version ${test} is old and may cause issues, recommend upgrade to ${python_rec_version} or newer."
+    fi
+    
+    # TODO:
+    # 5. are docker images downloadeded?
     # check_images
     
     arm=false
