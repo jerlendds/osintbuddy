@@ -92,7 +92,7 @@ def app_openapi_schema(app):
         routes=app.routes,
     )
     openapi_schema["info"]["x-logo"] = {
-        "url": "https://github.com/jerlendds/osintbuddy/assets/29207058/41d71b7f-2e51-4d43-8f4d-fa22635f98d3"
+        "url": "https://raw.githubusercontent.com/jerlendds/osintbuddy/develop/ob/_assets/icon.png"
     }
 
     return openapi_schema
