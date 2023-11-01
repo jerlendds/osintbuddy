@@ -374,7 +374,7 @@ async def active_project(websocket: WebSocket, project_uuid: str):
             await execute_event(
                 event=event,
                 send_json=websocket.send_json,
-                project_uuid=project_uuid.replace('-', '')
+                project_uuid=project_uuid.replace("-", "")
             )
         except OBPluginError as e:
             await websocket.send_json({"action": "error", "detail": f"Unhandled plugin error! {e}"})
