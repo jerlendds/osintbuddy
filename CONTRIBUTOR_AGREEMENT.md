@@ -1,84 +1,67 @@
-# OSINTBuddy Contributor License Agreement
+# OSINTBuddy Contributor Agreement
 
-If you have not already done so, please complete and sign, then scan and email a pdf file of this CLA to [oss@osintbuddy.com](mailto:oss@osintbuddy.com). You accept and agree to the following terms and conditions for your present and future Contributions Submitted to OSINTBuddy. 
+This is a reference copy of the terms of the OSINTBuddy Contributor Agreement. To actually complete and submit an OCA, please sign up and go to the [OSINTBuddy forum](https://forum.osintbuddy.com/t/osintbuddy-contributor-agreement/23).
 
-Please read this document carefully before signing and keep a copy for your records.
+Thank you for your interest in OSINTBuddy. In order for You (as defined below) to make intellectual property Contributions (as defined below) now or in the future to any of the OSINTBuddy projects, You must agree to this OSINTBuddy Contributor Agreement ("OCA"). If You have any questions about this agreement, licensing, or anything related to intellectual property at OSINTBuddy, please send an email to [oss@osintbuddy.com](mailto:oss@osintbuddy.com).
 
-This Contributor Licence Agreement (“Agreement”) sets out the terms under which contributions are made to the open source project OSINTBuddy (“OSINTBuddy”) by or on behalf of the Contributor. This Agreement is legally binding on the Contributor. 
+Please read this OCA carefully before accepting its terms. By accepting the OCA, You are agreeing to be bound by its terms. If You want to accept this OCA, complete the form completely, print a copy for Your records, and when ready, press the “Accept” button at the end of this form.
 
-Who the “Contributor” is depends on whether the person submitting the contribution is a private individual acting on their own behalf, or is acting on behalf of someone else (for example, their employer). The “Contributor” in this Agreement is therefore either: (i) if the individual who Submits a Contribution does so on behalf of their employer or another Legal Entity, any Legal Entity on behalf of whom a Contribution has been received by OSINTBuddy; or in all other cases (ii) the individual who Submits a Contribution to OSINTBuddy. "Legal Entity" means an entity which is not a natural person (for example, a limited company or corporation).
+As used in this OCA:
 
-## **1. Interpretation**
-
-The following definitions and rules of interpretation apply in this Agreement.
-
-### 1.1 Definitions:
-
-**Affiliates:** means, in respect of a Legal Entity, any other Legal Entities that control, are controlled by, or under common control with that Legal Entity.
-
-**Contribution:** means any software or code that is Submitted by the Contributor to OSINTBuddy for inclusion in a Project.
-
-**Copyright:** all copyright and rights in the nature of copyright subsisting in the Contribution in any part of the world, to which the Contributor is, or may become, entitled.
-
-**Effective Date:** the earlier of the date on which the Contributor Submits the Contribution, or the date of the Contributor’s acceptance of this Agreement.
-
-**Patent Rights:** any patent claims which the Contributor or its Affiliates owns, controls or has the right to grant, now or in the future, to the extent infringed by the exercise of the rights licensed under this Agreement.
-
-**Project:** a software project to which the Contribution is Submitted.
-
-**Submit:** means to submit or send to OSINTBuddy, jerlendds, or its representatives by any form of electronic, verbal, or written communication, for example, by means of code repositories or control systems, and issue tracking systems, that are managed by or on behalf of OSINTBuddy.
-
-## 2. Licence Grant
-
-### 2.1 Copyright: 
-The Contributor grants to OSINTBuddy a perpetual, irrevocable, worldwide, transferable, fully sublicenseable through multiple tiers, fee-free, non-exclusive licence under the Copyright to do the following acts, subject to, and in accordance with, the terms of this Agreement: to reproduce, prepare derivative works of, publicly display, publicly perform, communicate to the public, and distribute by any means Contributions and such derivative works.
-
-### 2.2. Patent Rights:
- The Contributor grants to jerlendds and the OSINTBuddy project a perpetual, irrevocable, worldwide, transferable, fully sublicenseable through multiple tiers, fee-free, non-exclusive licence under the Patent Rights to do the following acts, subject to, and in accordance with, the terms of this Agreement: to make, have made, use, sell, offer for sale, import and otherwise transfer the Contribution and the Contribution in combination with a Project (and portions of such combination).
-
-### 2.3
- The Contributor acknowledges that OSINTBuddy is not obliged to include the Contribution in any Project.
-
-### 2.4
- If OSINTBuddy includes the Contribution in a Project, OSINTBuddy may license the Contribution under any licence terms, including copyleft, permissive, commercial, or proprietary licenses, provided that it shall also license the Contribution under the terms of any licenses which are approved by the Open Source Initiative on or after the Effective Date, including both permissive and copyleft licenses, whether or not such licenses are subsequently disapproved (including any right to adopt any future version of a license if permitted).
-
-### 2.5
- In the event that any moral rights apply in respect of the Contribution, the Contributor, being the sole author of the Contribution, waives all moral rights in respect of the use to be made of the Contribution under this Agreement to which the Contributor may now or at any future time be entitled.
-
-## 3. Warranties and Disclaimers
-
-### 3.1 The Contributor warrants and represents that:
-
-(a) it is the sole owner of the Copyright and any Patent Rights and legally entitled to grant the licence in section 2;
-
-(b) the Contribution is its own original creation;
-
-(c) the licence in section 2 does not conflict with or infringe any rights granted by the Contributor or (if applicable) its Affiliates; and
-
-(d) it is not aware of any claims, suits, or actions in respect of the Contribution.
-
-### 3.2 All other conditions, warranties or other terms which might have effect between the parties in respect of the Contribution or be implied or incorporated into this Agreement are excluded.
-
-### 3.3 The Contributor is not required to provide any support for the Contribution.
-
-## 4. Other important terms
-
-### 4.1 Assignment/Transfer: 
-jerlendds may assign and transfer all of the OSINTBuddy projects rights and obligations under this Agreement to any person.
-
-###  4.2 Further Assurance: 
-The Contributor shall at OSINTBuddy’s expense execute and deliver such documents and perform such acts as may reasonably be required by OSINTBuddy for the purpose of giving full effect to this Agreement.
-
-###  4.3 Agreement:
- This Agreement constitutes the entire Agreement between the parties and supersedes and extinguishes all previous Agreements, promises, assurances, warranties, representations and understandings between them, whether written or oral, relating to its subject matter.
-
-###  4.4 Governing law:
- This Agreement and any dispute or claim (including non-contractual disputes or claims) arising out of or in connection with it or its subject matter or formation shall be governed by and construed in accordance with the law of Canada.
+- **(i)** “You" (or "Your") shall mean the entity that is making this Agreement with the OSINTBuddy project; 
 
 
-|   |   |
-|---|---|
-| Email | ___________________________________________________________________________________________________ |
-| Github handle | ___________________________________________________________________________________________________ |
-| Date | ___________________________________________________________________________________________________ |
-| Sign | ___________________________________________________________________________________________________ |
+
+- **(ii)** "Contribution" shall mean any original work of authorship, including any modifications or additions to an existing work, that is submitted by You to OSINTBuddy for inclusion in, or documentation of, any of the OSINTBuddy projects; and 
+
+- **(iii)** “Submit” (or “Submitted”) means any form of communication sent to OSINTBuddy (e.g. the content You post on electronic mailing lists, forums, content management systems, source code control systems, code review systems, issue tracking systems, etc. that are used by OSINTBuddy).
+
+This agreement applies to all Contributions You Submit.
+
+This OCA, and the license(s) associated with the particular OSINTBuddy projects You are contributing to, provides a license to Your Contributions to OSINTBuddy and downstream consumers, but You still own Your Contributions, and except for the licenses provided for in this OCA, You reserve all right, title and interest in Your Contributions. In addition to the above, You grant a non-exclusive, worldwide, perpetual, royalty-free license of all necessary rights under Your copyright in and to Your Contributions (the “Specification Grant”):
+
+- **(a)** for OSINTBuddy (and its contributors solely as a part of OSINTBuddy projects) to create, reproduce, prepare derivative works of, publicly display, publicly perform, distribute and sublicense specifications subject to the terms of the then-current OSINTBuddy projects, based on or derived from the Specification Content (as defined below) and 
+
+- **(b)** for recipients of such specifications to create, reproduce, and distribute implementations thereof based on the portion of Your Contributions or material derived from them in the specifications, subject to the terms of the then-current OSINTBuddy Foundation Specification License.
+
+“Specification Content” is the collection of interface definitions for the application or user interfaces (“Interfaces”) provided by the work to which Your Contribution was made, descriptions of the structure and semantic behavior of those Interfaces, and data formats and protocols associated with those Interfaces, all of which as are reasonably necessary to enable the development of independent implementations of those Interfaces. For the sake of clarity, Specification Content does not include implementation detail of how the OSINTBuddy project code or Your Contribution implements the Interfaces in the Specification and the Specification Grant provided above would not cover such additional material.
+
+OSINTBuddy requires that each Contribution You Submit now or in the future to comply with the following commitments documented in the Developer Certificate of Origin ([DCO](https://wiki.linuxfoundation.org/dco)). To confirm that You have read and agreed to each, please click on the box beside each one.
+ 
+---
+
+```txt
+Developer Certificate of Origin
+Version 1.1
+
+Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
+
+Everyone is permitted to copy and distribute verbatim copies of this
+license document, but changing it is not allowed.
+
+Developer's Certificate of Origin 1.1
+
+By making a contribution to this project, I certify that:
+
+(a) The contribution was created in whole or in part by me and I
+    have the right to submit it under the open source license
+    indicated in the file; or
+
+(b) The contribution is based upon previous work that, to the best
+    of my knowledge, is covered under an appropriate open source
+    license and I have the right under that license to submit that
+    work with modifications, whether created in whole or in part
+    by me, under the same open source license (unless I am
+    permitted to submit under a different license), as indicated
+    in the file; or
+
+(c) The contribution was provided directly to me by some other
+    person who certified (a), (b) or (c) and I have not modified
+    it.
+
+(d) I understand and agree that this project and the contribution
+    are public and that a record of the contribution (including all
+    personal information I submit with it, including my sign-off) is
+    maintained indefinitely and may be redistributed consistent with
+    this project or the open source license(s) involved.
+```
