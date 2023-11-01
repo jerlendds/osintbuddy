@@ -1,11 +1,13 @@
 import uuid
 import datetime
 from typing import Optional
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func, Table, Boolean
+
+from sqlalchemy import Integer, String, DateTime, func, Boolean
 from sqlalchemy.dialects.postgresql import UUID
-from app.db.base_class import Base
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+
+from app.db.base_class import Base
 
 
 class Entities(Base):

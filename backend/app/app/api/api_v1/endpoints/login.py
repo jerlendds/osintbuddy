@@ -1,11 +1,11 @@
 from typing import Union
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, Request, HTTPException
 from osintbuddy.utils import dkeys_to_snake_case
-from app import models, schemas
-from app.api import deps
-from app.core.logger import get_logger
+from fastapi import APIRouter, Depends, Request, HTTPException
 
+from app.api import deps
+from app import models, schemas
+from app.core.logger import get_logger
 from app.api.utils import APIRequest
 from app.crud.base import get_or_create_model
 

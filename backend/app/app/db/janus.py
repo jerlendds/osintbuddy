@@ -1,14 +1,5 @@
-import asyncio
 from contextlib import asynccontextmanager
-from typing import List, Callable, Tuple, Any, AsyncIterator
-from fastapi import (
-    APIRouter,
-    WebSocket,
-    WebSocketException,
-    WebSocketDisconnect,
-    HTTPException,
-    Depends
-)
+from typing import AsyncIterator
 from gremlinpy import DriverRemoteConnection, Graph, Cluster
 from gremlinpy.process.graph_traversal import AsyncGraphTraversal
 from app.core.config import settings
@@ -19,10 +10,7 @@ async def ProjectGraphConnection(
     host: str = settings.JANUSGRAPH_HOST,
     port: int = settings.JANUSGRAPH_PORT
 ) -> AsyncIterator[AsyncGraphTraversal]:
-    cluster = await Cluster.open(
-        asyncio.get_event_loop(),
-        **{'hosts': [host], 'port': port}
-    )
+    cluster = await Cluster.open(**{'hosts': [host], 'port': port})
     client = await cluster.connect(hostname='janus')
     print(f'connecting traversal: graph_{graph_uuid}_traversal')
     async with await DriverRemoteConnection.using(

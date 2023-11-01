@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Header, Depends
+from fastapi import APIRouter
 
 from .endpoints import graphs, nodes, entities, login, scans, account, config
 

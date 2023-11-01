@@ -32,7 +32,6 @@ async def get_casdoor_config(
     casdoor_syncers = sdk.get_syncers()
     # casdoor_resources = sdk.get_resources()
     # casdoor_tokens = sdk.get_tokens()
-
     return {
         "applications": casdoor_apps.get('data', []),
         "organizations": casdoor_orgs.get('data', []),

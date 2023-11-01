@@ -4,7 +4,6 @@ from osintbuddy import load_plugin, Registry
 
 from app import crud, schemas
 from app.core.logger import get_logger
-from app.core.config import settings
 # make sure all SQL Alchemy models are imported (app.db.base) before initializing DB
 from .base import *  # noqa
 

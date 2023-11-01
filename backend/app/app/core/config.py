@@ -5,9 +5,6 @@ from typing import Any, Dict, List, Optional, Union
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from pydantic import (
-    AnyHttpUrl,
-    HttpUrl,
-    PostgresDsn,
     validator
 )
 from pydantic_settings import BaseSettings

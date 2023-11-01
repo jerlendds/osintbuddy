@@ -1,10 +1,10 @@
-import asyncio
 from typing import Annotated
+
 from fastapi import APIRouter, HTTPException, Depends
 from gremlinpy import Cluster
-from gremlinpy.exception import GremlinServerError
 from sqlalchemy.orm import Session
 from starlette import status
+
 from app.api import deps
 from app import crud, schemas
 from app.core.logger import get_logger
@@ -15,10 +15,7 @@ log = get_logger("api_v1.endpoints.graphs")
 router = APIRouter(prefix="/graphs")
 
 
-@router.get(
-    '/{graph_id}',
-    response_model=schemas.Graph
-)
+@router.get("/{graph_id}", response_model=schemas.Graph)
 async def get_graph(
     user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     graph_id: str,
@@ -116,10 +113,7 @@ async def create_graph(
 ):
     try:
         obj_out = crud.graphs.create(db=db, obj_in=obj_in)
-        cluster = await Cluster.open(
-            asyncio.get_event_loop(),
-            **{'hosts': ['janus'], 'port': 8182}
-        )
+        cluster = await Cluster.open(**{'hosts': ['janus'], 'port': 8182})
         client = await cluster.connect(hostname='janus')
         await client.submit(janus_create_db(obj_out.uuid.hex))
         return obj_out
@@ -171,8 +165,8 @@ async def get_graph_stats(
                 unique_entity_counts["labels"].append(entity)
 
                 out_edge_count = await g.V().hasLabel(entity).outE().count().toList()
-                unique_out_edge_counts['series'].append(out_edge_count[0])
-                unique_out_edge_counts['labels'].append(entity)
+                unique_out_edge_counts["series"].append(out_edge_count[0])
+                unique_out_edge_counts["labels"].append(entity)
 
             return {
                 "entities": unique_entities,
@@ -182,7 +176,7 @@ async def get_graph_stats(
                 "entity_oute_counts": unique_out_edge_counts
             }
     except Exception as e:
-        log.error('Error inside graphs.get_graphs:')
+        log.error("Error inside graphs.get_graphs:")
         log.error(e)
         raise HTTPException(status_code=
             status.HTTP_422_UNPROCESSABLE_ENTITY,

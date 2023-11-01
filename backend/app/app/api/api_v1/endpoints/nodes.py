@@ -1,29 +1,20 @@
-import asyncio
-from contextlib import asynccontextmanager
-from typing import List, Callable, Tuple, Any, AsyncIterator, Annotated
-from fastapi import (
-    APIRouter,
-    WebSocket,
-    WebSocketException,
-    WebSocketDisconnect,
-    HTTPException,
-    Depends
-)
-from sqlalchemy.orm import Session
+from typing import List, Callable, Tuple, Any, Annotated
+from fastapi import APIRouter, WebSocket, WebSocketException, WebSocketDisconnect, HTTPException, Depends
 from websockets.exceptions import ConnectionClosedError
-from gremlinpy import DriverRemoteConnection, Graph, Cluster
 from gremlinpy.process.graph_traversal import AsyncGraphTraversal
-from gremlin_python.process.traversal import T, Cardinality
 from gremlin_python.process.graph_traversal import __ as _g
-from app.api import deps
-from app import schemas, crud
-from app.core.config import settings
-from app.core.logger import get_logger
+from gremlin_python.process.traversal import T, Cardinality
+from osintbuddy.utils import to_snake_case, MAP_KEY, chunks
 from osintbuddy import Registry, PluginUse, load_plugins
 from osintbuddy.errors import OBPluginError
-from osintbuddy.utils import to_snake_case
-from osintbuddy.utils import MAP_KEY, chunks
+from sqlalchemy.orm import Session
+from starlette import status
+
+from app.api import deps
+from app import schemas, crud
+from app.core.logger import get_logger
 from app.db.janus import ProjectGraphConnection
+
 
 log = get_logger("api_v1.endpoints.nodes")
 router = APIRouter(prefix="/nodes")
@@ -36,56 +27,74 @@ async def fetch_node_transforms(plugin_label):
         return labels
 
 
-@router.get(
-    "/refresh",
-)
+@router.get("/refresh")
 async def refresh_plugins(
     user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     db: Session = Depends(deps.get_db)
 ):
-    Registry.plugins = []
-    Registry.labels = []
-    Registry.ui_labels = []
-    entities = crud.entities.get_multi(db)
-    load_plugins(entities)
-    return {"status": "success", "plugins": Registry.ui_labels}
+    try:
+        Registry.plugins = []
+        Registry.labels = []
+        Registry.ui_labels = []
+        entities = crud.entities.get_multi(db)
+        load_plugins(entities)
+        return {"status": "success", "plugins": Registry.ui_labels}
+    except Exception as e:
+        log.error("Error inside nodes.refresh_plugins")
+        log.error(e)
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="There was an error refreshing, please try again."
+        )
 
 
-@router.get(
-    "/transforms",
-)
+@router.get("/transforms")
 async def get_entity_transforms(
     user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     label: str
 ):
-    if transforms := await fetch_node_transforms(label):
-        return {
-            "type": label,
-            "transforms": transforms,
-        }
-    raise HTTPException(
-        status_code=422,
-        detail='Invalid transform error. Please file an issue if this occurs.'
-    )
+    try:
+        if transforms := await fetch_node_transforms(label):
+            return {
+                "type": label,
+                "transforms": transforms,
+            }
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid transform error. Please file an issue if this occurs."
+        )
+    except Exception as e:
+        log.error("Error inside nodes.get_entity_transforms")
+        log.error(e)
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="There was an error refreshing, please try again."
+        )
 
 
-@router.post(
-    '/',
-)
+@router.post("/")
 async def create_graph_entity(
     user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     node: schemas.CreateNode
 ):
-    plugin = await Registry.get_plugin(plugin_label=node.label)
-    if plugin:
-        blueprint = plugin.blueprint()
-        blueprint['position'] = node.position.dict()
-        return await save_node_on_drop(
-            node.label,
-            blueprint,
-            node.graphId.replace('-', '')
+    try:
+        plugin = await Registry.get_plugin(plugin_label=node.label)
+        if plugin:
+            blueprint = plugin.blueprint()
+            blueprint["position"] = node.position.dict()
+            return await save_node_on_drop(
+                node.label,
+                blueprint,
+                node.graphId.replace("-", "")
+            )
+        raise HTTPException(status_code=422, detail=f"Plugin entity {node.label} cannot be found.")
+    except Exception as e:
+        log.error("Error inside nodes.create_graph_entity")
+        log.error(e)
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="There was an error refreshing, please try again."
         )
-    raise HTTPException(status_code=422, detail=f'Plugin entity {node.label} cannot be found.')
 
 
 def add_node_element(vertex, element: dict or List[dict], data_labels: List[str]):
@@ -125,8 +134,8 @@ async def save_node_to_graph(
     add_edge: dict = {}
 ) -> Tuple[Any, List[str]]:
     v = graph.addV(to_snake_case(node_label)) \
-             .property('x', position.get('x', 0.0)) \
-             .property('y', position.get('y', 0.0))
+            .property('x', position.get('x', 0.0)) \
+            .property('y', position.get('y', 0.0))
     if not blueprint:
         return await v.next()
 

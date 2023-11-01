@@ -1,11 +1,11 @@
 import uuid
 import datetime
-from typing import List
+
 from sqlalchemy import Column, String, DateTime, Boolean, func
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column
+
 from app.db.base_class import Base
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.models.entities import Entities
 
 
 class Graphs(Base):

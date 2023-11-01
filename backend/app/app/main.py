@@ -1,7 +1,4 @@
-from typing import Annotated
-from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request, Response, Depends
-from fastapi.routing import APIRoute
+from fastapi import FastAPI
 from fastapi.responses import UJSONResponse
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,12 +8,9 @@ from fastapi_cache import caches, close_caches
 from fastapi_cache.backends.redis import CACHE_KEY, RedisCacheBackend
 # import sentry_sdk
 # from sentry_sdk.integrations.asyncio import AsyncioIntegration
-from osintbuddy import discover_plugins
 from app.api.api_v1.api import api_router
 from app.core.config import settings, use_route_names_as_operation_ids
 from app.core.casdoor import Config as CasdoorConfig
-from app.api import deps
-from app import schemas
 # if settings.SENTRY_DSN:
 #     sentry_sdk.init(
 #         # integrations=(AsyncioIntegration(),),

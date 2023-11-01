@@ -44,12 +44,6 @@ class CRUDEntities(CRUDBase[
         return db.query(self.model).where(self.model.is_favorite == is_favorite).offset(skip).limit(limit).all()
 
     def count_by_favorites(self, db: Session, is_favorite: bool = False) -> int:
-        if isinstance(is_favorite, bool) and is_favorite:
-            return db.query(func.count(self.model.id)).where(self.model.is_favorite == is_favorite).all()
-        stmt = select(func.count(self.model.id)).where(
-            (self.model.is_favorite == False) |
-            (self.model.is_favorite == None)
-        )
-        return db.execute(stmt).all()
+        return db.query(func.count(self.model.id)).where(self.model.is_favorite == is_favorite).all()
 
 entities = CRUDEntities(Entities)
