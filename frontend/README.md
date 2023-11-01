@@ -34,7 +34,7 @@
   2. Install the dependencies. From the `osintbuddy` directory run:
       ```bash
       ./launcher bootstrap
-      # alternatively from the frontend directory try:  yarn && yarn ui:dev
+      # alternatively from the frontend directory try:  npm install && npm run ui:dev
       ```
 
   3. From the `osintbuddy` directory, start the stack:
@@ -43,7 +43,7 @@
       # restart the ui:          ./launcher restart ui
       # stop the ui:             ./launcher stop ui
       # kill the stack:          ./launcher kill
-      # generate api client:      yarn client:gen (only works if the backend is up)
+      # generate api client:      npm run client:gen (only works if the backend is up)
       ```
       - Frontend: [http://localhost:3000](http://localhost:3000)
       - Backend: [http://localhost:48997/](http://localhost:48997/)

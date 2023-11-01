@@ -4,7 +4,7 @@
 run_api_gen () {
     heading "Generating client SDK..."
     cd ../frontend && \
-    yarn client:gen && \
+    npm run client:gen && \
     success
 }
 

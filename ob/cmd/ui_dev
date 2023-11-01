@@ -19,7 +19,7 @@ run_uidev() {
     export REACT_APP_CASDOOR_CLIENT_ID=$REACT_APP_CASDOOR_CLIENT_ID
     export REACT_APP_CASDOOR_ORG_NAME=$REACT_APP_CASDOOR_ORG_NAME
     export REACT_APP_CASDOOR_APP_NAME=$REACT_APP_CASDOOR_APP_NAME
-    yarn ui:dev
+    npm run ui:dev
     exit 0
 }
 

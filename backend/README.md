@@ -58,7 +58,7 @@ https://www.exploit-db.com/google-hacking-database -->
       # restart the backend:     ./launcher restart backend
       # stop the backend:        ./launcher stop backend
       # kill the stack:          ./launcher kill
-      # generate UI api client:   yarn client:gen (only works if the backend is running)
+      # generate UI api client:   npm run client:gen (only works if the backend is running)
       ```
       - Frontend: [http://localhost:3000](http://localhost:3000)
       - Backend: [http://localhost:48997/](http://localhost:48997/)

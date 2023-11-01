@@ -2,8 +2,7 @@ version: "3.9"
 
 services:
   ui:
-    image: node:18-alpine
-    command: sh -c "cd /app/ && yarn && yarn ui:dev"
+    image: node:18.18.2-alpine3.18
     volumes:
       - ../frontend/:/app/
     ports:
