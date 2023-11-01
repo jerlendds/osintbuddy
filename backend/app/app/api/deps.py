@@ -1,4 +1,4 @@
-from typing import Generator
+from typing import Generator, Any
 from contextlib import contextmanager
 
 import boto3
@@ -16,10 +16,13 @@ from app.api.utils import APIRequest
 log = get_logger("api.deps")
 
 
-def get_db() -> Generator:
+def get_db() -> Generator[Any, Session, Any]:
     try:
-        db = SessionLocal()
+        db: Session = SessionLocal()
         yield db
+    except Exception as e:
+        log.error('Error inside api.deps.get_db')
+        log.error(e)
     finally:
         db.close()
 
@@ -29,20 +32,23 @@ async def get_user_from_session(
     db: Session = Depends(get_db)
 ) -> schemas.User:
     if user := request.session.get("member"):
-        osintbuddy_user = crud.user.get_by_cid(db=db, cid=user.get("id"))
-        if osintbuddy_user:
-            return osintbuddy_user
+        ob_user: schemas.User | None = crud.user.get_by_cid(db=db, cid=user.get("id"))
+        if ob_user:
+            return ob_user
     raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 def get_s3():
-    kwargs = {
-        "endpoint_url": "http://s3:8333", 
-        "aws_access_key_id": "accessKey1",
-        "aws_secret_access_key": "secretKey1"
-    }
-    s3 = boto3.resource("s3", **kwargs)
-    return s3
+    try:
+        s3 = boto3.resource("s3", **{
+            "endpoint_url": "http://s3:8333", 
+            "aws_access_key_id": "accessKey1",
+            "aws_secret_access_key": "secretKey1"
+        })
+        yield s3
+    except Exception as e:
+        log.error('Error inside api.deps.get_s3')
+        log.error(e)
 
 
 @contextmanager
@@ -57,7 +63,6 @@ def get_driver() -> Generator[Session, None, None]:
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--headless")
-
     try:
         driver: uc.Chrome = uc.Chrome(
             driver_executable_path="/usr/bin/chromedriver",
@@ -65,7 +70,9 @@ def get_driver() -> Generator[Session, None, None]:
             desired_capabilities=DesiredCapabilities.CHROME,
             options=options,
         )
-
         yield driver
+    except Exception as e:
+        log.error('Error inside api.deps.get_driver')
+        log.error(e)
     finally:
         driver.quit()
