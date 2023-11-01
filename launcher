@@ -55,6 +55,7 @@ usage () {
     echo -e "    $(c YsB)ui$(c):          Stop the UI container and launch the frontend locally."
     echo -e "    $(c YsB)kill$(c):        Kill containers; down the stack."
     echo -e "    $(c YsB)containers$(c):  List the names you can access the containers by"
+    echo -e "    $(c YsB)pkg:update$(c):  Update the osintbuddy package locally and in docker from the osintbuddy-plugins repo (used in dev)"
     usage_containers
     
     exit 1
