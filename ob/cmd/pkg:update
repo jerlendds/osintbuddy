@@ -3,12 +3,19 @@
 
 pkg_update () {
     cd ../
+    warning "For this command to work in docker you need to edit: ./ob/alpha-compose.override.yml:"
+    info "
+  backend:
+    volumes:
+      - ../backend/app:/app/
+#     - ../backend/osintbuddy-plugins:/tmp/osintbuddy-plugins # <- uncomment me"
     if [ -d "venv" ]; then
-        ob_compose exec backend pip install osintbuddy-plugins
-
         . venv/bin/activate
         pip install backend/osintbuddy-plugins
-        
+
+        ob_compose exec backend pip install /tmp/osintbuddy-plugins
+        ob_compose build backend
+        ob_compose restart
         success "The osintbuddy Python package has been updated locally and in docker!"
     else
         error "Error: Python venv not found!"
@@ -19,4 +26,5 @@ pkg_update () {
 }
 
 pkg_update
+
 

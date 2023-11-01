@@ -11,8 +11,8 @@ run_migration() {
         ob_compose exec backend alembic revision --autogenerate -m "$migration_message"
         ob_compose exec backend alembic upgrade head
         heading "Fixing migration file permissions..."
-        ob_compose exec backend sh -c "/usr/sbin/useradd $USER > /dev/null 2>&1"
-        ob_compose exec backend sh -c "chown $USER:$USER  -R alembic/versions/*.py"
+        ob_compose exec backend sh -c "/usr/sbin/useradd $USER"
+        ob_compose exec backend sh -c "chown $USER:$USER  -R /app/alembic/versions/*.py"
         success
         info "View migrations at: ./backend/app/alembic/versions"
         exit 0

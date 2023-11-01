@@ -4,13 +4,16 @@ source cmd/_colors
 
 export docker_path=`which docker`
 export git_path=`which git`
-alias ob_compose="$docker_path compose"
 
 # https://docs.docker.com/compose/environment-variables/envvars/
 # export COMPOSE_PROJECT_NAME="ob_alpha"
 export DOCKER_RESTART_POLICY=yes
 export COMPOSE_ENV_FILES="$(pwd)/.env.alpha"
 export COMPOSE_FILE="$(pwd)/alpha-compose.yml"
+export OB_COMPOSE_OVERRIDE="$(pwd)/alpha-compose.override.yml"
+
+alias ob_compose="$docker_path compose -f $COMPOSE_FILE -f $OB_COMPOSE_OVERRIDE"
+
 
 # Colored logs...
 function heading() { printf "$(c B1)[OSINTBuddy: $OB_CMD] ${WHITE}${1}${reset}\n"; }
@@ -25,6 +28,6 @@ function print_access_urls() {
     info "Once ready you can access OSINTBuddy through the following URLs:"
     info "      http://localhost:3000        - frontend"
     info "      http://localhost:45910       - casdoor"
-    info "      http://localhost:48997/api   - backend"
     info "      http://localhost:48997/docs  - docs"
+    info "      http://localhost:48997/api   - backend"
 }
