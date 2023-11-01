@@ -1,0 +1,86 @@
+services:
+  backend:
+    container_name: "ob_dev_backend"
+    tty: true
+    command: ["/bin/sh", "-c", "./start-reload.sh"]
+    volumes:
+      - ../backend/app:/app/
+      # - ../backend/osintbuddy-plugins/:/tmp/osintbuddy-plugins  # <- uncomment me if you're a dev
+    env_file:
+      - .env.alpha
+
+  ui:
+    container_name: "ob_dev_ui"
+    tty: true
+    env_file:
+      - .env.alpha
+
+  casdoor:
+    container_name: "ob_dev_casdoor"
+
+  redis:
+    container_name: "ob_dev_redis"
+    command: redis-server
+
+  db:
+    container_name: "ob_dev_db"
+    volumes:
+      - "ob-db-data:${PGDATA-/var/lib/postgresql/data/pgdata}"
+    env_file:
+      - .env.alpha
+    ports:
+      - "${POSTGRES_PORT-55432}:5432"
+
+  janus:
+    container_name: "ob_dev_janus"
+
+  sdb:
+    container_name: "ob_dev_sdb"
+    env_file:
+      - .env.alpha
+    volumes:
+      - ob-sdb-data:${SCYLLADATA-/var/lib/scylla}
+
+  index:
+    container_name: "ob_dev_index"
+    volumes:
+      - ob-solr-data:/var/solr
+    env_file:
+      - .env.alpha
+
+  # TODO: Add option for ob/_seaweedfs/* object store...
+  s3:
+    container_name: "ob_dev_s3"
+    env_file:
+      - .env.alpha
+
+volumes:
+  ob-db-data:
+  ob-sdb-data:
+  ob-solr-data:
+
+# TODO: Fix worker and clearly
+# worker:
+#   tty: true
+#   container_name: "ob_dev_worker"
+#   build:
+#     context: ../backend
+#     dockerfile: worker.Dockerfile
+#   command: ./worker-start.sh
+#   env_file:
+#     - .env.alpha
+# clearly:
+#   tty: true
+#   image: "${CLEARLY_IMAGE-rsalmei/clearly:latest}"
+#   container_name: "ob_dev_clearly"
+#   ports:
+#     - "${CLEARLY_PORT-12223}:12223"
+#   command:
+#     - "server $(CELERY_BROKER_URL) --backend "
+#   env_file:
+#     - .env.alpha
+
+# TODO: Move important vars to secrets...
+# secrets:
+#   POSTGRES_PASSWORD:
+#     file: ./???

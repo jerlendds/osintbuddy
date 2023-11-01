@@ -2,20 +2,14 @@ version: "3.9"
 
 services:
   ui:
-    tty: true
-    container_name: "ob_dev_ui"
     image: node:18-alpine
     command: sh -c "cd /app/ && yarn && yarn ui:dev"
     volumes:
       - ../frontend/:/app/
     ports:
       - "${FRONTEND_PORT-3000}:3000"
-    env_file:
-      - .env.alpha
+
   backend:
-    tty: true
-    container_name: "ob_dev_backend"
-    command: ["/bin/sh", "-c", "./start-reload.sh"]
     build:
       context: ../backend
       dockerfile: backend.Dockerfile
@@ -32,10 +26,8 @@ services:
       PYTHONDONTWRITEBYTECODE: 1
     ports:
       - "${BACKEND_PORT-8000}:80"
-    env_file:
-      - .env.alpha
+
   casdoor:
-    container_name: "ob_dev_casdoor"
     image: casbin/casdoor:latest
     restart: on-failure
     depends_on:
@@ -47,23 +39,18 @@ services:
     volumes:
       - ./_casdoor/conf:/conf
       - ./_casdoor/init_data.json:/init_data.json
+
   redis:
     image: ${REDIS_IMAGE-redis:alpine3.18}
-    container_name: "ob_dev_redis"
     ports:
       - "${REDIS_PORT-63379}:6379"
-    command: redis-server
+
   db:
     image: "${POSTGRES_IMAGE-postgres:15.4}"
-    container_name: "ob_dev_db"
-    volumes:
-      - "ob-db-data:${PGDATA-/var/lib/postgresql/data/pgdata}"
-    env_file:
-      - .env.alpha
     ports:
       - "${POSTGRES_PORT-55432}:5432"
+
   janus:
-    container_name: "ob_dev_janus"
     build:
       context: ./_janus
       dockerfile: janusgraph.Dockerfile
@@ -73,9 +60,9 @@ services:
       - "./_janus/janusgraph-dynamic.properties:/opt/janusgraph/janusgraph-dynamic.properties"
       - "./_janus/janusgraph-server.yaml:/etc/opt/janusgraph/janusgraph-server.yaml"
       - "./_janus/empty-sample.groovy:/opt/janusgraph/scripts/empty-sample.groovy"
+
   sdb:
     image: ${SCYLLA_IMAGE-scylladb/scylla:5.1}
-    container_name: "ob_dev_sdb"
     ports:
       - "${SDB_REST_PORT-10000}:10000"
       - "${CQL_PORT-9042}:9042"
@@ -83,54 +70,14 @@ services:
       - "${INTERNODE_PORT-7000}:7000"
       - "${INTERNODE_ONE_PORT-7001}:7001"
       - "${JMX_PORT-7199}:7199"
-    env_file:
-      - .env.alpha
-    volumes:
-      - ob-sdb-data:${SCYLLADATA-/var/lib/scylla}
+
   index:
     image: "${SOLR_IMAGE-solr:9.3.0-slim}"
-    container_name: "ob_dev_index"
-    volumes:
-      - ob-solr-data:/var/solr
     ports:
       - "${SOLR_PORT-8983}:8983"
-    env_file:
-      - .env.alpha
-  # TODO: Fix worker and clearly
-  # worker:
-  #   tty: true
-  #   container_name: "ob_dev_worker"
-  #   build:
-  #     context: ../backend
-  #     dockerfile: worker.Dockerfile
-  #   command: ./worker-start.sh
-  #   env_file:
-  #     - .env.alpha
-  # clearly:
-  #   tty: true
-  #   image: "${CLEARLY_IMAGE-rsalmei/clearly:latest}"
-  #   container_name: "ob_dev_clearly"
-  #   ports:
-  #     - "${CLEARLY_PORT-12223}:12223"
-  #   command:
-  #     - "server $(CELERY_BROKER_URL) --backend "
-  #   env_file:
-  #     - .env.alpha
+
   s3: # TODO: Add option to use ob/_seaweedfs/* eventually
     image: "${S3_IMAGE-minio/minio:RELEASE.2023-10-16T04-13-43Z}"
-    container_name: "ob_dev_s3"
     ports:
       - 9000:9000
       - 9001:9001
-    env_file:
-      - .env.alpha
-
-# TODO: Move important vars to secrets...
-# secrets:
-#   POSTGRES_PASSWORD:
-#     file: ./???
-
-volumes:
-  ob-db-data:
-  ob-sdb-data:
-  ob-solr-data:
