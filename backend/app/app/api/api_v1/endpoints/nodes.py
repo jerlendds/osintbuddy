@@ -378,7 +378,10 @@ async def active_project(websocket: WebSocket, project_uuid: str):
             )
         except OBPluginError as e:
             await websocket.send_json({"action": "error", "detail": f"Unhandled plugin error! {e}"})
-        except WebSocketDisconnect:
-            pass
-        except (WebSocketException, BufferError, ConnectionClosedError):
-            pass
+        except WebSocketDisconnect as e:
+            log.error(e)
+        except (WebSocketException, BufferError, ConnectionClosedError) as e:
+            log.error(e)
+        except Exception as e:
+            log.error("Exception inside nodes.active_project")
+            log.error(e)
