@@ -10,8 +10,6 @@ As used in this OCA:
 
 - **(i)** “You" (or "Your") shall mean the entity that is making this Agreement with the OSINTBuddy project; 
 
-
-
 - **(ii)** "Contribution" shall mean any original work of authorship, including any modifications or additions to an existing work, that is submitted by You to OSINTBuddy for inclusion in, or documentation of, any of the OSINTBuddy projects; and 
 
 - **(iii)** “Submit” (or “Submitted”) means any form of communication sent to OSINTBuddy (e.g. the content You post on electronic mailing lists, forums, content management systems, source code control systems, code review systems, issue tracking systems, etc. that are used by OSINTBuddy).
