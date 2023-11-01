@@ -112,9 +112,10 @@ To start using OSINTBuddy, follow these simple installation steps:
    cd osintbuddy
    ```
 2. Install Docker
-    - [Learn how to install Docker on Mac](https://docs.docker.com/desktop/install/mac-install/)
-    - [Learn how to install Docker on Windows](https://docs.docker.com/desktop/install/windows-install/)
-    - [Learn how to install Docker on Linux](https://docs.docker.com/desktop/install/linux-install/)
+    - [Install Guide for Mac](https://docs.docker.com/desktop/install/mac-install/)
+    - [Install Guide for Windows](https://docs.docker.com/desktop/install/windows-install/)
+    - [Install Guide for Linux](https://docs.docker.com/desktop/install/linux-install/)
+
 3. Start the stack with Docker:
    ```sh
    # ./launcher               # display usage information.
@@ -132,8 +133,7 @@ To start using OSINTBuddy, follow these simple installation steps:
 
 ## [↑](#introducing-osintbuddy)Roadmap
  
-~~See our [trello board](https://trello.com/b/99Q70frX/) 
-for a list of our upcoming features.~~
+~~See the [trello board](https://trello.com/b/99Q70frX/) for a list of our upcoming features.~~
 
 See the forum: [forum.osintbuddy.com](https://forum.osintbuddy.com), for a list of our upcoming features, potential ideas, and more (*Note: We're currently in the process of setting up the forum and moving trello issues over. We're not sure when this will be completed. For the time being you can count on dev log updates being on the forum from now on*).
 
@@ -165,7 +165,7 @@ for a list of requested features (and known issues).
 
  [] Add playwright and start reworking existing selenium based plugins  
 
-For this update you'll have to rebuild your docker containers (`./launcher build`)! After a long wait you'll be rewarded with a new UX, an updated plugin system now running as its own service, Casdoor managed auth for signing in/up, a new CLI tool, `ob`, for managing plugin development and the plugin server, and another CLI `./launcher` for managing the OSINTBuddy stack. 
+For this update I recommend running bootstrap first, this sets up the new environment for containers: `./launcher bootstrap && ./launcher start`! After a 10m (up to 60m depending on internet speed) wait you'll be rewarded with a new UX, an updated plugin system now running as its own service, Casdoor managed auth for signing in/up, a new CLI tool, `ob`, for managing plugin development and the plugin server, and another CLI `./launcher` for managing the OSINTBuddy stack.
 
 
 ## [↑](#introducing-osintbuddy)Contributing
@@ -201,7 +201,6 @@ Sponsor the OSINTBuddy project for unique benefits. Learn more on the [OSINTBudd
 
 [![Yearly OpenCollective Income](https://badgen.net/opencollective/yearly/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
 [![OpenCollective Backers](https://badgen.net/opencollective/backers/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
-
 
 
 [contributors-shield]: https://img.shields.io/github/contributors/jerlendds/osintbuddy.svg?style=for-the-badge
