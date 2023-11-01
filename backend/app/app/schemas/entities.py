@@ -3,11 +3,10 @@ from uuid import UUID, uuid4
 from typing import Optional, List, Union
 from pydantic import BaseModel, validator, ConfigDict
 
-from osintbuddy.utils import plugin_source_template
+from osintbuddy.templates import plugin_source_template
 
 
 class EntityBase(BaseModel):
-
     label: Optional[str] = None
     author: Optional[str] = "Unknown author"
     description: Optional[str] = "No description found..."

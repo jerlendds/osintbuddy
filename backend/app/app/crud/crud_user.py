@@ -12,17 +12,19 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def get_by_email(self, db: Session, *, email: str) -> Optional[User]:
         return db.query(User).filter(User.email == email).first()
 
-    def full_name(self, user: User) -> str:
-        return user.full_name
+    # get by casdoor account id
+    def get_by_cid(self, db: Session, *, cid: int) -> User | None:
+        return db.query(User).filter(User.cid == cid).first()
 
-    def is_active(self, user: User) -> bool:
-        return user.is_active
-
-    def is_superuser(self, user: User) -> bool:
-        return user.is_superuser
-
-    def is_disabled(self, user: User) -> bool:
-        return user.disabled
-
+    # def get_or_create_cuser(self, db: Session, *, cuser: dict = {}):
+    #     user = db.query(self.model).filter(User.cid == cuser.get("name")).first()
+    #     if user:
+    #         return user
+    #     else:
+    #         user = self.model(**kwargs)
+    #         session.add(user)
+    #         session.commit()
+    #         return user
+                
 
 user = CRUDUser(User)

@@ -2,24 +2,18 @@ from typing import Generator
 from contextlib import contextmanager
 
 import boto3
-from fastapi import HTTPException
+from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+from app import schemas, crud
 from app.db.session import SessionLocal
 from app.core.logger import get_logger
 from app.api.utils import APIRequest
 
-
 log = get_logger("api.deps")
-
-
-async def get_user_from_session(request: APIRequest):
-    if user := request.session.get("member"):
-        return user
-    raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 def get_db() -> Generator:
@@ -28,6 +22,17 @@ def get_db() -> Generator:
         yield db
     finally:
         db.close()
+
+
+async def get_user_from_session(
+    request: APIRequest,
+    db: Session = Depends(get_db)
+) -> schemas.User:
+    if user := request.session.get("member"):
+        osintbuddy_user = crud.user.get_by_cid(db=db, cid=user.get("id"))
+        if osintbuddy_user:
+            return osintbuddy_user
+    raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 def get_s3():

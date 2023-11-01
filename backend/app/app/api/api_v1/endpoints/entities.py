@@ -20,7 +20,7 @@ router = APIRouter(prefix="/entities")
     response_model=schemas.Entity
 )
 async def get_entity(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     entity_uuid: str,
     db: Session = Depends(deps.get_db),
 ):
@@ -32,7 +32,7 @@ async def get_entity(
 
 @router.get("")
 async def get_entities(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
@@ -54,7 +54,7 @@ async def get_entities(
 
 @router.post("")
 async def create_entity(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     entity: schemas.PostEntityCreate,
     db: Session = Depends(deps.get_db)
 ):
@@ -67,7 +67,7 @@ async def create_entity(
 
 @router.put("/{entity_id}")
 async def update_entity_by_uuid(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     entity_id: str,
     obj_in: schemas.EntityBase,
     db: Session = Depends(deps.get_db)
@@ -79,7 +79,7 @@ async def update_entity_by_uuid(
 
 @router.delete("/{entity_id}")
 async def delete_entity(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     entity_id: str,
     db: Session = Depends(deps.get_db),
 ):
@@ -91,7 +91,7 @@ async def delete_entity(
 
 @router.put("/{entity_id}/favorite")
 async def update_favorite_entity_uuid(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     entity_id: str,
     is_favorite: bool = False,
     db: Session = Depends(deps.get_db),

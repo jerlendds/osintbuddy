@@ -7,6 +7,7 @@ from termcolor import colored
 from pyfiglet import figlet_format
 just_fix_windows_console()
 from app.core.config import settings
+# from osintbuddy.ascii import ...  # TODO: add fancy ascii logo on startup and simplify text 
 
 
 def print_startup_message():

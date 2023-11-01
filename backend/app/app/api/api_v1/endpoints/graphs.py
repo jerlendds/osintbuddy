@@ -20,7 +20,7 @@ router = APIRouter(prefix="/graphs")
     response_model=schemas.Graph
 )
 async def get_graph(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     graph_id: str,
     db: Session = Depends(deps.get_db),
 ):
@@ -41,7 +41,7 @@ async def get_graph(
 
 @router.put('/{graph_id}/favorite')
 async def update_favorite_graph_uuid(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     graph_id: str,
     is_favorite: bool = False,
     db: Session = Depends(deps.get_db),
@@ -110,7 +110,7 @@ async def get_favorite_graphs(
     response_model=schemas.Graph
 )
 async def create_graph(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     obj_in: schemas.GraphCreate,
     db: Session = Depends(deps.get_db),
 ):
@@ -134,7 +134,7 @@ async def create_graph(
 
 @router.delete('')
 async def delete_graph(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     uuid: str,
     db: Session = Depends(deps.get_db),
 ):
@@ -152,7 +152,7 @@ async def delete_graph(
 
 @router.get('/{graph_id}/stats')
 async def get_graph_stats(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     graph_id: str,
     db: Session = Depends(deps.get_db)
 ):

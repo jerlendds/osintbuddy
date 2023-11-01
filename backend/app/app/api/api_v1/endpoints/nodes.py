@@ -40,7 +40,7 @@ async def fetch_node_transforms(plugin_label):
     "/refresh",
 )
 async def refresh_plugins(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     db: Session = Depends(deps.get_db)
 ):
     Registry.plugins = []
@@ -55,7 +55,7 @@ async def refresh_plugins(
     "/transforms",
 )
 async def get_entity_transforms(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     label: str
 ):
     if transforms := await fetch_node_transforms(label):
@@ -73,7 +73,7 @@ async def get_entity_transforms(
     '/',
 )
 async def create_graph_entity(
-    user: Annotated[schemas.CasdoorUser, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     node: schemas.CreateNode
 ):
     plugin = await Registry.get_plugin(plugin_label=node.label)

@@ -31,7 +31,6 @@ class CRUDEntities(CRUDBase[
     ) -> List[ModelType]:
         return db.query(self.model).where(self.model.uuid == uuid).first()
 
-
     def update_favorite_by_uuid(self, db: Session, db_obj: Entities, is_favorite: bool = False):
         setattr(db_obj, 'is_favorite', is_favorite)
         db.add(db_obj)

@@ -8,8 +8,13 @@ from sqlalchemy import func
 from app.db.base_class import Base
 
 
+ModelType = TypeVar("ModelType", bound=Base)
+CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
+UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
+
+
 # https://stackoverflow.com/a/6078058
-def get_or_create(session, model, **kwargs):
+def get_or_create_model(session, model: ModelType, **kwargs):
     instance = session.query(model).filter_by(**kwargs).first()
     if instance:
         return instance
@@ -18,11 +23,6 @@ def get_or_create(session, model, **kwargs):
         session.add(instance)
         session.commit()
         return instance
-
-
-ModelType = TypeVar("ModelType", bound=Base)
-CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
-UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
 
 class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):

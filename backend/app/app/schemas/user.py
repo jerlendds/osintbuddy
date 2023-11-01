@@ -43,42 +43,48 @@ class CasdoorUser(BaseModel):
     createdTime: datetime.datetime
 
 
-# Shared properties
 class UserBase(BaseModel):
-    email: Optional[EmailStr] = None
-    is_active: Optional[bool] = True
-    is_superuser: bool = False
-    full_name: Optional[str] = None
+    name: str
+    username: Optional[str] = ""
+    email: Optional[str] = ""
+    avatar: Optional[str] = ""
+    phone: Optional[str] = ""
+    display_name: Optional[str] = ""
+    first_name: Optional[str] = ""
+    last_name: Optional[str] = ""
 
 
-# Properties to receive via API on creation
-class UserCreate(UserBase):
-    email: EmailStr
-    full_name: str
-    password: str
-    username: str = ""
-
-
-# Properties to receive via API on update
 class UserUpdate(UserBase):
     hashed_password: Optional[str] = None
 
 
-class UserInDBBase(UserBase):
-    id: Optional[int] = None
+class UserCreate(UserBase):
+    is_admin: bool
+    created_time: datetime.datetime
+    updated_time: datetime.datetime
 
     class Config:
         from_attributes = True
 
 
-# Additional properties to return via API
-class User(UserInDBBase):
-    modified: datetime.datetime
-    created: datetime.datetime
+class User(UserCreate):
+    uuid: UUID
 
 
-# Additional properties stored in DB
+class UserInDBBase(UserCreate):
+    is_admin: bool
+    created_time: datetime.datetime
+    updated_time: datetime.datetime
+    cid: UUID
+
+    class Config:
+        from_attributes = True
+
+
 class UserInDB(UserInDBBase):
-    hashed_password: str
-    modified: datetime.datetime
-    created: datetime.datetime
+    id: Optional[int] = None
+    
+    is_deleted: bool
+    is_forbidden: bool
+    is_online: bool
+    email_verified: bool
