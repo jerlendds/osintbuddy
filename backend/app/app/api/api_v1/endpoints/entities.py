@@ -1,7 +1,7 @@
 from uuid import UUID
 from typing import Annotated 
 
-from fastapi import APIRouter, HTTPException, Depends,
+from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from starlette import status
 
