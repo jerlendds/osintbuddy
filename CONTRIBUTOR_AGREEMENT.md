@@ -20,7 +20,7 @@ This OCA, and the license(s) associated with the particular OSINTBuddy projects 
 
 - **(a)** for OSINTBuddy (and its contributors solely as a part of OSINTBuddy projects) to create, reproduce, prepare derivative works of, publicly display, publicly perform, distribute and sublicense specifications subject to the terms of the then-current OSINTBuddy projects, based on or derived from the Specification Content (as defined below) and 
 
-- **(b)** for recipients of such specifications to create, reproduce, and distribute implementations thereof based on the portion of Your Contributions or material derived from them in the specifications, subject to the terms of the then-current OSINTBuddy License.
+- **(b)** for recipients of such specifications to create, reproduce, and distribute implementations thereof based on the portion of Your Contributions or material derived from them in the specifications, subject to the terms of the then-current OSINTBuddy projects License(s).
 
 “Specification Content” is the collection of interface definitions for the application or user interfaces (“Interfaces”) provided by the work to which Your Contribution was made, descriptions of the structure and semantic behavior of those Interfaces, and data formats and protocols associated with those Interfaces, all of which as are reasonably necessary to enable the development of independent implementations of those Interfaces. For the sake of clarity, Specification Content does not include implementation detail of how the OSINTBuddy project code or Your Contribution implements the Interfaces in the Specification and the Specification Grant provided above would not cover such additional material.
 
