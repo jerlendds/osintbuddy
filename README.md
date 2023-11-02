@@ -84,19 +84,17 @@ An almost incomprehensible amount of data is created every day. And each year, f
 - Grey literature *(technical reports, preprints, patents, business documents, etc)*
 
 
-Some of the main hindrances to practical OSINT is the volume of information it has to deal with [(information explosion)](https://en.wikipedia.org/wiki/Information_explosion) and the issue of low quality data. With the majority of this data being unstructured, there's many challenges to analyzing it and producing actionable intelligence since most data analytics databases are designed for structured data.
+OSINT is a method of working with, assessing and ranking information — We are living in the [Information Age](https://en.wikipedia.org/wiki/Information_Age) and the volume of information OSINT research has to deal with [(information explosion)](https://en.wikipedia.org/wiki/Information_explosion) and the issue of low quality data leaves researchers drowning in poor quality info. The majority of this data is unstructured introducing many challenges to analyzing it and producing actionable intelligence since most data analytics databases are designed for structured data. 
 
 
-We've decided to do something about it. The rapid developments in technologies such as AI and big data analytics have opened new horizons for OSINT which weren't previously available. We want our information quick and to the point, that's why we're building an open-source OSINT tool that's free. Free to use, free to modify, free to do with as you wish, and built with plain old web technologies anyone can learn. But this isn't really the project. This is a free new community. A community for OSINT enthusiast around the world and we need your help to design it, to program it, and to build it. We want to hear your suggestions, your ideas, and we're going to build it right in front of your eyes. The notion of a “needle in a haystack” is taken to the extreme on the internet. Let's build a magnet.
+We've decided to do something about it. The rapid developments in technologies such as AI and big data analytics have opened new horizons for OSINT which weren't previously available. We want our information quick and to the point, that's why we're building an open-source OSINT tool that's free. Free to use, free to modify, free to do with as you wish, and built with plain old web technologies anyone can learn. But this isn't really the project. This is a free new community. A community for OSINT enthusiasts around the world and we need your help to design it, to program it, and to build it. We want to hear your suggestions, your ideas, and we're going to build it right in front of your eyes. The notion of a “needle in a haystack” is taken to the extreme on the internet. Let's build a magnet.
 
 
-
-### Key Features
-- Simplified data fetching from multiple sources.
+### Key Alpha Features
+- Simplified data fetching from custom sources using Python plugins.
 - Visual representation of fetched data for easy understanding.
 - A development platform that is open for contributions.
 - Plugin-based system for transforming data, check out the [osintbuddy](https://pypi.org/project/osintbuddy/) package.
-
 
 
 ## Getting Started
@@ -111,6 +109,7 @@ To start using OSINTBuddy, follow these simple installation steps:
    # git clone --depth=1 --recurse-submodules git@github.com:jerlendds/osintbuddy.git 
    cd osintbuddy
    ```
+
 2. Install Docker
     - [Install Guide for Mac](https://docs.docker.com/desktop/install/mac-install/)
     - [Install Guide for Windows](https://docs.docker.com/desktop/install/windows-install/)
@@ -135,7 +134,7 @@ To start using OSINTBuddy, follow these simple installation steps:
  
 ~~See the [trello board](https://trello.com/b/99Q70frX/) for a list of our upcoming features.~~
 
-See the forum: [forum.osintbuddy.com](https://forum.osintbuddy.com), for a list of our upcoming features, potential ideas, and more (*Note: We're currently in the process of setting up the forum and moving trello issues over. We're not sure when this will be completed. For the time being you can count on dev log updates being on the forum from now on*).
+See the forum: [forum.osintbuddy.com](https://forum.osintbuddy.com), for a list of our upcoming features, to contribute feedback, ideas, and more (*Note: We're currently in the process of setting up the forum and moving trello issues over. We're not sure when this will be completed. For the time being you can count on dev log updates being on the forum from now on*).
 
 
 See the [open issues](https://github.com/jerlendds/osintbuddy/issues)
@@ -146,7 +145,6 @@ for a list of requested features (and known issues).
 - [x] Website node
 - [x] Google search node
 - [x] Google cache search node
-- [x] Google dorks
 - [x] DNS node
 - [x] URL node
 - [x] IP node
@@ -159,18 +157,17 @@ for a list of requested features (and known issues).
 - [x] Added Casdoor for auth
 - [x] Improved UI/UX
 
- [] Add wizards for plugin create and custom `.env` setup
-
- [] Rework plugin system to its own service
-
- [] Add playwright and start reworking existing selenium based plugins  
+*Coming soon*
+ - [] Add wizards for plugin create and custom `.env` setup
+ - [] Rework plugin system to its own service
+ - [] Add playwright and start reworking existing selenium based plugins  
 
 For this update I recommend running bootstrap first, this sets up the new environment for containers: `./launcher bootstrap && ./launcher start`! After a 10m (up to 60m depending on internet speed) wait you'll be rewarded with a new UX, an updated plugin system now running as its own service, Casdoor managed auth for signing in/up, a new CLI tool, `ob`, for managing plugin development and the plugin server, and another CLI `./launcher` for managing the OSINTBuddy stack.
 
 
 ## [↑](#introducing-osintbuddy)Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. But if you'd like to make a significant change to this project or the `osintbuddy-plugins` project, please first [create an issue](https://github.com/jerlendds/osintbuddy/issues/new?assignees=jerlendds&labels=Type%3A+Suggestion&projects=&template=feature.md&title=%5BFEATURE+REQUEST%5D+Your_feature_request_here) or open a contributor post on the [forum](https://forum.osintbuddy.com/c/osintbuddy-contributors/11) to get feedback before spending too much time. We don't want you to invest your time on changes we are already working on.
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/add-core-feature`)
@@ -181,9 +178,7 @@ Contributions are what make the open source community such an amazing place to l
 
 ## [↑](#introducing-osintbuddy)License
 
-Licensed under the GNU Affero General Public License v3.0.
-
-Copyright 2023 jerlendds. [GNU AGPL v3](https://choosealicense.com/licenses/apache-2.0/).
+[GNU Affero General Public License v3.0](https://choosealicense.com/licenses/apache-2.0/)
 
 *Note: the [OSINTBuddy PyPi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*.
 
@@ -196,8 +191,8 @@ Patched `aiogremlin` library: [jerlendds/gremlinpy](https://github.com/jerlendds
 
 
 ## [↑](#introducing-osintbuddy)Sponsor OSINTBuddy 
-Help us keep the OSINTBuddy project free and maintained forever.
-Sponsor the OSINTBuddy project for unique benefits. Learn more on the [OSINTBuddy OpenCollective project page](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
+Help us keep the project free and maintained.
+Sponsor the OSINTBuddy project for unique benefits. Learn more on the [OSINTBuddy OpenCollective](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
 
 [![Yearly OpenCollective Income](https://badgen.net/opencollective/yearly/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
 [![OpenCollective Backers](https://badgen.net/opencollective/backers/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
