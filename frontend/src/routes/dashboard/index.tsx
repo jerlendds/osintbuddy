@@ -1,5 +1,5 @@
 import { Fragment, useRef, useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Tab } from "@headlessui/react";
 import GraphPanel from "./_components/tabs/GraphPanel";
@@ -8,9 +8,10 @@ import MarketPanel from './_components/tabs/MarketPanel';
 import CreateEntityModal from "./_components/modals/CreateEntityModal";
 import CreateGraphModal from "./_components/modals/CreateGraphModal";
 import styles from "./dashboard.module.css"
-import { AllGraphsList, useGetGraphsQuery } from "@/app/api";
+import { AllGraphsList, useGetGraphStatsQuery, useGetGraphsQuery } from "@/app/api";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
+import { GetGraphStatsApiResponse } from '../../app/api';
 
 export interface ScrollGraphs {
   skip?: number | undefined
@@ -20,6 +21,8 @@ export interface ScrollGraphs {
 }
 
 export type DashboardContextType = {
+  graphStats: GetGraphStatsApiResponse
+  refreshGraphStats: () => void;
   refreshAllGraphs: () => void;
   graphsData: AllGraphsList
   isLoadingGraphs: boolean
@@ -27,6 +30,7 @@ export type DashboardContextType = {
 };
 
 export default function DashboardPage() {
+  const { hid } = useParams();
   const location = useLocation()
   const initialTab = location.pathname.includes("entity") ?
     1 : location.pathname.includes("market")
@@ -59,7 +63,7 @@ export default function DashboardPage() {
     if (skip !== undefined && limit !== undefined) setGraphsQuery({ skip, limit })
     if (favoriteSkip !== undefined && favoriteLimit !== undefined) setFavoriteGraphsQuery({ favoriteSkip, favoriteLimit })
   }
-
+  const { data: graphStats, refetch: refreshGraphStats } = useGetGraphStatsQuery({ hid: hid as string }, { skip: hid === undefined && !location.pathname.includes("/dashboard/graph/") }) // , { skip: hid === undefined }
   return (
     <>
       <div className="flex max-h-screen">
@@ -145,6 +149,8 @@ export default function DashboardPage() {
           graphsData: allGraphsData,
           isLoadingGraphs,
           isGraphsError,
+          graphStats,
+          refreshGraphStats,
         } satisfies DashboardContextType} />
       </div>
       <CreateGraphModal

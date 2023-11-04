@@ -16,14 +16,14 @@ export default function GraphHeader({ graph, stats, refreshAllGraphs }: GraphHea
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex w-full bg-transparent border-b border-dark-400">
-        <div className="py-3.5 w-full mx-auto">
+      <div className="flex w-full bg-transparent border-b border-dark-400 -top-[2px] relative">
+        <div className=" w-full mx-auto">
           <section className="flex flex-col items-start justify-between px-4 lg:items-center lg:px-6 md:px-4 lg:flex-row md:flex-row md:items-center  relative">
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full py-2 ">
               <h3 className="text-lg font-semibold whitespace-nowrap leading-normal text-slate-300">
                 {graph?.name}
               </h3>
-              <p className="text-sm leading-normal max-w-12 whitespace-normal h-10 truncate max-w-4xl text-slate-400">
+              <p className="text-sm leading-normal whitespace-normal h-10 truncate max-w-6xl text-slate-400">
                 {graph?.description}
               </p>
             </div>

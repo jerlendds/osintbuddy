@@ -6,16 +6,18 @@ import { Graph, useGetGraphQuery, useGetGraphStatsQuery } from "@/app/api";
 import CaseNotes from "@/components/Notes/CaseNotes"
 import GraphHeader from "./GraphHeader"
 import { DashboardContextType } from "..";
+import { useEffectOnce } from "@/app/hooks";
 
 
 
 export default function GraphDetails() {
   const { hid } = useParams()
-  const { data: activeGraph } = useGetGraphQuery({ hid: hid as string }, { skip: hid === undefined })
-  const { data: graphStats } = useGetGraphStatsQuery({ hid: hid as string }, { skip: hid === undefined })
+  const { data: activeGraph } = useGetGraphQuery({ hid: hid as string })
 
   const uniqueChartRef = useRef(null);
   const uniqueOutEdgesChartRef = useRef(null);
+  const { graphStats, refreshAllGraphs } = useOutletContext<DashboardContextType>();
+
   useEffect(() => {
     if (uniqueChartRef?.current) {
       let data = graphStats?.unique_entity_counts ? graphStats?.unique_entity_counts : {
@@ -57,7 +59,6 @@ export default function GraphDetails() {
     }
   }, [graphStats?.unique_entity_counts])
 
-  const { refreshAllGraphs } = useOutletContext<DashboardContextType>();
 
   return (
     <>
