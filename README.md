@@ -36,8 +36,8 @@
   🚧  <ins>Work in progress</ins>  🚧
 <br/>
 
-  ![ob-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/9a22223f-7477-4268-be85-46b94dd875bb)
-  
+  ![ob-new-ui-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/049a6cbd-61fd-4bd1-9f82-119ce17dd2a2)
+
   ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum](https://forum.osintbuddy.com)** or on the **[discord](https://discord.gg/gsbbYHA3K3)** ⚠️
 
   ---
