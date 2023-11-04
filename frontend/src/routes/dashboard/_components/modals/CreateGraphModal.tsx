@@ -46,7 +46,7 @@ export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
       closeModal()
       if (showTour) {
         setIsOpen(true)
-        navigate(`inquiry/${newGraph.uuid}`)
+        navigate(`/graph/inquiry/${newGraph.uuid}`)
       } else {
         navigate(`${newGraph.uuid}`)
       }
