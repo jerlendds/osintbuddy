@@ -38,17 +38,6 @@ const initialState: Graph = {
   viewMode: 'base'
 };
 
-export const fetchNodeBlueprint = createAsyncThunk(
-  'graph/saveNewNode',
-  async ({ label, position, uuid }: { label: string; position: XYPosition; uuid: string }) => {
-    return null
-    // return await sdk.nodes.createGraphEntity({
-    //     label,
-    //     position,
-    //     graphId: uuid,
-    //   })
-  }
-);
 
 export const saveNode = createAsyncThunk(
   'graph/saveNode',
@@ -205,11 +194,11 @@ export const graph = createSlice({
     updateEdgeEvent: (state, action: PayloadAction<UpdateEdgeEvent>) => {
       state.edges = updateEdge(action.payload.oldEdge, action.payload.newConnection, state.edges);
     },
+    addNodeUpdate: (state, action: PayloadAction<any>) => {
+      state.nodes.push(action.payload);
+    },
   },
   extraReducers(builder) {
-    builder.addCase(fetchNodeBlueprint.fulfilled, (state, action) => {
-      // state.nodes.push({ ...action.payload, type: state.viewMode});
-    }),
       builder.addCase(saveNode.fulfilled, (state, action) => {
         state.nodes.push(action.payload);
       });
@@ -235,7 +224,8 @@ export const {
   resetGraph,
   setActiveProject,
   setNodeType,
-  setViewMode
+  setViewMode,
+  addNodeUpdate
 } = graph.actions;
 
 export const graphNodes = (state: RootState) => state.graph.nodes;

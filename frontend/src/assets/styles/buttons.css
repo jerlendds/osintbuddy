@@ -1,0 +1,7 @@
+.btn-primary {
+  @apply ring-1 ring-info-200 text-left text-sm font-semibold text-info-200 hover:text-info-300 flex items-center border border-info-200 hover:border-info-300 py-2 px-3 rounded-md mx-4 mt-auto justify-center;
+}
+
+.btn-primary svg {
+  @apply ml-5 w-5 h-5
+}

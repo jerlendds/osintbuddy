@@ -2,13 +2,14 @@
 import { ChevronUpDownIcon, PaperClipIcon } from '@heroicons/react/24/outline';
 import { Combobox } from '@headlessui/react';
 import classNames from 'classnames';
-import { ChangeEvent, Dispatch, Fragment, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, Dispatch, Fragment, useEffect, useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { GripIcon, Icon } from '@/components/Icons';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { type ThunkDispatch } from 'redux-thunk';
-import { setEditState, type Graph, EditState, saveUserEdits, selectNodeValue } from '@/features/graph/graphSlice';
+import { type Graph, EditState, saveUserEdits, selectNodeValue } from '@/features/graph/graphSlice';
+import { AnyAction } from '@reduxjs/toolkit';
 
 var dropdownKey = 0;
 
@@ -30,7 +31,7 @@ type NodeElement = NodeInput & {
   nodeId: string;
   editState: EditState;
   dispatch: ThunkDispatch<{ settings: { showSidebar: boolean }; graph: Graph }, undefined, AnyAction> &
-    Dispatch<AnyAction>;
+  Dispatch<AnyAction>;
 };
 
 export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject; sendJsonMessage: () => void }) {
@@ -302,8 +303,8 @@ export function DropdownInput({ options, label, nodeId, sendJsonMessage, dispatc
     query === ''
       ? options ?? []
       : options?.filter((option: DropdownOption) => {
-          return option.label.toLowerCase().includes(query.toLowerCase());
-        }) ?? [];
+        return option.label.toLowerCase().includes(query.toLowerCase());
+      }) ?? [];
 
   const activeValue = useAppSelector((state) => selectNodeValue(state, nodeId, label));
 

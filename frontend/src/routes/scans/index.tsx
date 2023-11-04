@@ -37,7 +37,7 @@ export function ScanMachineCard({
             <div className="flex flex-col">
               <h4 className="mb-2 leading-4 text-lg tracking-tight text-slate-400 dark:text-slate-300">
                 {title}
-              </h4>{" "}
+              </h4>
               <div className="flex flex-col font-normal">
                 <p>{description}</p>
               </div>

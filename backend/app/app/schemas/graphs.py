@@ -45,3 +45,5 @@ class GraphInDB(GraphInDBBase):
 class GraphsList(BaseModel):
     graphs: List[Graph]
     count: int
+
+    

@@ -4,6 +4,7 @@
 @import './layouts.css';
 @import './tables.css';
 @import './charts.css';
+@import './buttons.css';
 
 @font-face {
   font-family: 'Lexend';
@@ -37,11 +38,11 @@ button {
 
 
 ::-moz-selection {
- @apply text-slate-200 bg-info-300
+  @apply text-slate-200 bg-info-300
 }
 
 ::selection {
- @apply text-slate-200 bg-info-300
+  @apply text-slate-200 bg-info-300
 }
 
 /* https://gradienta.io/editor */
@@ -73,8 +74,8 @@ figcaption {
 }
 
 /* 
- Custom Scrollbar Style 
- Works on Chrome, Edge, and Safari 
+  Custom Scrollbar Style 
+  Works on Chrome, Edge, and Safari 
 */
 *::-webkit-scrollbar {
   width: 6px;

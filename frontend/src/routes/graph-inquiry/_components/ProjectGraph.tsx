@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo, DragEventHandler } from 'react';
+import { useCallback, useState, useMemo, DragEventHandler, useEffect } from 'react';
 import ReactFlow, {
   Edge,
   Background,
@@ -9,10 +9,13 @@ import ReactFlow, {
   Connection,
 } from 'reactflow';
 import BaseNode from './BaseNode';
-import { createEdge, fetchNodeBlueprint, onEdgesChange, updateEdgeEvent, updateNodeFlow } from '@/features/graph/graphSlice';
+import { addNodeUpdate, createEdge, onEdgesChange, updateEdgeEvent, updateNodeFlow } from '@/features/graph/graphSlice';
 import { useAppDispatch } from '@/app/hooks';
 import { toast } from 'react-toastify';
 import BaseMiniNode from './BaseMiniNode';
+import { CreateGraphEntityApiResponse, CreateNode, useCreateEntityMutation, useCreateGraphEntityMutation, useGetEntityTransformsQuery, useRefreshPluginsQuery } from '@/app/api';
+import { CreateGraphEntityApiArg } from '../../../app/api';
+import { useParams } from 'react-router-dom';
 
 const viewOptions: FitViewOptions = {
   padding: 50,
@@ -34,21 +37,27 @@ export default function ProjectGraph({
   setIsEditingMini
 }: JSONObject) {
   const dispatch = useAppDispatch();
-  const [isSavingNewNode, setSavingNewNode] = useState(false);
   const onEdgeUpdate = useCallback(
     (oldEdge: Edge, newConnection: Connection) => dispatch(updateEdgeEvent({ oldEdge, newConnection })),
     []
   );
+  const { uuid } = useParams()
+  useRefreshPluginsQuery({ uuid: uuid as string })
 
   const onDragOver: DragEventHandler<HTMLDivElement> = useCallback((event) => {
     event.preventDefault();
     if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
   }, []);
 
+  const [blankNode, setBlankNode] = useState<any>({ label: null, position: null });
+  const [createGraphEntity, {
+    isError: isCreateEntityError,
+    isLoading: isLoadingCreateEntity }
+  ] = useCreateGraphEntityMutation(blankNode)
+
   const onDrop: DragEventHandler<HTMLDivElement> = useCallback(
     async (event) => {
       event.preventDefault();
-      setSavingNewNode(true);
       const label = event.dataTransfer && event.dataTransfer.getData('application/reactflow');
       if (typeof label === 'undefined' || !label) return;
 
@@ -57,18 +66,14 @@ export default function ProjectGraph({
         x: event.clientX - graphBounds.left,
         y: event.clientY - graphBounds.top,
       });
-      try {
-        await dispatch(
-          fetchNodeBlueprint({
-            label,
-            position,
-            uuid: activeProject.uuid,
+      if (label && position && uuid) {
+        const createNode = { label, position, uuid }
+        createGraphEntity({ createNode })
+          .then(({ data }: CreateGraphEntityApiResponse) => dispatch(addNodeUpdate({ position, label, ...data, })))
+          .catch((error) => {
+            console.error(error)
+            toast.error(`We ran into a problem creating the ${label} entity. Please try again`)
           })
-        ).unwrap();
-      } catch (error: unknown) {
-        if (error instanceof Error) toast.info(error.message);
-      } finally {
-        setSavingNewNode(false);
       }
     },
     [graphInstance]
@@ -99,12 +104,8 @@ export default function ProjectGraph({
       nodes={nodes}
       edges={edges}
       onDrop={onDrop}
-      onConnect={(connection) => {
-        dispatch(createEdge(connection));
-      }}
-      onEdgesChange={(changes) => {
-        dispatch(onEdgesChange(changes));
-      }}
+      onConnect={(connection) => dispatch(createEdge(connection))}
+      onEdgesChange={(changes) => dispatch(onEdgesChange(changes))}
       edgeTypes={edgeTypes}
       onDragOver={onDragOver}
       onEdgeUpdate={onEdgeUpdate}

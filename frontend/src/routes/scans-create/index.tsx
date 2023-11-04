@@ -251,15 +251,12 @@ export function ResizableHandles({ activeEntity }: JSONObject) {
                                 icon={entity.icon}
                               />
                             </span>
-
                             <p className="text-lg mt-auto mb-2 font-semibold leading-6 text-slate-300 whitespace-nowrap">
                               {entity.name}
                             </p>
                           </div>
-
                           <div className="mt-1 flex flex-wrap items-center gap-x-2 text-xs leading-5 text-slate-500">
                             <p className="truncate whitespace-normal leading-5 text-slate-500">
-                              {" "}
                               {entity.description && entity.description}
                             </p>
                           </div>
@@ -279,12 +276,9 @@ export function ResizableHandles({ activeEntity }: JSONObject) {
 export default function ScansCreatePage() {
   const graphRef = useRef<any>(null);
   const [graphInstance, setGraphInstance] = useState(null);
-
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-
   const { ref, isOpen, setIsOpen } = useComponentVisible(false);
-
   const [activeEntity, setActiveEntity] = useState({});
 
   return (

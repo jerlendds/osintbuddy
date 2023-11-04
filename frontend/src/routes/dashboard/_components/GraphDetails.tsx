@@ -1,23 +1,20 @@
-import GraphHeader from "./_components/GraphHeader"
-import { useEffectOnce } from "@/app/hooks";
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { useParams } from "react-router-dom"
 import 'chartist/dist/index.css';
 import { BarChart } from "chartist"
+import { Graph, useGetGraphQuery, useGetGraphStatsQuery } from "@/app/api";
 import CaseNotes from "@/components/Notes/CaseNotes"
+import GraphHeader from "./GraphHeader"
+
+
 
 export default function GraphDetails() {
   const params: any = useParams()
-  const [activeGraph, setActiveGraph] = useState<any>(null);
-  const [graphStats, setGraphStats] = useState<any>(null);
-
-  useEffect(() => {
-
-  }, [params?.graphId])
+  const { data: activeGraph } = useGetGraphQuery({ graphId: params.uuid })
+  const { data: graphStats } = useGetGraphStatsQuery({ graphId: params.uuid })
 
   const uniqueChartRef = useRef(null);
-  const uniqueOuteChartRef = useRef(null);
-
+  const uniqueOutEdgesChartRef = useRef(null);
   useEffect(() => {
     if (uniqueChartRef?.current) {
       let data = graphStats?.unique_entity_counts ? graphStats?.unique_entity_counts : {
@@ -38,13 +35,13 @@ export default function GraphDetails() {
         }
       );
     }
-    if (uniqueOuteChartRef?.current) {
+    if (uniqueOutEdgesChartRef?.current) {
       let data = graphStats?.entity_oute_counts ? graphStats?.entity_oute_counts : {
         labels: [],
         series: []
       };
       new BarChart(
-        uniqueOuteChartRef.current,
+        uniqueOutEdgesChartRef.current,
         data,
         {
           distributeSeries: true,
@@ -62,7 +59,7 @@ export default function GraphDetails() {
   return (
     <>
       <section className="flex flex-col w-full">
-        <GraphHeader stats={graphStats} graph={activeGraph} setActiveGraph={setActiveGraph} />
+        <GraphHeader stats={graphStats} graph={activeGraph as Graph} />
         <section className="flex w-full h-full relative">
           <div className="flex flex-col w-2/5">
             <div className="flex flex-col pl-4 mx-4 mt-4 bg-dark-600 rounded-md ">
@@ -75,7 +72,7 @@ export default function GraphDetails() {
               <h3 className="text-slate-300 mt-3 font-display font-medium text-md">
                 Outgoing Relations Count by Entity
               </h3>
-              <div className=" mb-3 overflow-y-scroll h-auto max-h-72 bar-hz" ref={uniqueOuteChartRef}></div>
+              <div className=" mb-3 overflow-y-scroll h-auto max-h-72 bar-hz" ref={uniqueOutEdgesChartRef}></div>
             </div>
           </div>
           <section className="flex flex-col w-3/5 pl-6 h-full py-2 overflow-y-scroll pt-4 rounded-br-md absolute right-0 bg-black/20 pr-4 bg-dark-950 border-l border-b border-dark-400">

@@ -1,13 +1,16 @@
-import { useAppDispatch } from "@/app/hooks";
+import { Graph } from "@/app/api";
 import { formatPGDate } from "@/app/utilities";
 import { ClockIcon, EyeIcon, FingerPrintIcon, PlusIcon, ScaleIcon, TrashIcon, UserIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-export default function GraphHeader({ graph, stats, setActiveGraph }: JSONObject) {
-  const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+interface GraphHeaderProps {
+  graph: Graph
+  stats: any
+}
 
+export default function GraphHeader({ graph, stats }: GraphHeaderProps) {
+  const navigate = useNavigate()
   return (
     <div className="flex flex-col w-full">
       <div className="flex w-full bg-transparent border-b border-dark-400">
@@ -24,14 +27,13 @@ export default function GraphHeader({ graph, stats, setActiveGraph }: JSONObject
             <div className="flex w-full gap-x-4 mt-auto">
               <button onClick={() => {
                 // dispatch(deleteGraph(graph.uuid))
-                navigate('/app/dashboard/graphs', { replace: true })
+                navigate('/dashboard/graph', { replace: true })
               }} className="mb-3.5 ring-1 ring-danger-600 ml-auto pr-3 text-left text-sm font-semibold text-danger-600 hover:text-danger-700 flex items-center border border-danger-600 hover:border-danger-700 py-2 px-3 rounded-md mr-1 ">
                 Delete graph
                 <TrashIcon className="text-inherit h-5 w-5 ml-2" />
               </button>
               <Link
-                to={`/app/dashboard/graph/${graph?.uuid}`}
-                state={{ graph }}
+                to={`/graph/inquiry/${graph?.uuid}`}
                 className='mb-3.5 ring-1 ring-info-200 pr-3 text-left text-sm font-semibold text-info-200 hover:text-info-300 flex items-center border border-info-200 hover:border-info-300 py-2 px-3 rounded-md mr-1'
               >
                 Open graph

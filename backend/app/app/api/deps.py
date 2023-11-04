@@ -2,6 +2,7 @@ from typing import Generator, Any
 from contextlib import contextmanager
 
 import boto3
+from botocore.exceptions import BotoCoreError
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 import undetected_chromedriver as uc
@@ -20,9 +21,6 @@ def get_db() -> Generator[Any, Session, Any]:
     try:
         db: Session = SessionLocal()
         yield db
-    except Exception as e:
-        log.error('Error inside api.deps.get_db')
-        log.error(e)
     finally:
         db.close()
 
@@ -46,7 +44,7 @@ def get_s3():
             "aws_secret_access_key": "secretKey1"
         })
         yield s3
-    except Exception as e:
+    except BotoCoreError as e:
         log.error('Error inside api.deps.get_s3')
         log.error(e)
 

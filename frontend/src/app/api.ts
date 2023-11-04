@@ -29,7 +29,7 @@ const injectedRtkApi = api.injectEndpoints({
     >({
       query: (queryArg) => ({
         url: `/api/v1/graphs/${queryArg.graphId}/favorite`,
-        method: "PUT",
+        method: "PATCH",
         params: { is_favorite: queryArg.isFavorite },
       }),
     }),
@@ -91,6 +91,15 @@ const injectedRtkApi = api.injectEndpoints({
         body: queryArg.postEntityCreate,
       }),
     }),
+    getEntityTransforms: build.query<
+      GetEntityTransformsApiResponse,
+      GetEntityTransformsApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/v1/entities/transforms`,
+        params: { label: queryArg.label },
+      }),
+    }),
     updateEntityByUuid: build.mutation<
       UpdateEntityByUuidApiResponse,
       UpdateEntityByUuidApiArg
@@ -121,15 +130,9 @@ const injectedRtkApi = api.injectEndpoints({
       RefreshPluginsApiResponse,
       RefreshPluginsApiArg
     >({
-      query: () => ({ url: `/api/v1/nodes/refresh` }),
-    }),
-    getEntityTransforms: build.query<
-      GetEntityTransformsApiResponse,
-      GetEntityTransformsApiArg
-    >({
       query: (queryArg) => ({
-        url: `/api/v1/nodes/transforms`,
-        params: { label: queryArg.label },
+        url: `/api/v1/nodes/refresh`,
+        params: { uuid: queryArg.uuid },
       }),
     }),
     createGraphEntity: build.mutation<
@@ -168,7 +171,7 @@ const injectedRtkApi = api.injectEndpoints({
       query: (queryArg) => ({
         url: `/api/v1/scans`,
         method: "DELETE",
-        params: { id: queryArg.id },
+        params: { sid: queryArg.sid },
       }),
     }),
     getStatus: build.query<GetStatusApiResponse, GetStatusApiArg>({
@@ -191,7 +194,7 @@ export type PostSignoutApiResponse =
   /** status 200 Successful Response */ Status;
 export type PostSignoutApiArg = void;
 export type GetAccountApiResponse = /** status 200 Successful Response */
-  | CasdoorUser
+  | User
   | HttpError;
 export type GetAccountApiArg = void;
 export type GetGraphApiResponse = /** status 200 Successful Response */ Graph;
@@ -245,6 +248,11 @@ export type CreateEntityApiResponse = /** status 200 Successful Response */ any;
 export type CreateEntityApiArg = {
   postEntityCreate: PostEntityCreate;
 };
+export type GetEntityTransformsApiResponse =
+  /** status 200 Successful Response */ any;
+export type GetEntityTransformsApiArg = {
+  label: string;
+};
 export type UpdateEntityByUuidApiResponse =
   /** status 200 Successful Response */ any;
 export type UpdateEntityByUuidApiArg = {
@@ -263,11 +271,8 @@ export type UpdateFavoriteEntityUuidApiArg = {
 };
 export type RefreshPluginsApiResponse =
   /** status 200 Successful Response */ any;
-export type RefreshPluginsApiArg = void;
-export type GetEntityTransformsApiResponse =
-  /** status 200 Successful Response */ any;
-export type GetEntityTransformsApiArg = {
-  label: string;
+export type RefreshPluginsApiArg = {
+  uuid: string;
 };
 export type CreateGraphEntityApiResponse =
   /** status 200 Successful Response */ any;
@@ -288,7 +293,7 @@ export type GetScanMachinesApiArg = {
 export type DeleteScanProjectApiResponse =
   /** status 200 Successful Response */ any;
 export type DeleteScanProjectApiArg = {
-  id: number;
+  sid: number;
 };
 export type GetStatusApiResponse = /** status 200 Successful Response */ any;
 export type GetStatusApiArg = void;
@@ -306,38 +311,19 @@ export type ValidationError = {
 export type HttpValidationError = {
   detail?: ValidationError[];
 };
-export type CasdoorUser = {
-  owner?: string;
-  type?: string;
-  signupApplication?: string;
-  id: string;
-  sub?: string | null;
-  exp?: number | null;
-  nbf?: number | null;
-  iat?: number | null;
-  jti?: string | null;
-  aud?: string[];
-  avatar: string | null;
-  avatarType: string | null;
-  permanentAvatar: string | null;
-  firstName?: string | null;
-  lastName?: string | null;
+export type User = {
   name: string;
-  displayName: string;
-  email: string;
-  emailVerified: boolean;
-  phone: string | null;
-  countryCode: string | null;
-  region: string | null;
-  location: string | null;
-  bio: string | null;
-  language?: string | null;
-  isOnline?: boolean | null;
-  isAdmin?: boolean | null;
-  isForbidden?: boolean | null;
-  isDeleted?: boolean | null;
-  updatedTime: string;
-  createdTime: string;
+  username?: string | null;
+  email?: string | null;
+  avatar?: string | null;
+  phone?: string | null;
+  display_name?: string | null;
+  first_name?: string | null;
+  last_name?: string | null;
+  is_admin: boolean;
+  created_time: string;
+  updated_time: string;
+  uuid: string;
 };
 export type Graph = {
   name: string;
@@ -387,7 +373,7 @@ export type XyPosition = {
 export type CreateNode = {
   label: string;
   position: XyPosition;
-  graphId: string;
+  uuid: string;
 };
 export type ScanMachineCreate = {
   name: string;
@@ -408,11 +394,11 @@ export const {
   useGetEntityQuery,
   useGetEntitiesQuery,
   useCreateEntityMutation,
+  useGetEntityTransformsQuery,
   useUpdateEntityByUuidMutation,
   useDeleteEntityMutation,
   useUpdateFavoriteEntityUuidMutation,
   useRefreshPluginsQuery,
-  useGetEntityTransformsQuery,
   useCreateGraphEntityMutation,
   useCreateScanMachineMutation,
   useGetScanMachinesQuery,

@@ -59,7 +59,7 @@ class CRUDGraphs(CRUDBase[
             is_favorite=is_favorite
         )
         graphs_total_count: int = self.count_by_favorites(db, is_favorite)[0][0]
-        return schemas.GraphsList(graphs=graphs, count=graphs_total_count)
+        return graphs, graphs_total_count
 
 
 graphs = CRUDGraphs(Graphs)

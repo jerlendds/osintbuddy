@@ -1,25 +1,20 @@
-import { Fragment, useEffect, useRef, useState } from "react";
-import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { Dialog, Transition } from "@headlessui/react";
-import { ChevronLeftIcon, ChevronRightIcon, CogIcon, DocumentMagnifyingGlassIcon, FolderOpenIcon, InboxIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { TourProvider } from "@reactour/tour";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { TourProvider, StepType } from "@reactour/tour";
 import classNames from "classnames";
-import { ReactComponent as OSINTBuddyLogo } from "@images/logo.svg";
-import HamburgerMenu from "@/components/HamburgerMenu";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAppDispatch, useAppSelector, useEffectOnce } from "@/app/hooks";
-import { isSidebarOpen, selectIsAuthenticated, setIsAuthenticated, setSidebar } from "@/features/account/accountSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { isSidebarOpen, selectIsAuthenticated, setSidebar } from "@/features/account/accountSlice";
 import IncidentCard from "@/components/IncidentCard";
-import { api } from "@/app/api";
+import OverlayModal from "@/components/modals/OverlayModal";
+import AppLayoutSidebar from "@/components/AppLayoutSidebar";
 
-const navigation = [
-  { name: "Dashboard", to: "/app/dashboard/graphs", icon: InboxIcon },
-  { name: "Incidents *", to: "/app/incidents", icon: FolderOpenIcon },
-  { name: "Scans", to: "/app/scans", icon: DocumentMagnifyingGlassIcon },
-];
 
-const graphTourSteps: any = [
+
+const graphTourSteps: StepType[] = [
   {
     selector: "#main-view",
     content:
@@ -33,13 +28,12 @@ const graphTourSteps: any = [
 ];
 
 export default function AppLayout() {
-  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
   const showSidebar: boolean = useAppSelector((state) => isSidebarOpen(state));
-  const [openIncident, setOpenIncident] = useState(false);
+  const [showIncidentsModal, setShowIncidentsModal] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const cancelButtonRef = useRef(null);
+  const cancelIncidentsModalRef = useRef(null);
 
   const isAuthenticated = useAppSelector(state => selectIsAuthenticated(state));
 
@@ -47,19 +41,7 @@ export default function AppLayout() {
     dispatch(setSidebar(!showSidebar));
   };
 
-
-  const { data: user, isLoading } = api.useGetAccountQuery()
-
-
-  console.log('casdoor conf', user, isLoading)
-
-  // const { data, error, isLoading } = ob.useGetAccountQuery();
-
-  // console.log('ob.getAccount data', data)
-  // console.log('ob.getAccount error: ', error)
-  // console.log('ob.getAccount isLoading: ', isLoading)
   if (!isAuthenticated) return <Navigate to="/" replace />
-
   return (
     <>
       <TourProvider
@@ -141,114 +123,7 @@ export default function AppLayout() {
         }}
       >
         <div className="flex flex-col max-w-screen">
-          <div
-            className={classNames(
-              "fixed inset-y-0 flex border-r border-dark-300 w-64 flex-col transition-transform duration-100",
-              showSidebar ? "translate-x-0" : "-translate-x-52"
-            )}
-          >
-            <div className="flex min-h-0 flex-1 flex-col bg-dark-700">
-              <div
-                className={classNames(
-                  "flex h-12 flex-shrink-0 items-center justify-between",
-                  showSidebar ? "px-3" : "px-1"
-                )}
-              >
-                <Link to="/" replace>
-                  <OSINTBuddyLogo className="h-7 w-auto fill-slate-400" />
-                </Link>
-
-                <HamburgerMenu
-                  isOpen={showSidebar}
-                  className="mx-1.5"
-                  onClick={toggleSidebar}
-                />
-              </div>
-              <div className="flex flex-1 flex-col overflow-y-auto">
-                <nav className="flex-1 flex py-4 flex-col">
-                  {navigation.map((item) => (
-                    <NavLink
-                      key={item.name}
-                      to={item.to}
-                      className={({ isActive }) =>
-                        classNames(
-                          isActive && "active",
-                          "sidebar-link",
-                          !showSidebar && "mx-0"
-                        )
-                      }
-                    >
-                      <item.icon
-                        className={classNames(
-                          "transition-all",
-                          location.pathname.includes(item.to)
-                            ? "text-info-200"
-                            : "text-slate-400 group-hover:text-slate-300",
-                          "mr-3 flex-shrink-0 h-6 w-6 duration-100",
-                          showSidebar
-                            ? "translate-x-0"
-                            : "translate-x-[13.16rem]"
-                        )}
-                        aria-hidden="true"
-                      />
-                      {item.name}{" "}
-                      {item.name === "Incidents *" && (
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setOpenIncident(!openIncident);
-                            toast.info(
-                              <>
-                                This feature is currently being planned out and
-                                created. You can help shape this feature by
-                                contributing to the discussion{" "}
-                                <a
-                                  className="text-info-200"
-                                  href="https://github.com/jerlendds/osintbuddy/discussions"
-                                  target="_blank"
-                                >
-                                  on Github!
-                                </a>
-                              </>,
-                              { autoClose: 10000 }
-                            );
-                          }}
-                          title="Create new incident"
-                          className="ml-auto relative bg-dark-400 transition-colors duration-75 hover:bg-dark-500 p-1.5 rounded-full"
-                        >
-                          <PlusIcon className="text-white w-5 h-5" />
-                        </button>
-                      )}
-                    </NavLink>
-                  ))}
-                  <NavLink
-                    to="/app/settings"
-                    replace
-                    className={({ isActive }) =>
-                      classNames(
-                        isActive && "active",
-                        "sidebar-link mt-auto",
-                        !showSidebar && "mx-0"
-                      )
-                    }
-                  >
-                    <CogIcon
-                      className={classNames(
-                        "transition-all",
-                        location.pathname.includes("settings")
-                          ? "text-info-200"
-                          : "text-slate-400 group-hover:text-slate-300",
-                        "mr-3 flex-shrink-0 h-6 w-6 duration-100",
-                        showSidebar ? "translate-x-0" : "translate-x-[13.16rem]"
-                      )}
-                      aria-hidden="true"
-                    />
-                    Settings
-                  </NavLink>
-                </nav>
-              </div>
-            </div>
-          </div>
+          <AppLayoutSidebar setShowIncidentsModal={setShowIncidentsModal} toggleSidebar={toggleSidebar} showSidebar={showSidebar} />
           <div
             id="main-view"
             style={{ width: `calc(100% - ${showSidebar ? 16 : 3}rem)` }}
@@ -262,44 +137,14 @@ export default function AppLayout() {
             </main>
           </div>
         </div>
-        <Transition.Root show={openIncident} as={Fragment}>
-          <Dialog
-            as="div"
-            className="relative z-10"
-            initialFocus={cancelButtonRef}
-            onClose={setOpenIncident}
-          >
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <div className="fixed inset-0 bg-dark-900 bg-opacity-75 transition-opacity" />
-            </Transition.Child>
 
-            <div className="fixed inset-0 z-10 overflow-y-auto">
-              <div className="flex min-h-full items-end justify-center text-center sm:items-center sm:p-0 ">
-                <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-300"
-                  enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                  enterTo="opacity-100 translate-y-0 sm:scale-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                  leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                >
-                  <Dialog.Panel className="relative max-w-4xl z-10 w-full transform overflow-hidden rounded-lg  text-left shadow-xl transition-all ">
-                    <IncidentCard closeModal={() => setOpenIncident(false)} />
-                  </Dialog.Panel>
-                </Transition.Child>
-              </div>
-            </div>
-          </Dialog>
-        </Transition.Root>
+        <OverlayModal
+          cancelCreateRef={cancelIncidentsModalRef}
+          isOpen={showIncidentsModal}
+          closeModal={() => setShowIncidentsModal(false)}
+        >
+          <IncidentCard closeModal={() => setShowIncidentsModal(false)} />
+        </OverlayModal>
         <ToastContainer
           position="bottom-left"
           autoClose={3000}

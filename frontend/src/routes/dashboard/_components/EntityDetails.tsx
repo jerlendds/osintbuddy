@@ -2,22 +2,22 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import EntityEditor from "../../components/EntityEditor/EntityEditor";
+import EntityEditor from "../../../components/EntityEditor/EntityEditor";
+import { useGetEntityQuery } from "@/app/api";
 
 
 
 
 
 export default function EntityDetailsPage() {
-  const params: { entityId: string | undefined } = useParams()
-  const [activeGraph, setActiveGraph] = useState<any>(null);
-  const [graphStats, setGraphStats] = useState<any>(null);
+  const params: { uuid: string | undefined } = useParams()
   const dispatch = useAppDispatch()
 
-  useEffect(() => {
-    params?.entityId && dispatch(setActiveEntityId(params.entityId))
-  }, [params])
-  const activeEntity = useAppSelector((state) => selectActiveEntity(state))
+  const { isLoading, data: activeEntity } = useGetEntityQuery({
+    entityUuid: params?.uuid
+  })
+
+
 
   return (
     <>

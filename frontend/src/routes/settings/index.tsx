@@ -133,7 +133,7 @@ function Table({
             <div className="flex items-center justify-between relative z-40">
               <Link
                 // @ts-ignore
-                to={`/app/projects/${row.original.id}`}
+                to={`/dashboard/${row.original.id}`}
                 state={{ activeCase: row.original }}
                 className={classNames(
                   "text-info-200 flex items-center justify-between text-sm font-display hover:text-slate-200 border-info-200 border-2 py-1 rounded-full px-3 bg-info-200 hover:border-info-50 transition-colors duration-75 ease-in"

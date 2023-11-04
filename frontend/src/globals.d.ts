@@ -10,6 +10,11 @@ interface FetchProps {
   pageIndex: number;
 }
 
+interface InputProps {
+  register: UseFormRegister<any>
+  name: string
+}
+
 interface NodeData {
   label: string;
   color: HexColor;

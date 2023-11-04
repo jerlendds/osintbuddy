@@ -1,4 +1,3 @@
-import { api } from "@/app/api";
 import { BASE_URL, LS_USER_KEY, lUserDefault } from "@/app/baseApi";
 import { useAppDispatch } from "@/app/hooks";
 import { lStorage } from "@/app/utilities";
@@ -35,7 +34,7 @@ export default function CallbackPage() {
           type: "SilentSignin",
           data: "success"
         }, "*");
-        navigate("/app/dashboard/graphs", { replace: true })
+        navigate("/dashboard/graph", { replace: true })
       } else {
         console.error(resp)
         localStorage.removeItem(LS_USER_KEY)

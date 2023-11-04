@@ -1,0 +1,33 @@
+/* wraps the sidebar with search and the main view */
+.dashboard-wrapper {
+  @apply h-screen !min-w-[20rem] max-w-[20rem] justify-between flex flex-col w-full py-8 bg-dark-700 border-r border-dark-400 pl-3
+}
+
+.search-container {
+  @apply flex items-center relative bg-dark-900 border-y border-l border-dark-400 rounded rounded-r-none -mr-px
+}
+
+.search-container input {
+  @apply py-3 pl-1 w-full focus:outline-none relative bg-dark-700 text-sm font-medium text-slate-400 bg-transparent placeholder-slate-700
+}
+
+.dashboard-tabs {
+  @apply flex flex-col h-full relative;
+}
+.tabs-list {
+  @apply flex justify-between w-full px-3 py-2;
+}
+
+.tab {
+  @apply focus:outline-none transition-colors duration-75 ease-in-out flex items-center justify-center px-3 py-2.5 font-display rounded-full text-sm leading-none
+}
+.tab-true {
+  @apply bg-info-300 text-slate-300;
+}
+.tab-false {
+  @apply text-slate-700 hover:text-slate-600;
+}
+
+.tab-panel {
+  @apply flex flex-col justify-between h-full w-full relative;
+}

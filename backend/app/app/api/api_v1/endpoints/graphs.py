@@ -36,7 +36,7 @@ async def get_graph(
         )
 
 
-@router.put('/{graph_id}/favorite')
+@router.patch('/{graph_id}/favorite')
 async def update_favorite_graph_uuid(
     user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     graph_id: str,
@@ -71,7 +71,11 @@ async def get_graphs(
     is_favorite: bool = False
 ) -> schemas.GraphsList:
     try:
-        return crud.graphs.get_user_graphs_by_favorites(db, user, skip, limit, is_favorite=is_favorite)
+        graphs, graphs_count = crud.graphs.get_user_graphs_by_favorites(db, user, skip, limit, is_favorite=is_favorite)
+        return {
+            "graphs": graphs,
+            "count": graphs_count
+        }
     except Exception as e:
         log.error('Error inside graphs.get_graphs:')
         log.error(e)
@@ -92,7 +96,11 @@ async def get_favorite_graphs(
     limit: int = 100,
 ):
     try:
-        return crud.graphs.get_user_graphs_by_favorites(db, user, skip, limit)
+        graphs, graphs_count = crud.graphs.get_user_graphs_by_favorites(db, user, skip, limit)
+        return {
+            "graphs": graphs,
+            "count": graphs_count
+        }
     except Exception as e:
         log.error('Error inside graphs.get_favorite_graphs:')
         log.error(e)

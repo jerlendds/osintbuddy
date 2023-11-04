@@ -2,7 +2,7 @@
 import { useCallback, useState, useRef, useEffect } from 'react';
 import { Edge, XYPosition, Node } from 'reactflow';
 import { HotKeys } from 'react-hotkeys';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import 'reactflow/dist/style.css';
 import EntityOptions from './_components/EntityOptions';
@@ -25,15 +25,21 @@ import DisplayOptions from './_components/DisplayOptions';
 import { MiniEditDialog } from './_components/BaseMiniNode';
 import sdk, { WS_URL } from '@/app/baseApi';
 import CommandPallet from './_components/CommandPallet';
+import { api, useGetEntityTransformsQuery, useGetGraphQuery } from '@/app/api';
+import RoundLoader from '@/components/Loaders';
 
 const keyMap = {
   TOGGLE_PALETTE: ['shift+p'],
 };
 
+const WS_GRAPH_INQUIRE = `ws://${WS_URL}/nodes/graph/`
+
 export default function OsintPage() {
   const dispatch = useAppDispatch();
-  const location = useLocation();
-  const activeProject = location?.state?.graph;
+  const params = useParams()
+
+  const { data: activeGraph, isSuccess, isLoading, isError } = useGetGraphQuery({ graphId: params.uuid })
+
   const initialNodes = useAppSelector((state) => graphNodes(state));
   const initialEdges = useAppSelector((state) => graphEdges(state));
   const graphRef = useRef<HTMLDivElement>(null);
@@ -46,14 +52,18 @@ export default function OsintPage() {
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
 
   const [messageHistory, setMessageHistory] = useState([]);
-  const projectUUID = activeProject.uuid.replace('-', '');
-  const [socketUrl, setSocketUrl] = useState(`ws://${WS_URL}/nodes/graph/${projectUUID}`);
-  const traversalId = activeProject.uuid.replaceAll(/\-/g, '');
-  const [isLoading, setIsLoading] = useState(true);
+  const [socketUrl, setSocketUrl] = useState(null);
   const viewMode = useAppSelector((state) => selectViewMode(state));
 
+  useEffect(() => {
+    if (activeGraph) setSocketUrl(`${WS_GRAPH_INQUIRE}${activeGraph.uuid}`)
+  }, [activeGraph])
+
   const { lastMessage, lastJsonMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl, {
-    onOpen: () => console.log(`opening traversal: \n\tproject_${traversalId}_traversal`),
+    onOpen: () => {
+      const traversalId = activeGraph.uuid.replaceAll("-", "")
+      activeGraph && process.env.NODE_ENV === 'development' && console.log(`opening traversal: \n\tproject_${traversalId}_traversal`)
+    },
     shouldReconnect: () => true,
   });
 
@@ -159,7 +169,6 @@ export default function OsintPage() {
         if (lastJsonMessage.action === 'addInitialLoad') {
           lastJsonMessage.nodes.forEach((node, idx) => addNode(node.id.toString(), node.data, node.position));
           lastJsonMessage.edges.forEach((edge) => addEdge(edge.source.toString(), edge.target.toString()));
-          setIsLoading(false);
         }
         if (lastJsonMessage.action === 'addNode') {
           lastJsonMessage.position.x += 560;
@@ -200,12 +209,15 @@ export default function OsintPage() {
   const [ctxSelection, setCtxSelection] = useState<JSONObject>(null);
   const [showMenu, setShowMenu] = useState(false);
   const [transforms, setTransforms] = useState<string[]>([]);
-
+  const [transformLabel, setTransformLabel] = useState<string | null>(null)
   // @todo implement support for multi-select transforms -
   // hm, actually, how will the transforms work if different plugin types/nodes are in the selection?
   const onMultiSelectionCtxMenu = (event: MouseEvent, nodes: Node[]) => {
     event.preventDefault();
   };
+
+  const { data, isLoading: isLoadingTransforms, isError: isTransformsError, isSuccess: isTransformsSuccess } = useGetEntityTransformsQuery({ label: transformLabel })
+  console.log(data, isLoadingTransforms, isTransformsError, isTransformsSuccess)
 
   const onSelectionCtxMenu = (event: MouseEvent, node: Node) => {
     event.preventDefault();
@@ -214,6 +226,7 @@ export default function OsintPage() {
       x: event.clientX - 20,
     });
     setCtxSelection(node);
+    setTransformLabel(node.data.label)
     // sdk.nodes.getEntityTransforms(node.data.label)
     //   .then((data) => {
     //     console.log('entityTransforms', data)
@@ -248,63 +261,71 @@ export default function OsintPage() {
   const activeNode = useAppSelector((state) => selectNode(state, activeNodeId));
   return (
     <>
-      <HotKeys keyMap={keyMap} handlers={handlers}>
-        <div className='h-screen flex flex-col w-full'>
-          <EntityOptions activeProject={activeProject} options={nodeOptions} />
-          <div className='h-full w-full justify-between bg-dark-900 '>
-            <DisplayOptions />
-            <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
+      {isError && (
+        <h2>Error</h2>
+      )}
+      {isLoading && (
+        <RoundLoader />
+      )}
+      {isSuccess && (
+        <HotKeys keyMap={keyMap} handlers={handlers}>
+          <div className='h-screen flex flex-col w-full'>
+            <EntityOptions activeProject={activeGraph} options={nodeOptions} />
+            <div className='h-full w-full justify-between bg-dark-900 '>
+              <DisplayOptions />
+              <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
 
-              <MiniEditDialog
-                setIsOpen={setIsOpen}
-                closeRef={ref}
-                isOpen={isOpen}
-                activeNode={activeNode}
-                nodeId={activeNodeId}
-                sendJsonMessage={sendJsonMessage}
-              />
+                <MiniEditDialog
+                  setIsOpen={setIsOpen}
+                  closeRef={ref}
+                  isOpen={isOpen}
+                  activeNode={activeNode}
+                  nodeId={activeNodeId}
+                  sendJsonMessage={sendJsonMessage}
+                />
 
-              <ProjectGraph
-                activeProject={activeProject}
-                onSelectionCtxMenu={onSelectionCtxMenu}
-                onMultiSelectionCtxMenu={onMultiSelectionCtxMenu}
-                onPaneCtxMenu={onPaneCtxMenu}
-                onPaneClick={onPaneClick}
-                addEdge={addEdge}
-                graphRef={graphRef}
-                nodes={initialNodes}
-                setNodes={setNodes}
-                edges={initialEdges}
-                setEdges={setEdges}
-                graphInstance={graphInstance}
-                setGraphInstance={setGraphInstance}
-                sendJsonMessage={sendJsonMessage}
-                lastMessage={lastMessage}
-                updateNode={createNodeUpdate}
-                setNodes={setNodes}
-                setIsEditingMini={setIsOpen}
-              />
+                <ProjectGraph
+                  activeProject={activeGraph}
+                  onSelectionCtxMenu={onSelectionCtxMenu}
+                  onMultiSelectionCtxMenu={onMultiSelectionCtxMenu}
+                  onPaneCtxMenu={onPaneCtxMenu}
+                  onPaneClick={onPaneClick}
+                  addEdge={addEdge}
+                  graphRef={graphRef}
+                  nodes={initialNodes}
+                  setNodes={setNodes}
+                  edges={initialEdges}
+                  setEdges={setEdges}
+                  graphInstance={graphInstance}
+                  setGraphInstance={setGraphInstance}
+                  sendJsonMessage={sendJsonMessage}
+                  lastMessage={lastMessage}
+                  updateNode={createNodeUpdate}
+                  setNodes={setNodes}
+                  setIsEditingMini={setIsOpen}
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <CommandPallet
-          toggleShowOptions={toggleShowNodeOptions}
-          isOpen={showCommandPalette}
-          setOpen={setShowCommandPalette}
-        />
-        <div
-          id='node-options-tour'
-          className='absolute top-[3.5rem] w-48 bg-red -z-10 h-20 left-[0.7rem] text-slate-900'
-        />
-        <ContextMenu
-          sendJsonMessage={sendJsonMessage}
-          transforms={transforms}
-          ctxSelection={ctxSelection}
-          showMenu={showMenu}
-          ctxPosition={ctxPosition}
-          closeMenu={() => setShowMenu(false)}
-        />
-      </HotKeys>
+          <CommandPallet
+            toggleShowOptions={toggleShowNodeOptions}
+            isOpen={showCommandPalette}
+            setOpen={setShowCommandPalette}
+          />
+          <div
+            id='node-options-tour'
+            className='absolute top-[3.5rem] w-48 bg-red -z-10 h-20 left-[0.7rem] text-slate-900'
+          />
+          <ContextMenu
+            sendJsonMessage={sendJsonMessage}
+            transforms={transforms}
+            ctxSelection={ctxSelection}
+            showMenu={showMenu}
+            ctxPosition={ctxPosition}
+            closeMenu={() => setShowMenu(false)}
+          />
+        </HotKeys>
+      )}
     </>
   );
 }

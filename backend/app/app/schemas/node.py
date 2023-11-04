@@ -1,3 +1,4 @@
+from uuid import UUID
 from pydantic import BaseModel
 
 class XYPosition(BaseModel):
@@ -7,5 +8,5 @@ class XYPosition(BaseModel):
 class CreateNode(BaseModel):
     label: str
     position: XYPosition
-    graphId: str
+    uuid: UUID
 

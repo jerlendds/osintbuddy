@@ -1,3 +1,4 @@
+from uuid import UUID
 from typing import List, Callable, Tuple, Any, Annotated
 from fastapi import APIRouter, WebSocket, WebSocketException, WebSocketDisconnect, HTTPException, Depends
 from websockets.exceptions import ConnectionClosedError
@@ -29,6 +30,7 @@ async def fetch_node_transforms(plugin_label):
 
 @router.get("/refresh")
 async def refresh_plugins(
+    uuid: UUID,
     user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     db: Session = Depends(deps.get_db)
 ):
@@ -36,35 +38,11 @@ async def refresh_plugins(
         Registry.plugins = []
         Registry.labels = []
         Registry.ui_labels = []
-        entities = crud.entities.get_multi(db)
+        entities = crud.entities.get_multi(db, skip=0, limit=100)
         load_plugins(entities)
         return {"status": "success", "plugins": Registry.ui_labels}
     except Exception as e:
         log.error("Error inside nodes.refresh_plugins")
-        log.error(e)
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="There was an error refreshing, please try again."
-        )
-
-
-@router.get("/transforms")
-async def get_entity_transforms(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
-    label: str
-):
-    try:
-        if transforms := await fetch_node_transforms(label):
-            return {
-                "type": label,
-                "transforms": transforms,
-            }
-        raise HTTPException(
-            status_code=422,
-            detail="Invalid transform error. Please file an issue if this occurs."
-        )
-    except Exception as e:
-        log.error("Error inside nodes.get_entity_transforms")
         log.error(e)
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -78,14 +56,17 @@ async def create_graph_entity(
     node: schemas.CreateNode
 ):
     try:
+        print(node.label, node.position, node.uuid)
+        
         plugin = await Registry.get_plugin(plugin_label=node.label)
+        print('plugin', plugin)
         if plugin:
             blueprint = plugin.blueprint()
             blueprint["position"] = node.position.dict()
             return await save_node_on_drop(
                 node.label,
                 blueprint,
-                node.graphId.replace("-", "")
+                node.uuid.hex
             )
         raise HTTPException(status_code=422, detail=f"Plugin entity {node.label} cannot be found.")
     except Exception as e:
@@ -351,30 +332,32 @@ async def get_command_type(event):
     return USER_ACTION, IS_READ, IS_UPDATE, IS_DELETE, IS_TRANSFORM
 
 
-async def execute_event(event: dict, send_json: Callable, project_uuid: str):
+async def execute_event(event: dict, send_json: Callable, uuid: str) -> None:
     USER_ACTION, IS_READ, IS_UPDATE, IS_DELETE, IS_TRANSFORM = await get_command_type(event)
     if USER_ACTION == 'node':
         if IS_READ:
-            await read_graph(USER_ACTION, send_json, project_uuid)
+            await read_graph(USER_ACTION, send_json, uuid)
         if IS_UPDATE:
-            await update_node(event["node"], USER_ACTION, send_json, project_uuid)
+            await update_node(event["node"], USER_ACTION, send_json, uuid)
         if IS_DELETE:
-            await remove_nodes(event["node"], USER_ACTION, send_json, project_uuid)
+            await remove_nodes(event["node"], USER_ACTION, send_json, uuid)
         if IS_TRANSFORM:
-            await nodes_transform(event["node"], send_json, project_uuid)
+            await nodes_transform(event["node"], send_json, uuid)
 
 
-@router.websocket("/graph/{project_uuid}")
-async def active_project(websocket: WebSocket, project_uuid: str):
+@router.websocket("/graph/{uuid}")
+async def active_project(websocket: WebSocket, uuid: UUID):
+    print("active_graph_inquiry", uuid)
+    is_project_active = True
     await websocket.accept()
     await websocket.send_json({"action": "refresh"})
-    while True:
+    while is_project_active:
         try:
-            event = await websocket.receive_json()
+            event: dict = await websocket.receive_json()
             await execute_event(
                 event=event,
                 send_json=websocket.send_json,
-                project_uuid=project_uuid.replace("-", "")
+                uuid=uuid.hex
             )
         except OBPluginError as e:
             await websocket.send_json({"action": "error", "detail": f"Unhandled plugin error! {e}"})
@@ -385,3 +368,5 @@ async def active_project(websocket: WebSocket, project_uuid: str):
         except Exception as e:
             log.error("Exception inside nodes.active_project")
             log.error(e)
+            is_project_active = False
+    websocket.close(code=400)

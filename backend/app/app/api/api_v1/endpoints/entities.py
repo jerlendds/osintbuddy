@@ -8,7 +8,7 @@ from starlette import status
 from app.api import deps
 from app import crud, schemas
 from app.core.logger import get_logger
-
+from osintbuddy import Registry
 
 log = get_logger("api_v1.endpoints.entities")
 router = APIRouter(prefix="/entities")
@@ -62,6 +62,37 @@ async def get_entities(
         )
 
 
+async def fetch_node_transforms(plugin_label):
+    plugin = await Registry.get_plugin(plugin_label=plugin_label)
+    if plugin is not None:
+        labels = plugin().transform_labels
+        return labels
+
+
+@router.get("/transforms")
+async def get_entity_transforms(
+    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    label: str
+):
+    try:
+        if transforms := await fetch_node_transforms(label):
+            return {
+                "type": label,
+                "transforms": transforms,
+            }
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid transform error. Please file an issue if this occurs."
+        )
+    except Exception as e:
+        log.error("Error inside nodes.get_entity_transforms")
+        log.error(e)
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="There was an error refreshing, please try again."
+        )
+
+
 @router.post("")
 async def create_entity(
     user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
@@ -69,7 +100,7 @@ async def create_entity(
     db: Session = Depends(deps.get_db)
 ):
     try:
-            return crud.entities.create(db, obj_in=schemas.EntityCreate(
+        return crud.entities.create(db, obj_in=schemas.EntityCreate(
             label=entity.label,
             author=entity.author,
             description=entity.description,

@@ -7,7 +7,7 @@ import {
   PlusIcon,
   Square2StackIcon,
 } from '@heroicons/react/24/outline';
-import React, { useRef, useState, MutableRefObject, useEffect, useCallback, DragEventHandler } from 'react';
+import React, { useRef, useState, MutableRefObject, useEffect, useCallback, DragEventHandler, useMemo } from 'react';
 import { Fragment } from 'react';
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
 import classNames from 'classnames';
@@ -72,12 +72,12 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
       <li key={entity.id} className='flex items-center w-full justify-between py-3'>
         <div
           draggable
-          onDragStart={(event) => onDragStart(event, entity.event)}
+          onDragStart={(event) => onDragStart(event, entity.label.replace("\s", "_").toLowerCase())}
           className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden bg-dark-400/60 hover:bg-dark-600 border-transparent border max-h-[160px] border-l-info-300 hover:border-info-100 transition-colors duration-150 border-l-[6px] hover:border-l-[6px] rounded-md w-full'
         >
           <div className='flex flex-col w-full select-none'>
             <div className='flex items-start justify-between gap-x-3 w-full relative'>
-              <p className='text-sm font-semibold leading-6 text-slate-300 whitespace-nowrap'>{entity.title}</p>
+              <p className='text-sm font-semibold leading-6 text-slate-300 whitespace-nowrap'>{entity.label}</p>
               <p
                 className={classNames(
                   statuses[entity.status],
@@ -108,6 +108,7 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
 
 import 'react-grid-layout/css/styles.css';
 import RGL, { Responsive, WidthProvider } from 'react-grid-layout';
+import { useGetEntitiesQuery } from '@/app/api';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -121,28 +122,25 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
     onLayoutChange: function () { },
     cols: 12,
   };
+
+  const { data: entitiesData, isLoading, isSuccess, isError } = useGetEntitiesQuery({ skip: 0, limit: 50 })
   const [showEntities, setShowEntities] = useState(true);
   const [searchFilter, setSearchFilter] = useState('');
-  // const layout = {
-  //     lg: [
-  //       { i: 'a', x: 0, y: 0, w: 1, h: 2, static: true },
-  //       { i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4 },
-  //       { i: 'c', x: 4, y: 0, w: 1, h: 2 },
-  //     ],
-  //   }
+
+  const entities = useMemo(() => searchFilter
+    ? entitiesData?.entities.filter((entity: JSONObject) => entity.label.toLowerCase().includes(searchFilter.toLowerCase()))
+    : entitiesData?.entities ?? [], [searchFilter, entitiesData])
+
   const dataGrid = {
     x: 0.1,
     y: 0,
     w: 14,
-    h: 16.5,
+    h: 16,
     maxH: 16,
     minH: 1,
     maxW: 44,
     minW: 10,
   };
-  const filteredOptions = searchFilter
-    ? options.filter((option: JSONObject) => option.event.toLowerCase().includes(searchFilter.toLowerCase()))
-    : options;
 
   const onDragStart = (event: DragEvent, nodeType: string) => {
     if (event?.dataTransfer) {
@@ -173,7 +171,7 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
         <ol className='text-sm flex select-none bg-dark-700 relative px-4 pt-2'>
           <li className='flex items-start'>
             <div className='flex items-center'>
-              <Link title='View all projects' to='/app/projects' replace>
+              <Link title='View all projects' to='/projects' replace>
                 <span className='text-slate-500 font-display'>
                   All Projects <span className='font-medium font-display'>/&nbsp;</span>
                 </span>
@@ -219,7 +217,7 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
               />
             </div>
             <ul className='overflow-y-scroll ml-4 pr-4 h-full relative'>
-              {filteredOptions.map((option: JSONObject) => (
+              {entities.map((option: JSONObject) => (
                 <ListItem onDragStart={onDragStart} key={option.event} entity={option} />
               ))}
             </ul>
