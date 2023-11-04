@@ -67,7 +67,11 @@ class Settings(BaseSettings):
     REACT_APP_CASDOOR_APP_NAME: str
     CASDOOR_CLIENT_SECRET: str
     CASDOOR_CERT: str
-    
+
+    SQIDS_ALPHABET: str = "RQWMLGFATEYHDSIUKXNCOVZJPB"
+
+    SQIDS_NAMESPACE: int = 4
+
     class Config:
         case_sensitive = True
 

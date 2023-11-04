@@ -42,16 +42,14 @@ class CRUDGraphs(CRUDBase[
         db.refresh(db_obj)
         return db_obj
 
-    def get_user_graphs_by_favorites(
+    def get_many_user_graphs(
         self,
         db: Session,
-        user: schemas.CasdoorUser,
+        user: schemas.User,
         skip: int = 0,
         limit: int = 50,
         is_favorite: bool = True
     ):
-        if limit > 50:
-            limit = 50
         graphs = self.get_many_by_favorites(
             db=db,
             skip=skip,

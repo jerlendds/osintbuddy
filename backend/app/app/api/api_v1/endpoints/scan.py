@@ -7,7 +7,7 @@ from app.core.logger import get_logger
 from app import crud, schemas
 
 log = get_logger("api_v1.endpoints.scans")
-router = APIRouter(prefix="/scans")
+router = APIRouter(prefix="/scan")
 
 
 @router.post("/machines")
@@ -36,7 +36,7 @@ async def get_scan_machines(
     try:
         if limit > 50:
             limit = 50
-        return crud.scan_machine.get_multi(db=db, limit=limit, skip=skip)
+        return crud.scan_machine.get_many(db=db, limit=limit, skip=skip)
     except Exception as e:
         log.error("Error inside scans.get_scan_machines:")
         log.error(e)

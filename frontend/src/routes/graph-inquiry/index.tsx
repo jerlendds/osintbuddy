@@ -1,8 +1,8 @@
 // @ts-nocheck
-import { useCallback, useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Edge, XYPosition, Node } from 'reactflow';
 import { HotKeys } from 'react-hotkeys';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import 'reactflow/dist/style.css';
 import EntityOptions from './_components/EntityOptions';
@@ -23,9 +23,9 @@ import {
 } from '@/features/graph/graphSlice';
 import DisplayOptions from './_components/DisplayOptions';
 import { MiniEditDialog } from './_components/BaseMiniNode';
-import sdk, { WS_URL } from '@/app/baseApi';
+import { WS_URL } from '@/app/baseApi';
 import CommandPallet from './_components/CommandPallet';
-import { api, useGetEntityTransformsQuery, useGetGraphQuery } from '@/app/api';
+import { useGetEntityTransformsQuery, useGetGraphQuery } from '@/app/api';
 import RoundLoader from '@/components/Loaders';
 
 const keyMap = {
@@ -36,10 +36,10 @@ const WS_GRAPH_INQUIRE = `ws://${WS_URL}/nodes/graph/`
 
 export default function OsintPage() {
   const dispatch = useAppDispatch();
-  const params = useParams()
-
-  const { data: activeGraph, isSuccess, isLoading, isError } = useGetGraphQuery({ graphId: params.uuid })
-
+  const { hid } = useParams()
+  console.log(hid)
+  const { data: activeGraph, isSuccess, isLoading, isError } = useGetGraphQuery({ hid })
+  console.log('activeGraph', activeGraph)
   const initialNodes = useAppSelector((state) => graphNodes(state));
   const initialEdges = useAppSelector((state) => graphEdges(state));
   const graphRef = useRef<HTMLDivElement>(null);
@@ -56,14 +56,10 @@ export default function OsintPage() {
   const viewMode = useAppSelector((state) => selectViewMode(state));
 
   useEffect(() => {
-    if (activeGraph) setSocketUrl(`${WS_GRAPH_INQUIRE}${activeGraph.uuid}`)
+    if (activeGraph) setSocketUrl(`${WS_GRAPH_INQUIRE}${activeGraph.id}`)
   }, [activeGraph])
 
   const { lastMessage, lastJsonMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl, {
-    onOpen: () => {
-      const traversalId = activeGraph.uuid.replaceAll("-", "")
-      activeGraph && process.env.NODE_ENV === 'development' && console.log(`opening traversal: \n\tproject_${traversalId}_traversal`)
-    },
     shouldReconnect: () => true,
   });
 
@@ -216,7 +212,7 @@ export default function OsintPage() {
     event.preventDefault();
   };
 
-  const { data, isLoading: isLoadingTransforms, isError: isTransformsError, isSuccess: isTransformsSuccess } = useGetEntityTransformsQuery({ label: transformLabel })
+  const { data, isLoading: isLoadingTransforms, isError: isTransformsError, isSuccess: isTransformsSuccess } = useGetEntityTransformsQuery({ label: transformLabel }, { skip: transformLabel === null })
   console.log(data, isLoadingTransforms, isTransformsError, isTransformsSuccess)
 
   const onSelectionCtxMenu = (event: MouseEvent, node: Node) => {
@@ -249,6 +245,7 @@ export default function OsintPage() {
       y: event.clientY - 25,
     });
   };
+  
 
   const onPaneClick = () => {
     setShowMenu(false);

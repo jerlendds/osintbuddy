@@ -8,5 +8,4 @@ class XYPosition(BaseModel):
 class CreateNode(BaseModel):
     label: str
     position: XYPosition
-    uuid: UUID
 

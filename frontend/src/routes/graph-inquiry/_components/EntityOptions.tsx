@@ -1,17 +1,9 @@
-import { Menu, Disclosure, Transition } from '@headlessui/react';
 import {
-  ChevronUpDownIcon,
-  EllipsisHorizontalIcon,
   LockClosedIcon,
   LockOpenIcon,
-  PlusIcon,
-  Square2StackIcon,
 } from '@heroicons/react/24/outline';
-import React, { useRef, useState, MutableRefObject, useEffect, useCallback, DragEventHandler, useMemo } from 'react';
-import { Fragment } from 'react';
-import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import classNames from 'classnames';
-import { GripIcon } from '@/components/Icons';
 import { Link } from 'react-router-dom';
 
 type UseResizeProps = {
@@ -72,7 +64,7 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
       <li key={entity.id} className='flex items-center w-full justify-between py-3'>
         <div
           draggable
-          onDragStart={(event) => onDragStart(event, entity.label.replace("\s", "_").toLowerCase())}
+          onDragStart={(event) => onDragStart(event, entity.label)}
           className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden bg-dark-400/60 hover:bg-dark-600 border-transparent border max-h-[160px] border-l-info-300 hover:border-info-100 transition-colors duration-150 border-l-[6px] hover:border-l-[6px] rounded-md w-full'
         >
           <div className='flex flex-col w-full select-none'>
@@ -108,7 +100,7 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
 
 import 'react-grid-layout/css/styles.css';
 import RGL, { Responsive, WidthProvider } from 'react-grid-layout';
-import { useGetEntitiesQuery } from '@/app/api';
+import { Entity, useGetEntitiesQuery } from '@/app/api';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -123,13 +115,18 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
     cols: 12,
   };
 
-  const { data: entitiesData, isLoading, isSuccess, isError } = useGetEntitiesQuery({ skip: 0, limit: 50 })
+  const {
+    data: entitiesData = { entities: [], count: 0 },
+    isLoading,
+    isSuccess,
+    isError
+  } = useGetEntitiesQuery({ skip: 0, limit: 50 })
   const [showEntities, setShowEntities] = useState(true);
   const [searchFilter, setSearchFilter] = useState('');
 
   const entities = useMemo(() => searchFilter
     ? entitiesData?.entities.filter((entity: JSONObject) => entity.label.toLowerCase().includes(searchFilter.toLowerCase()))
-    : entitiesData?.entities ?? [], [searchFilter, entitiesData])
+    : entitiesData?.entities, [searchFilter, entitiesData])
 
   const dataGrid = {
     x: 0.1,
@@ -217,8 +214,8 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
               />
             </div>
             <ul className='overflow-y-scroll ml-4 pr-4 h-full relative'>
-              {entities.map((option: JSONObject) => (
-                <ListItem onDragStart={onDragStart} key={option.event} entity={option} />
+              {entities.map((entity) => (
+                <ListItem onDragStart={onDragStart} key={entity.id} entity={entity} />
               ))}
             </ul>
           </>

@@ -1,13 +1,12 @@
-import { GraphsList, api } from '@/app/api';
+import { AllGraphsList, useUpdateGraphFavoriteIdMutation } from '@/app/api';
 import { formatPGDate } from "@/app/utilities";
 import { ChevronDownIcon, StarIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch } from "@/app/hooks";
-import { GetFavoriteGraphsApiResponse } from '../../../../app/api';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
+import { UpdateGraphFavoriteIdApiArg } from '../../../../app/api';
 
 
 export function GraphLoaderCard() {
@@ -28,33 +27,29 @@ export function GraphLoaderCard() {
 
 
 interface GraphPanel {
-  favoriteGraphsData: GraphsList
-  isLoadingFavoriteGraphs: boolean | undefined
-  isFavoriteGraphsError: FetchBaseQueryError | SerializedError | undefined
-  graphsData: GraphsList
+  graphsData: AllGraphsList
   isLoadingGraphs: boolean | undefined
   isGraphsError: FetchBaseQueryError | SerializedError | undefined
+  refreshAllGraphs: () => void
 }
 
 export default function GraphPanel({
-  favoriteGraphsData,
-  isLoadingFavoriteGraphs,
-  isFavoriteGraphsError,
   graphsData,
   isLoadingGraphs,
-  isGraphsError
+  isGraphsError,
+  refreshAllGraphs
 }: GraphPanel) {
   const navigate = useNavigate();
-  const { uuid }: JSONObject = useParams();
+  const { hid }: JSONObject = useParams();
 
   const [showAllGraphs, setShowAllGraphs] = useState(true);
   const [showFavoriteGraphs, setShowFavoriteGraphs] = useState(true);
 
   const favoriteGraphs = useMemo(() => {
-    const sortedGraphs = favoriteGraphsData.graphs.slice()
+    const sortedGraphs = graphsData.favorite_graphs.slice()
     sortedGraphs.sort((a, b) => b.created.localeCompare(a.created))
     return sortedGraphs
-  }, [favoriteGraphsData])
+  }, [graphsData.favorite_graphs])
 
   const graphs = useMemo(() => {
     if (graphsData) {
@@ -62,14 +57,18 @@ export default function GraphPanel({
       sortedGraphs.sort((a, b) => b.created.localeCompare(a.created))
       return sortedGraphs
     }
-  }, [graphsData])
+  }, [graphsData.graphs])
 
   const MAX_DESCRIPTION_LENGTH = 63
+  const [updateFavoriteEntity] = useUpdateGraphFavoriteIdMutation()
 
-  const updateFavorites = (
-    uuid: string,
+  const updateFavorites = async (
+    hid: string,
     isFavorite: boolean
-  ) => null
+  ) => {
+    await updateFavoriteEntity({ hid })
+    refreshAllGraphs()
+  }
 
   return (
     <section >
@@ -78,31 +77,31 @@ export default function GraphPanel({
           <p className="text-xs font-medium leading-3 text-slate-500 focus:outline-none cursor-pointer">FAVORITES</p>
           <ChevronDownIcon className={classNames("h-4 w-4 text-slate-400 ml-auto transform focus:outline-none cursor-pointer origin-center -rotate-180 mr-3", showFavoriteGraphs && 'rotate-0')} />
         </div>
-        {showFavoriteGraphs && !isLoadingFavoriteGraphs && isFavoriteGraphsError && (
+        {showFavoriteGraphs && !isLoadingGraphs && isGraphsError && (
           <>
             <h2 className="text-slate-400 text-display">
               We ran into an error retrieving your favorite graphs. Please try refreshing the page, if this error continues to occur please <a href="#" className="text-info-300">file an issue</a> on github
             </h2>
           </>
         )}
-        {showFavoriteGraphs && isLoadingFavoriteGraphs && !isFavoriteGraphsError && (
+        {showFavoriteGraphs && isLoadingGraphs && !isGraphsError && (
           <>
             <GraphLoaderCard />
             <GraphLoaderCard />
           </>
         )}
-        {showFavoriteGraphs && !isLoadingFavoriteGraphs && (
+        {showFavoriteGraphs && !isLoadingGraphs && (
           <div className="mt-2 h-full overflow-y-scroll overflow-x-hidden">
             {favoriteGraphs.map((graph) => {
-              return <> <button key={graph.uuid} onClick={() => navigate(`graph/${graph.uuid}`)} className={classNames("mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center ", uuid === graph.uuid && "!border-dark-400 bg-dark-900 translate-x-px")}>
+              return <> <button key={graph.id} onClick={() => navigate(`graph/${graph.id}`)} className={classNames("mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center ", hid === graph.id && "!border-dark-400 bg-dark-900 translate-x-px")}>
                 <div className="flex w-full flex-col items-start mr-3 space-y-1">
-                  <p className={classNames("text-sm font-medium leading-none", uuid === graph.uuid && "text-slate-400")}>{graph.name}</p>
-                  <p className={classNames("text-xs font-medium leading-none text-slate-600 mt-1 text-left", uuid === graph.uuid && "!text-slate-500")}>{graph?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${graph?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : graph.description}</p>
-                  <p className={classNames("text-xs font-medium leading-none text-slate-600 mt-1.5 text-left", uuid === graph.uuid && "!text-slate-500")}>Last seen {formatPGDate(graph.last_seen)}</p>
+                  <p className={classNames("text-sm font-medium leading-none", hid === graph.id && "text-slate-400")}>{graph.name}</p>
+                  <p className={classNames("text-xs font-medium leading-none text-slate-600 mt-1 text-left", hid === graph.id && "!text-slate-500")}>{graph?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${graph?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : graph.description}</p>
+                  <p className={classNames("text-xs font-medium leading-none text-slate-600 mt-1.5 text-left", hid === graph.id && "!text-slate-500")}>Last seen {formatPGDate(graph.last_seen)}</p>
                 </div>
-                <StarIcon onClick={() => {
-                  updateFavorites(graph.uuid, false)
-                }} className={classNames("bg-slate-900 ml-auto rounded-md p-1 h-8 w-8 transition-colors duration-150 hover:text-info-200/80", graph.is_favorite ? 'text-info-200' : 'text-slate-600', uuid !== graph.uuid && '!bg-transparent hover:!bg-slate-900')} />
+                <StarIcon onClick={async () => {
+                  await updateFavorites(graph.id, true)
+                }} className={classNames("bg-slate-900 ml-auto rounded-md p-1 h-8 w-8 transition-colors duration-150 hover:text-info-200/80", graph.is_favorite ? 'text-info-200' : 'text-slate-600', hid !== graph.id && '!bg-transparent hover:!bg-slate-900')} />
               </button></>
             })}
           </div>
@@ -113,13 +112,7 @@ export default function GraphPanel({
           <p className="text-xs font-medium leading-3 text-slate-500 focus:outline-none cursor-pointer">ALL GRAPHS</p>
           <ChevronDownIcon className={classNames("h-4 w-4 text-slate-400 ml-auto transform focus:outline-none cursor-pointer origin-center -rotate-180 mr-3", showAllGraphs && 'rotate-0')} />
         </div>
-        {showAllGraphs && !isLoadingGraphs && isGraphsError && (
-          <>
-            <h2 className="text-slate-400 text-display">
-              We ran into an error retrieving your graphs. Please try refreshing the page, if this error continues to occur please <a href="#" className="text-info-300">file an issue</a> on github
-            </h2>
-          </>
-        )}
+
         {showAllGraphs && isLoadingGraphs && !isGraphsError && (
           <>
             <GraphLoaderCard />
@@ -130,22 +123,22 @@ export default function GraphPanel({
           <div className="mt-2 h-full overflow-y-scroll overflow-x-hidden">
             {graphs?.map((graph) => {
               return (
-                <button key={graph?.uuid} onClick={() => {
+                <button key={graph?.id} onClick={() => {
                   console.log(graph)
-                  navigate(`graph/${graph?.uuid}`)
-                }} className={classNames("mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center ", uuid === graph?.uuid && "!border-dark-400 bg-dark-900 translate-x-px")}>
+                  navigate(`graph/${graph?.id}`)
+                }} className={classNames("mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center ", hid === graph?.id && "!border-dark-400 bg-dark-900 translate-x-px")}>
                   <div className="flex w-full flex-col items-start mr-3 space-y-1.5">
-                    <p className={classNames("text-sm font-medium leading-none", uuid === graph?.uuid && "text-slate-400")}>{graph?.name}</p>
-                    <p className={classNames("text-xs font-medium leading-none text-slate-600  text-left", uuid === graph?.uuid && "!text-slate-500")}>{graph?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${graph?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : graph?.description}</p>
-                    <p className={classNames("text-xs font-medium leading-none text-slate-600  text-left", uuid === graph?.uuid && "!text-slate-500")}>Last seen {formatPGDate(graph?.last_seen)}</p>
+                    <p className={classNames("text-sm font-medium leading-none", hid === graph?.id && "text-slate-400")}>{graph?.name}</p>
+                    <p className={classNames("text-xs font-medium leading-none text-slate-600  text-left", hid === graph?.id && "!text-slate-500")}>{graph?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${graph?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : graph?.description}</p>
+                    <p className={classNames("text-xs font-medium leading-none text-slate-600  text-left", hid === graph?.id && "!text-slate-500")}>Last seen {formatPGDate(graph?.last_seen)}</p>
                   </div>
                   <StarIcon
-                    onClick={() => {
-                      updateFavorites(graph.uuid, true)
+                    onClick={async () => {
+                      await updateFavorites(graph.id, false)
                     }}
                     className={classNames("bg-slate-900 ml-auto rounded-md p-1 h-8 w-8 transition-colors duration-150 hover:text-info-200/80",
                       graph?.is_favorite ? 'text-info-200' : 'text-slate-600',
-                      uuid !== graph?.uuid && '!bg-transparent hover:!bg-slate-900')
+                      hid !== graph?.id && '!bg-transparent hover:!bg-slate-900')
                     }
                   />
                 </button>

@@ -3,15 +3,18 @@ from uuid import UUID
 from typing import Optional, List, Union
 
 from pydantic import BaseModel, validator, ConfigDict
+from app.api.utils import hid
 from osintbuddy.templates import plugin_source_template
+
+ENTITY_NAMESPACE = 1510
 
 
 class EntityBase(BaseModel):
-    label: Optional[str] = None
-    author: Optional[str] = "Unknown author"
-    description: Optional[str] = "No description found..."
-    source: Optional[str] = None
-    is_favorite: Optional[bool] = False
+    label: str = None
+    author: str = "Unknown author"
+    description: str = "No description found..."
+    source: str = None
+    is_favorite: bool = False
 
     @validator('source')
     def set_source(cls, v, values, **kwargs):
@@ -39,17 +42,32 @@ class EntityUpdate(EntityBase):
 
 
 class EntityInDBBase(EntityBase):
-    uuid: Optional[UUID] = None
+    id: str
+    _extract_id = validator(
+        'id',
+        pre=True,
+        allow_reuse=True
+    )(lambda v: hid(v, ENTITY_NAMESPACE))
 
-    last_edited: Optional[Union[datetime.datetime, None]]
-    updated: Optional[Union[datetime.datetime, None]]
-    created: Optional[Union[datetime.datetime, None]]
+    last_edited: datetime.datetime
+    updated: datetime.datetime
+    created: datetime.datetime
+
 
 # Additional properties to return via API
 class Entity(EntityInDBBase):
     model_config = ConfigDict(from_attributes=True)
 
-    
+
+class AllEntitiesList(BaseModel):
+    entities: List[Entity]
+    count: int
+    favorite_entities: List[Entity]
+    favorite_count: int
+
+class EntitiesList(BaseModel):
+    entities: List[Entity]
+    count: int
 
 # Additional properties stored in DB
 class EntityInDB(EntityInDBBase):

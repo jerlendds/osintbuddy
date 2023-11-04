@@ -10,14 +10,12 @@ import { useGetEntityQuery } from "@/app/api";
 
 
 export default function EntityDetailsPage() {
-  const params: { uuid: string | undefined } = useParams()
+  const { hid } = useParams()
   const dispatch = useAppDispatch()
 
   const { isLoading, data: activeEntity } = useGetEntityQuery({
-    entityUuid: params?.uuid
+    hid
   })
-
-
 
   return (
     <>

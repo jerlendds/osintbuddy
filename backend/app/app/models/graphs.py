@@ -11,7 +11,7 @@ from app.db.base_class import Base
 class Graphs(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     uuid: Mapped[UUID] = Column(UUID(as_uuid=True), default=uuid.uuid4, index=True)
-
+    # hid: Mapped[str] = Column(String, default=)
     name: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[str] = mapped_column(String(512), nullable=True)
 

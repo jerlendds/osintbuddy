@@ -41,14 +41,14 @@ export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
 
   useEffect(() => {
     if (!isSubmitSuccessful) return
-    if (newGraph && newGraph?.uuid) {
-      updateTable()
+    if (newGraph && newGraph?.id) {
       closeModal()
+      const replace = { replace: true }
       if (showTour) {
         setIsOpen(true)
-        navigate(`/graph/inquiry/${newGraph.uuid}`)
+        navigate(`/dashboard/graph/inquiry/${newGraph.id}`, replace)
       } else {
-        navigate(`${newGraph.uuid}`)
+        navigate(`/dashboard/graph/${newGraph.id}`, replace)
       }
     } else {
       console.error(createGraphError)
@@ -61,6 +61,7 @@ export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
     setShowTour(graphCreate?.showTour ?? false)
     delete graphCreate.showTour
     await createGraph({ graphCreate })
+    await updateTable()
   };
 
   return (
@@ -113,7 +114,7 @@ export default function CreateGraphModal({
   return (
     <OverlayModal isOpen={isOpen} closeModal={closeModal} cancelCreateRef={cancelCreateRef}>
       <CreateGraphForm
-        updateTable={(graph: Graph) => refreshAllGraphs()}
+        updateTable={async (graph: Graph) => await refreshAllGraphs()}
         closeModal={() => closeModal()}
       />
     </OverlayModal>

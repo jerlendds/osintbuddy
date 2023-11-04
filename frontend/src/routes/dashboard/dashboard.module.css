@@ -1,6 +1,6 @@
 /* wraps the sidebar with search and the main view */
-.dashboard-wrapper {
-  @apply h-screen !min-w-[20rem] max-w-[20rem] justify-between flex flex-col w-full py-8 bg-dark-700 border-r border-dark-400 pl-3
+.sidebar-wrapper {
+  @apply h-screen !min-w-[20rem] max-w-[20rem] flex flex-col w-full py-8 bg-dark-700 border-r border-dark-400 pl-3 max-h-screen justify-between
 }
 
 .search-container {
@@ -16,8 +16,9 @@
 }
 
 .dashboard-tabs {
-  @apply flex flex-col h-full relative;
+  @apply max-h-screen overflow-y-scroll
 }
+
 .tabs-list {
   @apply flex justify-between w-full px-3 py-2;
 }
@@ -32,5 +33,5 @@
 }
 
 .tab-panel {
-  @apply flex flex-col justify-between h-full w-full relative;
+  @apply w-full relative;
 }

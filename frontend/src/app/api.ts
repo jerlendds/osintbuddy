@@ -21,62 +21,48 @@ const injectedRtkApi = api.injectEndpoints({
       query: () => ({ url: `/api/v1/account/` }),
     }),
     getGraph: build.query<GetGraphApiResponse, GetGraphApiArg>({
-      query: (queryArg) => ({ url: `/api/v1/graphs/${queryArg.graphId}` }),
+      query: (queryArg) => ({ url: `/api/v1/graph/${queryArg.hid}` }),
     }),
-    updateFavoriteGraphUuid: build.mutation<
-      UpdateFavoriteGraphUuidApiResponse,
-      UpdateFavoriteGraphUuidApiArg
+    updateGraphFavoriteId: build.mutation<
+      UpdateGraphFavoriteIdApiResponse,
+      UpdateGraphFavoriteIdApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/v1/graphs/${queryArg.graphId}/favorite`,
+        url: `/api/v1/graph/${queryArg.hid}/favorite/`,
         method: "PATCH",
-        params: { is_favorite: queryArg.isFavorite },
       }),
     }),
     getGraphs: build.query<GetGraphsApiResponse, GetGraphsApiArg>({
       query: (queryArg) => ({
-        url: `/api/v1/graphs`,
+        url: `/api/v1/graph`,
         params: {
           skip: queryArg.skip,
           limit: queryArg.limit,
-          is_favorite: queryArg.isFavorite,
+          favorite_skip: queryArg.favoriteSkip,
+          favorite_limit: queryArg.favoriteLimit,
         },
       }),
     }),
     createGraph: build.mutation<CreateGraphApiResponse, CreateGraphApiArg>({
       query: (queryArg) => ({
-        url: `/api/v1/graphs`,
+        url: `/api/v1/graph`,
         method: "POST",
         body: queryArg.graphCreate,
       }),
     }),
     deleteGraph: build.mutation<DeleteGraphApiResponse, DeleteGraphApiArg>({
       query: (queryArg) => ({
-        url: `/api/v1/graphs`,
+        url: `/api/v1/graph`,
         method: "DELETE",
-        params: { uuid: queryArg.uuid },
+        params: { hid: queryArg.hid },
       }),
     }),
-    getFavoriteGraphs: build.query<
-      GetFavoriteGraphsApiResponse,
-      GetFavoriteGraphsApiArg
+    getGraphsByFavorite: build.query<
+      GetGraphsByFavoriteApiResponse,
+      GetGraphsByFavoriteApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/v1/graphs/favorites`,
-        params: { skip: queryArg.skip, limit: queryArg.limit },
-      }),
-    }),
-    getGraphStats: build.query<GetGraphStatsApiResponse, GetGraphStatsApiArg>({
-      query: (queryArg) => ({
-        url: `/api/v1/graphs/${queryArg.graphId}/stats`,
-      }),
-    }),
-    getEntity: build.query<GetEntityApiResponse, GetEntityApiArg>({
-      query: (queryArg) => ({ url: `/api/v1/entities/${queryArg.entityUuid}` }),
-    }),
-    getEntities: build.query<GetEntitiesApiResponse, GetEntitiesApiArg>({
-      query: (queryArg) => ({
-        url: `/api/v1/entities`,
+        url: `/api/v1/graph/favorites`,
         params: {
           skip: queryArg.skip,
           limit: queryArg.limit,
@@ -84,44 +70,56 @@ const injectedRtkApi = api.injectEndpoints({
         },
       }),
     }),
-    createEntity: build.mutation<CreateEntityApiResponse, CreateEntityApiArg>({
-      query: (queryArg) => ({
-        url: `/api/v1/entities`,
-        method: "POST",
-        body: queryArg.postEntityCreate,
-      }),
+    getGraphStats: build.query<GetGraphStatsApiResponse, GetGraphStatsApiArg>({
+      query: (queryArg) => ({ url: `/api/v1/graph/${queryArg.hid}/stats` }),
     }),
     getEntityTransforms: build.query<
       GetEntityTransformsApiResponse,
       GetEntityTransformsApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/v1/entities/transforms`,
+        url: `/api/v1/entity/plugins/transform/`,
         params: { label: queryArg.label },
       }),
     }),
-    updateEntityByUuid: build.mutation<
-      UpdateEntityByUuidApiResponse,
-      UpdateEntityByUuidApiArg
+    getEntity: build.query<GetEntityApiResponse, GetEntityApiArg>({
+      query: (queryArg) => ({ url: `/api/v1/entity/details/${queryArg.hid}` }),
+    }),
+    getEntities: build.query<GetEntitiesApiResponse, GetEntitiesApiArg>({
+      query: (queryArg) => ({
+        url: `/api/v1/entity`,
+        params: { skip: queryArg.skip, limit: queryArg.limit },
+      }),
+    }),
+    createEntity: build.mutation<CreateEntityApiResponse, CreateEntityApiArg>({
+      query: (queryArg) => ({
+        url: `/api/v1/entity`,
+        method: "POST",
+        body: queryArg.postEntityCreate,
+      }),
+    }),
+    updateEntityById: build.mutation<
+      UpdateEntityByIdApiResponse,
+      UpdateEntityByIdApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/v1/entities/${queryArg.entityId}`,
+        url: `/api/v1/entity/${queryArg.hid}`,
         method: "PUT",
         body: queryArg.entityBase,
       }),
     }),
     deleteEntity: build.mutation<DeleteEntityApiResponse, DeleteEntityApiArg>({
       query: (queryArg) => ({
-        url: `/api/v1/entities/${queryArg.entityId}`,
+        url: `/api/v1/entity/${queryArg.hid}`,
         method: "DELETE",
       }),
     }),
-    updateFavoriteEntityUuid: build.mutation<
-      UpdateFavoriteEntityUuidApiResponse,
-      UpdateFavoriteEntityUuidApiArg
+    updateEntityFavoriteId: build.mutation<
+      UpdateEntityFavoriteIdApiResponse,
+      UpdateEntityFavoriteIdApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/v1/entities/${queryArg.entityId}/favorite`,
+        url: `/api/v1/entity/${queryArg.hid}/favorite`,
         method: "PUT",
         params: { is_favorite: queryArg.isFavorite },
       }),
@@ -131,8 +129,8 @@ const injectedRtkApi = api.injectEndpoints({
       RefreshPluginsApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/v1/nodes/refresh`,
-        params: { uuid: queryArg.uuid },
+        url: `/api/v1/node/refresh`,
+        params: { hid: queryArg.hid },
       }),
     }),
     createGraphEntity: build.mutation<
@@ -140,9 +138,10 @@ const injectedRtkApi = api.injectEndpoints({
       CreateGraphEntityApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/v1/nodes/`,
+        url: `/api/v1/node/`,
         method: "POST",
         body: queryArg.createNode,
+        params: { hid: queryArg.hid },
       }),
     }),
     createScanMachine: build.mutation<
@@ -150,7 +149,7 @@ const injectedRtkApi = api.injectEndpoints({
       CreateScanMachineApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/v1/scans/machines`,
+        url: `/api/v1/scan/machines`,
         method: "POST",
         body: queryArg.scanMachineCreate,
       }),
@@ -160,7 +159,7 @@ const injectedRtkApi = api.injectEndpoints({
       GetScanMachinesApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/v1/scans/machines`,
+        url: `/api/v1/scan/machines`,
         params: { skip: queryArg.skip, limit: queryArg.limit },
       }),
     }),
@@ -169,13 +168,10 @@ const injectedRtkApi = api.injectEndpoints({
       DeleteScanProjectApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/v1/scans`,
+        url: `/api/v1/scan`,
         method: "DELETE",
         params: { sid: queryArg.sid },
       }),
-    }),
-    getStatus: build.query<GetStatusApiResponse, GetStatusApiArg>({
-      query: () => ({ url: `/status` }),
     }),
   }),
   overrideExisting: false,
@@ -199,20 +195,20 @@ export type GetAccountApiResponse = /** status 200 Successful Response */
 export type GetAccountApiArg = void;
 export type GetGraphApiResponse = /** status 200 Successful Response */ Graph;
 export type GetGraphApiArg = {
-  graphId: string;
+  hid: string;
 };
-export type UpdateFavoriteGraphUuidApiResponse =
+export type UpdateGraphFavoriteIdApiResponse =
   /** status 200 Successful Response */ any;
-export type UpdateFavoriteGraphUuidApiArg = {
-  graphId: string;
-  isFavorite?: boolean;
+export type UpdateGraphFavoriteIdApiArg = {
+  hid: string;
 };
 export type GetGraphsApiResponse =
-  /** status 200 Successful Response */ GraphsList;
+  /** status 200 Successful Response */ AllGraphsList;
 export type GetGraphsApiArg = {
   skip?: number;
   limit?: number;
-  isFavorite?: boolean;
+  favoriteSkip?: number;
+  favoriteLimit?: number;
 };
 export type CreateGraphApiResponse =
   /** status 200 Successful Response */ Graph;
@@ -221,62 +217,64 @@ export type CreateGraphApiArg = {
 };
 export type DeleteGraphApiResponse = /** status 200 Successful Response */ any;
 export type DeleteGraphApiArg = {
-  uuid: string;
+  hid: string;
 };
-export type GetFavoriteGraphsApiResponse =
+export type GetGraphsByFavoriteApiResponse =
   /** status 200 Successful Response */ GraphsList;
-export type GetFavoriteGraphsApiArg = {
-  skip?: number;
-  limit?: number;
-};
-export type GetGraphStatsApiResponse =
-  /** status 200 Successful Response */ any;
-export type GetGraphStatsApiArg = {
-  graphId: string;
-};
-export type GetEntityApiResponse = /** status 200 Successful Response */ Entity;
-export type GetEntityApiArg = {
-  entityUuid: string;
-};
-export type GetEntitiesApiResponse = /** status 200 Successful Response */ any;
-export type GetEntitiesApiArg = {
+export type GetGraphsByFavoriteApiArg = {
   skip?: number;
   limit?: number;
   isFavorite?: boolean;
 };
-export type CreateEntityApiResponse = /** status 200 Successful Response */ any;
-export type CreateEntityApiArg = {
-  postEntityCreate: PostEntityCreate;
+export type GetGraphStatsApiResponse =
+  /** status 200 Successful Response */ any;
+export type GetGraphStatsApiArg = {
+  hid: string;
 };
 export type GetEntityTransformsApiResponse =
   /** status 200 Successful Response */ any;
 export type GetEntityTransformsApiArg = {
   label: string;
 };
-export type UpdateEntityByUuidApiResponse =
+export type GetEntityApiResponse = /** status 200 Successful Response */ Entity;
+export type GetEntityApiArg = {
+  hid: string;
+};
+export type GetEntitiesApiResponse =
+  /** status 200 Successful Response */ AllEntitiesList;
+export type GetEntitiesApiArg = {
+  skip?: number;
+  limit?: number;
+};
+export type CreateEntityApiResponse = /** status 200 Successful Response */ any;
+export type CreateEntityApiArg = {
+  postEntityCreate: PostEntityCreate;
+};
+export type UpdateEntityByIdApiResponse =
   /** status 200 Successful Response */ any;
-export type UpdateEntityByUuidApiArg = {
-  entityId: string;
+export type UpdateEntityByIdApiArg = {
+  hid: string;
   entityBase: EntityBase;
 };
 export type DeleteEntityApiResponse = /** status 200 Successful Response */ any;
 export type DeleteEntityApiArg = {
-  entityId: string;
+  hid: string;
 };
-export type UpdateFavoriteEntityUuidApiResponse =
+export type UpdateEntityFavoriteIdApiResponse =
   /** status 200 Successful Response */ any;
-export type UpdateFavoriteEntityUuidApiArg = {
-  entityId: string;
+export type UpdateEntityFavoriteIdApiArg = {
+  hid: string;
   isFavorite?: boolean;
 };
 export type RefreshPluginsApiResponse =
   /** status 200 Successful Response */ any;
 export type RefreshPluginsApiArg = {
-  uuid: string;
+  hid: string;
 };
 export type CreateGraphEntityApiResponse =
   /** status 200 Successful Response */ any;
 export type CreateGraphEntityApiArg = {
+  hid: string;
   createNode: CreateNode;
 };
 export type CreateScanMachineApiResponse =
@@ -295,8 +293,6 @@ export type DeleteScanProjectApiResponse =
 export type DeleteScanProjectApiArg = {
   sid: number;
 };
-export type GetStatusApiResponse = /** status 200 Successful Response */ any;
-export type GetStatusApiArg = void;
 export type Status = {
   status: string;
 };
@@ -329,30 +325,42 @@ export type Graph = {
   name: string;
   description: string | null;
   is_favorite?: boolean;
-  uuid: string;
+  id: string;
   updated: string;
   created: string;
   last_seen: string;
 };
-export type GraphsList = {
+export type AllGraphsList = {
   graphs: Graph[];
   count: number;
+  favorite_graphs: Graph[];
+  favorite_count: number;
 };
 export type GraphCreate = {
   name: string;
   description: string | null;
   is_favorite?: boolean;
 };
+export type GraphsList = {
+  graphs: Graph[];
+  count: number;
+};
 export type Entity = {
-  label?: string | null;
-  author?: string | null;
-  description?: string | null;
-  source?: string | null;
-  is_favorite?: boolean | null;
-  uuid?: string | null;
-  last_edited: string | null;
-  updated: string | null;
-  created: string | null;
+  label?: string;
+  author?: string;
+  description?: string;
+  source?: string;
+  is_favorite?: boolean;
+  id: string;
+  last_edited: string;
+  updated: string;
+  created: string;
+};
+export type AllEntitiesList = {
+  entities: Entity[];
+  count: number;
+  favorite_entities: Entity[];
+  favorite_count: number;
 };
 export type PostEntityCreate = {
   label: string;
@@ -360,11 +368,11 @@ export type PostEntityCreate = {
   description: string;
 };
 export type EntityBase = {
-  label?: string | null;
-  author?: string | null;
-  description?: string | null;
-  source?: string | null;
-  is_favorite?: boolean | null;
+  label?: string;
+  author?: string;
+  description?: string;
+  source?: string;
+  is_favorite?: boolean;
 };
 export type XyPosition = {
   x: number;
@@ -373,7 +381,6 @@ export type XyPosition = {
 export type CreateNode = {
   label: string;
   position: XyPosition;
-  uuid: string;
 };
 export type ScanMachineCreate = {
   name: string;
@@ -385,23 +392,22 @@ export const {
   usePostSignoutMutation,
   useGetAccountQuery,
   useGetGraphQuery,
-  useUpdateFavoriteGraphUuidMutation,
+  useUpdateGraphFavoriteIdMutation,
   useGetGraphsQuery,
   useCreateGraphMutation,
   useDeleteGraphMutation,
-  useGetFavoriteGraphsQuery,
+  useGetGraphsByFavoriteQuery,
   useGetGraphStatsQuery,
+  useGetEntityTransformsQuery,
   useGetEntityQuery,
   useGetEntitiesQuery,
   useCreateEntityMutation,
-  useGetEntityTransformsQuery,
-  useUpdateEntityByUuidMutation,
+  useUpdateEntityByIdMutation,
   useDeleteEntityMutation,
-  useUpdateFavoriteEntityUuidMutation,
+  useUpdateEntityFavoriteIdMutation,
   useRefreshPluginsQuery,
   useCreateGraphEntityMutation,
   useCreateScanMachineMutation,
   useGetScanMachinesQuery,
   useDeleteScanProjectMutation,
-  useGetStatusQuery,
 } = injectedRtkApi;

@@ -10,9 +10,9 @@ import { DashboardContextType } from "..";
 
 
 export default function GraphDetails() {
-  const params: any = useParams()
-  const { data: activeGraph } = useGetGraphQuery({ graphId: params.uuid })
-  const { data: graphStats } = useGetGraphStatsQuery({ graphId: params.uuid })
+  const { hid } = useParams()
+  const { data: activeGraph } = useGetGraphQuery({ hid: hid as string }, { skip: hid === undefined })
+  const { data: graphStats } = useGetGraphStatsQuery({ hid: hid as string }, { skip: hid === undefined })
 
   const uniqueChartRef = useRef(null);
   const uniqueOutEdgesChartRef = useRef(null);
@@ -37,7 +37,7 @@ export default function GraphDetails() {
       );
     }
     if (uniqueOutEdgesChartRef?.current) {
-      let data = graphStats?.entity_oute_counts ? graphStats?.entity_oute_counts : {
+      let data = graphStats?.entity_out_edges_count ? graphStats.entity_out_edges_count : {
         labels: [],
         series: []
       };
@@ -62,7 +62,7 @@ export default function GraphDetails() {
   return (
     <>
       <section className="flex flex-col w-full">
-        <GraphHeader refreshAllGraphs={refreshAllGraphs} stats={graphStats} graph={activeGraph as Graph} />
+        <GraphHeader refreshAllGraphs={async () => await refreshAllGraphs()} stats={graphStats} graph={activeGraph as Graph} />
         <section className="flex w-full h-full relative">
           <div className="flex flex-col w-2/5">
             <div className="flex flex-col pl-4 mx-4 mt-4 bg-dark-600 rounded-md ">

@@ -38,11 +38,11 @@ export default function AppRoutes(): ReactElement {
         <Route path="dashboard" element={<Suspense><DashboardPage /></Suspense>}>
           <Route path='market' element={<Market />} />
           <Route path='graph' element={<GraphOverview />} />
-          <Route path='graph/:uuid' element={<GraphDetails />} />
+          <Route path='graph/:hid' element={<GraphDetails />} />
           <Route path='entity' element={<EntitiesOverview />} />
-          <Route path='entity/:uuid' element={<EntityDetails />} />
+          <Route path='entity/:hid' element={<EntityDetails />} />
         </Route>
-        <Route path="graph/inquiry/:uuid" element={<Suspense><GraphInquiry /></Suspense>} />
+        <Route path="graph/inquiry/:hid" element={<Suspense><GraphInquiry /></Suspense>} />
         <Route path="settings" element={<Suspense><Settings /></Suspense>} />
         <Route path="incidents" element={<Suspense><Incidents /></Suspense>} />
         <Route path="scans">

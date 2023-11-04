@@ -41,8 +41,8 @@ export default function ProjectGraph({
     (oldEdge: Edge, newConnection: Connection) => dispatch(updateEdgeEvent({ oldEdge, newConnection })),
     []
   );
-  const { uuid } = useParams()
-  useRefreshPluginsQuery({ uuid: uuid as string })
+  const { hid } = useParams()
+  useRefreshPluginsQuery({ hid: hid as string })
 
   const onDragOver: DragEventHandler<HTMLDivElement> = useCallback((event) => {
     event.preventDefault();
@@ -66,9 +66,9 @@ export default function ProjectGraph({
         x: event.clientX - graphBounds.left,
         y: event.clientY - graphBounds.top,
       });
-      if (label && position && uuid) {
-        const createNode = { label, position, uuid }
-        createGraphEntity({ createNode })
+      if (label && position && hid) {
+        const createNode = { label, position }
+        createGraphEntity({ createNode, hid })
           .then(({ data }: CreateGraphEntityApiResponse) => dispatch(addNodeUpdate({ position, label, ...data, })))
           .catch((error) => {
             console.error(error)

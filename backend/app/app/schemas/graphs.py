@@ -2,8 +2,10 @@ import datetime
 from uuid import UUID
 from typing import Optional, List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
+from app.api.utils import hid, sqids
 
+GRAPH_NAMESPACE = 5172
 
 # Shared properties
 class GraphsBase(BaseModel):
@@ -24,8 +26,13 @@ class GraphUpdate(GraphsBase):
 
 
 class GraphInDBBase(GraphsBase):
-    uuid: UUID
-    
+    id: str
+    _extract_id = validator(
+        'id',
+        pre=True,
+        allow_reuse=True
+    )(lambda v: hid(v, GRAPH_NAMESPACE))
+
     class Config:
         from_orm = True
 
@@ -40,10 +47,17 @@ class Graph(GraphInDBBase):
 # Additional properties stored in DB
 class GraphInDB(GraphInDBBase):
     id: int
+    uuid: UUID
 
 
 class GraphsList(BaseModel):
     graphs: List[Graph]
     count: int
 
-    
+
+class AllGraphsList(BaseModel):
+    graphs: List[Graph]
+    count: int
+
+    favorite_graphs: List[Graph]
+    favorite_count: int

@@ -18,7 +18,7 @@ from app.db.janus import ProjectGraphConnection
 
 
 log = get_logger("api_v1.endpoints.nodes")
-router = APIRouter(prefix="/nodes")
+router = APIRouter(prefix="/node")
 
 
 async def fetch_node_transforms(plugin_label):
@@ -30,7 +30,7 @@ async def fetch_node_transforms(plugin_label):
 
 @router.get("/refresh")
 async def refresh_plugins(
-    uuid: UUID,
+    hid: Annotated[str, Depends(deps.get_graph_id)],
     user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     db: Session = Depends(deps.get_db)
 ):
@@ -38,11 +38,11 @@ async def refresh_plugins(
         Registry.plugins = []
         Registry.labels = []
         Registry.ui_labels = []
-        entities = crud.entities.get_multi(db, skip=0, limit=100)
+        entities = crud.entities.get_many(db, skip=0, limit=100)
         load_plugins(entities)
         return {"status": "success", "plugins": Registry.ui_labels}
     except Exception as e:
-        log.error("Error inside nodes.refresh_plugins")
+        log.error("Error inside node.refresh_plugins")
         log.error(e)
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -52,25 +52,25 @@ async def refresh_plugins(
 
 @router.post("/")
 async def create_graph_entity(
+    hid: Annotated[str, Depends(deps.get_graph_id)],
     user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
-    node: schemas.CreateNode
+    node: schemas.CreateNode,
+    db: Session = Depends(deps.get_db)
 ):
     try:
-        print(node.label, node.position, node.uuid)
-        
-        plugin = await Registry.get_plugin(plugin_label=node.label)
-        print('plugin', plugin)
+        active_inquiry = crud.graphs.get(db, id=hid)
+        plugin = await Registry.get_plugin(plugin_label=to_snake_case(node.label))
         if plugin:
             blueprint = plugin.blueprint()
             blueprint["position"] = node.position.dict()
             return await save_node_on_drop(
                 node.label,
                 blueprint,
-                node.uuid.hex
+                active_inquiry.uuid
             )
         raise HTTPException(status_code=422, detail=f"Plugin entity {node.label} cannot be found.")
     except Exception as e:
-        log.error("Error inside nodes.create_graph_entity")
+        log.error("Error inside node.create_graph_entity")
         log.error(e)
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -142,9 +142,9 @@ async def save_node_to_graph(
 async def save_node_on_drop(
     node_label: str,
     node_blueprint: dict,
-    project_uuid: str
+    uuid: UUID
 ):
-    async with ProjectGraphConnection(project_uuid) as g:
+    async with ProjectGraphConnection(uuid) as g:
         new_entity = await save_node_to_graph(g, node_label, node_blueprint.get('position', {}))
         node_blueprint['data'] = {
             'color': node_blueprint.pop('color', '#145070'),
@@ -159,8 +159,8 @@ async def save_node_on_drop(
 
 
 
-async def load_initial_graph(project_uuid: str):
-    async with ProjectGraphConnection(project_uuid) as graph:
+async def load_initial_graph(uuid: UUID):
+    async with ProjectGraphConnection(uuid) as graph:
         edges = await graph.V().outE().project('from', 'edge', 'to')\
             .by(_g.outV()).by(_g.valueMap(True)).by(_g.inV()).union(
             _g.select('edge').unfold(),
@@ -246,17 +246,17 @@ async def read_graph(action_type, send_json, project_uuid):
     })
 
 
-async def update_node(node, action_type, send_json, project_uuid):
+async def update_node(node, action_type, send_json, uuid: UUID):
     if updateTargetId := node.pop('id', None):
-        async with ProjectGraphConnection(project_uuid) as graph:
+        async with ProjectGraphConnection(uuid) as graph:
             updateTarget = graph.V(updateTargetId)
             for k, v in node.items():
                 await updateTarget.property(Cardinality.single, to_snake_case(k), v).next()
             node['id'] = updateTargetId
 
 
-async def remove_nodes(node, action_type, send_json, project_uuid):
-    async with ProjectGraphConnection(project_uuid) as graph:
+async def remove_nodes(node, action_type, send_json, uuid: UUID):
+    async with ProjectGraphConnection(uuid.hex) as graph:
         if targetNode := node.get('id'):
             await graph.V(targetNode).drop().next()
     await send_json({"action": "remove:node", "node": node})
@@ -265,7 +265,7 @@ async def remove_nodes(node, action_type, send_json, project_uuid):
 async def nodes_transform(
     node: dict,
     send_json: Callable[[dict], None],
-    project_uuid: str
+    uuid: UUID
 ):
     node_output = {}
     plugin = await Registry.get_plugin(node.get('data', {}).get('label'))
@@ -309,7 +309,7 @@ async def nodes_transform(
             transform_ctx["position"] = node_transform["position"]
             transform_ctx["parentId"] = node_transform["id"]
 
-        async with ProjectGraphConnection(project_uuid) as graph:
+        async with ProjectGraphConnection(uuid) as graph:
             if isinstance(node_output, list):
                 [await create_node_transform_context(graph, n, node) for n in node_output]
             else:
@@ -332,7 +332,7 @@ async def get_command_type(event):
     return USER_ACTION, IS_READ, IS_UPDATE, IS_DELETE, IS_TRANSFORM
 
 
-async def execute_event(event: dict, send_json: Callable, uuid: str) -> None:
+async def execute_event(event: dict, send_json: Callable, uuid: UUID) -> None:
     USER_ACTION, IS_READ, IS_UPDATE, IS_DELETE, IS_TRANSFORM = await get_command_type(event)
     if USER_ACTION == 'node':
         if IS_READ:
@@ -346,18 +346,29 @@ async def execute_event(event: dict, send_json: Callable, uuid: str) -> None:
 
 
 @router.websocket("/graph/{uuid}")
-async def active_project(websocket: WebSocket, uuid: UUID):
-    print("active_graph_inquiry", uuid)
-    is_project_active = True
+async def active_project(
+    *,
+    websocket: WebSocket,
+    user: Annotated[schemas.User, Depends(deps.get_user_from_ws)],
+    hid: Annotated[int, Depends(deps.get_graph_id)],
+    db: Session = Depends(deps.get_db)
+):
     await websocket.accept()
-    await websocket.send_json({"action": "refresh"})
+
+    is_project_active = True
+    active_inquiry = crud.graphs.get(db, id=hid)
+    if active_inquiry is None:
+        is_project_active = False
+    else:
+        await websocket.send_json({"action": "refresh"})
+        
     while is_project_active:
         try:
             event: dict = await websocket.receive_json()
             await execute_event(
                 event=event,
                 send_json=websocket.send_json,
-                uuid=uuid.hex
+                uuid=active_inquiry.uuid
             )
         except OBPluginError as e:
             await websocket.send_json({"action": "error", "detail": f"Unhandled plugin error! {e}"})
@@ -366,7 +377,7 @@ async def active_project(websocket: WebSocket, uuid: UUID):
         except (WebSocketException, BufferError, ConnectionClosedError) as e:
             log.error(e)
         except Exception as e:
-            log.error("Exception inside nodes.active_project")
+            log.error("Exception inside node.active_project")
             log.error(e)
             is_project_active = False
     websocket.close(code=400)

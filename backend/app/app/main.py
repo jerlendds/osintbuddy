@@ -18,34 +18,32 @@ from app.core.casdoor import Config as CasdoorConfig
 #         traces_sample_rate=1.0,
 #     )
 
-async def on_shutdown() -> None:
-    await close_caches()
+# async def on_shutdown() -> None:
+#     await close_caches()
 
 
-async def on_startup() -> None:
-    rc = RedisCacheBackend(settings.REDIS_URL)
-    caches.set(CACHE_KEY, rc)
+# async def on_startup() -> None:
+#     rc = RedisCacheBackend(settings.REDIS_URL)
+#     caches.set(CACHE_KEY, rc)
 
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     default_response_class=UJSONResponse,
-    on_startup=[on_startup],
-    on_shutdown=[on_shutdown]
+    # on_startup=[on_startup],
+    # on_shutdown=[on_shutdown]
 )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
-@app.get("/status")
-def get_status():
-    return {"status": "ok"}
+use_route_names_as_operation_ids(app)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.BACKEND_CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=[
         "Content-Type",
         "User-Agent",
@@ -60,7 +58,6 @@ app.add_middleware(
     ],
 )
 
-
 app.add_middleware(
     SessionMiddleware,
     secret_key=CasdoorConfig.SECRET_KEY,
@@ -72,8 +69,6 @@ app.state.REDIRECT_URI = casdoor_config.REDIRECT_URI
 app.state.SECRET_TYPE = casdoor_config.SECRET_TYPE
 app.state.SECRET_KEY = casdoor_config.SECRET_KEY
 
-
-use_route_names_as_operation_ids(app)
 
 def app_openapi_schema(app):
     """Return openapi_schema. cached."""
@@ -93,3 +88,7 @@ def app_openapi_schema(app):
 
 app.openapi_schema = app_openapi_schema(app)
 
+
+@app.get("/status")
+def get_status():
+    return {"status": "ok"}

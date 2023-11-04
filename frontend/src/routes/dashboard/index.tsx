@@ -8,14 +8,27 @@ import MarketPanel from './_components/tabs/MarketPanel';
 import CreateEntityModal from "./_components/modals/CreateEntityModal";
 import CreateGraphModal from "./_components/modals/CreateGraphModal";
 import styles from "./dashboard.module.css"
-import { useGetFavoriteGraphsQuery, useGetGraphsQuery } from "@/app/api";
+import { AllGraphsList, useGetGraphsQuery } from "@/app/api";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
+export interface ScrollGraphs {
+  skip?: number | undefined
+  limit?: number | undefined
+  favoriteSkip?: number | undefined
+  favoriteLimit?: number | undefined
+}
 
-export type DashboardContextType = { refreshAllGraphs: () => void };
+export type DashboardContextType = {
+  refreshAllGraphs: () => void;
+  graphsData: AllGraphsList
+  isLoadingGraphs: boolean
+  isGraphsError: FetchBaseQueryError | SerializedError | undefined
+};
 
 export default function DashboardPage() {
   const location = useLocation()
-  const initialTab = location.pathname.includes("entities") ?
+  const initialTab = location.pathname.includes("entity") ?
     1 : location.pathname.includes("market")
       ? 2 : 0
 
@@ -27,31 +40,30 @@ export default function DashboardPage() {
   const [showCreateGraphModal, setShowCreateGraphModal] = useState<boolean>(false);
   const cancelCreateGraphRef = useRef<HTMLElement>(null);
 
-  const {
-    data: favoriteGraphsData = { graphs: [], count: 0, isFavorite: true },
-    isLoading: isLoadingFavoriteGraphs,
-    error: isFavoriteGraphsError,
-    refetch: refetchFavoriteGraphs
-  } = useGetFavoriteGraphsQuery({ skip: 0, limit: 50 })
-
+  const [graphsQuery, setGraphsQuery] = useState({ skip: 0, limit: 50 })
+  const [favoriteGraphsQuery, setFavoriteGraphsQuery] = useState({ favoriteSkip: 0, favoriteLimit: 50 })
 
   const {
-    data: graphsData = { graphs: [], count: 0 },
+    data: allGraphsData = { graphs: [], count: 0, favorite_graphs: [], favorite_count: 0 },
     isLoading: isLoadingGraphs,
     error: isGraphsError,
     refetch: refetchGraphs
-  } = useGetGraphsQuery({ skip: 0, limit: 50, isFavorite: false })
+  } = useGetGraphsQuery({ ...graphsQuery, ...favoriteGraphsQuery })
 
 
   const refreshAllGraphs = () => {
     refetchGraphs()
-    refetchFavoriteGraphs()
+  }
+
+  const scrollGraphs = ({ skip, limit, favoriteSkip, favoriteLimit }: ScrollGraphs) => {
+    if (skip !== undefined && limit !== undefined) setGraphsQuery({ skip, limit })
+    if (favoriteSkip !== undefined && favoriteLimit !== undefined) setFavoriteGraphsQuery({ favoriteSkip, favoriteLimit })
   }
 
   return (
     <>
-      <div className="flex overflow-y-hidden">
-        <div className={styles["dashboard-wrapper"]}>
+      <div className="flex max-h-screen">
+        <aside className={styles["sidebar-wrapper"]}>
           <div className={styles["search-container"]}>
             <MagnifyingGlassIcon />
             <input
@@ -98,22 +110,22 @@ export default function DashboardPage() {
                 )}
               </Tab>
             </Tab.List>
-            <Tab.Panel className={styles["tab-panel"]}>
-              <GraphPanel
-                favoriteGraphsData={favoriteGraphsData}
-                isLoadingFavoriteGraphs={isLoadingFavoriteGraphs}
-                isFavoriteGraphsError={isFavoriteGraphsError}
-                graphsData={graphsData}
-                isLoadingGraphs={isLoadingGraphs}
-                isGraphsError={isGraphsError}
-              />
-            </Tab.Panel>
-            <Tab.Panel className={styles["tab-panel"]}>
-              <EntitiesPanel />
-            </Tab.Panel>
-            <Tab.Panel className={styles["tab-panel"]}>
-              <MarketPanel />
-            </Tab.Panel>
+            <section>
+              <Tab.Panel className={styles["tab-panel"]}>
+                <GraphPanel
+                  refreshAllGraphs={() => refreshAllGraphs()}
+                  graphsData={allGraphsData}
+                  isLoadingGraphs={isLoadingGraphs}
+                  isGraphsError={isGraphsError}
+                />
+              </Tab.Panel>
+              <Tab.Panel className={styles["tab-panel"]}>
+                <EntitiesPanel />
+              </Tab.Panel>
+              <Tab.Panel className={styles["tab-panel"]}>
+                <MarketPanel />
+              </Tab.Panel>
+            </section>
           </Tab.Group>
           {tabIndex !== 2 && (
             <button
@@ -127,14 +139,19 @@ export default function DashboardPage() {
               <PlusIcon />
             </button>
           )}
-        </div>
-        <Outlet context={{ refreshAllGraphs } satisfies DashboardContextType} />
+        </aside>
+        <Outlet context={{
+          refreshAllGraphs,
+          graphsData: allGraphsData,
+          isLoadingGraphs,
+          isGraphsError,
+        } satisfies DashboardContextType} />
       </div>
       <CreateGraphModal
         cancelCreateRef={cancelCreateGraphRef}
         isOpen={showCreateGraphModal}
         closeModal={() => setShowCreateGraphModal(false)}
-        refreshAllGraphs={refreshAllGraphs}
+        refreshAllGraphs={async () => await refreshAllGraphs()}
       />
       <CreateEntityModal
         cancelCreateRef={cancelCreateEntityRef}

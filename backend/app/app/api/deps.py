@@ -3,7 +3,7 @@ from contextlib import contextmanager
 
 import boto3
 from botocore.exceptions import BotoCoreError
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, WebSocket, WebSocketException
 from sqlalchemy.orm import Session
 import undetected_chromedriver as uc
 from selenium import webdriver
@@ -12,7 +12,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from app import schemas, crud
 from app.db.session import SessionLocal
 from app.core.logger import get_logger
-from app.api.utils import APIRequest
+from app.api.utils import APIRequest, HidChecker
 
 log = get_logger("api.deps")
 
@@ -34,6 +34,21 @@ async def get_user_from_session(
         if ob_user:
             return ob_user
     raise HTTPException(status_code=401, detail="Unauthorized")
+
+
+async def get_user_from_ws(
+    websocket: WebSocket,
+    db: Session = Depends(get_db)
+) -> schemas.User:
+    if user := websocket.session.get("member"):
+        ob_user: schemas.User | None = crud.user.get_by_cid(db=db, cid=user.get("id"))
+        if ob_user:
+            return ob_user
+    raise WebSocketException(code=401, detail="Unauthorized")
+
+
+get_graph_id = HidChecker(namespace=schemas.GRAPH_NAMESPACE)
+get_entity_id = HidChecker(namespace=schemas.ENTITY_NAMESPACE)
 
 
 def get_s3():
