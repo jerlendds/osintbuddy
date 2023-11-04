@@ -14,7 +14,7 @@ run_start() {
     unset ERR
     start || ERR=$?
     if [[ $ERR > 0 ]]; then
-        error "We ran into an error starting OSINTBuddy. Please file an issue on Github."
+        error "We ran into an error starting OSINTBuddy."
         exit 1
     else
         if [[ ! -z "$OB_CMD_ARGS" ]]; then
