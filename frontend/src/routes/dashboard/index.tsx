@@ -27,7 +27,7 @@ export default function DashboardPage() {
       <div className="flex overflow-y-hidden">
         <div className={styles["dashboard-wrapper"]}>
           <div className={styles["search-container"]}>
-            <MagnifyingGlassIcon className="w-5 h-5 text-slate-700 ml-2" />
+            <MagnifyingGlassIcon />
             <input
               type="text"
               placeholder={`Search ${tabIndex === 0 ? 'graph' : tabIndex === 1 ? 'entity' : 'marketplace'}...`}
@@ -44,7 +44,7 @@ export default function DashboardPage() {
               <Tab as={Fragment}>
                 {({ selected }) => (
                   <Link
-                    to='/dashboard/graph'
+                    to='graph'
                     className={styles["tab"] + " " + styles[`tab-${selected}`]}
                   >
                     Graphs
@@ -54,7 +54,7 @@ export default function DashboardPage() {
               <Tab as={Fragment}>
                 {({ selected }) => (
                   <Link
-                    to='/dashboard/entity'
+                    to='entity'
                     className={styles["tab"] + " " + styles[`tab-${selected}`]}
                   >
                     Entities
@@ -64,7 +64,7 @@ export default function DashboardPage() {
               <Tab as={Fragment}>
                 {({ selected }) => (
                   <Link
-                    to='/dashboard/market'
+                    to='market'
                     className={styles["tab"] + " " + styles[`tab-${selected}`]}
                   >
                     Market

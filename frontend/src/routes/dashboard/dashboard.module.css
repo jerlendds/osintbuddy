@@ -11,13 +11,16 @@
   @apply py-3 pl-1 w-full focus:outline-none relative bg-dark-700 text-sm font-medium text-slate-400 bg-transparent placeholder-slate-700
 }
 
+.search-container svg {
+  @apply w-5 h-5 text-slate-700 ml-2
+}
+
 .dashboard-tabs {
   @apply flex flex-col h-full relative;
 }
 .tabs-list {
   @apply flex justify-between w-full px-3 py-2;
 }
-
 .tab {
   @apply focus:outline-none transition-colors duration-75 ease-in-out flex items-center justify-center px-3 py-2.5 font-display rounded-full text-sm leading-none
 }
