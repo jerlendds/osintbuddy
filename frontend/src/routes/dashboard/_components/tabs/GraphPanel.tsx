@@ -6,7 +6,8 @@ import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
-import { UpdateGraphFavoriteIdApiArg } from '../../../../app/api';
+import styles from "./subpanel.module.css"
+import Subpanel from '../Subpanel';
 
 
 export function GraphLoaderCard() {
@@ -31,17 +32,16 @@ interface GraphPanel {
   isLoadingGraphs: boolean | undefined
   isGraphsError: FetchBaseQueryError | SerializedError | undefined
   refreshAllGraphs: () => void
+  isGraphsSuccess: boolean | undefined
 }
 
 export default function GraphPanel({
   graphsData,
   isLoadingGraphs,
   isGraphsError,
-  refreshAllGraphs
+  refreshAllGraphs,
+  isGraphsSuccess
 }: GraphPanel) {
-  const navigate = useNavigate();
-  const { hid }: JSONObject = useParams();
-
   const [showAllGraphs, setShowAllGraphs] = useState(true);
   const [showFavoriteGraphs, setShowFavoriteGraphs] = useState(true);
 
@@ -62,91 +62,35 @@ export default function GraphPanel({
   const MAX_DESCRIPTION_LENGTH = 63
   const [updateFavoriteEntity] = useUpdateGraphFavoriteIdMutation()
 
-  const updateFavorites = async (
-    hid: string,
-    isFavorite: boolean
-  ) => {
+  const updateFavorites = async (hid: string) => {
     await updateFavoriteEntity({ hid })
-    refreshAllGraphs()
+    await refreshAllGraphs()
   }
 
   return (
-    <section >
-      <div className="mb-5 h-80 flex flex-col">
-        <div className="pb-1 flex items-center hover:border-dark-300 border-b transition-colors duration-100 ease-in-out border-transparent" onClick={() => setShowFavoriteGraphs(!showFavoriteGraphs)}>
-          <p className="text-xs font-medium leading-3 text-slate-500 focus:outline-none cursor-pointer">FAVORITES</p>
-          <ChevronDownIcon className={classNames("h-4 w-4 text-slate-400 ml-auto transform focus:outline-none cursor-pointer origin-center -rotate-180 mr-3", showFavoriteGraphs && 'rotate-0')} />
-        </div>
-        {showFavoriteGraphs && !isLoadingGraphs && isGraphsError && (
-          <>
-            <h2 className="text-slate-400 text-display">
-              We ran into an error retrieving your favorite graphs. Please try refreshing the page, if this error continues to occur please <a href="#" className="text-info-300">file an issue</a> on github
-            </h2>
-          </>
-        )}
-        {showFavoriteGraphs && isLoadingGraphs && !isGraphsError && (
-          <>
-            <GraphLoaderCard />
-            <GraphLoaderCard />
-          </>
-        )}
-        {showFavoriteGraphs && !isLoadingGraphs && (
-          <div className="mt-2 h-full overflow-y-scroll overflow-x-hidden">
-            {favoriteGraphs.map((graph) => {
-              return <> <button key={graph.id} onClick={() => navigate(`graph/${graph.id}`)} className={classNames("mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center ", hid === graph.id && "!border-dark-400 bg-dark-900 translate-x-px")}>
-                <div className="flex w-full flex-col items-start mr-3 space-y-1">
-                  <p className={classNames("text-sm font-medium leading-none", hid === graph.id && "text-slate-400")}>{graph.name}</p>
-                  <p className={classNames("text-xs font-medium leading-none text-slate-600 mt-1 text-left", hid === graph.id && "!text-slate-500")}>{graph?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${graph?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : graph.description}</p>
-                  <p className={classNames("text-xs font-medium leading-none text-slate-600 mt-1.5 text-left", hid === graph.id && "!text-slate-500")}>Last seen {formatPGDate(graph.last_seen)}</p>
-                </div>
-                <StarIcon onClick={async () => {
-                  await updateFavorites(graph.id, true)
-                }} className={classNames("bg-slate-900 ml-auto rounded-md p-1 h-8 w-8 transition-colors duration-150 hover:text-info-200/80", graph.is_favorite ? 'text-info-200' : 'text-slate-600', hid !== graph.id && '!bg-transparent hover:!bg-slate-900')} />
-              </button></>
-            })}
-          </div>
-        )}
-      </div>
-      <div className="h-96 flex flex-col">
-        <div className="pb-1 flex items-center hover:border-dark-300 border-b transition-colors duration-100 ease-in-out border-transparent" onClick={() => setShowAllGraphs(!showAllGraphs)}>
-          <p className="text-xs font-medium leading-3 text-slate-500 focus:outline-none cursor-pointer">ALL GRAPHS</p>
-          <ChevronDownIcon className={classNames("h-4 w-4 text-slate-400 ml-auto transform focus:outline-none cursor-pointer origin-center -rotate-180 mr-3", showAllGraphs && 'rotate-0')} />
-        </div>
-
-        {showAllGraphs && isLoadingGraphs && !isGraphsError && (
-          <>
-            <GraphLoaderCard />
-            <GraphLoaderCard />
-          </>
-        )}
-        {showAllGraphs && !isLoadingGraphs && (
-          <div className="mt-2 h-full overflow-y-scroll overflow-x-hidden">
-            {graphs?.map((graph) => {
-              return (
-                <button key={graph?.id} onClick={() => {
-                  console.log(graph)
-                  navigate(`graph/${graph?.id}`)
-                }} className={classNames("mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center ", hid === graph?.id && "!border-dark-400 bg-dark-900 translate-x-px")}>
-                  <div className="flex w-full flex-col items-start mr-3 space-y-1.5">
-                    <p className={classNames("text-sm font-medium leading-none", hid === graph?.id && "text-slate-400")}>{graph?.name}</p>
-                    <p className={classNames("text-xs font-medium leading-none text-slate-600  text-left", hid === graph?.id && "!text-slate-500")}>{graph?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${graph?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : graph?.description}</p>
-                    <p className={classNames("text-xs font-medium leading-none text-slate-600  text-left", hid === graph?.id && "!text-slate-500")}>Last seen {formatPGDate(graph?.last_seen)}</p>
-                  </div>
-                  <StarIcon
-                    onClick={async () => {
-                      await updateFavorites(graph.id, false)
-                    }}
-                    className={classNames("bg-slate-900 ml-auto rounded-md p-1 h-8 w-8 transition-colors duration-150 hover:text-info-200/80",
-                      graph?.is_favorite ? 'text-info-200' : 'text-slate-600',
-                      hid !== graph?.id && '!bg-transparent hover:!bg-slate-900')
-                    }
-                  />
-                </button>
-              )
-            })}
-          </div>
-        )}
-      </div>
+    <section className={styles["subpanel-wrapper"]}>
+      <Subpanel
+        label="FAVORITES"
+        showError={isGraphsError}
+        showEntities={showFavoriteGraphs}
+        setShowEntities={() => setShowFavoriteGraphs(!showFavoriteGraphs)}
+        isLoading={isLoadingGraphs}
+        isSuccess={isGraphsSuccess}
+        items={favoriteGraphs}
+        onClick={async (hid) => await updateFavorites(hid)}
+        to="/dashboard/graph"
+      />
+      <Subpanel
+        label="ALL GRAPHS1"
+        showError={isGraphsError}
+        showEntities={showAllGraphs}
+        setShowEntities={() => setShowAllGraphs(!showAllGraphs)}
+        isLoading={isLoadingGraphs}
+        isSuccess={isGraphsSuccess}
+        items={graphs}
+        onClick={async (hid) => await updateFavorites(hid)}
+        to="/dashboard/graph"
+      />
     </section>
   )
 }

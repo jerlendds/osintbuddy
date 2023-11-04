@@ -51,7 +51,8 @@ export default function DashboardPage() {
     data: allGraphsData = { graphs: [], count: 0, favorite_graphs: [], favorite_count: 0 },
     isLoading: isLoadingGraphs,
     error: isGraphsError,
-    refetch: refetchGraphs
+    refetch: refetchGraphs,
+    isSuccess: isGraphsSuccess
   } = useGetGraphsQuery({ ...graphsQuery, ...favoriteGraphsQuery })
 
 
@@ -121,6 +122,7 @@ export default function DashboardPage() {
                   graphsData={allGraphsData}
                   isLoadingGraphs={isLoadingGraphs}
                   isGraphsError={isGraphsError}
+                  isGraphsSuccess={isGraphsSuccess}
                 />
               </Tab.Panel>
               <Tab.Panel className={styles["tab-panel"]}>
