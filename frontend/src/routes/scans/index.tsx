@@ -8,7 +8,6 @@ import {
 } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
-import CreateScanModal from "./_components/CreateScanModal";
 import { useRef, useState } from "react";
 import { useEffectOnce } from "@/app/hooks";
 
@@ -124,12 +123,12 @@ export default function ScansPage() {
           </section>
         </div>
       </div>
-      <CreateScanModal
+      {/* <CreateScanModal
         closeModal={closeModal}
         isOpen={isModalOpen}
         cancelCreateRef={cancelCreateRef}
         refreshData={() => null}
-      />
+      /> */}
     </>
   );
 }
