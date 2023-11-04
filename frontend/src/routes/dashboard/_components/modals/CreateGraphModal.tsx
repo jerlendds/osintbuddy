@@ -4,7 +4,6 @@ import { useTour } from '@reactour/tour';
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from "yup";
-import { useAppDispatch } from '@/app/hooks';
 import { Graph, useCreateGraphMutation } from '@/app/api';
 import OverlayModal, { OverlayModalProps } from '@/components/modals/OverlayModal';
 import InputField from '@/components/inputs/InputField';
@@ -12,7 +11,6 @@ import InputTextarea from '@/components/inputs/InputTextArea';
 import InputToggleSwitch from '@/components/inputs/InputToggleSwitch';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-
 
 type GraphFormData = {
   name: string
@@ -112,8 +110,6 @@ export default function CreateGraphModal({
   cancelCreateRef,
   refreshAllGraphs
 }: CreateGraphModalProps) {
-  const dispatch = useAppDispatch()
-
   return (
     <OverlayModal isOpen={isOpen} closeModal={closeModal} cancelCreateRef={cancelCreateRef}>
       <CreateGraphForm
