@@ -1,15 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { useTour } from '@reactour/tour';
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from "yup";
 import { useAppDispatch } from '@/app/hooks';
-import { useCreateGraphMutation } from '@/app/api';
+import { Graph, useCreateGraphMutation } from '@/app/api';
 import OverlayModal, { OverlayModalProps } from '@/components/modals/OverlayModal';
-import InputField from '../../../../components/inputs/InputField';
-import InputTextarea from '../../../../components/inputs/InputTextArea';
-import InputToggleSwitch from '../../../../components/inputs/InputToggleSwitch';
+import InputField from '@/components/inputs/InputField';
+import InputTextarea from '@/components/inputs/InputTextArea';
+import InputToggleSwitch from '@/components/inputs/InputToggleSwitch';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 
 type GraphFormData = {
@@ -26,8 +28,10 @@ const graphSchema: Yup.ObjectSchema<GraphFormData> = Yup.object().shape({
 
 
 export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
+  const navigate = useNavigate()
+  const [showTour, setShowTour] = useState(false)
   const { setIsOpen, setCurrentStep } = useTour();
-  const [createGraph, { isLoading, data }] = useCreateGraphMutation()
+  const [createGraph, { data: newGraph, isError: createGraphError }] = useCreateGraphMutation()
 
   const {
     reset,
@@ -39,17 +43,26 @@ export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
 
   useEffect(() => {
     if (!isSubmitSuccessful) return
+    if (newGraph && newGraph?.uuid) {
+      updateTable()
+      closeModal()
+      if (showTour) {
+        setIsOpen(true)
+        navigate(`inquiry/${newGraph.uuid}`)
+      } else {
+        navigate(`${newGraph.uuid}`)
+      }
+    } else {
+      console.error(createGraphError)
+      toast.error("We ran into an error creating your graph. Please try again")
+    }
     reset({ name: "", description: "", showTour: false })
   }, [isSubmitSuccessful])
 
   const onSubmitHandler = async (graphCreate: GraphFormData) => {
-    const showTour = graphCreate.showTour
+    setShowTour(graphCreate?.showTour ?? false)
     delete graphCreate.showTour
-    createGraph({ graphCreate }).then((data) => console.log('cg data', data))
-    closeModal()
-    if (showTour) {
-      //   setIsOpen(true)
-    }
+    await createGraph({ graphCreate })
   };
 
   return (
@@ -57,7 +70,7 @@ export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
       <div className='border-b border-dark-300 mx-4 py-5 sm:px-6'>
         <div className='-ml-6 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap'>
           <div className='ml-4 mt-2'>
-            <h1 onClick={() => console.log(errors)} className='font-display text-2xl tracking-tight text-slate-200 dark:text-white'>New Graph</h1>
+            <h1 className='font-display text-2xl tracking-tight text-slate-200 dark:text-white'>New Graph</h1>
           </div>
         </div>
       </div>
@@ -89,17 +102,22 @@ export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
   );
 }
 
+interface CreateGraphModalProps extends OverlayModalProps {
+  refreshAllGraphs: () => void
+}
+
 export default function CreateGraphModal({
   closeModal,
   isOpen,
   cancelCreateRef,
-}: OverlayModalProps) {
+  refreshAllGraphs
+}: CreateGraphModalProps) {
   const dispatch = useAppDispatch()
 
   return (
     <OverlayModal isOpen={isOpen} closeModal={closeModal} cancelCreateRef={cancelCreateRef}>
       <CreateGraphForm
-        updateTable={(project: any) => null}
+        updateTable={(graph: Graph) => refreshAllGraphs()}
         closeModal={() => closeModal()}
       />
     </OverlayModal>

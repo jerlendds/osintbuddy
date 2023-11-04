@@ -1,10 +1,11 @@
 import { useEffect, useRef } from "react"
-import { useParams } from "react-router-dom"
+import { useOutletContext, useParams } from "react-router-dom"
 import 'chartist/dist/index.css';
 import { BarChart } from "chartist"
 import { Graph, useGetGraphQuery, useGetGraphStatsQuery } from "@/app/api";
 import CaseNotes from "@/components/Notes/CaseNotes"
 import GraphHeader from "./GraphHeader"
+import { DashboardContextType } from "..";
 
 
 
@@ -56,10 +57,12 @@ export default function GraphDetails() {
     }
   }, [graphStats?.unique_entity_counts])
 
+  const { refreshAllGraphs } = useOutletContext<DashboardContextType>();
+
   return (
     <>
       <section className="flex flex-col w-full">
-        <GraphHeader stats={graphStats} graph={activeGraph as Graph} />
+        <GraphHeader refreshAllGraphs={refreshAllGraphs} stats={graphStats} graph={activeGraph as Graph} />
         <section className="flex w-full h-full relative">
           <div className="flex flex-col w-2/5">
             <div className="flex flex-col pl-4 mx-4 mt-4 bg-dark-600 rounded-md ">

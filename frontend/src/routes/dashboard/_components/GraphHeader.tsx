@@ -1,4 +1,4 @@
-import { Graph } from "@/app/api";
+import { Graph, useDeleteGraphMutation } from "@/app/api";
 import { formatPGDate } from "@/app/utilities";
 import { ClockIcon, EyeIcon, FingerPrintIcon, PlusIcon, ScaleIcon, TrashIcon, UserIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,10 +7,14 @@ import { toast } from "react-toastify";
 interface GraphHeaderProps {
   graph: Graph
   stats: any
+  refreshAllGraphs: () => void
 }
 
-export default function GraphHeader({ graph, stats }: GraphHeaderProps) {
+export default function GraphHeader({ graph, stats, refreshAllGraphs }: GraphHeaderProps) {
   const navigate = useNavigate()
+  const [deleteGraph, { isSuccess, isError }] = useDeleteGraphMutation()
+
+  console.log(graph)
   return (
     <div className="flex flex-col w-full">
       <div className="flex w-full bg-transparent border-b border-dark-400">
@@ -26,8 +30,15 @@ export default function GraphHeader({ graph, stats }: GraphHeaderProps) {
             </div>
             <div className="flex w-full gap-x-4 mt-auto">
               <button onClick={() => {
-                // dispatch(deleteGraph(graph.uuid))
-                navigate('/dashboard/graph', { replace: true })
+                deleteGraph({ uuid: graph.uuid })
+                  .then(() => {
+                    navigate('/dashboard/graph', { replace: true })
+                    refreshAllGraphs()
+                  })
+                  .catch((error) => {
+                    console.error(error)
+                    toast.error("We ran into an error deleting your graph. Please try again")
+                  })
               }} className="mb-3.5 ring-1 ring-danger-600 ml-auto pr-3 text-left text-sm font-semibold text-danger-600 hover:text-danger-700 flex items-center border border-danger-600 hover:border-danger-700 py-2 px-3 rounded-md mr-1 ">
                 Delete graph
                 <TrashIcon className="text-inherit h-5 w-5 ml-2" />

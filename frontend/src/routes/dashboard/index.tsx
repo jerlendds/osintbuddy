@@ -8,6 +8,10 @@ import MarketPanel from './_components/tabs/MarketPanel';
 import CreateEntityModal from "./_components/modals/CreateEntityModal";
 import CreateGraphModal from "./_components/modals/CreateGraphModal";
 import styles from "./dashboard.module.css"
+import { useGetFavoriteGraphsQuery, useGetGraphsQuery } from "@/app/api";
+
+
+export type DashboardContextType = { refreshAllGraphs: () => void };
 
 export default function DashboardPage() {
   const location = useLocation()
@@ -22,6 +26,28 @@ export default function DashboardPage() {
 
   const [showCreateGraphModal, setShowCreateGraphModal] = useState<boolean>(false);
   const cancelCreateGraphRef = useRef<HTMLElement>(null);
+
+  const {
+    data: favoriteGraphsData = { graphs: [], count: 0, isFavorite: true },
+    isLoading: isLoadingFavoriteGraphs,
+    error: isFavoriteGraphsError,
+    refetch: refetchFavoriteGraphs
+  } = useGetFavoriteGraphsQuery({ skip: 0, limit: 50 })
+
+
+  const {
+    data: graphsData = { graphs: [], count: 0 },
+    isLoading: isLoadingGraphs,
+    error: isGraphsError,
+    refetch: refetchGraphs
+  } = useGetGraphsQuery({ skip: 0, limit: 50, isFavorite: false })
+
+
+  const refreshAllGraphs = () => {
+    refetchGraphs()
+    refetchFavoriteGraphs()
+  }
+
   return (
     <>
       <div className="flex overflow-y-hidden">
@@ -73,7 +99,14 @@ export default function DashboardPage() {
               </Tab>
             </Tab.List>
             <Tab.Panel className={styles["tab-panel"]}>
-              <GraphPanel />
+              <GraphPanel
+                favoriteGraphsData={favoriteGraphsData}
+                isLoadingFavoriteGraphs={isLoadingFavoriteGraphs}
+                isFavoriteGraphsError={isFavoriteGraphsError}
+                graphsData={graphsData}
+                isLoadingGraphs={isLoadingGraphs}
+                isGraphsError={isGraphsError}
+              />
             </Tab.Panel>
             <Tab.Panel className={styles["tab-panel"]}>
               <EntitiesPanel />
@@ -95,12 +128,13 @@ export default function DashboardPage() {
             </button>
           )}
         </div>
-        <Outlet />
+        <Outlet context={{ refreshAllGraphs } satisfies DashboardContextType} />
       </div>
       <CreateGraphModal
         cancelCreateRef={cancelCreateGraphRef}
         isOpen={showCreateGraphModal}
         closeModal={() => setShowCreateGraphModal(false)}
+        refreshAllGraphs={refreshAllGraphs}
       />
       <CreateEntityModal
         cancelCreateRef={cancelCreateEntityRef}

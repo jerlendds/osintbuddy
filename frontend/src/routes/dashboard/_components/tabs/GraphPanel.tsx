@@ -1,4 +1,4 @@
-import { api } from '@/app/api';
+import { GraphsList, api } from '@/app/api';
 import { formatPGDate } from "@/app/utilities";
 import { ChevronDownIcon, StarIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
@@ -6,6 +6,8 @@ import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch } from "@/app/hooks";
 import { GetFavoriteGraphsApiResponse } from '../../../../app/api';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { SerializedError } from '@reduxjs/toolkit';
 
 
 export function GraphLoaderCard() {
@@ -25,31 +27,35 @@ export function GraphLoaderCard() {
 }
 
 
-export default function GraphPanel() {
+interface GraphPanel {
+  favoriteGraphsData: GraphsList
+  isLoadingFavoriteGraphs: boolean | undefined
+  isFavoriteGraphsError: FetchBaseQueryError | SerializedError | undefined
+  graphsData: GraphsList
+  isLoadingGraphs: boolean | undefined
+  isGraphsError: FetchBaseQueryError | SerializedError | undefined
+}
+
+export default function GraphPanel({
+  favoriteGraphsData,
+  isLoadingFavoriteGraphs,
+  isFavoriteGraphsError,
+  graphsData,
+  isLoadingGraphs,
+  isGraphsError
+}: GraphPanel) {
   const navigate = useNavigate();
-  const params: JSONObject = useParams();
+  const { uuid }: JSONObject = useParams();
 
   const [showAllGraphs, setShowAllGraphs] = useState(true);
   const [showFavoriteGraphs, setShowFavoriteGraphs] = useState(true);
 
-  const dispatch = useAppDispatch()
-
-  const {
-    data: favoriteGraphsData = { graphs: [], count: 0, isFavorite: true },
-    isLoading: isLoadingFavoriteGraphs,
-    error: isFavoriteGraphsError
-  } = api.useGetFavoriteGraphsQuery({ skip: 0, limit: 50 })
   const favoriteGraphs = useMemo(() => {
     const sortedGraphs = favoriteGraphsData.graphs.slice()
     sortedGraphs.sort((a, b) => b.created.localeCompare(a.created))
     return sortedGraphs
   }, [favoriteGraphsData])
 
-  const {
-    data: graphsData = { graphs: [], count: 0 },
-    isLoading: isLoadingGraphs,
-    error: isGraphsError
-  } = api.useGetGraphsQuery({ skip: 0, limit: 50, isFavorite: false })
   const graphs = useMemo(() => {
     if (graphsData) {
       const sortedGraphs = graphsData.graphs.slice()
@@ -57,7 +63,6 @@ export default function GraphPanel() {
       return sortedGraphs
     }
   }, [graphsData])
-
 
   const MAX_DESCRIPTION_LENGTH = 63
 
@@ -89,15 +94,15 @@ export default function GraphPanel() {
         {showFavoriteGraphs && !isLoadingFavoriteGraphs && (
           <div className="mt-2 h-full overflow-y-scroll overflow-x-hidden">
             {favoriteGraphs.map((graph) => {
-              return <> <button key={graph.uuid} onClick={() => navigate(`graph/${graph.uuid}`)} className={classNames("mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center ", params?.uuid === graph.uuid && "!border-dark-400 bg-dark-900 translate-x-px")}>
+              return <> <button key={graph.uuid} onClick={() => navigate(`graph/${graph.uuid}`)} className={classNames("mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center ", uuid === graph.uuid && "!border-dark-400 bg-dark-900 translate-x-px")}>
                 <div className="flex w-full flex-col items-start mr-3 space-y-1">
-                  <p className={classNames("text-sm font-medium leading-none", params?.uuid === graph.uuid && "text-slate-400")}>{graph.name}</p>
-                  <p className={classNames("text-xs font-medium leading-none text-slate-600 mt-1 text-left", params?.uuid === graph.uuid && "!text-slate-500")}>{graph?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${graph?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : graph.description}</p>
-                  <p className={classNames("text-xs font-medium leading-none text-slate-600 mt-1.5 text-left", params?.uuid === graph.uuid && "!text-slate-500")}>Last seen {formatPGDate(graph.last_seen)}</p>
+                  <p className={classNames("text-sm font-medium leading-none", uuid === graph.uuid && "text-slate-400")}>{graph.name}</p>
+                  <p className={classNames("text-xs font-medium leading-none text-slate-600 mt-1 text-left", uuid === graph.uuid && "!text-slate-500")}>{graph?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${graph?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : graph.description}</p>
+                  <p className={classNames("text-xs font-medium leading-none text-slate-600 mt-1.5 text-left", uuid === graph.uuid && "!text-slate-500")}>Last seen {formatPGDate(graph.last_seen)}</p>
                 </div>
                 <StarIcon onClick={() => {
                   updateFavorites(graph.uuid, false)
-                }} className={classNames("bg-slate-900 ml-auto rounded-md p-1 h-8 w-8 transition-colors duration-150 hover:text-info-200/80", graph.is_favorite ? 'text-info-200' : 'text-slate-600', params?.uuid !== graph.uuid && '!bg-transparent hover:!bg-slate-900')} />
+                }} className={classNames("bg-slate-900 ml-auto rounded-md p-1 h-8 w-8 transition-colors duration-150 hover:text-info-200/80", graph.is_favorite ? 'text-info-200' : 'text-slate-600', uuid !== graph.uuid && '!bg-transparent hover:!bg-slate-900')} />
               </button></>
             })}
           </div>
@@ -128,11 +133,11 @@ export default function GraphPanel() {
                 <button key={graph?.uuid} onClick={() => {
                   console.log(graph)
                   navigate(`graph/${graph?.uuid}`)
-                }} className={classNames("mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center ", params?.uuid === graph?.uuid && "!border-dark-400 bg-dark-900 translate-x-px")}>
+                }} className={classNames("mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center ", uuid === graph?.uuid && "!border-dark-400 bg-dark-900 translate-x-px")}>
                   <div className="flex w-full flex-col items-start mr-3 space-y-1.5">
-                    <p className={classNames("text-sm font-medium leading-none", params?.uuid === graph?.uuid && "text-slate-400")}>{graph?.name}</p>
-                    <p className={classNames("text-xs font-medium leading-none text-slate-600  text-left", params?.uuid === graph?.uuid && "!text-slate-500")}>{graph?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${graph?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : graph?.description}</p>
-                    <p className={classNames("text-xs font-medium leading-none text-slate-600  text-left", params?.uuid === graph?.uuid && "!text-slate-500")}>Last seen {formatPGDate(graph?.last_seen)}</p>
+                    <p className={classNames("text-sm font-medium leading-none", uuid === graph?.uuid && "text-slate-400")}>{graph?.name}</p>
+                    <p className={classNames("text-xs font-medium leading-none text-slate-600  text-left", uuid === graph?.uuid && "!text-slate-500")}>{graph?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${graph?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : graph?.description}</p>
+                    <p className={classNames("text-xs font-medium leading-none text-slate-600  text-left", uuid === graph?.uuid && "!text-slate-500")}>Last seen {formatPGDate(graph?.last_seen)}</p>
                   </div>
                   <StarIcon
                     onClick={() => {
@@ -140,7 +145,7 @@ export default function GraphPanel() {
                     }}
                     className={classNames("bg-slate-900 ml-auto rounded-md p-1 h-8 w-8 transition-colors duration-150 hover:text-info-200/80",
                       graph?.is_favorite ? 'text-info-200' : 'text-slate-600',
-                      params?.uuid !== graph?.uuid && '!bg-transparent hover:!bg-slate-900')
+                      uuid !== graph?.uuid && '!bg-transparent hover:!bg-slate-900')
                     }
                   />
                 </button>

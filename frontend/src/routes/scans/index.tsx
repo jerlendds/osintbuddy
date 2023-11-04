@@ -1,12 +1,10 @@
 import { InquiryHeader } from "@/components/Headers";
-import { UnderConstruction } from "@/components/Loaders";
 import {
   DocumentMagnifyingGlassIcon,
   PencilIcon,
   PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import { useEffectOnce } from "@/app/hooks";
