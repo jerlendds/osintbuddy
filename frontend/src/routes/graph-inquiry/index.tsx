@@ -1,9 +1,8 @@
-// @ts-nocheck
 import { useState, useRef, useEffect } from 'react';
 import { Edge, XYPosition, Node } from 'reactflow';
 import { HotKeys } from 'react-hotkeys';
 import { useParams } from 'react-router-dom';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
+import useWebSocket, { ReadyState, SendMessage } from 'react-use-websocket';
 import 'reactflow/dist/style.css';
 import EntityOptions from './_components/EntityOptions';
 import ContextMenu from './_components/ContextMenu';
@@ -25,19 +24,27 @@ import DisplayOptions from './_components/DisplayOptions';
 import { MiniEditDialog } from './_components/BaseMiniNode';
 import { WS_URL } from '@/app/baseApi';
 import CommandPallet from './_components/CommandPallet';
-import { useGetEntityTransformsQuery, useGetGraphQuery } from '@/app/api';
+import { useGetGraphQuery } from '@/app/api';
 import RoundLoader from '@/components/Loaders';
+import { SendJsonMessage } from 'react-use-websocket/dist/lib/types';
 
 const keyMap = {
   TOGGLE_PALETTE: ['shift+p'],
 };
+
+interface UseWebsocket {
+  lastJsonMessage: JSONObject
+  readyState: ReadyState
+  sendJsonMessage: SendJsonMessage
+  lastMessage: MessageEvent<any> | null
+}
 
 const WS_GRAPH_INQUIRE = `ws://${WS_URL}/node/graph`
 
 export default function OsintPage() {
   const dispatch = useAppDispatch();
   const { hid } = useParams()
-  const { data: activeGraph, isSuccess, isLoading, isError } = useGetGraphQuery({ hid })
+  const { data: activeGraph, isSuccess, isLoading, isError } = useGetGraphQuery({ hid: hid as string })
   const initialNodes = useAppSelector((state) => graphNodes(state));
   const initialEdges = useAppSelector((state) => graphEdges(state));
   const graphRef = useRef<HTMLDivElement>(null);
@@ -49,7 +56,7 @@ export default function OsintPage() {
   const [showNodeOptions, setShowNodeOptions] = useState<boolean>(false);
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
 
-  const [messageHistory, setMessageHistory] = useState([]);
+  const [messageHistory, setMessageHistory] = useState<JSONObject[]>([]);
   const [socketUrl, setSocketUrl] = useState(`${WS_GRAPH_INQUIRE}`);
   const viewMode = useAppSelector((state) => selectViewMode(state));
   const [shouldConnect, setShouldConnect] = useState(false)
@@ -61,9 +68,8 @@ export default function OsintPage() {
     }
   }, [activeGraph?.id])
 
-  const { lastMessage, lastJsonMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl, {
+  const { lastJsonMessage, readyState, sendJsonMessage, lastMessage }: UseWebsocket = useWebSocket(socketUrl, {
     shouldReconnect: () => shouldConnect,
-    connect: () => shouldConnect
   });
 
   useEffectOnce(() => {
@@ -71,13 +77,13 @@ export default function OsintPage() {
     sendJsonMessage({ action: 'read:node' });
   });
 
-  function addNode(id, data: AddNode, position, type: ProjectViewModes = viewMode) {
+  function addNode(id: string, data: AddNode, position: XYPosition, type: ProjectViewModes = viewMode) {
     dispatch(createNode({ id, data, position, type }));
   }
 
   function addEdge(
-    source,
-    target,
+    source: string,
+    target: string,
     sourceHandle: string = 'r1',
     targetHandle: string = 'l2',
     type: string = 'default'
@@ -110,7 +116,7 @@ export default function OsintPage() {
   //   [initialNodes, initialEdges]
   // );
 
-  const addNodeAction = (node) => {
+  const addNodeAction = (node: JSONObject) => {
     const position = node?.position;
     const parentId = node.parentId;
     delete node.action;
@@ -136,7 +142,6 @@ export default function OsintPage() {
     //   return options;
     // }).then((options) => setNodeOptions(options))
     //   .catch((error: Error) => console.error(error))
-
   };
 
   const connectionStatus = {
@@ -148,9 +153,9 @@ export default function OsintPage() {
   }[readyState];
 
 
-  const createNodeUpdate = (node: JSONObject, data) => {
+  const createNodeUpdate = (node: JSONObject, data: JSONObject) => {
     let updatedNode = { ...node };
-    updatedNode.elements = node.data.elements.map((elm) => {
+    updatedNode.elements = node.data.elements.map((elm: JSONObject) => {
       // @todo refactor me to `find`
       if (Object.keys(data)[0] === elm.label) {
         elm.value = data[elm.label];
@@ -164,17 +169,17 @@ export default function OsintPage() {
   useEffect(() => {
     if (lastJsonMessage) {
       setMessageHistory((prev) => prev.concat(lastJsonMessage));
-      if (lastJsonMessage.action === 'error') toast.error(`${lastJsonMessage.detail}`);
+      if (lastJsonMessage && lastJsonMessage.action === 'error') toast.error(`${lastJsonMessage.detail}`);
       if (!Array.isArray(lastJsonMessage)) {
         if (lastJsonMessage.action === 'addInitialLoad') {
-          lastJsonMessage.nodes.forEach((node, idx) => addNode(node.id.toString(), node.data, node.position));
-          lastJsonMessage.edges.forEach((edge) => addEdge(edge.source.toString(), edge.target.toString()));
+          lastJsonMessage.nodes.forEach((node: JSONObject, idx: JSONObject) => addNode(node.id.toString(), node.data, node.position));
+          lastJsonMessage.edges.forEach((edge: JSONObject) => addEdge(edge.source.toString(), edge.target.toString()));
         }
         if (lastJsonMessage.action === 'addNode') {
           lastJsonMessage.position.x += 560;
           lastJsonMessage.position.y += 140;
           addNodeAction(lastJsonMessage);
-          toast.success(`Found 1 ${label.label}`);
+          toast.success(`Found 1 result`);
         }
       } else if (Array.isArray(lastJsonMessage)) {
         lastJsonMessage.map((node, idx) => {
@@ -203,21 +208,18 @@ export default function OsintPage() {
         updateNodeOptions();
       }
     }
-  }, [lastMessage, setMessageHistory]);
+  }, [lastJsonMessage, setMessageHistory]);
 
   const [ctxPosition, setCtxPosition] = useState<XYPosition>({ x: 0, y: 0 });
-  const [ctxSelection, setCtxSelection] = useState<JSONObject>(null);
+  const [ctxSelection, setCtxSelection] = useState<JSONObject | null>(null);
   const [showMenu, setShowMenu] = useState(false);
-  const [transforms, setTransforms] = useState<string[]>([]);
-  const [transformLabel, setTransformLabel] = useState<string | null>(null)
+  const [activeTransformLabel, setActiveTransformLabel] = useState<string | null>(null)
   // @todo implement support for multi-select transforms -
   // hm, actually, how will the transforms work if different plugin types/nodes are in the selection?
   // just delete?
   const onMultiSelectionCtxMenu = (event: MouseEvent, nodes: Node[]) => {
     event.preventDefault();
   };
-
-  const { data, isLoading: isLoadingTransforms, isError: isTransformsError, isSuccess: isTransformsSuccess } = useGetEntityTransformsQuery({ label: transformLabel }, { skip: transformLabel === null })
 
   const onSelectionCtxMenu = (event: MouseEvent, node: Node) => {
     event.preventDefault();
@@ -226,14 +228,13 @@ export default function OsintPage() {
       x: event.clientX - 20,
     });
     setCtxSelection(node);
-    setTransformLabel(node.data.label)
+    setActiveTransformLabel(node.data.label)
     setShowMenu(true);
   };
 
   const onPaneCtxMenu = (event: MouseEvent) => {
     event.preventDefault();
     setCtxSelection(null);
-    setTransforms(null);
     setShowMenu(true);
     setCtxPosition({
       x: event.clientX - 25,
@@ -244,13 +245,13 @@ export default function OsintPage() {
 
   const onPaneClick = () => {
     setShowMenu(false);
-    setTransforms(null);
     setCtxSelection(null);
   };
-  const { ref, isOpen, setIsOpen } = useComponentVisible(false);
 
+  const { ref, isOpen, setIsOpen } = useComponentVisible(false);
   const activeNodeId = useAppSelector((state) => selectEditId(state));
   const activeNode = useAppSelector((state) => selectNode(state, activeNodeId));
+
   return (
     <>
       {isError && (
@@ -293,14 +294,12 @@ export default function OsintPage() {
                   sendJsonMessage={sendJsonMessage}
                   lastMessage={lastMessage}
                   updateNode={createNodeUpdate}
-                  setNodes={setNodes}
                   setIsEditingMini={setIsOpen}
                 />
               </div>
             </div>
           </div>
           <CommandPallet
-            toggleShowOptions={toggleShowNodeOptions}
             isOpen={showCommandPalette}
             setOpen={setShowCommandPalette}
           />
@@ -309,8 +308,8 @@ export default function OsintPage() {
             className='absolute top-[3.5rem] w-48 bg-red -z-10 h-20 left-[0.7rem] text-slate-900'
           />
           <ContextMenu
+            activeTransformLabel={activeTransformLabel}
             sendJsonMessage={sendJsonMessage}
-            transforms={transforms}
             ctxSelection={ctxSelection}
             showMenu={showMenu}
             ctxPosition={ctxPosition}

@@ -5,26 +5,16 @@ import classNames from 'classnames';
 import { useAppDispatch } from '@/app/hooks';
 import { deleteNode } from '@/features/graph/graphSlice';
 import { useState } from 'react';
+import { useGetEntityTransformsQuery } from '@/app/api';
 
 export default function ContextMenu({
   closeMenu,
   showMenu,
   ctxPosition: position,
   ctxSelection,
-  transforms,
-  zoomIn,
-  zoomOut,
   sendJsonMessage,
-}: {
-  transforms: JSONObject[];
-  showMenu: boolean;
-  ctxPosition: XYPosition;
-  ctxSelection: JSONObject;
-  zoomIn: Function;
-  zoomOut: Function;
-  closeMenu: Function;
-  sendJsonMessage: Function;
-}) {
+  activeTransformLabel
+}: JSONObject) {
   const dispatch = useAppDispatch();
 
   const ctxPosition = {
@@ -32,11 +22,13 @@ export default function ContextMenu({
     left: position.x,
   };
 
+  const { data: transformsData = { transforms: [], type: null }, isLoading: isLoadingTransforms, isError: isTransformsError, isSuccess: isTransformsSuccess } = useGetEntityTransformsQuery({ label: activeTransformLabel as string }, { skip: activeTransformLabel === null })
+
+
   const [query, setQuery] = useState('');
   const filteredTransforms = query
-    ? transforms?.filter((transform) => transform.label.toLowerCase().includes(query.toLowerCase()))
-    : transforms;
-
+    ? transformsData?.transforms.filter((transform: any) => transform.label.toLowerCase().includes(query.toLowerCase()))
+    : transformsData?.transforms ?? [];
   return (
     <>
       <div id='context-menu' className='z-[999] absolute' style={ctxPosition}>
@@ -55,13 +47,13 @@ export default function ContextMenu({
                     {ctxSelection?.id ? ctxSelection.id : 'No node selected'}
                     {ctxSelection?.label && (
                       <span className='inline-flex ml-auto items-center rounded-full whitespace-nowrap truncate bg-dark-700 px-1.5 py-0.5 text-sm font-medium text-blue-800 mr-1'>
-                        {ctxSelection.label}
+                        {transformsData?.type ?? ''}
                       </span>
                     )}
                   </div>
                 </div>
               </div>
-              {transforms && (
+              {transformsData && transformsData?.transforms && (
                 <>
                   <div className='pb-2  '>
                     <div>

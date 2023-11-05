@@ -1,18 +1,17 @@
 import { Icon } from '@components/Icons';
-// wtf
-export default function ContextAction({
+import { toast } from 'react-toastify';
 
+export default function ContextAction({
   nodeCtx: ctx,
   transforms,
   sendJsonMessage,
   closeMenu
 }: {
-  nodeCtx: JSONObject
+  nodeCtx: JSONObject | null
   transforms: JSONObject[]
   sendJsonMessage: Function
   closeMenu: Function
 }) {
-  console.log('before map', transforms)
   return (
     <>
       {transforms && <div className='node-context max-h-32 overflow-y-scroll'>
@@ -24,16 +23,20 @@ export default function ContextAction({
                 onClick={(e) => {
                   e.preventDefault()
                   closeMenu()
-                  sendJsonMessage({
-                    action: 'transform:node',
-                    node: {
-                      id: ctx.id,
-                      type: ctx.label,
-                      data: ctx.data,
-                      position: ctx.position,
-                      transform: transform.label,
-                    },
-                  })
+                  if (ctx) {
+                    sendJsonMessage({
+                      action: 'transform:node',
+                      node: {
+                        id: ctx.id,
+                        type: ctx.label,
+                        data: ctx.data,
+                        position: ctx.position,
+                        transform: transform.label,
+                      },
+                    })
+                  } else {
+                    toast.error("Ctx not found!")
+                  }
                 }}
               >
                 <Icon icon={transform.icon}></Icon>
