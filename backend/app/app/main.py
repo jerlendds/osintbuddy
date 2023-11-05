@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
 from fastapi.responses import UJSONResponse
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,7 +8,7 @@ from fastapi_cache import caches, close_caches
 from fastapi_cache.backends.redis import CACHE_KEY, RedisCacheBackend
 # import sentry_sdk
 # from sentry_sdk.integrations.asyncio import AsyncioIntegration
-from app.api.api_v1.api import api_router
+from app.api.api_v1.api import api_router, node
 from app.core.config import settings, use_route_names_as_operation_ids
 from app.core.casdoor import Config as CasdoorConfig
 # if settings.SENTRY_DSN:
@@ -26,7 +26,8 @@ from app.core.casdoor import Config as CasdoorConfig
 #     rc = RedisCacheBackend(settings.REDIS_URL)
 #     caches.set(CACHE_KEY, rc)
 
-
+app_routes = APIRouter()
+app_routes.include_router(api_router)
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
@@ -34,8 +35,7 @@ app = FastAPI(
     # on_startup=[on_startup],
     # on_shutdown=[on_shutdown]
 )
-
-app.include_router(api_router, prefix=settings.API_V1_STR)
+app.include_router(app_routes)
 
 use_route_names_as_operation_ids(app)
 

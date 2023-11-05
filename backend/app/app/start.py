@@ -30,7 +30,7 @@ def print_startup_message():
         colored("Created by:", color="red"),
         colored("jerlendds\n\n\n", color="red", attrs=["bold", "underline"]),
     )
-    
+
 
 def main():
     print_startup_message()
