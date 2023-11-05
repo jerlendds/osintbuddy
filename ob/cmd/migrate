@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-. cmd/env
+. ./cmd/env
 
 migration_message="$OB_CMD_ARGS"
 

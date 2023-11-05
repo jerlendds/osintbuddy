@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-. cmd/env
+. ./cmd/env
 
 # From https://stackoverflow.com/a/44660519/702738
 compare_version() {
@@ -195,12 +195,12 @@ setup_python_env() {
     else
         cd ..
         python3 -m venv venv && \
-        . venv/bin/activate && \
+        . ./venv/bin/activate && \
         pip install --upgrade pip && \
         pip install -r backend/requirements.txt && \
         pip install backend/osintbuddy-plugins
     fi
-    info "Activate virtual environment:    . venv/bin/activate"
+    info "Activate virtual environment:    . ./venv/bin/activate"
     cd "$OB_DIR"
 }
 

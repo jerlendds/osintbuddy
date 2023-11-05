@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-. cmd/env
+. ./cmd/env
 
 run_logs() {
     heading "Loading $OB_CMD_ARGS logs"

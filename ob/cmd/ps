@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-. cmd/env
+. ./cmd/env
 
 run_ps () {
     $docker_path ps

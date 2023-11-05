@@ -9,7 +9,7 @@ export OB_DIR="$(pwd)/ob"
 
 if [ -f ./ob/cmd/env ]; then
     cd $OB_DIR
-    source cmd/env;
+    . ./cmd/env;
 else
     echo "Error! Please run the ./launcher only from the root osintbuddy directory."
     exit 1
@@ -67,61 +67,61 @@ fi
 
 case "$OB_CMD" in
     bootstrap)
-        cmd/bootstrap
+        ./cmd/bootstrap
     ;;
     start)
-        cmd/start
+        ./cmd/start
     ;;
     restart)
-        cmd/restart
+        ./cmd/restart
     ;;
     stop)
-        cmd/stop
+        ./cmd/stop
     ;;
     build)
-        cmd/build
+        ./cmd/build
     ;;
     logs)
-        cmd/logs
+        ./cmd/logs
     ;;
     api:gen)
-        cmd/api:gen
+        ./cmd/api:gen
     ;;
     kill)
-        cmd/downkill
+        ./cmd/downkill
     ;;
     ui)
-        cmd/ui_dev
+        ./cmd/ui_dev
     ;;
     debug:send)
-        cmd/debug:send
+        ./cmd/debug:send
     ;;
     cleanup)
-        cmd/stop
-        cmd/cleanup
+        ./cmd/stop
+        ./cmd/cleanup
     ;;
     exec)
-        cmd/shell
+        ./cmd/shell
     ;;
     python)
-        cmd/python
+        ./cmd/python
     ;;
     migrate)
-        cmd/migrate
+        ./cmd/migrate
     ;;
     setup:dev)
-        cmd/setup:dev
+        ./cmd/setup:dev
     ;;
     pkg:update)
-        cmd/pkg:update
+        ./cmd/pkg:update
     ;;
     ps)
-        cmd/ps
+        ./cmd/ps
     ;;
     containers)
-        usage_containers
+        ./usage_containers
     ;;
     show)
-        print_access_urls
+        ./print_access_urls
     ;;
 esac

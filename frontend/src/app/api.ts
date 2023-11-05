@@ -1,6 +1,26 @@
 import { emptyApi as api } from "./baseApi";
 const injectedRtkApi = api.injectEndpoints({
   endpoints: (build) => ({
+    refreshPlugins: build.query<
+      RefreshPluginsApiResponse,
+      RefreshPluginsApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/v1/node/refresh`,
+        params: { hid: queryArg.hid },
+      }),
+    }),
+    createGraphEntity: build.mutation<
+      CreateGraphEntityApiResponse,
+      CreateGraphEntityApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/v1/node/`,
+        method: "POST",
+        body: queryArg.createNode,
+        params: { hid: queryArg.hid },
+      }),
+    }),
     getCasdoorConfig: build.query<
       GetCasdoorConfigApiResponse,
       GetCasdoorConfigApiArg
@@ -123,26 +143,6 @@ const injectedRtkApi = api.injectEndpoints({
         method: "PUT",
       }),
     }),
-    refreshPlugins: build.query<
-      RefreshPluginsApiResponse,
-      RefreshPluginsApiArg
-    >({
-      query: (queryArg) => ({
-        url: `/api/v1/node/refresh`,
-        params: { hid: queryArg.hid },
-      }),
-    }),
-    createGraphEntity: build.mutation<
-      CreateGraphEntityApiResponse,
-      CreateGraphEntityApiArg
-    >({
-      query: (queryArg) => ({
-        url: `/api/v1/node/`,
-        method: "POST",
-        body: queryArg.createNode,
-        params: { hid: queryArg.hid },
-      }),
-    }),
     createScanMachine: build.mutation<
       CreateScanMachineApiResponse,
       CreateScanMachineApiArg
@@ -176,6 +176,17 @@ const injectedRtkApi = api.injectEndpoints({
   overrideExisting: false,
 });
 export { injectedRtkApi as api };
+export type RefreshPluginsApiResponse =
+  /** status 200 Successful Response */ any;
+export type RefreshPluginsApiArg = {
+  hid: string;
+};
+export type CreateGraphEntityApiResponse =
+  /** status 200 Successful Response */ any;
+export type CreateGraphEntityApiArg = {
+  hid: string;
+  createNode: CreateNode;
+};
 export type GetCasdoorConfigApiResponse =
   /** status 200 Successful Response */ any;
 export type GetCasdoorConfigApiArg = void;
@@ -264,17 +275,6 @@ export type UpdateEntityFavoriteIdApiResponse =
 export type UpdateEntityFavoriteIdApiArg = {
   hid: string;
 };
-export type RefreshPluginsApiResponse =
-  /** status 200 Successful Response */ any;
-export type RefreshPluginsApiArg = {
-  hid: string;
-};
-export type CreateGraphEntityApiResponse =
-  /** status 200 Successful Response */ any;
-export type CreateGraphEntityApiArg = {
-  hid: string;
-  createNode: CreateNode;
-};
 export type CreateScanMachineApiResponse =
   /** status 200 Successful Response */ any;
 export type CreateScanMachineApiArg = {
@@ -291,12 +291,6 @@ export type DeleteScanProjectApiResponse =
 export type DeleteScanProjectApiArg = {
   sid: number;
 };
-export type Status = {
-  status: string;
-};
-export type HttpError = {
-  detail: string;
-};
 export type ValidationError = {
   loc: (string | number)[];
   msg: string;
@@ -304,6 +298,20 @@ export type ValidationError = {
 };
 export type HttpValidationError = {
   detail?: ValidationError[];
+};
+export type XyPosition = {
+  x: number;
+  y: number;
+};
+export type CreateNode = {
+  label: string;
+  position: XyPosition;
+};
+export type Status = {
+  status: string;
+};
+export type HttpError = {
+  detail: string;
 };
 export type User = {
   name: string;
@@ -372,19 +380,13 @@ export type EntityBase = {
   source?: string;
   is_favorite?: boolean;
 };
-export type XyPosition = {
-  x: number;
-  y: number;
-};
-export type CreateNode = {
-  label: string;
-  position: XyPosition;
-};
 export type ScanMachineCreate = {
   name: string;
   description: string;
 };
 export const {
+  useRefreshPluginsQuery,
+  useCreateGraphEntityMutation,
   useGetCasdoorConfigQuery,
   usePostSigninMutation,
   usePostSignoutMutation,
@@ -403,8 +405,6 @@ export const {
   useUpdateEntityByIdMutation,
   useDeleteEntityMutation,
   useUpdateEntityFavoriteIdMutation,
-  useRefreshPluginsQuery,
-  useCreateGraphEntityMutation,
   useCreateScanMachineMutation,
   useGetScanMachinesQuery,
   useDeleteScanProjectMutation,

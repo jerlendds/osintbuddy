@@ -1,6 +1,6 @@
 
 #!/usr/bin/env sh
-. cmd/env
+. ./cmd/env
 
 run_cleanup() {
     heading "Stopping containers and removing volumes"

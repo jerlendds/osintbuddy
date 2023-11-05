@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 # used in ./ob/cmd/* scripts ran by ./launcher
-source cmd/_colors
+. ./cmd/_colors
 
 export docker_path=`which docker`
 export git_path=`which git`

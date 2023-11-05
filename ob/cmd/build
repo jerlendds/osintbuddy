@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-. cmd/env
+. ./cmd/env
 
 run_build() {
     if [ ! -z "$OB_CMD" ] & [ ! -z "$OB_CMD_ARGS" ]; then

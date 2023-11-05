@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-. cmd/env
+. ./cmd/env
 
 run_shell() {
     heading "Running $OB_CMD_OPT1 inside $OB_CMD_ARGS"
