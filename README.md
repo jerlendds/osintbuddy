@@ -118,7 +118,8 @@ To start using OSINTBuddy, follow these simple installation steps:
 3. Start the stack with Docker:
    ```sh
    # ./launcher               # display usage information.
-     ./launcher bootstrap     # first time? build images; setup ui and backend dependencies;
+   # ./launcher bootstrap     # first time working on osintbuddy? build images and 
+   #                            setup development environments for the frontend and backend.
      ./launcher start         # start the osintbuddy stack.
    ```
    - **Note:** the stack will take a few minutes to startup while Solr and ScyllaDB configure themselves for JanusGraph. If you try to connect before all the databases are ready you will encounter errors.

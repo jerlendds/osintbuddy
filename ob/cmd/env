@@ -12,7 +12,7 @@ export COMPOSE_ENV_FILES="$(pwd)/.env.alpha"
 export COMPOSE_FILE="$(pwd)/alpha-compose.yml"
 export OB_COMPOSE_OVERRIDE="$(pwd)/alpha-compose.override.yml"
 
-alias ob_compose="$docker_path compose -f $COMPOSE_FILE -f $OB_COMPOSE_OVERRIDE"
+alias ob_compose="$docker_path-compose -f $COMPOSE_FILE -f $OB_COMPOSE_OVERRIDE"
 
 
 # Colored logs...

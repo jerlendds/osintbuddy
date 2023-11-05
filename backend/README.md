@@ -47,9 +47,9 @@ https://www.exploit-db.com/google-hacking-database -->
       cd osintbuddy
       ```
 
-  2. Setup your `venv` and install dependencies. From the `osintbuddy` directory run:
+  2. *(optional)* Setup your `venv` and install development dependencies. From the `osintbuddy` directory run:
       ```bash
-      ./launcher bootstrap
+      ./launcher bootstrap 
       ```
 
   3. Start the stack
