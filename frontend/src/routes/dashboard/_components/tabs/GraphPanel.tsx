@@ -81,7 +81,7 @@ export default function GraphPanel({
         to="/dashboard/graph"
       />
       <Subpanel
-        label="ALL GRAPHS1"
+        label="ALL GRAPHS"
         showError={isGraphsError}
         showEntities={showAllGraphs}
         setShowEntities={() => setShowAllGraphs(!showAllGraphs)}
