@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
+
+export OB_DIR="$(pwd)/ob"
+if [ -f ./ob/cmd/env ]; then
+    cd $OB_DIR
+    . ./cmd/env
+else
+    echo "Error! Please run the ./launcher from the root osintbuddy directory only."
+    exit 1
+fi
+
 export OB_CMD=$1;
 export OB_CMD_ARGS=$2;
 export OB_CMD_OPT1=${3:-""};
 export OB_CMD_OPT2=${4:-""};
 export OB_CMD_OPT3=${5:-""};
-
-export OB_DIR="$(pwd)/ob"
-
-if [ -f ./ob/cmd/env ]; then
-    cd $OB_DIR
-    . ./cmd/env;
-else
-    echo "Error! Please run the ./launcher only from the root osintbuddy directory."
-    exit 1
-fi
 
 # localhost:45910/login/oauth/authorize?client_id=&response_type=&redirect_uri=&scope=read&state=
 usage_containers () {
@@ -63,6 +63,7 @@ usage () {
 
 if [ -z "$OB_CMD" -a "$OB_CMD" != "cleanup" ]; then
     usage
+    exit 0
 fi
 
 case "$OB_CMD" in

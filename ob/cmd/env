@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-# used in ./ob/cmd/* scripts ran by ./launcher
+# used by ./ob/cmd/* scripts ran by this ./launcher
 . ./cmd/_colors
 
 export node=`which node`
@@ -19,15 +19,13 @@ ob_compose() {
     $docker_path-compose -f $COMPOSE_FILE -f $OB_COMPOSE_OVERRIDE "$@"
 }
 
-
 # Colored logs...
 function heading() { printf "$(c B1)[OSINTBuddy: $OB_CMD] ${WHITE}${1}${reset}\n"; }
-function warning() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${magenta}${1}${reset}\n"; }
+function warning() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${YELLOW}${1}${reset}\n"; }
 function error() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${red}${1}${reset}\n"; }
 function success() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${green}${1:-Completed successfully!}${reset}\n"; }
 function info() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${CYAN}${1:-''}${reset}\n"; }
 function abort() { printf "${BLUE}[OSINTBuddy: $OB_CMD] ${RED}${1:-Aborting!}${reset}\n\n"; exit 1; }
-
 
 function print_access_urls() {
     info "Once ready you can access OSINTBuddy through the following URLs:"
