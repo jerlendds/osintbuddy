@@ -132,7 +132,7 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
   const dataGrid = {
     x: 0.1,
     y: 0,
-    w: 14,
+    w: 15,
     h: 16,
     maxH: 16,
     minH: 1,
@@ -171,22 +171,23 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
             <div className='flex items-center'>
               <Link title='View all projects' to='/projects' replace>
                 <span className='text-slate-500 font-display'>
-                  All Projects <span className='font-medium font-display'>/&nbsp;</span>
+                  Graphs <span className='font-medium font-display'>/&nbsp;</span>
                 </span>
               </Link>
             </div>
           </li>
           <li className='flex mr-auto'>
-            <div className='flex justify-between items-center w-full text-slate-400 '>
+            <h5
+              title={activeProject.name}
+              className='flex justify-between items-center w-full text-slate-400 '>
               <span
                 className='text-slate-500 text-inherit whitespace-nowrap font-display'
-                title={activeProject.name}
                 aria-current={activeProject.description}
               >
-                {activeProject.name}
+                {activeProject.name.length > 1 ? `${activeProject.name.slice(0, 16)}...` : activeProject.name}
                 <span className='font-medium font-display '>&nbsp;/</span>
               </span>
-            </div>
+            </h5>
           </li>
           <li className='flex'>
             <div className='flex justify-between items-center w-full text-slate-400 '>
