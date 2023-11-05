@@ -207,7 +207,7 @@ async def update_node(node, action_type, send_json, uuid: UUID):
 
 
 async def remove_nodes(node, action_type, send_json, uuid: UUID):
-    async with ProjectGraphConnection(uuid.hex) as graph:
+    async with ProjectGraphConnection(uuid) as graph:
         if targetNode := node.get('id'):
             await graph.V(targetNode).drop().next()
     await send_json({"action": "remove:node", "node": node})
