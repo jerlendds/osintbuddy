@@ -201,6 +201,7 @@ setup_python_env() {
         warning "Existing venv detected! Skipping python venv setup..."
     else
         cd ..
+        git submodule update && \
         $python3 -m venv venv && \
         . ./venv/bin/activate && \
         python3 -m pip install --upgrade pip && \
