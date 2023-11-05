@@ -3,8 +3,10 @@ import {
   LockOpenIcon,
 } from '@heroicons/react/24/outline';
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import classNames from 'classnames';
 import { Link } from 'react-router-dom';
+import 'react-grid-layout/css/styles.css';
+import RGL, { Responsive, WidthProvider } from 'react-grid-layout';
+import { useGetEntitiesQuery } from '@/app/api';
 
 type UseResizeProps = {
   minWidth: number;
@@ -100,13 +102,7 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
   );
 }
 
-import 'react-grid-layout/css/styles.css';
-import RGL, { Responsive, WidthProvider } from 'react-grid-layout';
-import { Entity, useGetEntitiesQuery } from '@/app/api';
-
 const ResponsiveGridLayout = WidthProvider(Responsive);
-
-const ReactGridLayout = WidthProvider(RGL);
 
 export default function EntityOptions({ options, activeProject }: JSONObject) {
 
