@@ -7,12 +7,6 @@ export python3=`which python`
 export docker_path=`which docker`
 export git_path=`which git`
 
-echo "USING NODE: $node"
-echo "USING PYTHON: $python3"
-echo "USING GIT: $git_path"
-echo "USING DOCKER: $docker_path"
-
-echo "USING OB_COMPOSE: $docker_path-compose -f $COMPOSE_FILE -f $OB_COMPOSE_OVERRIDE $@"
 
 # https://docs.docker.com/compose/environment-variables/envvars/
 # export COMPOSE_PROJECT_NAME="ob_alpha"

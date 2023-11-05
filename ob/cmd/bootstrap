@@ -1,44 +1,5 @@
 #!/usr/bin/bash
-echo "BOOTSTRAP BEFORE SOURCE"
-
-echo "USING NODE: $node"
-echo "USING PYTHON: $python3"
-echo "USING GIT: $git_path"
-echo "USING DOCKER: $docker_path"
-
-which --all node
-which --all $node
-
-which --all $python3
-which --all python3
-hash
-
-echo "USING OB_COMPOSE: $docker_path-compose -f $COMPOSE_FILE -f $OB_COMPOSE_OVERRIDE $@"
-
-
 . ./cmd/env
-
-echo "ENTERING BOOTSTRAP"
-
-echo "USING NODE: $node"
-echo "USING PYTHON: $python3"
-echo "USING GIT: $git_path"
-echo "USING DOCKER: $docker_path"
-which --all python
-
-
-which --all $node
-hash
-
-which --all $python3
-
-
-which --all node
-hash
-
-which --all python3
-echo "USING OB_COMPOSE: $docker_path-compose -f $COMPOSE_FILE -f $OB_COMPOSE_OVERRIDE $@"
-
 
 # From https://stackoverflow.com/a/44660519/702738
 compare_version() {
@@ -160,15 +121,13 @@ check_prereqs() {
     fi
     
     
-    echo "USING NODE: $node"
-    hash
     # 3. has node and running recommended node version
     if [ -z "$(which $node)" ]; then
         warning "Node environment not detected! We recommend installing Node 18.18.2 for this project."
         warning "Some ./launcher commands may not work without a node environment."
-        heading "Attempting to start the OSINTBuddy stack without Node."
+        heading "Attempting to continue without Node..."
     fi
-    hash
+
     test=($($node --version))
     test=${test[0]//v/}  # Get version alone and strip the prefixed v
     
