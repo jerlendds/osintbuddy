@@ -2,6 +2,8 @@
 # used in ./ob/cmd/* scripts ran by ./launcher
 . ./cmd/_colors
 
+export node=`which node`
+export python3=`which python`
 export docker_path=`which docker`
 export git_path=`which git`
 
