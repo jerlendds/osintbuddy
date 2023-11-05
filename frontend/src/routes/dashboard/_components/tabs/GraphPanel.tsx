@@ -1,9 +1,5 @@
 import { AllGraphsList, useUpdateGraphFavoriteIdMutation } from '@/app/api';
-import { formatPGDate } from "@/app/utilities";
-import { ChevronDownIcon, StarIcon } from "@heroicons/react/24/outline";
-import classNames from "classnames";
 import { useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
 import styles from "./subpanel.module.css"

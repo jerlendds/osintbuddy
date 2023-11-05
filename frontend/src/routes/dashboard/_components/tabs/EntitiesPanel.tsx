@@ -1,5 +1,4 @@
-import { Entity, useGetEntitiesQuery, useUpdateEntityFavoriteIdMutation } from "@/app/api";
-import { formatPGDate } from "@/app/utilities";
+import { useUpdateEntityFavoriteIdMutation } from "@/app/api";
 import { useMemo, useState } from "react";
 import styles from "./subpanel.module.css"
 import Subpanel from "./Subpanel";

@@ -8,7 +8,6 @@ import InputField from '@/components/inputs/InputField';
 import OverlayModal, { OverlayModalProps } from '@/components/modals/OverlayModal';
 import styles from "./form.module.css"
 import InputTextarea from '@/components/inputs/InputTextArea';
-import classNames from 'classnames';
 
 type EntityFormData = {
   name: string
