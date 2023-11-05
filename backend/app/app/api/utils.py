@@ -44,6 +44,5 @@ class HidChecker:
         self.ns :int = namespace
 
     def __call__(self, hid: str) -> int:
-        print('HID CHECKER', hid,  sqids.decode(hid))
         decoded: list[int] = sqids.decode(hid)
         return decoded[1]

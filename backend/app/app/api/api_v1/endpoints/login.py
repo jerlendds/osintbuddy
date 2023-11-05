@@ -37,7 +37,6 @@ async def post_signin(
     except Exception as e:
         log.error("Error in login.post_signin:")
         log.error(e)
-        print(e)
         return HTTPException(
             status_code=401,
             detail="Unauthorized."

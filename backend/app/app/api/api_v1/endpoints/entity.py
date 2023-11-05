@@ -27,7 +27,6 @@ async def get_entity_transforms(
     user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     label: str
 ):
-    print('How the fuck is it a badly formed UUID? ITS NOT HERE', label)
     try:
         if transforms := await fetch_node_transforms(label):
             return {
