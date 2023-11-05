@@ -35,3 +35,11 @@ echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
 echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(pyenv init -)"' >> ~/.bashrc
 ```
+
+After setting up the above you should reboot/open a new terminal/source your new environment for these changes to take effect. Once you do that the `pyenv` command will be available.
+
+```bash
+# install and use python 3.11.4
+pyenv install 3.11.4
+pyenv global 3.11.4
+```
