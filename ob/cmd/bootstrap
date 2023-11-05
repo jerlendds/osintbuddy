@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 . ./cmd/env
 
+echo "START BOOTSTRAP"
+
 # From https://stackoverflow.com/a/44660519/702738
 compare_version() {
     if [[ $1 == $2 ]]; then
