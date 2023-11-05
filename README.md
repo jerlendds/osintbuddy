@@ -163,7 +163,13 @@ for a list of requested features (and known issues).
  - [] Rework plugin system to its own service
  - [] Add playwright and start reworking existing selenium based plugins  
 
-For this update I recommend running bootstrap first, this sets up the new environment for containers: `./launcher bootstrap && ./launcher start`! After a 10m (up to 60m depending on internet speed) wait you'll be rewarded with a new UX, an updated plugin system now running as its own service, Casdoor managed auth for signing in/up, a new CLI tool, `ob`, for managing plugin development and the plugin server, and another CLI `./launcher` for managing the OSINTBuddy stack.
+If you're a developer I recommend running bootstrap first, this sets up the new environment for containers: `./launcher bootstrap` afterwards start the stack with `./launcher start`! After a 10m up to an hour depending on network speeds you'll be rewarded with:
+
+- a new UX
+- an updated plugin system now running as its own service
+- Casdoor managed auth for signing in/up, where the default user and password is `osintbuddy`
+- a new CLI tool, `ob`, for managing plugin development and the plugin server
+- and another CLI `./launcher` for managing the OSINTBuddy stack
 
 
 ## [↑](#introducing-osintbuddy)Contributing
