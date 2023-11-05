@@ -5,3 +5,18 @@
 .btn-primary svg {
   @apply ml-5 w-5 h-5
 }
+
+.btn-danger {
+  @apply relative inline-flex items-center rounded-md ring-danger-600 ring-1 focus:ring-1 focus:ring-inset hover:ring-2 px-5 py-2 text-sm font-medium text-slate-400 hover:text-slate-200 hover:border-danger-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-400 mr-4
+}
+
+.btn-form {
+  @apply flex px-2 py-2 hover:ring-2 focus:ring-1 focus:ring-inset outline-none items-center text-slate-400 hover:text-slate-200 rounded-md ring-1
+}
+.btn-form svg {
+  @apply w-5 h-5 text-white
+}
+
+.btn-form span {
+  @apply mx-2
+}

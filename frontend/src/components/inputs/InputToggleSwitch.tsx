@@ -35,9 +35,12 @@ export interface InputToggleSwitchProps {
   name: string
   control: Control<any, any>;
   defaultValue?: boolean;
+  className?: string
+  label?: string
+  description?: string
 }
 
-export default function InputToggleSwitch({ control, name, defaultValue }: InputToggleSwitchProps) {
+export default function InputToggleSwitch({ control, name, defaultValue, className, label, description }: InputToggleSwitchProps) {
   const { field } = useController({
     defaultValue: defaultValue ?? false,
     control,
@@ -45,16 +48,20 @@ export default function InputToggleSwitch({ control, name, defaultValue }: Input
   })
 
   return (
-    <Switch.Group as='div' className='px-4 pb-5 sm:px-6 sm:col-span-2'>
+    <Switch.Group as='div' className={'px-4 pb-5 sm:px-6 sm:col-span-2 ' + className ?? ''}>
       <Switch.Label as='h3' className='mx-4 text-base font-semibold leading-6 text-slate-200' passive>
-        Enable Guide
+        {label ?? ""}
       </Switch.Label>
       <div className='mt-2 mx-4 sm:flex sm:items-start sm:justify-between'>
-        <div className='max-w-xl text-sm text-slate-400'>
-          <Switch.Description>
-            Get a step-by-step tour on how to perform OSINTBuddy investigations
-          </Switch.Description>
-        </div>
+
+        {description && (
+          <div className='max-w-xl text-sm text-slate-400'>
+            <Switch.Description>
+              {description}
+            </Switch.Description>
+          </div>
+        )}
+
         <div className='mt-5 sm:ml-6 sm:-mt-2 sm:flex sm:flex-shrink-0 sm:items-center'>
           <SwitchButton {...field} />
         </div>

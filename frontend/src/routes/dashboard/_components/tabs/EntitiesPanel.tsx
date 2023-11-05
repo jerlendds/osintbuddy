@@ -5,19 +5,17 @@ import styles from "./subpanel.module.css"
 import Subpanel from "./Subpanel";
 
 
-export default function EntitiesPanel() {
+export default function EntitiesPanel({
+  entitiesData,
+  isLoading,
+  isError,
+  isSuccess,
+  refreshAllEntities,
+}: JSONObject) {
   const [showFavoriteEntities, setShowFavoriteEntities] = useState<boolean>(true);
   const [showEntities, setShowEntities] = useState(true);
 
-  const {
-    data: entitiesData = { entities: [], count: 0, favorite_entities: [], favorite_count: 0 },
-    isLoading,
-    isError,
-    isSuccess,
-    refetch: refreshAllEntities
-  } = useGetEntitiesQuery({ skip: 0, limit: 50 })
 
-  console.log(isLoading, isError)
 
   const entities = useMemo(() => {
     const sortedEntities = entitiesData.entities.slice()

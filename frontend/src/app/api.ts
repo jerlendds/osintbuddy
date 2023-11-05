@@ -121,7 +121,6 @@ const injectedRtkApi = api.injectEndpoints({
       query: (queryArg) => ({
         url: `/api/v1/entity/${queryArg.hid}/favorite`,
         method: "PUT",
-        params: { is_favorite: queryArg.isFavorite },
       }),
     }),
     refreshPlugins: build.query<
@@ -264,7 +263,6 @@ export type UpdateEntityFavoriteIdApiResponse =
   /** status 200 Successful Response */ any;
 export type UpdateEntityFavoriteIdApiArg = {
   hid: string;
-  isFavorite?: boolean;
 };
 export type RefreshPluginsApiResponse =
   /** status 200 Successful Response */ any;

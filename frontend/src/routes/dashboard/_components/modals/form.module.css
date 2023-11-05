@@ -1,0 +1,26 @@
+.modal-form {
+  @apply bg-dark-600 w-full  shadow sm:rounded-lg
+}
+
+.modal-form section:first-child {
+  @apply border-b border-dark-300 mx-4 py-5 sm:px-6;
+}
+
+.modal-form section:first-child > div {
+  @apply -ml-6 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap
+}
+
+
+.modal-form section:first-child > div h1 {
+  @apply font-display text-2xl tracking-tight text-slate-200 dark:text-white
+}
+
+
+.modal-form section:last-child {
+  @apply flex justify-end items-center px-8 pb-6 w-full relative;
+}
+
+.modal-form section:last-child > div {
+  @apply mt-2 flex-shrink-0 flex items-center 
+}
+

@@ -5,13 +5,13 @@ import { Tab } from "@headlessui/react";
 import GraphPanel from "./_components/tabs/GraphPanel";
 import EntitiesPanel from "./_components/tabs/EntitiesPanel";
 import MarketPanel from './_components/tabs/MarketPanel';
-import CreateEntityModal from "./_components/modals/CreateEntityModal";
 import CreateGraphModal from "./_components/modals/CreateGraphModal";
 import styles from "./dashboard.module.css"
-import { AllGraphsList, useGetGraphStatsQuery, useGetGraphsQuery } from "@/app/api";
+import { AllGraphsList, useGetEntitiesQuery, useGetGraphStatsQuery, useGetGraphsQuery } from "@/app/api";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
 import { GetGraphStatsApiResponse } from '../../app/api';
+import CreateEntityModal from "./_components/modals/CreateEntityModal";
 
 export interface ScrollGraphs {
   skip?: number | undefined
@@ -59,6 +59,13 @@ export default function DashboardPage() {
   const refreshAllGraphs = () => {
     refetchGraphs()
   }
+  const {
+    data: entitiesData = { entities: [], count: 0, favorite_entities: [], favorite_count: 0 },
+    isLoading,
+    isError,
+    isSuccess,
+    refetch: refreshAllEntities
+  } = useGetEntitiesQuery({ skip: 0, limit: 50 })
 
   const scrollGraphs = ({ skip, limit, favoriteSkip, favoriteLimit }: ScrollGraphs) => {
     if (skip !== undefined && limit !== undefined) setGraphsQuery({ skip, limit })
@@ -126,7 +133,13 @@ export default function DashboardPage() {
                 />
               </Tab.Panel>
               <Tab.Panel className={styles["tab-panel"]}>
-                <EntitiesPanel />
+                <EntitiesPanel
+                  entitiesData={entitiesData}
+                  isLoading={isLoading}
+                  isError={isError}
+                  isSuccess={isSuccess}
+                  refreshAllEntities={refreshAllEntities}
+                />
               </Tab.Panel>
               <Tab.Panel className={styles["tab-panel"]}>
                 <MarketPanel />
@@ -137,7 +150,7 @@ export default function DashboardPage() {
             <button
               onClick={() => {
                 if (tabIndex === 0) setShowCreateGraphModal(true)
-                if (tabIndex === 1) { } // TODO
+                if (tabIndex === 1) setShowCreateEntityModal(true) // TODO
               }}
               className='btn-primary'
             >
@@ -162,6 +175,7 @@ export default function DashboardPage() {
         refreshAllGraphs={async () => await refreshAllGraphs()}
       />
       <CreateEntityModal
+        refreshAllEntities={refreshAllEntities}
         cancelCreateRef={cancelCreateEntityRef}
         isOpen={showCreateEntityModal}
         closeModal={() => setShowCreateEntityModal(false)}

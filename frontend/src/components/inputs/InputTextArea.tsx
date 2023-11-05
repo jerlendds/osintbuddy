@@ -1,8 +1,8 @@
-export default function InputTextarea({ register, name }: InputProps) {
+export default function InputTextarea({ register, name, label, className }: InputProps) {
   return (
-    <div className='sm:col-span-2'>
+    <div className={'sm:col-span-2 ' + className ?? ''}>
       <label htmlFor={name} className='block font-semibold leading-6 mt-4 text-slate-200 pl-8'>
-        Description
+        {label}
       </label>
       <div className='mt-2.5 px-8'>
         <textarea

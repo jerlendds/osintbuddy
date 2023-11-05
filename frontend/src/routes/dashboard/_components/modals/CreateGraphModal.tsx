@@ -11,6 +11,7 @@ import InputTextarea from '@/components/inputs/InputTextArea';
 import InputToggleSwitch from '@/components/inputs/InputToggleSwitch';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import styles from "./form.module.css"
 
 type GraphFormData = {
   name: string
@@ -65,38 +66,36 @@ export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmitHandler)} className='bg-dark-600 w-full  shadow sm:rounded-lg'>
-      <div className='border-b border-dark-300 mx-4 py-5 sm:px-6'>
-        <div className='-ml-6 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap'>
-          <div className='ml-4 mt-2'>
-            <h1 className='font-display text-2xl tracking-tight text-slate-200 dark:text-white'>New Graph</h1>
-          </div>
+    <form onSubmit={handleSubmit(onSubmitHandler)} className={styles["modal-form"]}>
+      <section>
+        <div>
+          <h1>New Graph</h1>
         </div>
-      </div>
+      </section>
 
-      <InputField register={register} name="name" />
-      <InputTextarea register={register} name="description" />
-      <InputToggleSwitch control={control} name={"showTour"} />
+      <InputField register={register} name="name" label="Name" />
+      <InputTextarea register={register} name="description" label="Description" />
+      <InputToggleSwitch label="Enable Guide" className="mt-4" control={control} name={"showTour"} description="Get a step-by-step tour on how to perform OSINTBuddy investigations" />
 
-      <div className='flex justify-end items-center px-8 pb-6 w-full relative'>
-        <div className='mt-2 flex-shrink-0 flex items-center'>
+      <section>
+        <div>
           <button
             onClick={() => closeModal()}
             type='button'
-            className='relative inline-flex items-center rounded-md border-danger-600 border px-5 py-2.5 text-sm font-medium text-slate-400 hover:text-slate-200 hover:border-danger-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-400 mr-4'
+            className="btn-danger"
           >
-            Cancel
+            <span>Cancel</span>
           </button>
           <button
             type='submit'
             disabled={isSubmitting}
-            className='flex px-2 py-2 hover:ring-2 focus:ring-1 focus:ring-inset outline-none items-center text-slate-400 hover:text-slate-200 rounded-md ring-1 '
+            className='btn-form '
           >
-            <span className='mx-2'>Create graph</span>
-            <PlusIcon className='w-5 h-5 text-white' />
+            <span>Create graph</span>
+            <PlusIcon />
           </button>
         </div>
-      </div>
+      </section>
     </form>
   );
 }

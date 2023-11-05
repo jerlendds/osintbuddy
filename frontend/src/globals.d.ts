@@ -13,6 +13,8 @@ interface FetchProps {
 interface InputProps {
   register: UseFormRegister<any>
   name: string
+  label?: string
+  className?: string
 }
 
 interface NodeData {
