@@ -31,6 +31,12 @@ which --all $node
 hash
 
 which --all $python3
+
+
+which --all node
+hash
+
+which --all python3
 echo "USING OB_COMPOSE: $docker_path-compose -f $COMPOSE_FILE -f $OB_COMPOSE_OVERRIDE $@"
 
 
