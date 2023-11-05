@@ -6,11 +6,11 @@ echo "USING PYTHON: $python3"
 echo "USING GIT: $git_path"
 echo "USING DOCKER: $docker_path"
 
-echo "which --all node"
-echo "which --all $node"
+which --all node
+which --all $node
 
-echo "which --all $python3"
-echo "which --all python3"
+which --all $python3
+which --all python3
 hash
 
 echo "USING OB_COMPOSE: $docker_path-compose -f $COMPOSE_FILE -f $OB_COMPOSE_OVERRIDE $@"
@@ -25,10 +25,12 @@ echo "USING PYTHON: $python3"
 echo "USING GIT: $git_path"
 echo "USING DOCKER: $docker_path"
 hash
+which --all python
 
-echo "which --all $node"
 
-echo "which --all $python3"
+which --all $node
+
+which --all $python3
 echo "USING OB_COMPOSE: $docker_path-compose -f $COMPOSE_FILE -f $OB_COMPOSE_OVERRIDE $@"
 
 
