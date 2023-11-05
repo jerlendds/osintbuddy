@@ -73,7 +73,7 @@ export default function DashboardPage() {
             <MagnifyingGlassIcon />
             <input
               type="text"
-              placeholder={`Search ${tabIndex === 0 ? 'graph' : tabIndex === 1 ? 'entity' : 'marketplace'}...`}
+              placeholder={`Search ${tabIndex === 0 ? 'graphs' : tabIndex === 1 ? 'entities' : 'marketplace'}...`}
             />
           </div>
           <Tab.Group

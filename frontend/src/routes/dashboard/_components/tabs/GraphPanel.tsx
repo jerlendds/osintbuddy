@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
 import styles from "./subpanel.module.css"
-import Subpanel from '../Subpanel';
+import Subpanel from './Subpanel';
 
 
 export function GraphLoaderCard() {

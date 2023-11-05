@@ -1,12 +1,8 @@
 import { Entity, useGetEntitiesQuery, useUpdateEntityFavoriteIdMutation } from "@/app/api";
 import { formatPGDate } from "@/app/utilities";
-import { ChevronDownIcon, StarIcon } from "@heroicons/react/24/outline";
-import classNames from "classnames";
 import { useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
 import styles from "./subpanel.module.css"
-import Subpanel from "../Subpanel";
-
+import Subpanel from "./Subpanel";
 
 
 export default function EntitiesPanel() {

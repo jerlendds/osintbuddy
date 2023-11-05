@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom"
-import styles from "./tabs/subpanel.module.css"
-import { ChevronDownIcon, StarIcon } from "@heroicons/react/20/solid"
+import styles from "./subpanel.module.css"
+import { ChevronDownIcon } from "@heroicons/react/20/solid"
+import { StarIcon } from "@heroicons/react/24/outline";
 import { formatPGDate } from "@/app/utilities"
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query"
 import { SerializedError } from "@reduxjs/toolkit"

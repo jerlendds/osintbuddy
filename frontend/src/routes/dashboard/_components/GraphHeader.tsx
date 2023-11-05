@@ -54,8 +54,8 @@ export default function GraphHeader({ graph, stats, refreshAllGraphs }: GraphHea
               </Link>
             </div>
           </section>
-          <hr className="mb-3 border-dark-400" />
-          <section className="flex flex-col px-4 py-1 lg:px-6 md:px-4 gap-x-5 lg:flex-row md:flex-row gap-y-4">
+          <hr className="mb-1 border-dark-400" />
+          <section className="mb-1 flex flex-col px-4 py-1 lg:px-6 md:px-4 gap-x-5 lg:flex-row md:flex-row gap-y-4">
             {graph && stats && (
               <>
                 <div className="flex items-center ml-[4px] gap-x-2">

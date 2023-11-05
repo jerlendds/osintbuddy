@@ -1,5 +1,5 @@
 .subpanel-wrapper {
-  @apply mt-5 px-2 flex-col justify-between h-full
+  @apply mt-5 pl-2 flex-col justify-between h-full
 }
 
 .subpanel {
@@ -43,7 +43,7 @@
 }
 
 svg.link-icon {
-  @apply bg-slate-900 ml-auto rounded-md p-1 h-7 w-7 transition-colors duration-150 hover:text-info-200/80
+  @apply bg-slate-900 ml-auto rounded-md p-1 h-8 w-8 transition-colors duration-150 hover:text-info-200/80
 }
 svg.link-icon-true {
   @apply !text-info-200;
