@@ -32,14 +32,12 @@ const keyMap = {
   TOGGLE_PALETTE: ['shift+p'],
 };
 
-const WS_GRAPH_INQUIRE = `ws://${WS_URL}/nodes/graph/`
+const WS_GRAPH_INQUIRE = `ws://${WS_URL}/node/graph`
 
 export default function OsintPage() {
   const dispatch = useAppDispatch();
   const { hid } = useParams()
-  console.log(hid)
   const { data: activeGraph, isSuccess, isLoading, isError } = useGetGraphQuery({ hid })
-  console.log('activeGraph', activeGraph)
   const initialNodes = useAppSelector((state) => graphNodes(state));
   const initialEdges = useAppSelector((state) => graphEdges(state));
   const graphRef = useRef<HTMLDivElement>(null);
@@ -52,15 +50,20 @@ export default function OsintPage() {
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
 
   const [messageHistory, setMessageHistory] = useState([]);
-  const [socketUrl, setSocketUrl] = useState(null);
+  const [socketUrl, setSocketUrl] = useState(`${WS_GRAPH_INQUIRE}`);
   const viewMode = useAppSelector((state) => selectViewMode(state));
+  const [shouldConnect, setShouldConnect] = useState(false)
 
   useEffect(() => {
-    if (activeGraph) setSocketUrl(`${WS_GRAPH_INQUIRE}${activeGraph.id}`)
-  }, [activeGraph])
+    if (activeGraph && !socketUrl.includes(activeGraph?.id)) {
+      setSocketUrl(`${WS_GRAPH_INQUIRE}/${activeGraph.id}`)
+      setShouldConnect(true)
+    }
+  }, [activeGraph?.id])
 
   const { lastMessage, lastJsonMessage, readyState, sendJsonMessage } = useWebSocket(socketUrl, {
-    shouldReconnect: () => true,
+    shouldReconnect: () => shouldConnect,
+    connect: () => shouldConnect
   });
 
   useEffectOnce(() => {
@@ -144,6 +147,7 @@ export default function OsintPage() {
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState];
 
+
   const createNodeUpdate = (node: JSONObject, data) => {
     let updatedNode = { ...node };
     updatedNode.elements = node.data.elements.map((elm) => {
@@ -208,12 +212,12 @@ export default function OsintPage() {
   const [transformLabel, setTransformLabel] = useState<string | null>(null)
   // @todo implement support for multi-select transforms -
   // hm, actually, how will the transforms work if different plugin types/nodes are in the selection?
+  // just delete?
   const onMultiSelectionCtxMenu = (event: MouseEvent, nodes: Node[]) => {
     event.preventDefault();
   };
 
   const { data, isLoading: isLoadingTransforms, isError: isTransformsError, isSuccess: isTransformsSuccess } = useGetEntityTransformsQuery({ label: transformLabel }, { skip: transformLabel === null })
-  console.log(data, isLoadingTransforms, isTransformsError, isTransformsSuccess)
 
   const onSelectionCtxMenu = (event: MouseEvent, node: Node) => {
     event.preventDefault();
@@ -223,15 +227,6 @@ export default function OsintPage() {
     });
     setCtxSelection(node);
     setTransformLabel(node.data.label)
-    // sdk.nodes.getEntityTransforms(node.data.label)
-    //   .then((data) => {
-    //     console.log('entityTransforms', data)
-    //     setTransforms(data.transforms);
-    //   })
-    //   .catch((error) => {
-    //     toast.warn(`We found no transforms while trying to load the plugin ${node.data.label}.`);
-    //     setTransforms([]);
-    //   });
     setShowMenu(true);
   };
 
@@ -245,7 +240,7 @@ export default function OsintPage() {
       y: event.clientY - 25,
     });
   };
-  
+
 
   const onPaneClick = () => {
     setShowMenu(false);
