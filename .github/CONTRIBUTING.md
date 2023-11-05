@@ -13,7 +13,7 @@ We're using **`Node` v18.18.2** on the frontend. I personally use [nvm](https://
 ```bash
 # install and setup nvm
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-source ~./bashrc
+source ~/.bashrc
 
 # installing and enabling Node 18.18.2
 nvm install 18
