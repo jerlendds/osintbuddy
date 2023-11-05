@@ -47,7 +47,7 @@ export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
       const replace = { replace: true }
       if (showTour) {
         setIsOpen(true)
-        navigate(`/dashboard/graph/inquiry/${newGraph.id}`, replace)
+        navigate(`/graph/inquiry/${newGraph.id}`, replace)
       } else {
         navigate(`/dashboard/graph/${newGraph.id}`, replace)
       }
