@@ -1,7 +1,25 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
+echo "BOOTSTRAP BEFORE SOURCE"
+
+echo "USING NODE: $node"
+echo "USING PYTHON: $python3"
+echo "USING GIT: $git_path"
+echo "USING DOCKER: $docker_path"
+
+echo "USING OB_COMPOSE: $docker_path-compose -f $COMPOSE_FILE -f $OB_COMPOSE_OVERRIDE $@"
+
+
 . ./cmd/env
 
-echo "START BOOTSTRAP"
+echo "ENTERING BOOTSTRAP"
+
+echo "USING NODE: $node"
+echo "USING PYTHON: $python3"
+echo "USING GIT: $git_path"
+echo "USING DOCKER: $docker_path"
+
+echo "USING OB_COMPOSE: $docker_path-compose -f $COMPOSE_FILE -f $OB_COMPOSE_OVERRIDE $@"
+
 
 # From https://stackoverflow.com/a/44660519/702738
 compare_version() {
@@ -122,14 +140,16 @@ check_prereqs() {
         exit 1
     fi
     
+    
+    echo "USING NODE: $node"
     # 3. has node and running recommended node version
-    if [ -z "$(which node)" ]; then
+    if [ -z "$(which $node)" ]; then
         warning "Node environment not detected! We recommend installing Node 18.18.2 for this project."
         warning "Some ./launcher commands may not work without a node environment."
         heading "Attempting to start the OSINTBuddy stack without Node."
     fi
     
-    test=($(node --version))
+    test=($($node --version))
     test=${test[0]//v/}  # Get version alone and strip the prefixed v
     
     
@@ -144,7 +164,7 @@ check_prereqs() {
     fi
     
     # 4. running recommended Python version
-    test=($(python3 --version))
+    test=($($python3 --version))
     test=${test[1]///}  # Get version alone and strip the prefixed v
     
     if compare_version "${python_min_version}" "${test}"; then
@@ -202,11 +222,11 @@ setup_python_env() {
         warning "Existing venv detected! Skipping python venv setup..."
     else
         cd ..
-        python3 -m venv venv && \
+        $python3 -m venv venv && \
         . ./venv/bin/activate && \
-        pip install --upgrade pip && \
-        pip install -r backend/requirements.txt && \
-        pip install backend/osintbuddy-plugins
+        $python3 -m pip install --upgrade pip && \
+        $python3 -m pip install -r backend/requirements.txt && \
+        $python3 -m pip install backend/osintbuddy-plugins
     fi
     info "Activate virtual environment:    . ./venv/bin/activate"
     cd "$OB_DIR"
