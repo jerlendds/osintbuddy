@@ -38,7 +38,7 @@
 
   ![ob-new-ui-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/d3aba90a-9f63-4e4a-b501-bd247c87dd16)
 
-  ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum](https://forum.osintbuddy.com)** or on the **[discord](https://discord.gg/gsbbYHA3K3)** ⚠️
+  ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum](https://forum.osintbuddy.com)** or on the **[OSINTBuddy discord](https://discord.gg/gsbbYHA3K3)** ⚠️
 
   ---
 </p>
