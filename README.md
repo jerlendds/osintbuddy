@@ -110,7 +110,7 @@ To start using OSINTBuddy, follow these simple installation steps:
    cd osintbuddy
    ```
 
-2. Install Docker
+2. Install Docker & Compose
     - [Install Guide for Mac](https://docs.docker.com/desktop/install/mac-install/)
     - [Install Guide for Windows](https://docs.docker.com/desktop/install/windows-install/)
     - [Install Guide for Linux](https://docs.docker.com/desktop/install/linux-install/)

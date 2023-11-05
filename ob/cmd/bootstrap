@@ -120,13 +120,20 @@ check_prereqs() {
         exit 1
     fi
     
-    # 3. running recommended node version
+    # 3. has node and running recommended node version
+    if [ -z "$(which node)" ]; then
+        warning "Node environment not detected! We recommend installing Node 18.18.2 for this project."
+        warning "Some ./launcher commands may not work without a node environment."
+        heading "Attempting to start the OSINTBuddy stack without Node."
+    fi
+    
     test=($(node --version))
     test=${test[0]//v/}  # Get version alone and strip the prefixed v
     
+    
+    
     if compare_version "${node_min_version}" "${test}"; then
-        echo "ERROR: Node version ${test} not supported, please upgrade to at least ${node_min_version}, or recommended ${node_rec_version}"
-        exit 1
+        echo "WARNING: Node version ${test} not supported, please upgrade to at least ${node_min_version}, or recommended ${node_rec_version}"
     fi
     
     # Recommend best Node version
@@ -135,12 +142,11 @@ check_prereqs() {
     fi
     
     # 4. running recommended Python version
-    test=($(python --version))
+    test=($(python3 --version))
     test=${test[1]///}  # Get version alone and strip the prefixed v
     
     if compare_version "${python_min_version}" "${test}"; then
-        echo "ERROR: Python version ${test} not supported, please upgrade to at least ${python_min_version}, or recommended ${python_rec_version}"
-        exit 1
+        warning "WARNING: Python version ${test} not supported, please upgrade to at least ${python_min_version}, or recommended ${python_rec_version}"
     fi
     
     # Recommend best Python version
