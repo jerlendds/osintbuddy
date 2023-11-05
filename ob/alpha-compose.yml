@@ -24,7 +24,7 @@ services:
     environment:
       PYTHONDONTWRITEBYTECODE: 1
     ports:
-      - "${BACKEND_PORT-8000}:80"
+      - "${BACKEND_PORT-48997}:80"
 
   casdoor:
     image: casbin/casdoor:latest
