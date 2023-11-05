@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 # used in ./ob/cmd/* scripts ran by ./launcher
 . ./cmd/_colors
 

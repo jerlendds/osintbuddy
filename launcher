@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 export OB_CMD=$1;
 export OB_CMD_ARGS=$2;
 export OB_CMD_OPT1=${3:-""};
