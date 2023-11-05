@@ -70,20 +70,21 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
           <div className='flex flex-col w-full select-none'>
             <div className='flex items-start justify-between gap-x-3 w-full relative'>
               <p className='text-sm font-semibold leading-6 text-slate-300 whitespace-nowrap'>{entity.label}</p>
-              <p
+              {/* TODO: Find something useful to put here... */}
+              {/* <p
                 className={classNames(
                   statuses[entity.status],
                   'rounded-[0.25rem] right-0 relative whitespace-nowrap text-slate-300 px-1.5 py-0.5 text-xs font-medium ring-1 ring-info-300 ring-inset'
                 )}
               >
                 {entity.status}Installed
-              </p>
+              </p> */}
             </div>
             <div className='mt-1 flex flex-wrap items-center gap-x-2 text-xs leading-5 text-slate-500'>
               <p className='truncate whitespace-normal leading-5 text-slate-500'>
                 {' '}
-                {entity.description && entity.description.length > 62 ?
-                  `${entity.description.slice(0, 62)}...` : entity.description}
+                {entity.description && entity.description.length > 78 ?
+                  `${entity.description.slice(0, 78)}...` : entity.description}
               </p>
               <svg viewBox='0 0 2 2' className='h-0.5 w-0.5 fill-current'>
                 <circle cx={1} cy={1} r={1} />
@@ -108,13 +109,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 const ReactGridLayout = WidthProvider(RGL);
 
 export default function EntityOptions({ options, activeProject }: JSONObject) {
-  const defaultProps = {
-    className: 'layout',
-    items: 10,
-    rowHeight: 30,
-    onLayoutChange: function () { },
-    cols: 12,
-  };
+
 
   const {
     data: entitiesData = { entities: [], count: 0 },
@@ -132,12 +127,12 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
   const dataGrid = {
     x: 0.1,
     y: 0,
-    w: 15,
-    h: 16,
+    w: 5,
+    h: 15,
     maxH: 16,
     minH: 1,
     maxW: 44,
-    minW: 10,
+    minW: 1,
   };
 
   const onDragStart = (event: DragEvent, nodeType: string) => {
@@ -153,7 +148,7 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
   return (
     <ResponsiveGridLayout
       compactType={null}
-      className='h-full w-full max-w-sm z-[99] absolute'
+      className='z-[99] absolute'
       rowHeight={42}
       breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
       cols={{ lg: 26, md: 26, sm: 24, xs: 22, xxs: 18 }}
@@ -167,26 +162,15 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
         data-grid={dataGrid}
       >
         <ol className='text-sm flex select-none bg-dark-700 relative px-4 pt-2'>
-          <li className='flex items-start'>
-            <div className='flex items-center'>
-              <Link title='View all projects' to='/projects' replace>
-                <span className='text-slate-500 font-display'>
-                  Graphs <span className='font-medium font-display'>/&nbsp;</span>
-                </span>
-              </Link>
-            </div>
-          </li>
           <li className='flex mr-auto'>
             <h5
               title={activeProject.name}
-              className='flex justify-between items-center w-full text-slate-400 '>
-              <span
-                className='text-slate-500 text-inherit whitespace-nowrap font-display'
-                aria-current={activeProject.description}
-              >
-                {activeProject.name.length > 1 ? `${activeProject.name.slice(0, 16)}...` : activeProject.name}
-                <span className='font-medium font-display '>&nbsp;/</span>
-              </span>
+              className='flex whitespace-nowrap truncate justify-between items-center w-full text-slate-500 text-inherit font-display '>
+              <Link title='View all graphs' to='/dashboard/graph' replace>
+                Graphs /&nbsp;
+              </Link>
+              {activeProject.name.length > 1 ? `${activeProject.name.slice(0, 16)}...` : activeProject.name}
+              &nbsp;/
             </h5>
           </li>
           <li className='flex'>
