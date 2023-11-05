@@ -40,7 +40,7 @@ def main():
         port=80,
         loop="asyncio",
         reload=True,
-        workers=6,
+        workers=4,
         headers=[("server", "app")],
         log_level=settings.BACKEND_LOG_LEVEL
     )

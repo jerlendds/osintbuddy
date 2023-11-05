@@ -68,7 +68,7 @@ Here are the basic installation instructions that install the Python build depen
 # install build deps
 sudo apt update; sudo apt install build-essential libssl-dev zlib1g-dev \
 libbz2-dev libreadline-dev libsqlite3-dev curl \
-libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev python3.11-venv
+libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev python3.11-venv jq
 
 # run the automatic installer
 curl https://pyenv.run | bash
@@ -86,4 +86,9 @@ After setting up the above you should reboot/open a new terminal/source your new
 # install and use python 3.11.4
 pyenv install 3.11.4
 pyenv global 3.11.4
+```
+
+We also need yq for some of the launcher commands. To install yq run:
+```bash
+python3 -m pip install yq
 ```
