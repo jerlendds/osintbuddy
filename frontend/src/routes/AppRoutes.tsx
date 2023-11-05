@@ -13,10 +13,10 @@ import CallbackPage from './public/CallbackPage';
 const DashboardPage = lazy(() => import("./dashboard"));
 
 const Market = lazy(() => import("./dashboard/_components/tabs/MarketPanel"))
-const GraphOverview = lazy(() => import("./dashboard/_components/GraphOverview"))
-const GraphDetails = lazy(() => import("./dashboard/_components/GraphDetails"))
-const EntitiesOverview = lazy(() => import("./dashboard/_components/EntitiesOverview"))
-const EntityDetails = lazy(() => import("./dashboard/_components/EntityDetails"))
+const GraphOverview = lazy(() => import("./dashboard/_components/graph/GraphOverview"))
+const GraphDetails = lazy(() => import("./dashboard/_components/graph/GraphDetails"))
+const EntitiesOverview = lazy(() => import("./dashboard/_components/entity/EntitiesOverview"))
+const EntityDetails = lazy(() => import("./dashboard/_components/entity/EntityDetails"))
 const GraphInquiry = lazy(() => import("./graph-inquiry"));
 
 const Settings = lazy(() => import("./settings"));

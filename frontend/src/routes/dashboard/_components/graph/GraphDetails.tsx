@@ -5,7 +5,7 @@ import { BarChart } from "chartist"
 import { Graph, useGetGraphQuery, useGetGraphStatsQuery } from "@/app/api";
 import CaseNotes from "@/components/Notes/CaseNotes"
 import GraphHeader from "./GraphHeader"
-import { DashboardContextType } from "..";
+import { DashboardContextType } from "../..";
 import { useEffectOnce } from "@/app/hooks";
 
 

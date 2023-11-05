@@ -54,7 +54,7 @@ export default function Subpanel({
   return (
     <div className={styles["subpanel"]}>
       <div className={styles["subpanel-header"]} onClick={setShowEntities}>
-        <p>{label}</p>
+        <p>{label ?? ""}</p>
         <ChevronDownIcon className={styles[`show-header-icon-${showEntities}`]} />
       </div>
       {showError && showEntities && !isLoading && (
@@ -72,7 +72,7 @@ export default function Subpanel({
       )}
       {isSuccess && showEntities && (
         <section className={styles["subpanel-section"]}>
-          {items?.length && items.map((item) => {
+          {items && items.map((item) => {
             return (
               <Link
                 key={item.id}
