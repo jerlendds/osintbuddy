@@ -82,7 +82,8 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
             <div className='mt-1 flex flex-wrap items-center gap-x-2 text-xs leading-5 text-slate-500'>
               <p className='truncate whitespace-normal leading-5 text-slate-500'>
                 {' '}
-                {entity.description && entity.description}
+                {entity.description && entity.description.length > 62 ?
+                  `${entity.description.slice(0, 62)}...` : entity.description}
               </p>
               <svg viewBox='0 0 2 2' className='h-0.5 w-0.5 fill-current'>
                 <circle cx={1} cy={1} r={1} />
