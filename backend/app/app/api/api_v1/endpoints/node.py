@@ -30,15 +30,17 @@ async def fetch_node_transforms(plugin_label):
 
 
 def add_node_element(vertex, element: dict or List[dict], data_labels: List[str]):
+    # Remove stylistic values unrelated to element data
     # Some osintbuddy.elements of type displays dont have an icon or options 
     icon = element.pop('icon', None)
     options = element.pop('options', None)
+
+    label = element.pop('label')
+    style = element.pop('style')
+    placeholder = element.pop('placeholder')
     elm_type = element.pop('type')
     if elm_type == 'empty':
         return
-    # Remove values unrelated to a plugins author element data
-    label = element.pop('label')
-    placeholder = element.pop('placeholder')
     if value := element.get('value'):
         vertex.property(to_snake_case(label), value)
     else:
@@ -48,10 +50,11 @@ def add_node_element(vertex, element: dict or List[dict], data_labels: List[str]
         ]
     # Save the data labels so we can assign these as meta properties later
     data_labels.append(to_snake_case(label))
-    # Restore the node elements relied on by the UI
+
     element['type'] = elm_type
     element['icon'] = icon
     element['label'] = label
+    element['style'] = style
     element['placeholder'] = placeholder
     if options:
         element['options'] = options
@@ -77,9 +80,10 @@ async def save_node_to_graph(
             [add_node_element(v, elm, new_labels) for elm in element]
         else:
             add_node_element(v, element, new_labels)
-
+    
     new_entity = await v.next()
     # TODO: support adding optional kwargs to edge properties
+
     if add_edge.get('id') and add_edge.get('label'):
         source: AsyncGraphTraversal = graph.V().hasId(new_entity.id)
         target: AsyncGraphTraversal = graph.V().hasId(add_edge['id'])
@@ -101,6 +105,7 @@ async def save_node_on_drop(
         node_blueprint['data'] = {
             'color': node_blueprint.pop('color', '#145070'),
             'icon': node_blueprint.pop('icon', 'atom-2'),
+            'style': node_blueprint.pop('style', {}),
             'label': node_blueprint.pop('label'),
             'elements': node_blueprint.pop('elements'),
         }
@@ -146,6 +151,7 @@ def map_read_to_blueprint(blueprint, map_element, data, position, entity_id) -> 
     blueprint['data'] = {
         'color': color,
         'icon': blueprint.get('icon'),
+        'style': blueprint.pop('style', {}),
         'label': blueprint.get('label'),
         'elements': blueprint.get('elements'),
     }
@@ -229,7 +235,7 @@ async def nodes_transform(
                 get_graph=lambda: None
             )
         )
-        async def create_transform_output_node(
+        async def create_node_transform_context(
             graph: AsyncGraphTraversal,
             transform_ctx: dict,
             node_transform: dict
@@ -248,6 +254,7 @@ async def nodes_transform(
             transform_ctx['data'] = {
                 'color': transform_ctx.pop('color', '#145070'),
                 'icon': transform_ctx.pop('icon', 'atom-2'),
+                'style': transform_ctx.pop('style', {}),
                 'label': transform_ctx.pop('label'),
                 'elements': transform_ctx.pop('elements'),
             }
@@ -259,9 +266,9 @@ async def nodes_transform(
 
         async with ProjectGraphConnection(uuid) as graph:
             if isinstance(node_output, list):
-                [await create_transform_output_node(graph, n, node) for n in node_output]
+                [await create_node_transform_context(graph, n, node) for n in node_output]
             else:
-                await create_transform_output_node(graph, node_output, node)
+                await create_node_transform_context(graph, node_output, node)
         await send_json(node_output)
     else:
         await send_json({'error': 'noPluginFound'})

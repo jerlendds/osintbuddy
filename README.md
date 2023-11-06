@@ -36,7 +36,7 @@
   🚧  <ins>Work in progress</ins>  🚧
 <br/>
 
-  ![ob-new-ui-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/d3aba90a-9f63-4e4a-b501-bd247c87dd16)
+  ![2023-11-05 new-ux-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/098ec246-92ae-45f9-9f66-7c1bb1765ce2)
 
   ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum](https://forum.osintbuddy.com)** or on the **[OSINTBuddy discord](https://discord.gg/gsbbYHA3K3)** ⚠️
 
