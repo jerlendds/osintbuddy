@@ -12,7 +12,7 @@ import CallbackPage from './public/CallbackPage';
 // Private routes
 const DashboardPage = lazy(() => import("./dashboard"));
 
-const Market = lazy(() => import("./dashboard/_components/tabs/MarketPanel"))
+const Market = lazy(() => import("./dashboard/_components/Market"))
 const GraphOverview = lazy(() => import("./dashboard/_components/graph/GraphOverview"))
 const GraphDetails = lazy(() => import("./dashboard/_components/graph/GraphDetails"))
 const EntitiesOverview = lazy(() => import("./dashboard/_components/entity/EntitiesOverview"))
