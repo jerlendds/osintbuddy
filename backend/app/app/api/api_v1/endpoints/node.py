@@ -296,9 +296,9 @@ async def execute_event(event: dict, send_json: Callable, uuid: UUID) -> None:
 
 
 @router.websocket("/graph/{hid}")
-async def active_project(
+async def active_graph_inquiry(
     websocket: WebSocket,
-    # user: Annotated[schemas.User, Depends(deps.get_user_from_ws)],
+    user: Annotated[schemas.User, Depends(deps.get_user_from_ws)],
     hid: Annotated[int, Depends(deps.get_graph_id)],
     db: Session = Depends(deps.get_db)
 ):
