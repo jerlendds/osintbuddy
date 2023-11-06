@@ -328,7 +328,7 @@ export type User = {
   uuid: string;
 };
 export type Graph = {
-  name: string;
+  label: string;
   description: string | null;
   is_favorite?: boolean;
   id: string;
@@ -343,7 +343,7 @@ export type AllGraphsList = {
   favorite_count: number;
 };
 export type GraphCreate = {
-  name: string;
+  label: string;
   description: string | null;
   is_favorite?: boolean;
 };

@@ -165,7 +165,7 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
               <Link title='View all graphs' to='/dashboard/graph' replace>
                 Graphs /&nbsp;
               </Link>
-              {activeProject.name.length > 22 ? `${activeProject.name.slice(0, 22)}...` : activeProject.name}
+              {activeProject.label.length > 22 ? `${activeProject.label.slice(0, 22)}...` : activeProject.label}
               &nbsp;/
             </h5>
           </li>

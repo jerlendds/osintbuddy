@@ -21,7 +21,7 @@ export default function GraphHeader({ graph, stats, refetchGraphs }: GraphHeader
           <section className="flex flex-col items-start justify-between px-4 lg:items-center lg:px-6 md:px-4 lg:flex-row md:flex-row md:items-center  relative">
             <div className="flex flex-col w-full py-2 ">
               <h3 className="text-lg font-semibold whitespace-nowrap leading-normal text-slate-300">
-                {graph?.name}
+                {graph?.label}
               </h3>
               <p className="text-sm leading-normal whitespace-normal h-10 truncate max-w-6xl text-slate-400">
                 {graph?.description}

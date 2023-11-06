@@ -14,13 +14,13 @@ import { useNavigate } from 'react-router-dom';
 import styles from "./form.module.css"
 
 type GraphFormData = {
-  name: string
+  label: string
   description: string
   showTour?: boolean | undefined
 }
 
 const graphSchema: Yup.ObjectSchema<GraphFormData> = Yup.object().shape({
-  name: Yup.string().required("Required"),
+  label: Yup.string().required("Required"),
   description: Yup.string().optional().default("No description found..."),
   showTour: Yup.boolean()
 });
@@ -55,7 +55,7 @@ export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
       console.error(createGraphError)
       toast.error("We ran into an error creating your graph. Please try again")
     }
-    reset({ name: "", description: "", showTour: false })
+    reset({ label: "", description: "", showTour: false })
   }, [isSubmitSuccessful])
 
   const onSubmitHandler = async (graphCreate: GraphFormData) => {
@@ -73,7 +73,7 @@ export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
         </div>
       </section>
 
-      <InputField register={register} name="name" label="Name" />
+      <InputField register={register} name="label" label="Label" />
       <InputTextarea register={register} name="description" label="Description" />
       <InputToggleSwitch label="Enable Guide" className="mt-4" control={control} name={"showTour"} description="Get a step-by-step tour on how to perform OSINTBuddy investigations" />
 
