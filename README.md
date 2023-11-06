@@ -38,7 +38,7 @@
 
   ![2023-11-05 new-ux-demo](https://github.com/jerlendds/osintbuddy/assets/29207058/6bb97c5d-3b38-42d8-9497-839808e8e439)
 
-  ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum](https://forum.osintbuddy.com)** or on the **[OSINTBuddy discord](https://discord.gg/gsbbYHA3K3)** ⚠️
+  ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum](https://forum.osintbuddy.com)** or on the **[discord](https://discord.gg/gsbbYHA3K3)** ⚠️
 
   ---
 </p>
