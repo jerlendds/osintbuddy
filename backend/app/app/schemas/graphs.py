@@ -9,7 +9,7 @@ GRAPH_NAMESPACE = 5172
 
 # Shared properties
 class GraphsBase(BaseModel):
-    name: str
+    label: str
     description: Optional[str]
 
     is_favorite: bool = False

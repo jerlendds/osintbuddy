@@ -12,7 +12,7 @@ class Graphs(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     uuid: Mapped[UUID] = Column(UUID(as_uuid=True), default=uuid.uuid4, index=True)
     # hid: Mapped[str] = Column(String, default=)
-    name: Mapped[str] = mapped_column(String, nullable=False)
+    label: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[str] = mapped_column(String(512), nullable=True)
 
     is_favorite: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
@@ -29,7 +29,7 @@ class Graphs(Base):
         return (
             f"Graphs(id={self.id!r}, "
             f"uuid={self.uuid!r}, "
-            f"name={self.name!r}, "
+            f"name={self.label!r}, "
             f"description={self.description[64:]!r}, "
             f"is_favorite={self.is_favorite!r}, "
             f"updated={self.updated!r}, "
