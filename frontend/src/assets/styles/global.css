@@ -78,20 +78,26 @@ figcaption {
   Works on Chrome, Edge, and Safari 
 */
 *::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  border-radius: none;
+
 }
 *::-webkit-scrollbar-track {
   background: #1A1F27;
-  width: 6px;
+  width: 8px;
+  border-radius: none;
+
 }
 *::-webkit-scrollbar-thumb {
   background-color: #1A1F27;
-  border-radius: 8px;
-  border-right: 8px solid #1A1F27;
+  border-radius: none;
+  border-right: 10px solid #1A1F27;
 }
 * {
-  scrollbar-width: 6px;
+  scrollbar-width: 8px;
   scrollbar-color: #1A1F27 #0B111F;
+  border-radius: none;
+
 }
 /* end Custom Scrollbar Style */
 
