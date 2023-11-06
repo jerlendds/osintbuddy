@@ -5,7 +5,7 @@ import {
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import 'react-grid-layout/css/styles.css';
-import RGL, { Responsive, WidthProvider } from 'react-grid-layout';
+import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useGetEntitiesQuery } from '@/app/api';
 
 type UseResizeProps = {
@@ -104,11 +104,9 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-export default function EntityOptions({ options, activeProject }: JSONObject) {
-
-
+export default function EntityOptions({ activeProject }: JSONObject) {
   const {
-    data: entitiesData = { entities: [], count: 0 },
+    data: entitiesData = { entities: [], count: 0, favorite_entities: [], favorite_count: 0 },
     isLoading,
     isSuccess,
     isError
@@ -117,8 +115,9 @@ export default function EntityOptions({ options, activeProject }: JSONObject) {
   const [searchFilter, setSearchFilter] = useState('');
 
   const entities = useMemo(() => searchFilter
-    ? entitiesData?.entities.filter((entity: JSONObject) => entity.label.toLowerCase().includes(searchFilter.toLowerCase()))
-    : entitiesData?.entities, [searchFilter, entitiesData])
+    ? [...entitiesData?.entities.filter((entity: JSONObject) => entity.label.toLowerCase().includes(searchFilter.toLowerCase())),
+    ...entitiesData?.favorite_entities.filter((entity: JSONObject) => entity.label.toLowerCase().includes(searchFilter.toLowerCase()))]
+    : [...entitiesData?.entities, ...entitiesData?.favorite_entities], [searchFilter, entitiesData])
 
   const dataGrid = {
     x: 0.1,
