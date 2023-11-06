@@ -7,10 +7,10 @@ import { toast } from "react-toastify";
 interface GraphHeaderProps {
   graph: Graph;
   stats: any;
-  refreshAllGraphs: () => Promise<void>;
+  refetchGraphs: () => Promise<void>;
 }
 
-export default function GraphHeader({ graph, stats, refreshAllGraphs }: GraphHeaderProps) {
+export default function GraphHeader({ graph, stats, refetchGraphs }: GraphHeaderProps) {
   const navigate = useNavigate()
   const [deleteGraph] = useDeleteGraphMutation()
 
@@ -38,7 +38,7 @@ export default function GraphHeader({ graph, stats, refreshAllGraphs }: GraphHea
                       console.error(error)
                       toast.error("We ran into an error deleting your graph. Please try again")
                     })
-                  await refreshAllGraphs()
+                  await refetchGraphs()
                 }}
                 className="mb-3.5 ring-1 ring-danger-600 ml-auto pr-3 text-left text-sm font-semibold text-danger-600 hover:text-danger-700 flex items-center border border-danger-600 hover:border-danger-700 py-2 px-3 rounded-md mr-1 "
               >

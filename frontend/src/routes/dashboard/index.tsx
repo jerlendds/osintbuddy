@@ -12,6 +12,7 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
 import { GetGraphStatsApiResponse } from '../../app/api';
 import CreateEntityModal from "./_components/modals/CreateEntityModal";
+import { UseQueryStateOptions } from "@reduxjs/toolkit/dist/query/react/buildHooks";
 
 export interface ScrollGraphs {
   skip?: number | undefined
@@ -61,14 +62,23 @@ export default function DashboardPage() {
     isLoading,
     isError,
     isSuccess,
-    refetch: refreshAllEntities
+    refetch: refreshAllEntities,
   } = useGetEntitiesQuery({ skip: 0, limit: 50 })
 
   const scrollGraphs = ({ skip, limit, favoriteSkip, favoriteLimit }: ScrollGraphs) => {
     if (skip !== undefined && limit !== undefined) setGraphsQuery({ skip, limit })
     if (favoriteSkip !== undefined && favoriteLimit !== undefined) setFavoriteGraphsQuery({ favoriteSkip, favoriteLimit })
   }
-  const { data: graphStats, refetch: refreshGraphStats } = useGetGraphStatsQuery({ hid: hid as string }, { skip: hid === undefined && !location.pathname.includes("/dashboard/graph/") }) // , { skip: hid === undefined }
+  const {
+    data: graphStats,
+    refetch: refreshGraphStats } = useGetGraphStatsQuery(
+      { hid: hid as string },
+      {
+        skip: hid === undefined && !location.pathname.includes("/dashboard/graph/"),
+        refetchOnMountOrArgChange: true
+      }
+    )
+
   return (
     <>
       <div className="flex max-h-screen">

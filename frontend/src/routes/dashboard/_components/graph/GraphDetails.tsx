@@ -63,7 +63,7 @@ export default function GraphDetails() {
   return (
     <>
       <section className="flex flex-col w-full">
-        <GraphHeader refreshAllGraphs={async () => await refetchGraphs()} stats={graphStats} graph={activeGraph as Graph} />
+        <GraphHeader refetchGraphs={async () => await refetchGraphs()} stats={graphStats} graph={activeGraph as Graph} />
         <section className="flex w-full h-full relative">
           <div className="flex flex-col w-2/5">
             <div className="flex flex-col pl-4 mx-4 mt-4 bg-dark-600 rounded-md ">
