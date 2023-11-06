@@ -16,7 +16,7 @@ export default function GraphDetails() {
 
   const uniqueChartRef = useRef(null);
   const uniqueOutEdgesChartRef = useRef(null);
-  const { graphStats, refreshAllGraphs } = useOutletContext<DashboardContextType>();
+  const { graphStats, refetchGraphs } = useOutletContext<DashboardContextType>();
 
   useEffect(() => {
     if (uniqueChartRef?.current) {
@@ -63,7 +63,7 @@ export default function GraphDetails() {
   return (
     <>
       <section className="flex flex-col w-full">
-        <GraphHeader refreshAllGraphs={async () => await refreshAllGraphs()} stats={graphStats} graph={activeGraph as Graph} />
+        <GraphHeader refreshAllGraphs={async () => await refetchGraphs()} stats={graphStats} graph={activeGraph as Graph} />
         <section className="flex w-full h-full relative">
           <div className="flex flex-col w-2/5">
             <div className="flex flex-col pl-4 mx-4 mt-4 bg-dark-600 rounded-md ">

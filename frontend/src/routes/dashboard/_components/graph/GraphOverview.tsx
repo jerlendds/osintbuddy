@@ -3,13 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import { DashboardContextType } from "../..";
 
 export default function GraphOverview() {
-  const {
-    graphsData,
-    isLoadingGraphs,
-    isGraphsError,
-    refreshAllGraphs
-  } = useOutletContext<DashboardContextType>()
-
+  const { graphsData } = useOutletContext<DashboardContextType>()
 
   const graphs = useMemo(() => {
     const sortedGraphs = graphsData.graphs.slice()

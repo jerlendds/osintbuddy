@@ -27,7 +27,7 @@ interface GraphPanel {
   graphsData: AllGraphsList
   isLoadingGraphs: boolean | undefined
   isGraphsError: FetchBaseQueryError | SerializedError | undefined
-  refreshAllGraphs: () => void
+  refetchGraphs: () => void
   isGraphsSuccess: boolean | undefined
 }
 
@@ -35,7 +35,7 @@ export default function GraphPanel({
   graphsData,
   isLoadingGraphs,
   isGraphsError,
-  refreshAllGraphs,
+  refetchGraphs,
   isGraphsSuccess
 }: GraphPanel) {
   const [showAllGraphs, setShowAllGraphs] = useState(true);
@@ -60,7 +60,7 @@ export default function GraphPanel({
 
   const updateFavorites = async (hid: string) => {
     await updateFavoriteEntity({ hid })
-    await refreshAllGraphs()
+    await refetchGraphs()
   }
 
   return (

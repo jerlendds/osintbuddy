@@ -23,7 +23,7 @@ export interface ScrollGraphs {
 export type DashboardContextType = {
   graphStats: GetGraphStatsApiResponse
   refreshGraphStats: () => void;
-  refreshAllGraphs: () => void;
+  refetchGraphs: () => void;
   graphsData: AllGraphsList
   isLoadingGraphs: boolean
   isGraphsError: FetchBaseQueryError | SerializedError | undefined
@@ -56,9 +56,6 @@ export default function DashboardPage() {
   } = useGetGraphsQuery({ ...graphsQuery, ...favoriteGraphsQuery })
 
 
-  const refreshAllGraphs = () => {
-    refetchGraphs()
-  }
   const {
     data: entitiesData = { entities: [], count: 0, favorite_entities: [], favorite_count: 0 },
     isLoading,
@@ -125,7 +122,7 @@ export default function DashboardPage() {
             <section>
               <Tab.Panel className={styles["tab-panel"]}>
                 <GraphPanel
-                  refreshAllGraphs={() => refreshAllGraphs()}
+                  refetchGraphs={async () => await refetchGraphs()}
                   graphsData={allGraphsData}
                   isLoadingGraphs={isLoadingGraphs}
                   isGraphsError={isGraphsError}
@@ -164,7 +161,7 @@ export default function DashboardPage() {
           )}
         </aside>
         <Outlet context={{
-          refreshAllGraphs,
+          refetchGraphs,
           graphsData: allGraphsData,
           isLoadingGraphs,
           isGraphsError,
@@ -176,7 +173,7 @@ export default function DashboardPage() {
         cancelCreateRef={cancelCreateGraphRef}
         isOpen={showCreateGraphModal}
         closeModal={() => setShowCreateGraphModal(false)}
-        refreshAllGraphs={async () => await refreshAllGraphs()}
+        refreshAllGraphs={async () => await refetchGraphs()}
       />
       <CreateEntityModal
         refreshAllEntities={refreshAllEntities}
