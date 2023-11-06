@@ -49,7 +49,10 @@ function App(): JSX.Element {
 ##### Heading 5
 ###### Heading 6
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni tenetur hic, laborum sequi suscipit voluptas quibusdam a doloremque iusto adipisci maxime sunt ad. Iure possimus, voluptate minima officia iste delectus consectetur! Laborum quibusdam natus facere laudantium maiores explicabo quia sunt.
+At the moment any notes that are entered here will not be saved. We're working on that. Follow the project on discord or on the forum to get the latest updates from the OSINTBuddy project.
+
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni tenetur hic,
+laborum sequi suscipit voluptas quibusdam a doloremque iusto adipisci maxime sunt ad. Iure possimus, voluptate minima officia iste delectus consectetur! Laborum quibusdam natus facere laudantium maiores explicabo quia sunt.
 `, TRANSFORMERS),
     namespace: 'Playground',
     nodes: [...PlaygroundNodes],
