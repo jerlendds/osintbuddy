@@ -13,7 +13,7 @@ export function formatTime(date: Date) {
 export function formatPGDate(date: string, showAt: boolean = false): string {
   if (date) {
     const dateStr = date.replace(' ', 'T')
-    return `${new Date(dateStr).toLocaleDateString()}${showAt ? ' at ' : ' '}${formatTime(new Date(dateStr))}`
+    return `${new Date(dateStr).toDateString()}${showAt ? ' at ' : ' '}${formatTime(new Date(dateStr))}`
   }
   return ''
 }
