@@ -328,7 +328,7 @@ async def active_graph_inquiry(
             log.error("Exception inside node.active_project")
             log.error(e)
             is_project_active = False
-    websocket.close()
+    await websocket.close()
 
 
 @router.get("/refresh")
