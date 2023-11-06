@@ -36,6 +36,7 @@ interface EntitiesSubpanelProps {
   onClick: (hid: string) => void
   items: JSONObject[] | undefined // Entity[] | Graph[]
   to: "/dashboard/entity" | "/dashboard/graph"
+  errorMessage?: string | null
 }
 
 export default function Subpanel({
@@ -47,7 +48,8 @@ export default function Subpanel({
   label,
   onClick,
   items,
-  to
+  to,
+  errorMessage
 }: EntitiesSubpanelProps) {
   const { hid } = useParams();
 
@@ -60,7 +62,9 @@ export default function Subpanel({
       {showError && showEntities && !isLoading && (
         <>
           <h2 className="text-slate-400 text-display">
-            We ran into an error retrieving your entities. Please try refreshing the page, if this error continues to occur please <a href="#" className="text-info-300">file an issue</a> on github
+            {errorMessage?.length ? (<>{errorMessage}</>) : (
+              <>We ran into an error retrieving your entities. Please try refreshing the page, if this error continues to occur please <a href="#" className="text-info-300">file an issue</a> on github</>
+            )}
           </h2>
         </>
       )}

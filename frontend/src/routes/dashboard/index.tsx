@@ -146,7 +146,7 @@ export default function DashboardPage() {
               </Tab.Panel>
             </section>
           </Tab.Group>
-          {tabIndex !== 2 && (
+          {tabIndex !== 2 ? (
             <button
               onClick={() => {
                 if (tabIndex === 0) setShowCreateGraphModal(true)
@@ -157,6 +157,10 @@ export default function DashboardPage() {
               Create {tabIndex === 0 ? 'graph' : 'entity'}
               <PlusIcon />
             </button>
+          ) : (
+            <button
+              className='btn-primary'
+            >Upload a plugin</button>
           )}
         </aside>
         <Outlet context={{
