@@ -69,7 +69,7 @@ export default function LandingPage(): React.ReactElement {
                   </header>
                 </article>
                 <div className='docs max-w-4xl text-slate-400 mt-2'>v0.1.0</div>
-                <div className='docs max-w-4xl text-slate-400 py-2'>Hi, I'm the creator of OSINTBuddy. Want a chance at having your feature ideas prioritized? Email <a href='mailto:ideas@forum.osintbuddy.com' className='text-sky-500'>ideas@forum.osintbuddy.com</a> with the subject: <i>Early Access Request</i>. The first 50 people to reach out will have their suggestions put up for vote on the osintbuddy website so the community can decide what gets built first!
+                <div className='docs max-w-4xl text-slate-400 py-2'>Hi, I'm the creator of OSINTBuddy. Want a chance at having your feature ideas prioritized? Email <a href='mailto:oss@osintbuddy.com' className='text-sky-500'>oss@osintbuddy.com</a> with the subject: <i>Early Access Request</i>. The first 50 people to reach out will have their suggestions put up for vote on the osintbuddy website so the community can decide what gets built first!
                 </div>.
               </div>
               <div className='hidden xl:sticky xl:-mr-6 xl:block xl:h-[calc(100vh-4.5rem)] xl:flex-none xl:overflow-y-auto  xl:pr-6'>

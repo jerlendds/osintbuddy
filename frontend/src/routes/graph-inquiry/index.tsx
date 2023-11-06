@@ -39,11 +39,12 @@ interface UseWebsocket {
   lastMessage: MessageEvent<any> | null
 }
 
-const WS_GRAPH_INQUIRE = `ws://${WS_URL}/node/graph`
 
 export default function OsintPage() {
   const dispatch = useAppDispatch();
   const { hid } = useParams()
+  const WS_GRAPH_INQUIRE = `ws://${WS_URL}/node/graph/${hid}`
+  
   const { data: activeGraph, isSuccess, isLoading, isError } = useGetGraphQuery({ hid: hid as string })
   const initialNodes = useAppSelector((state) => graphNodes(state));
   const initialEdges = useAppSelector((state) => graphEdges(state));
