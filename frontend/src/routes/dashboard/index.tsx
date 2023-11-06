@@ -56,7 +56,6 @@ export default function DashboardPage() {
     isSuccess: isGraphsSuccess
   } = useGetGraphsQuery({ ...graphsQuery, ...favoriteGraphsQuery })
 
-
   const {
     data: entitiesData = { entities: [], count: 0, favorite_entities: [], favorite_count: 0 },
     isLoading,

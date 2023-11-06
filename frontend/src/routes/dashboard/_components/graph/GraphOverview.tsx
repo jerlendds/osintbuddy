@@ -34,7 +34,7 @@ export default function GraphOverview() {
           {(graphs.length > 0 || favoriteGraphs.length > 0) && (
             <>
               <h1 className="text-slate-300 text-3xl lg:text-4xl font-bold pt-12 sm:pt-14 lg:pt-8 ">
-                {graphs.length + favoriteGraphs.length} {(graphs.length ? graphs.length : 0 + favoriteGraphs.length ? favoriteGraphs.length : 0) === 1 ? 'graph' : 'graphs'} available</h1>
+                {graphs.length + favoriteGraphs.length} {(graphs.length ? graphs.length : 0 + favoriteGraphs.length ? favoriteGraphs.length : 0) >= 2 ? 'graphs' : 'graph'} available</h1>
               <p className="py-6 md:py-8 max-w-md">
                 Get started by selecting an existing graph from the sidebar
                 on the left, or try creating a new graph

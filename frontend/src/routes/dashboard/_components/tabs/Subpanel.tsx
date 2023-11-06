@@ -61,11 +61,11 @@ export default function Subpanel({
       </div>
       {showError && showEntities && !isLoading && (
         <>
-          <h2 className="text-slate-400 text-display">
+          <p>
             {errorMessage?.length ? (<>{errorMessage}</>) : (
               <>We ran into an error retrieving your entities. Please try refreshing the page, if this error continues to occur please <a href="#" className="text-info-300">file an issue</a> on github</>
             )}
-          </h2>
+          </p>
         </>
       )}
       {showEntities && isLoading && !showError && (
