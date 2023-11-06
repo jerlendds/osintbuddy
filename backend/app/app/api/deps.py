@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.chrome.webdriver import WebDriver
 
 from app import schemas, crud
 from app.db.session import SessionLocal
@@ -44,7 +45,7 @@ async def get_user_from_ws(
         ob_user: schemas.User | None = crud.user.get_by_cid(db=db, cid=user.get("id"))
         if ob_user:
             return ob_user
-    raise WebSocketException(code=401, detail="Unauthorized")
+    raise WebSocketException(code=401)
 
 
 get_graph_id = HidChecker(namespace=schemas.GRAPH_NAMESPACE)
@@ -76,16 +77,12 @@ def get_driver() -> Generator[Session, None, None]:
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--headless")
+    
+    driver: uc.Chrome = webdriver.Chrome(
+        options=options,
+        # desired_capabilities=DesiredCapabilities.CHROME,
+    )
     try:
-        driver: uc.Chrome = uc.Chrome(
-            driver_executable_path="/usr/bin/chromedriver",
-            version_main=114,
-            desired_capabilities=DesiredCapabilities.CHROME,
-            options=options,
-        )
         yield driver
-    except Exception as e:
-        log.error('Error inside api.deps.get_driver')
-        log.error(e)
     finally:
         driver.quit()
