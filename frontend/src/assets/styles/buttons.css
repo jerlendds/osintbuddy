@@ -1,5 +1,5 @@
 .btn-primary {
-  @apply ring-1 ring-primary-400 hover:ring-primary-200 text-left text-sm font-semibold text-primary-300 hover:text-primary-200 flex items-center border hover:ring-inset border-primary-400 hover:border-primary-200 py-2 px-3 rounded-md   justify-center transition-colors duration-100 ease-in-out;
+  @apply ring-1 ring-primary-300 hover:ring-primary-200 text-left text-sm font-semibold text-primary-300 hover:text-primary-200 flex items-center border hover:ring-inset border-primary-300 hover:border-primary-200 py-2 px-3 rounded-md   justify-center transition-colors duration-100 ease-in-out;
 }
 
 .btn-primary svg {
@@ -7,7 +7,7 @@
 }
 
 .btn-danger {
-  @apply relative inline-flex items-center rounded-md ring-danger-600 ring-1 focus:ring-1 focus:ring-inset hover:ring-2 px-5 py-2 text-sm font-medium text-slate-400 hover:text-slate-200 hover:border-danger-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-400 mr-4
+  @apply ring-1 ring-danger-500 hover:ring-danger-400 text-left text-sm font-semibold text-danger-500 hover:text-danger-400 flex items-center border hover:ring-inset border-danger-500 hover:border-danger-400 py-2 px-3 rounded-md   justify-center transition-colors duration-100 ease-in-out
 }
 
 .btn-form {
@@ -16,7 +16,6 @@
 .btn-form svg {
   @apply w-5 h-5 text-white
 }
-
 .btn-form span {
   @apply mx-2
 }

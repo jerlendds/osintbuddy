@@ -4,7 +4,7 @@
 }
 
 .search-container {
-  @apply flex items-center relative border transition-colors duration-200 ease-out from-mirage-400/60 to-mirage-400/30 bg-gradient-to-tl rounded border-mirage-300/30 hover:border-mirage-300 mb-2
+  @apply flex items-center relative border transition-colors duration-200 ease-out from-mirage-400/60 to-mirage-400/30 bg-gradient-to-tl rounded border-mirage-300/30 hover:border-mirage-300 mb-2 mr-2 ml-1
 }
 .search-container:active, .search-container:focus-within {
   @apply border-primary/50 from-mirage-300/30 to-mirage-300/20 bg-gradient-to-l
@@ -26,7 +26,7 @@
   @apply flex justify-between w-full rounded p-1 absolute;
 }
 .tab {
-  @apply focus:outline-none transition-colors duration-200 ease-in-out flex items-center justify-center py-2.5 font-display rounded min-w-[6rem] text-sm leading-none z-20
+  @apply focus:outline-none transition-colors duration-200 ease-in-out flex items-center justify-center py-2.5 px-0 font-display rounded min-w-[6rem] text-sm leading-none z-20
 }
 .tab-true {
   @apply  text-slate-300 ;
@@ -35,13 +35,16 @@
   @apply text-slate-600 hover:text-slate-500;
 }
 .tab-slider {
-  @apply from-primary-300/40 to-primary-300/60 border border-mirage-400/60 bg-gradient-to-br h-[34px] translate-x-[2px] w-[95px] absolute transition-transform duration-200 rounded 
+  @apply from-primary-300/40 to-primary-300/60 border border-mirage-400/60 bg-gradient-to-br h-[34px] translate-x-0  w-[90px] absolute transition-transform duration-200 ease-in-out rounded 
+}
+.graph-tab[aria-selected="true"] ~ div {
+  @apply translate-x-[0px] w-[98px]
 }
 .entities-tab[aria-selected="true"] ~ div {
-  @apply translate-x-[100px]
+  @apply translate-x-[102px] w-[99px]
 }
 .market-tab[aria-selected="true"] ~ div {
-  @apply translate-x-[200px]
+  @apply translate-x-[205px] w-[93px]
 }
 .tab-panel {
   @apply w-full relative;

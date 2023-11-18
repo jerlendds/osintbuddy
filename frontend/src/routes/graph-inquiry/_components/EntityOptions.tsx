@@ -161,9 +161,9 @@ export default function EntityOptions({ activeProject }: JSONObject) {
             <h5
               title={activeProject.name}
               className='flex whitespace-nowrap truncate justify-between items-center w-full text-slate-600 text-inherit font-display '>
-              <Link title='View all graphs' to='/dashboard/graph' replace>
-                Entities /&nbsp;
-              </Link>
+              <Link title='View all graphs' className='text-slate-500' to='/dashboard/graph' replace>
+                Entities&nbsp;
+              </Link>{" /"}&nbsp;
               {activeProject.label.length > 22 ? `${activeProject.label.slice(0, 22)}...` : activeProject.label}
               &nbsp;/
             </h5>
@@ -183,11 +183,9 @@ export default function EntityOptions({ activeProject }: JSONObject) {
         </ol>
         {showEntities && (
           <>
-            <div className='text-xl items-center justify-between w-full flex mt-2 px-4'>
-              <span className='font-display text-slate-400 font-medium select-none'>Entities</span>
-            </div>
 
-            <div className='mt-2.5 block justify-between items-center from-mirage-400/50 to-mirage-400/40 bg-gradient-to-r rounded border mb-2 mx-4 focus-within:border-primary  px-3.5 py-1 text-slate-100 shadow-sm border-mirage-400/20 ring-light-900/10  focus-within:border-primary/50 focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l'>
+
+            <div className='mt-2.5 hover:border-mirage-200/40 transition-colors duration-200 ease-in-out block justify-between items-center from-mirage-400/50 to-mirage-400/40 bg-gradient-to-r rounded border mb-2 mx-4 focus-within:!border-primary/40  px-3.5 py-1 text-slate-100 shadow-sm border-mirage-400/20 ring-light-900/10  focus-within:border-primary/50 focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l'>
               <input
                 onChange={(e) => setSearchFilter(e.target.value)}
                 className='block w-full placeholder:text-slate-700 bg-transparent outline-none  sm:text-sm'

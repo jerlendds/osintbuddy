@@ -53,7 +53,7 @@ background-image: radial-gradient(49% 81% at 45% 47%, #7700ff 0%, #073AFF00 100%
 
 /* https://gradienta.io/editor */
 body {
-  @apply min-h-screen from-mirage-900/80 to-mirage-500/80 bg-gradient-to-br;
+  @apply min-h-screen from-mirage-900/90 to-mirage-700/70 bg-gradient-to-br;
   
 }
 #root {
@@ -97,16 +97,16 @@ figcaption {
 
 }
 *::-webkit-scrollbar-thumb {
-  background-color: #1A1F27;
-  border-radius: none;
-  border-right: 10px solid #1d222f;
+  background-color: #1a1f2793;
+  border-radius: 2px;
+  border-right: 10px solid #1b243a84;
 }
 * {
   scrollbar-width: 8px;
-  scrollbar-color: #1d222f #202d4333;
-  border-radius: none;
-
+  scrollbar-color: #1d222f62 #202d4333;
+  
 }
+
 /* end Custom Scrollbar Style */
 
 /* start Animated CSS Hamburger Menu */

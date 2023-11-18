@@ -42,7 +42,7 @@ export default function GraphHeader({ graph, stats, refetchGraphs }: GraphHeader
                     })
                   await refetchGraphs()
                 }}
-                className="mb-3.5 ring-1 ring-danger-600 ml-auto pr-3 text-left text-sm font-semibold text-danger-600 hover:text-danger-700 flex items-center border border-danger-600 hover:border-danger-700 py-2 px-3 rounded-md mr-1 "
+                className="btn-danger mb-3.5 ml-auto"
               >
                 Delete graph
                 <TrashIcon className="text-inherit h-5 w-5 ml-2" />
