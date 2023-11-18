@@ -66,7 +66,7 @@ export default function GraphPanel({
   return (
     <section className={styles["subpanel-wrapper"]}>
       <Subpanel
-        label="FAVORITES"
+        label="Favorites"
         showError={isGraphsError}
         showEntities={showFavoriteGraphs}
         setShowEntities={() => setShowFavoriteGraphs(!showFavoriteGraphs)}
@@ -77,7 +77,7 @@ export default function GraphPanel({
         to="/dashboard/graph"
       />
       <Subpanel
-        label="ALL GRAPHS"
+        label="All graphs"
         showError={isGraphsError}
         showEntities={showAllGraphs}
         setShowEntities={() => setShowAllGraphs(!showAllGraphs)}

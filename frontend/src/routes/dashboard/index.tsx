@@ -80,7 +80,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      <div className="flex max-h-screen">
+      <div className="flex max-h-screen h-full">
         <aside className={styles["sidebar-wrapper"]}>
           <div className={styles["search-container"]}>
             <MagnifyingGlassIcon />
@@ -101,7 +101,7 @@ export default function DashboardPage() {
                 {({ selected }) => (
                   <Link
                     to='graph'
-                    className={styles["tab"] + " " + styles[`tab-${selected}`]}
+                    className={styles["tab"] + ` ${styles["graph-tab"]} ` + styles[`tab-${selected}`]}
                   >
                     Graphs
                   </Link>
@@ -111,7 +111,7 @@ export default function DashboardPage() {
                 {({ selected }) => (
                   <Link
                     to='entity'
-                    className={styles["tab"] + " " + styles[`tab-${selected}`]}
+                    className={styles["tab"] + ` ${styles["entities-tab"]} ` + styles[`tab-${selected}`]}
                   >
                     Entities
                   </Link>
@@ -121,12 +121,13 @@ export default function DashboardPage() {
                 {({ selected }) => (
                   <Link
                     to='market'
-                    className={styles["tab"] + " " + styles[`tab-${selected}`]}
+                    className={styles["tab"] + ` ${styles["market-tab"]} ` + styles[`tab-${selected}`]}
                   >
                     Market
                   </Link>
                 )}
               </Tab>
+              <div className={styles["tab-slider"]}></div>
             </Tab.List>
             <section>
               <Tab.Panel className={styles["tab-panel"]}>
@@ -158,7 +159,7 @@ export default function DashboardPage() {
                 if (tabIndex === 0) setShowCreateGraphModal(true)
                 if (tabIndex === 1) setShowCreateEntityModal(true) // TODO
               }}
-              className='btn-primary'
+              className='btn-primary mx-4 mt-auto'
             >
               Create {tabIndex === 0 ? 'graph' : 'entity'}
               <PlusIcon />

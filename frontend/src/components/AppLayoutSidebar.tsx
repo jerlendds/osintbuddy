@@ -22,14 +22,14 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
   return (
     <div
       className={classNames(
-        "fixed inset-y-0 flex border-r border-dark-300 w-64 flex-col transition-transform duration-100",
-        showSidebar ? "translate-x-0" : "-translate-x-52"
+        "fixed inset-y-0 flex border-r from-mirage-600/30 to-mirage-500/30 bg-gradient-to-br shadow border-mirage-800/70 w-64 flex-col transition-transform duration-100",
+        showSidebar ? "translate-x-0" : "-translate-x-52 border-r-2"
       )}
     >
-      <div className="flex min-h-0 flex-1 flex-col bg-dark-700">
+      <div className="flex min-h-0 flex-1 flex-col ">
         <div
           className={classNames(
-            "flex h-12 flex-shrink-0 items-center justify-between",
+            "flex h-11 mt-1 flex-shrink-0 items-center justify-between",
             showSidebar ? "px-3" : "px-1"
           )}
         >
@@ -39,12 +39,12 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
 
           <HamburgerMenu
             isOpen={showSidebar}
-            className="mx-1.5"
+            className={!showSidebar ? 'mr-1.5' : ''}
             onClick={toggleSidebar}
           />
         </div>
         <div className="flex flex-1 flex-col overflow-y-auto">
-          <nav className="flex-1 flex py-4 flex-col">
+          <nav className="flex-1 flex py-4 pt-3 flex-col">
             {navigation.map((item) => (
               <NavLink
                 key={item.name}
@@ -61,8 +61,8 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                   className={classNames(
                     "transition-all",
                     location.pathname.includes(item.to)
-                      ? "text-info-200"
-                      : "text-slate-400 group-hover:text-slate-300",
+                      ? "text-slate-500"
+                      : "",
                     "mr-3 flex-shrink-0 h-6 w-6 duration-100",
                     showSidebar
                       ? "translate-x-0"
@@ -82,7 +82,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                           created. You can help shape this feature by
                           contributing to the discussion
                           <a
-                            className="text-info-200"
+                            className="text-primary"
                             href="https://github.com/jerlendds/osintbuddy/discussions"
                             target="_blank"
                           >
@@ -93,9 +93,9 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                       );
                     }}
                     title="Create new incident"
-                    className="ml-auto relative bg-dark-400 transition-colors duration-75 hover:bg-dark-500 p-1.5 rounded-full"
+                    className="ml-auto -mr-0.5 relative bg-dark-400 transition-colors duration-75 hover:bg-dark-500 p-1.5 rounded-full"
                   >
-                    <PlusIcon className="text-white w-5 h-5" />
+                    <PlusIcon className="text-white w-4 h-4" />
                   </button>
                 )}
               </NavLink>
@@ -115,8 +115,8 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                 className={classNames(
                   "transition-all",
                   location.pathname.includes("settings")
-                    ? "text-info-200"
-                    : "text-slate-400 group-hover:text-slate-300",
+                    ? "text-primary"
+                    : "text-slate-600 group-hover:text-slate-300",
                   "mr-3 flex-shrink-0 h-6 w-6 duration-100",
                   showSidebar ? "translate-x-0" : "translate-x-[13.16rem]"
                 )}

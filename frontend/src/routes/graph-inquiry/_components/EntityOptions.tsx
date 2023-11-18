@@ -67,7 +67,7 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
         <div
           draggable
           onDragStart={(event) => onDragStart(event, entity.label)}
-          className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden bg-dark-400/60 hover:bg-dark-600 border-transparent border max-h-[160px] border-l-info-300 hover:border-info-100 transition-colors duration-150 border-l-[6px] hover:border-l-[6px] rounded-md w-full'
+          className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-400/10 hover:from-30% hover:to-mirage-300/40  border-mirage-300/40 border max-h-[160px] border-l-primary-300/50 hover:border-primary-400 transition-colors duration-150 border-l-[6px] hover:border-l-[6px] rounded-md w-full'
         >
           <div className='flex flex-col w-full select-none'>
             <div className='flex items-start justify-between gap-x-3 w-full relative'>
@@ -152,31 +152,31 @@ export default function EntityOptions({ activeProject }: JSONObject) {
     >
       <div
         draggable={false}
-        className=' overflow-hidden rounded-md z-10 border border-dark-300 bg-dark-700 flex flex-col h-min'
+        className=' overflow-hidden rounded-md z-10 border border-mirage-400/60  bg-mirage-600  flex flex-col h-min'
         key='a'
         data-grid={dataGrid}
       >
-        <ol className='text-sm flex select-none bg-dark-700 relative px-4 pt-2'>
+        <ol className='text-sm flex select-none relative px-4 pt-2'>
           <li className='flex mr-auto'>
             <h5
               title={activeProject.name}
-              className='flex whitespace-nowrap truncate justify-between items-center w-full text-slate-500 text-inherit font-display '>
+              className='flex whitespace-nowrap truncate justify-between items-center w-full text-slate-600 text-inherit font-display '>
               <Link title='View all graphs' to='/dashboard/graph' replace>
-                Graphs /&nbsp;
+                Entities /&nbsp;
               </Link>
               {activeProject.label.length > 22 ? `${activeProject.label.slice(0, 22)}...` : activeProject.label}
               &nbsp;/
             </h5>
           </li>
           <li className='flex'>
-            <div className='flex justify-between items-center w-full text-slate-400 '>
+            <div className='flex justify-between items-center w-full '>
               <button
                 onClick={() => setDraggable(!isDraggable)}
-                className='text-slate-500 hover:text-slate-400 text-inherit whitespace-nowrap font-display'
+                className='text-slate-600 hover:text-slate-400 text-inherit whitespace-nowrap font-display'
                 title={activeProject.name}
                 aria-current={activeProject.description}
               >
-                {isDraggable ? <LockOpenIcon className='w-5 h-5' /> : <LockClosedIcon className='w-5 h-5' />}
+                {isDraggable ? <LockOpenIcon className='w-5 h-5 text-slate-600' /> : <LockClosedIcon className='w-5 h-5 text-slate-600' />}
               </button>
             </div>
           </li>
@@ -187,10 +187,10 @@ export default function EntityOptions({ activeProject }: JSONObject) {
               <span className='font-display text-slate-400 font-medium select-none'>Entities</span>
             </div>
 
-            <div className='mt-2.5 block justify-between items-center bg-dark-800 mx-4 rounded-md border-0 px-3.5 py-1 text-slate-100 shadow-sm ring-1 ring-light-900/10'>
+            <div className='mt-2.5 block justify-between items-center from-mirage-400/50 to-mirage-400/40 bg-gradient-to-r rounded border mb-2 mx-4 focus-within:border-primary  px-3.5 py-1 text-slate-100 shadow-sm border-mirage-400/20 ring-light-900/10  focus-within:border-primary/50 focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l'>
               <input
                 onChange={(e) => setSearchFilter(e.target.value)}
-                className='block w-full placeholder:text-slate-700 bg-dark-800 outline-none focus:ring-info-200 sm:text-sm'
+                className='block w-full placeholder:text-slate-700 bg-transparent outline-none  sm:text-sm'
                 placeholder='Search entities...'
               />
             </div>

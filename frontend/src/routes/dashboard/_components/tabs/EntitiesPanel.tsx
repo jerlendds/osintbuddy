@@ -38,7 +38,7 @@ export default function EntitiesPanel({
   return (
     <section className={styles["subpanel-wrapper"]}>
       <Subpanel
-        label="FAVORITES"
+        label="Favorites"
         showError={isError}
         showEntities={showFavoriteEntities}
         setShowEntities={() => setShowFavoriteEntities(!showFavoriteEntities)}
@@ -49,7 +49,7 @@ export default function EntitiesPanel({
         to="/dashboard/entity"
       />
       <Subpanel
-        label="ALL ENTITIES"
+        label="All entities"
         showError={isError}
         showEntities={showEntities}
         setShowEntities={() => setShowEntities(!showEntities)}

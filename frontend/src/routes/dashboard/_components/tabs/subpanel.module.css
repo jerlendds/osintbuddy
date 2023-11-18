@@ -1,26 +1,26 @@
 .subpanel-wrapper {
-  @apply mt-5 pl-2 flex-col justify-between h-full
+  @apply mt-5 flex-col justify-between h-full
 }
 
 .subpanel {
-  @apply flex flex-col pb-2
+  @apply flex flex-col pb-2 first:pt-8 pl-1
+}
+
+
+
+.subpanel > p {
+  @apply text-sm py-4 font-medium text-slate-500 focus:outline-none cursor-pointer px-2
 }
 
 .subpanel-header {
-  @apply pb-1 flex items-center hover:border-dark-300 border-b transition-colors duration-100 ease-in-out border-transparent
+  @apply  flex pb-1 items-center hover:border-mirage-400/60 border-b transition-colors duration-100 ease-in-out border-transparent
 }
-
-.subpanel > p {
-  @apply text-sm py-4 font-medium leading-5  text-slate-500 focus:outline-none cursor-pointer px-2
-}
-
-
 .subpanel-header p {
-  @apply text-xs font-medium leading-3 text-slate-500 focus:outline-none cursor-pointer
+  @apply text-sm px-1 font-black  leading-3 text-slate-600 focus:outline-none cursor-pointer
 }
 
 .subpanel-header svg {
-  @apply h-4 w-4 text-slate-400 ml-auto transform focus:outline-none cursor-pointer origin-center  mr-3
+  @apply h-5 w-5 mr-2 hover:rotate-3 origin-center text-slate-600 ml-auto transform focus:outline-none cursor-pointer 
 }
 
 .show-header-icon-true {
@@ -32,44 +32,44 @@
 }
 
 .subpanel-section {
-  @apply mt-2 overflow-y-scroll overflow-x-hidden;
+  @apply mt-2 overflow-y-scroll overflow-x-clip px-1;
 }
 
 .subpanel-link {
-  @apply mb-1 focus:outline-none py-3 bg-dark-700 border-y rounded-md border-transparent hover:border-dark-400 border-l px-3 rounded-r-none hover:translate-x-px transition-transform focus:translate-x-px  hover:bg-dark-900 text-slate-600 hover:text-slate-400 focus:bg-dark-900 focus:text-slate-400  w-full  flex items-center
+  @apply mb-1  focus:outline-none py-3 bg-transparent border rounded-md border-transparent hover:to-mirage-400/20 hover:bg-gradient-to-bl hover:border-mirage-700/70  px-3 hover:translate-x-px z-50 transition-transform   hover:from-mirage-500/90 text-slate-400 hover:text-slate-400/20 focus:bg-mirage-500/60 focus:text-slate-400/40  w-full  flex items-center -translate-x-px
 }
 
 .subpanel-link-true {
-  @apply !border-dark-400 bg-dark-900 translate-x-px
+  @apply !border-mirage-300/30 from-mirage-400/10 to-mirage-400/30 hover:from-mirage-400/10 hover:to-mirage-400/30 bg-gradient-to-br hover:bg-gradient-to-br hover:translate-x-0 shadow translate-x-0
 }
 
 .subpanel-link div {
-  @apply flex w-full flex-col items-start mr-3 space-y-1.5
+  @apply flex w-full flex-col items-start mr-3 space-y-1.5 text-slate-600 hover:text-slate-400/60
 }
 
 svg.link-icon {
-  @apply bg-slate-900 ml-auto rounded-md p-1 h-8 w-8 transition-colors duration-150 hover:text-info-200/80
+  @apply bg-mirage-500/80 border-transparent border ml-auto rounded-md p-1 h-8 w-8 transition-colors duration-150 hover:text-primary hover:border-mirage-300/20
 }
 svg.link-icon-true {
-  @apply !text-info-200;
+  @apply !text-primary-300  hover:!text-primary;
 }
 svg.link-icon-false {
   @apply text-slate-600
 }
 .link-active-true {
-  @apply !bg-transparent hover:!bg-slate-900;
+  @apply !bg-transparent hover:!bg-slate-900 ;
 }
 
 .subpanel-label {
-  @apply text-sm font-medium leading-none
+  @apply text-sm font-medium leading-none 
 }
 .subpanel-label-true {
   @apply text-slate-400;
 }
 
 .subpanel-desc {
-  @apply text-xs font-medium leading-none text-slate-600 text-left;
+  @apply text-xs font-medium leading-none text-slate-400/30 text-left;
 }
 .subpanel-desc-true {
-  @apply !text-slate-400
+  @apply !text-slate-400/60
 }

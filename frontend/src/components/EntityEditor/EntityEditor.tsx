@@ -64,7 +64,7 @@ export default function EntityEditor({ activeEntity }: JSONObject) {
         isResizable={true}
       >
         <div
-          className=" overflow-hidden rounded-md z-10 bg-dark-600 border border-dark-300  flex flex-col h-full"
+          className="overflow-hidden rounded-md z-10 bg-dark-600 border border-dark-300  flex flex-col h-full"
           key="b"
           data-grid={{
             x: 0,

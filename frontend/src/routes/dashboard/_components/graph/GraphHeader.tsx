@@ -14,12 +14,14 @@ export default function GraphHeader({ graph, stats, refetchGraphs }: GraphHeader
   const navigate = useNavigate()
   const [deleteGraph] = useDeleteGraphMutation()
 
+
+
   return (
     <div className="flex flex-col w-full">
-      <div className="flex w-full bg-transparent border-b border-dark-400 -top-[2px] relative">
+      <div className="flex w-full  border-b-2  border-mirage-400/20 -top-[2px] relative">
         <div className=" w-full mx-auto">
           <section className="flex flex-col items-start justify-between px-4 lg:items-center lg:px-6 md:px-4 lg:flex-row md:flex-row md:items-center  relative">
-            <div className="flex flex-col w-full py-2 ">
+            <div className="flex flex-col w-full py-1">
               <h3 className="text-lg font-semibold whitespace-nowrap leading-normal text-slate-300">
                 {graph?.label}
               </h3>
@@ -27,7 +29,7 @@ export default function GraphHeader({ graph, stats, refetchGraphs }: GraphHeader
                 {graph?.description}
               </p>
             </div>
-            <div className="flex w-full gap-x-4 mt-auto">
+            <div className="flex w-full gap-x-4 mt-auto relative">
               <button
                 onClick={async () => {
                   await deleteGraph({ hid: graph.id })
@@ -47,15 +49,15 @@ export default function GraphHeader({ graph, stats, refetchGraphs }: GraphHeader
               </button>
               <Link
                 to={`/graph/inquiry/${graph?.id}`}
-                className='mb-3.5 ring-1 ring-info-200 pr-3 text-left text-sm font-semibold text-info-200 hover:text-info-300 flex items-center border border-info-200 hover:border-info-300 py-2 px-3 rounded-md mr-1'
+                className='btn-primary mb-3.5'
               >
                 Open graph
                 <EyeIcon className='ml-2 w-5 h-5 ' />
               </Link>
             </div>
           </section>
-          <hr className="mb-1 border-dark-400" />
-          <section className="mb-1 flex flex-col px-4 py-1 lg:px-6 md:px-4 gap-x-5 lg:flex-row md:flex-row gap-y-4">
+          <hr className=" border-b border-mirage-400/20" />
+          <section className=" bg-mirage-800/25 flex flex-col px-4 py-2 lg:px-6 md:px-4 gap-x-5 lg:flex-row md:flex-row gap-y-4">
             {graph && stats && (
               <>
                 <div className="flex items-center ml-[4px] gap-x-2">

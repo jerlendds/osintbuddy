@@ -121,7 +121,7 @@ export default function ProjectGraph({
       onNodeContextMenu={onSelectionCtxMenu}
       onSelectionContextMenu={onMultiSelectionCtxMenu}
     >
-      <Background variant={BackgroundVariant.Dots} className='bg-dark-[rgb(10 15 20)]' color='#1F3057' />
+      <Background variant={BackgroundVariant.Dots} className='bg-transparent' color='#1F3057' />
       <Controls />
     </ReactFlow>
   );

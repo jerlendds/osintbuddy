@@ -1,6 +1,6 @@
 import { InquiryHeader } from '@/components/Headers';
 import classNames from 'classnames';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Combobox } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import {

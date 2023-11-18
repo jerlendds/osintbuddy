@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { isSidebarOpen, selectIsAuthenticated, setSidebar } from "@/features/account/accountSlice";
+import { selectIsSidebarOpen, selectIsAuthenticated, setSidebar } from "@/features/account/accountSlice";
 import IncidentCard from "@/components/IncidentCard";
 import OverlayModal from "@/components/modals/OverlayModal";
 import AppLayoutSidebar from "@/components/AppLayoutSidebar";
@@ -30,7 +30,7 @@ const graphTourSteps: StepType[] = [
 export default function AppLayout() {
   const location = useLocation();
   const dispatch = useAppDispatch();
-  const showSidebar: boolean = useAppSelector((state) => isSidebarOpen(state));
+  const showSidebar: boolean = useAppSelector((state) => selectIsSidebarOpen(state));
   const [showIncidentsModal, setShowIncidentsModal] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const cancelIncidentsModalRef = useRef(null);

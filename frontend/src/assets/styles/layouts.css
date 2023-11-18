@@ -1,12 +1,24 @@
 .sidebar-link {
-  @apply flex items-center transition-colors duration-75 px-2 mx-2 my-1 py-2 text-base font-sans font-medium rounded-md text-slate-600 hover:bg-dark-800 hover:text-slate-200 ;
+  @apply flex items-center transition-colors duration-200 ease-in-out px-2 mx-2 my-1 py-2 text-base font-sans font-medium rounded-md text-slate-600 hover:bg-mirage-100/20 hover:text-slate-500  border hover:border-mirage-400/60 border-transparent hover:from-mirage-500/60 hover:to-mirage-500/40 hover:bg-gradient-to-r;
 }
 
 .sidebar-link.active {
-  @apply bg-dark-400 text-slate-200;
+  @apply from-primary-300/30 to-primary-300/40  from-60% border border-mirage-400/60 bg-gradient-to-br shadow-sm bg-mirage-500  text-slate-300 ;
 }
 
 .sidebar-link.active button {
-  @apply bg-dark-500 hover:bg-dark-600;
+  @apply bg-mirage-500 hover:bg-mirage-600  border-mirage-300/40  ;
+}
+.sidebar-link.active svg {
+  @apply text-slate-400 
+}
+.sidebar-link button {
+  @apply border border-mirage-400/40 transition-colors duration-200 hover:border-mirage-300 bg-mirage-500
 }
 
+.sidebar-link button svg {
+  @apply text-slate-400
+}
+.sidebar-link button:hover svg {
+  @apply text-slate-300
+}

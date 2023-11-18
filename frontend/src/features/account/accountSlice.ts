@@ -47,7 +47,7 @@ export const account = createSlice({
 
 export const { closeSidebar, openSidebar, setSidebar, setIsAuthenticated, signOut } = account.actions;
 
-export const isSidebarOpen = (state: RootState) => state.account.showSidebar;
+export const selectIsSidebarOpen = (state: RootState) => state.account.showSidebar;
 export const selectIsAuthenticated = (state: RootState) => state.account.isAuthenticated;
 
 export default account.reducer;

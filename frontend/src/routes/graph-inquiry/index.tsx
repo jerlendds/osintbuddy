@@ -44,7 +44,7 @@ export default function OsintPage() {
   const dispatch = useAppDispatch();
   const { hid } = useParams()
   const WS_GRAPH_INQUIRE = `ws://${WS_URL}/node/graph/${hid}`
-  
+
   const { data: activeGraph, isSuccess, isLoading, isError } = useGetGraphQuery({ hid: hid as string })
   const initialNodes = useAppSelector((state) => graphNodes(state));
   const initialEdges = useAppSelector((state) => graphEdges(state));
@@ -263,9 +263,9 @@ export default function OsintPage() {
       )}
       {isSuccess && (
         <HotKeys keyMap={keyMap} handlers={handlers}>
-          <div className='h-screen flex flex-col w-full'>
+          <div className='h-screen flex flex-col border-l border-mirage-950 w-full'>
             <EntityOptions activeProject={activeGraph} options={nodeOptions} />
-            <div className='h-full w-full justify-between bg-dark-900 '>
+            <div className='h-full w-full justify-between  bg-mirage-800/70'>
               <DisplayOptions />
               <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
 

@@ -10,7 +10,7 @@ export default function MarketPanel() {
     <>
       <section className={styles["subpanel-wrapper"]}>
         <Subpanel
-          label="PROVIDERS"
+          label="Community"
           showError={true}
           showEntities={showCommunityPlugins}
           setShowEntities={() => setShowCommunityPlugins(!showCommunityPlugins)}
@@ -22,7 +22,7 @@ export default function MarketPanel() {
           errorMessage={"The market will be here one day... Follow the project on the forum or on discord to get the latest updates"}
         />
         <Subpanel
-          label="COMMUNITY"
+          label="Providers"
           showError={true}
           showEntities={showProviders}
           setShowEntities={() => setShowProviders(!showProviders)}

@@ -4,8 +4,8 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
-from fastapi_cache import caches, close_caches
-from fastapi_cache.backends.redis import CACHE_KEY, RedisCacheBackend
+# from fastapi_cache import caches, close_caches
+# from fastapi_cache.backends.redis import CACHE_KEY, RedisCacheBackend
 # import sentry_sdk
 # from sentry_sdk.integrations.asyncio import AsyncioIntegration
 from app.api.api_v1.api import api_router, node

@@ -1,14 +1,17 @@
 /* wraps the sidebar with search and the main view */
 .sidebar-wrapper {
-  @apply h-screen !min-w-[20rem] max-w-[20rem] flex flex-col w-full py-8 bg-dark-700 border-r border-dark-400 pl-3 max-h-screen justify-between
+  @apply rounded !min-w-[20rem] max-w-[20rem] flex flex-col w-full pt-3.5 pb-6 border-r-2 border-mirage-800/70 from-mirage-500/20 to-mirage-400/20 bg-gradient-to-br px-2 max-h-screen justify-between shadow-xl 
 }
 
 .search-container {
-  @apply flex items-center relative bg-dark-900 border-y border-l border-dark-400 rounded rounded-r-none -mr-px
+  @apply flex items-center relative border transition-colors duration-200 ease-out from-mirage-400/60 to-mirage-400/30 bg-gradient-to-tl rounded border-mirage-300/30 hover:border-mirage-300 mb-2
+}
+.search-container:active, .search-container:focus-within {
+  @apply border-primary/50 from-mirage-300/30 to-mirage-300/20 bg-gradient-to-l
 }
 
 .search-container input {
-  @apply py-3 pl-1 w-full focus:outline-none relative bg-dark-700 text-sm font-medium text-slate-400 bg-transparent placeholder-slate-700
+  @apply py-1.5 pl-1.5 w-full focus:outline-none relative text-sm font-medium text-slate-400 bg-transparent placeholder-slate-600
 }
 
 .search-container svg {
@@ -16,22 +19,30 @@
 }
 
 .dashboard-tabs {
-  @apply max-h-screen overflow-y-scroll
+  @apply max-h-screen h-full overflow-y-scroll relative
 }
 
 .tabs-list {
-  @apply flex justify-between w-full px-3 py-2;
+  @apply flex justify-between w-full rounded p-1 absolute;
 }
 .tab {
-  @apply focus:outline-none transition-colors duration-75 ease-in-out flex items-center justify-center px-3 py-2.5 font-display rounded-full text-sm leading-none
+  @apply focus:outline-none transition-colors duration-200 ease-in-out flex items-center justify-center py-2.5 font-display rounded min-w-[6rem] text-sm leading-none z-20
 }
 .tab-true {
-  @apply bg-info-300 text-slate-300;
+  @apply  text-slate-300 ;
 }
 .tab-false {
-  @apply text-slate-700 hover:text-slate-600;
+  @apply text-slate-600 hover:text-slate-500;
 }
-
+.tab-slider {
+  @apply from-primary-300/40 to-primary-300/60 border border-mirage-400/60 bg-gradient-to-br h-[34px] translate-x-[2px] w-[95px] absolute transition-transform duration-200 rounded 
+}
+.entities-tab[aria-selected="true"] ~ div {
+  @apply translate-x-[100px]
+}
+.market-tab[aria-selected="true"] ~ div {
+  @apply translate-x-[200px]
+}
 .tab-panel {
   @apply w-full relative;
 }

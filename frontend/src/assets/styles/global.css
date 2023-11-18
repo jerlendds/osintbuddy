@@ -45,12 +45,20 @@ button {
   @apply text-slate-200 bg-info-300
 }
 
+html {
+  background-size: 100% 100%;
+background-position: 0px 0px,0px 0px,0px 0px,0px 0px,0px 0px;
+background-image: radial-gradient(49% 81% at 45% 47%, #7700ff 0%, #073AFF00 100%),radial-gradient(113% 91% at 17% -2%, rgb(7, 162, 46) 1%, #ff000000 99%),radial-gradient(142% 91% at 83% 7%, rgb(50, 13, 143) 1%, #ff00ea00 99%),radial-gradient(142% 91% at -6% 74%, rgba(0, 42, 255, 0.441) 1%, #FF000000 99%),radial-gradient(142% 91% at 111% 84%, rgb(0, 115, 255) 25%, rgb(69, 34, 150) 95%);
+}
+
 /* https://gradienta.io/editor */
 body {
-  @apply min-h-screen bg-dark-900;
+  @apply min-h-screen from-mirage-900/80 to-mirage-500/80 bg-gradient-to-br;
+  
 }
 #root {
-  @apply flex flex-col min-h-screen relative;
+  @apply flex flex-col min-h-screen relative bg-mirage-800/60
+
 }
 
 svg.icon {
@@ -114,12 +122,17 @@ figcaption {
   transition: all 0.15s ease-in-out;
 }
 
+.hamburger:hover .line {
+  background-color: rgb(71 85 105);
+
+}
+
 .hamburger .line {
+  background-color: rgb(51 65 85);
   border-radius: 50px;
   height: 2px;
-  background-color: #94A3B8;
   display: block;
-  margin: 8px auto;
+  margin: 6px auto;
   -webkit-transition: all 0.15s ease-in-out;
   -o-transition: all 0.15s ease-in-out;
   transition: all 0.15s ease-in-out;
@@ -128,19 +141,19 @@ figcaption {
 .hamburger.is-active .line:nth-child(1),
 .hamburger.is-active .line:nth-child(2),
 .hamburger.is-active .line:nth-child(3) {
-  width: 26px;
+  width: 20px;
 }
 
 .hamburger .line:nth-child(1) {
-  width: 30px;
+  width: 26px;
   margin-right: 100%;
 }
 .hamburger .line:nth-child(2) {
-  width: 30px;
+  width: 26px;
   margin-right: 100%;
 }
 .hamburger .line:nth-child(3) {
-  width: 30px;
+  width: 26px;
   margin-right: 100%;
 }
 .hamburger.is-active .line:nth-child(2) {
@@ -148,17 +161,17 @@ figcaption {
 }
 
 .hamburger.is-active .line:nth-child(1) {
-  -webkit-transform: translateY(10px);
-  -ms-transform: translateY(10px);
-  -o-transform: translateY(10px);
-  transform: translateY(10px);
+  -webkit-transform: translateY(8px);
+  -ms-transform: translateY(8px);
+  -o-transform: translateY(8px);
+  transform: translateY(8px);
 }
 
 .hamburger.is-active .line:nth-child(3) {
-  -webkit-transform: translateY(-10px) rotate(90deg);
-  -ms-transform: translateY(-10px) rotate(90deg);
-  -o-transform: translateY(-10px) rotate(90deg);
-  transform: translateY(-10px) rotate(90deg);
+  -webkit-transform: translateY(-8px) rotate(90deg);
+  -ms-transform: translateY(-8px) rotate(90deg);
+  -o-transform: translateY(-8px) rotate(90deg);
+  transform: translateY(-8px) rotate(90deg);
 }
 /* end Animated CSS Hamburger Menu */
 
