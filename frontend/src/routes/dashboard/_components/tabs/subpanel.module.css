@@ -1,9 +1,9 @@
 .subpanel-wrapper {
-  @apply mt-5 flex-col justify-between h-full
+  @apply mt-5 flex-col justify-between h-full 
 }
 
 .subpanel {
-  @apply flex flex-col pb-2 first:pt-8 pl-1
+  @apply flex flex-col pb-2 first:pt-8 pl-1 
 }
 
 
@@ -32,7 +32,7 @@
 }
 
 .subpanel-section {
-  @apply mt-2 overflow-y-scroll overflow-x-clip px-1;
+  @apply mt-2 overflow-x-clip px-1 overflow-y-hidden;
 }
 
 .subpanel-link {

@@ -159,7 +159,7 @@ export default function DashboardPage() {
                 if (tabIndex === 0) setShowCreateGraphModal(true)
                 if (tabIndex === 1) setShowCreateEntityModal(true) // TODO
               }}
-              className='btn-primary mx-4 mt-auto'
+              className='btn-primary mt-auto mx-4 mr-6'
             >
               Create {tabIndex === 0 ? 'graph' : 'entity'}
               <PlusIcon />

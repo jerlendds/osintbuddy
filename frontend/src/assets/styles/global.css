@@ -91,7 +91,7 @@ figcaption {
 
 }
 *::-webkit-scrollbar-track {
-  background: #1A1F27;
+  background: #19233433;
   width: 8px;
   border-radius: none;
 
@@ -99,11 +99,11 @@ figcaption {
 *::-webkit-scrollbar-thumb {
   background-color: #1A1F27;
   border-radius: none;
-  border-right: 10px solid #1A1F27;
+  border-right: 10px solid #1d222f;
 }
 * {
   scrollbar-width: 8px;
-  scrollbar-color: #1A1F27 #0B111F;
+  scrollbar-color: #1d222f #202d4333;
   border-radius: none;
 
 }
