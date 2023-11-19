@@ -15,9 +15,9 @@ export const tokyoNightTheme = auraInit({
     caret: "#c6c6c6",
     background: 'rgba(0 0 0 0)',
     fontFamily: 'monospace',
-    gutterBackground: 'rgba(36, 46, 77, .26)',
+    gutterBackground: 'rgba(36, 46, 77, .16)',
     selectionMatch: 'rgba(76, 86, 107, .00)',
-    lineHighlight: 'rgba(36, 46, 77, .86)',
+    lineHighlight: 'rgba(36, 46, 77, .16)',
   },
   styles: [{ tag: t.comment, color: "#6272a4" }],
 })
@@ -71,7 +71,7 @@ export default function EntityEditor({ activeEntity }: JSONObject) {
         isResizable={true}
       >
         <div
-          className="overflow-hidden rounded-md border-mirage-100/0 border z-10 from-mirage-100/10 to-mirage-200/10 shadow bg-gradient-to-tl from-50% flex flex-col h-full"
+          className="overflow-hidden rounded-md border-mirage-100/0 shadow-lg border z-10 from-mirage-100/10 to-mirage-200/10  bg-gradient-to-tl from-50% flex flex-col h-full"
           key="b"
           data-grid={{
             x: 0,

@@ -67,7 +67,7 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
         <div
           draggable
           onDragStart={(event) => onDragStart(event, entity.label)}
-          className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-400/10 hover:from-30% hover:to-mirage-300/40  border-mirage-300/40 border max-h-[160px] border-l-primary-300/50 hover:border-primary-400 transition-colors duration-150 border-l-[6px] hover:border-l-[6px] rounded-md w-full'
+          className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-300/10 hover:from-30% hover:to-mirage-200/20  border-mirage-300/20 border max-h-[160px] border-l-primary-300/50 hover:border-primary-400 transition-colors duration-150 border-l-[6px] hover:border-l-[6px] rounded-md w-full'
         >
           <div className='flex flex-col w-full select-none'>
             <div className='flex items-start justify-between gap-x-3 w-full relative'>
@@ -152,7 +152,7 @@ export default function EntityOptions({ activeProject }: JSONObject) {
     >
       <div
         draggable={false}
-        className=' overflow-hidden rounded-md z-10 border border-mirage-400/60  bg-mirage-600  flex flex-col h-min'
+        className=' overflow-hidden rounded-md z-10 border border-mirage-400/60  bg-mirage-700  flex flex-col h-min'
         key='a'
         data-grid={dataGrid}
       >
@@ -183,9 +183,7 @@ export default function EntityOptions({ activeProject }: JSONObject) {
         </ol>
         {showEntities && (
           <>
-
-
-            <div className='mt-2.5 hover:border-mirage-200/40 transition-colors duration-200 ease-in-out block justify-between items-center from-mirage-400/50 to-mirage-400/40 bg-gradient-to-r rounded border mb-2 mx-4 focus-within:!border-primary/40  px-3.5 py-1 text-slate-100 shadow-sm border-mirage-400/20 ring-light-900/10 focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l'>
+            <div className='mt-2.5 hover:border-mirage-400/40 transition-colors duration-200 ease-in-out block justify-between items-center to-mirage-400/50 from-mirage-300/20 bg-gradient-to-br rounded border mb-2 mx-4 focus-within:!border-primary/40  px-3.5 py-1 text-slate-100 shadow-sm border-mirage-400/20 ring-light-900/10 focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l'>
               <input
                 onChange={(e) => setSearchFilter(e.target.value)}
                 className='block w-full placeholder:text-slate-700 bg-transparent outline-none  sm:text-sm'

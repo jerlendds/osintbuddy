@@ -4,10 +4,10 @@
 }
 
 .search-container {
-  @apply flex items-center relative border transition-colors duration-200 ease-out from-mirage-400/60 to-mirage-400/30 bg-gradient-to-tl rounded border-mirage-300/30 hover:border-mirage-300 mb-2 mr-2 ml-1
+  @apply flex items-center relative border transition-colors duration-200 ease-out from-mirage-400/60 to-mirage-300/20 bg-gradient-to-tl rounded border-mirage-300/30 hover:border-mirage-300 mb-2 mr-2 ml-1
 }
 .search-container:active, .search-container:focus-within {
-  @apply border-primary/50 from-mirage-300/30 to-mirage-300/20 bg-gradient-to-l
+  @apply border-primary/50 to-mirage-400/10 from-mirage-400/20 bg-gradient-to-l
 }
 
 .search-container input {

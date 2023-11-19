@@ -265,7 +265,7 @@ export default function OsintPage() {
         <HotKeys keyMap={keyMap} handlers={handlers}>
           <div className='h-screen flex flex-col border-l border-mirage-950 w-full'>
             <EntityOptions activeProject={activeGraph} options={nodeOptions} />
-            <div className='h-full w-full justify-between  bg-mirage-800/70'>
+            <div className='h-full w-full justify-between  bg-mirage-900/90'>
               <DisplayOptions />
               <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
 
