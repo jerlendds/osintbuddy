@@ -14,7 +14,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: 'Inter';
   src: url('@/assets/fonts/Inter-Regular.woff2') format('woff2'),
@@ -23,7 +22,14 @@
   font-style: normal;
   font-display: swap;
 }
-
+@font-face {
+  font-family: 'Fira Code';
+  src: url('@/assets/fonts/FiraCode-Light.woff2') format('woff2'),
+      url('@/assets/fonts/FiraCode-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
 *,
 :after,
 :before {
@@ -53,7 +59,7 @@ background-image: radial-gradient(49% 81% at 45% 47%, #7700ff 0%, #073AFF00 100%
 
 /* https://gradienta.io/editor */
 body {
-  @apply min-h-screen from-mirage-900/90 to-mirage-700/70 bg-gradient-to-br;
+  @apply min-h-screen from-mirage-900/90 to-mirage-700/60 bg-gradient-to-br;
   
 }
 #root {
@@ -104,7 +110,7 @@ figcaption {
 * {
   scrollbar-width: 8px;
   scrollbar-color: #1d222f62 #202d4333;
-  
+
 }
 
 /* end Custom Scrollbar Style */
@@ -286,7 +292,7 @@ input[type='file'] {
   @apply !border-slate-600 !w-2 !h-2
 }
 
-.cm-line span {
-  @apply  text-sm;
+.cm-content {
+  @apply font-code text-sm font-semibold
 }
 /* end react-grid-layout and codemirror */

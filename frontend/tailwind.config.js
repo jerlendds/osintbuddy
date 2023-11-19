@@ -226,7 +226,7 @@ module.exports = {
     fontFamily: {
       sans: ["Inter"],
       display: ["Lexend"],
-      code: ["monospace"],
+      code: ["Fira Code", "monospace"],
     },
     extend: {
       animation: {

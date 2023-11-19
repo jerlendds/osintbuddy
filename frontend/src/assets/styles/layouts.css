@@ -20,5 +20,6 @@
   @apply text-slate-400
 }
 .sidebar-link button:hover svg {
-  @apply text-slate-300
+  @apply text-slate-300;
+
 }

@@ -18,7 +18,7 @@ export default function GraphHeader({ graph, stats, refetchGraphs }: GraphHeader
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex w-full  border-b-2  border-mirage-400/20 -top-[2px] relative">
+      <div className="flex w-full  border-b-2 border-mirage-400/20 -top-[2px] relative">
         <div className=" w-full mx-auto">
           <section className="flex flex-col items-start justify-between px-4 lg:items-center lg:px-6 md:px-4 lg:flex-row md:flex-row md:items-center  relative">
             <div className="flex flex-col w-full py-1">
