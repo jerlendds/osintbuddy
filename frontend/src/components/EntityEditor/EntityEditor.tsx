@@ -71,7 +71,7 @@ export default function EntityEditor({ activeEntity }: JSONObject) {
         isResizable={true}
       >
         <div
-          className="overflow-hidden rounded-md border-mirage-200/60 border z-10 from-mirage-300/30 to-mirage-200/60 shadow bg-gradient-to-tl from-10%   flex flex-col h-full"
+          className="overflow-hidden rounded-md border-mirage-100/0 border z-10 from-mirage-100/10 to-mirage-200/10 shadow bg-gradient-to-tl from-50% flex flex-col h-full"
           key="b"
           data-grid={{
             x: 0,
@@ -84,7 +84,7 @@ export default function EntityEditor({ activeEntity }: JSONObject) {
             minW: 4.5,
           }}
         >
-          <ol className="text-sm flex select-none from-mirage-400/80 bg-gradient-to-tr from-40% to-mirage-300/60 relative px-2 py-2 border-b border-mirage-300/80">
+          <ol className="text-sm flex select-none from-mirage-400/30 bg-gradient-to-tr from-40% to-mirage-300/10 relative px-2 py-2 border-b border-mirage-300/80">
             <li className="flex items-start">
               <div className="flex items-center">
                 <span className="text-slate-500 font-display truncate">
@@ -94,7 +94,7 @@ export default function EntityEditor({ activeEntity }: JSONObject) {
               </div>
             </li>
             <li className="flex mr-auto">
-              <div className="flex justify-between items-center w-full text-primary-100">
+              <div className="flex justify-between items-center w-full text-slate-400">
                 <span
                   className="text-inherit whitespace-nowrap font-display"
                   title={"placeholder"}
