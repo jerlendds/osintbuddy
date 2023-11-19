@@ -13,9 +13,9 @@ import { Icon } from "../Icons";
 export const tokyoNightTheme = auraInit({
   settings: {
     caret: "#c6c6c6",
-    background: 'rgba(46, 56, 87, .2)',
+    background: 'rgba(0 0 0 0)',
     fontFamily: 'monospace',
-    gutterBackground: 'rgba(46, 56, 87, .36)',
+    gutterBackground: 'rgba(36, 46, 77, .26)',
     selectionMatch: 'rgba(76, 86, 107, .00)',
     lineHighlight: 'rgba(36, 46, 77, .86)',
   },
@@ -71,7 +71,7 @@ export default function EntityEditor({ activeEntity }: JSONObject) {
         isResizable={true}
       >
         <div
-          className="overflow-hidden rounded-md border-mirage-200/60 border z-10 from-mirage-200/30 to-mirage-300/60 shadow bg-gradient-to-tl from-10%   flex flex-col h-full"
+          className="overflow-hidden rounded-md border-mirage-200/60 border z-10 from-mirage-300/30 to-mirage-200/60 shadow bg-gradient-to-tl from-10%   flex flex-col h-full"
           key="b"
           data-grid={{
             x: 0,
