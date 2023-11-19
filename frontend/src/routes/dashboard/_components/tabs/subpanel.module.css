@@ -48,10 +48,10 @@
 }
 
 svg.link-icon {
-  @apply bg-mirage-500/80 border-transparent border ml-auto rounded-md p-1 h-8 w-8 transition-colors duration-150 hover:text-primary hover:border-mirage-300/20
+  @apply bg-mirage-500/80 border-transparent border ml-auto rounded-md p-1 h-8 w-8 transition-colors duration-150 hover:text-primary-300 hover:border-mirage-300/20
 }
 svg.link-icon-true {
-  @apply !text-primary-300  hover:!text-primary;
+  @apply !text-primary-300  hover:!text-primary-200;
 }
 svg.link-icon-false {
   @apply text-slate-600

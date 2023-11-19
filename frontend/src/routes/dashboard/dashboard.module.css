@@ -15,7 +15,7 @@
 }
 
 .search-container svg {
-  @apply w-5 h-5 text-slate-700 ml-2
+  @apply w-5 h-5 text-slate-700 ml-2 
 }
 
 .dashboard-tabs {

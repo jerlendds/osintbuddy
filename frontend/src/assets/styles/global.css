@@ -44,17 +44,17 @@ button {
 
 
 ::-moz-selection {
-  @apply text-slate-200 bg-info-300
+  @apply text-slate-200 bg-radiance-500/60
 }
 
 ::selection {
-  @apply text-slate-200 bg-info-300
+  @apply text-slate-200 bg-radiance-500/60
 }
 
 html {
   background-size: 100% 100%;
 background-position: 0px 0px,0px 0px,0px 0px,0px 0px,0px 0px;
-background-image: radial-gradient(49% 81% at 45% 47%, #7700ff 0%, #073AFF00 100%),radial-gradient(113% 91% at 17% -2%, rgb(7, 162, 46) 1%, #ff000000 99%),radial-gradient(142% 91% at 83% 7%, rgb(50, 13, 143) 1%, #ff00ea00 99%),radial-gradient(142% 91% at -6% 74%, rgba(0, 42, 255, 0.441) 1%, #FF000000 99%),radial-gradient(142% 91% at 111% 84%, rgb(0, 115, 255) 25%, rgb(69, 34, 150) 95%);
+background-image: radial-gradient(49% 81% at 45% 47%, #9d2dffe3 0%, #073AFF00 100%),radial-gradient(113% 91% at 17% -2%, rgb(7, 162, 46) 1%, #ff000000 99%),radial-gradient(142% 91% at 83% 7%, rgb(50, 13, 143) 1%, #ff00ea00 99%),radial-gradient(142% 91% at -6% 74%, rgba(0, 42, 255, 0.441) 1%, #FF000000 99%),radial-gradient(142% 91% at 111% 84%, rgb(0, 115, 255) 25%, rgb(69, 34, 150) 95%);
 }
 
 /* https://gradienta.io/editor */

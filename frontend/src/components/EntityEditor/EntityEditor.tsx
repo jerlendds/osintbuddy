@@ -17,7 +17,7 @@ export const tokyoNightTheme = auraInit({
     fontFamily: 'monospace',
     gutterBackground: 'rgba(36, 46, 77, .16)',
     selectionMatch: 'rgba(76, 86, 107, .00)',
-    lineHighlight: 'rgba(36, 46, 77, .16)',
+    lineHighlight: 'rgba(36, 46, 77, .26)',
   },
   styles: [{ tag: t.comment, color: "#6272a4" }],
 })

@@ -3,7 +3,7 @@
 }
 
 .sidebar-link.active {
-  @apply from-primary-300/30 to-primary-300/40  from-60% border border-mirage-400/60 bg-gradient-to-br shadow-sm bg-mirage-500  text-slate-300 ;
+  @apply to-primary-300/30 from-primary-300/40   from-60% border border-mirage-400/60 bg-gradient-to-br shadow-sm bg-mirage-500  text-slate-300 ;
 }
 
 .sidebar-link.active button {
