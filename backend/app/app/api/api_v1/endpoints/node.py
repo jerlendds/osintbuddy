@@ -147,7 +147,7 @@ def map_read_to_blueprint(blueprint, map_element, data, position, entity_id) -> 
 
     blueprint['position'] = position
     blueprint['id'] = entity_id
-    blueprint['type'] = 'base'
+    blueprint['type'] = 'mini'
     blueprint['data'] = {
         'color': color,
         'icon': blueprint.get('icon'),
@@ -162,8 +162,8 @@ async def read_graph(action_type, send_json, project_uuid):
     nodes_data, edges = await load_initial_graph(project_uuid)
     for data in nodes_data:
         position = {
-            'x': data.pop('x')[0],
-            'y': data.pop('y')[0]
+            'x': data.pop('x', [0])[0],
+            'y': data.pop('y', [0])[0]
         }
         entity_id = data.pop(T.id)
         label_data = data.pop(T.label)
@@ -259,7 +259,7 @@ async def nodes_transform(
                 'elements': transform_ctx.pop('elements'),
             }
             transform_ctx['id'] = str(new_entity.id)
-            transform_ctx['type'] = 'base'
+            transform_ctx['type'] = 'mini'
             transform_ctx["action"] = "addNode"
             transform_ctx["position"] = node_transform["position"]
             transform_ctx["parentId"] = node_transform["id"]
