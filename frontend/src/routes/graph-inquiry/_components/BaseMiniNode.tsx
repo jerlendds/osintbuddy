@@ -6,7 +6,7 @@ import { ChangeEvent, Dispatch, Fragment, useEffect, useRef, useState } from 're
 import { Handle, Position } from 'reactflow';
 import { GripIcon, Icon } from '@/components/Icons';
 import { Dialog } from '@headlessui/react';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector, useComponentVisible } from '@/app/hooks';
 import { type ThunkDispatch } from 'redux-thunk';
 import {
   setEditState,
@@ -16,6 +16,7 @@ import {
   selectNodeValue,
   setEditId,
 } from '@/features/graph/graphSlice';
+import { toast } from 'react-toastify';
 
 var dropdownKey = 0;
 
@@ -100,15 +101,13 @@ const getNodeElement = (nodeId, value, element: NodeInput, key: string | null = 
 export default function BaseMiniNode({
   ctx,
   sendJsonMessage,
-  setIsEditing,
-}: {
-  ctx: JSONObject;
-  sendJsonMessage: () => void;
-  setIsEditing: () => void;
-}) {
+  closeRef,
+  isOpen,
+  setIsOpen,
+  dispatch
+}: JSONObject) {
   const node = ctx.data;
 
-  const dispatch = useAppDispatch();
 
   const backgroundColor = node?.color?.length === 7 ? `${node.color}76` : node?.color ? node.color : '#145070';
 
@@ -124,15 +123,21 @@ export default function BaseMiniNode({
       <Handle position={Position.Bottom} id='b2' key='b2' type='target' style={handleStyle} />
       <Handle position={Position.Left} id='l2' key='l2' type='target' style={handleStyle} />
       <div
-        onClick={() => {
-          dispatch(setEditId(ctx.id));
-          setIsEditing(true);
+        onDoubleClick={() => {
+          setIsOpen(!isOpen)
+          if (!isOpen) {
+            dispatch(setEditId(ctx.id));
+
+          } else {
+            dispatch(setEditId(null))
+          }
         }}
         data-label-type={node.label}
         className='node container !rounded-full'
         style={node.style}
       >
-        <div style={{ backgroundColor }} className='header !rounded-full !p-4'>
+        <div
+          style={{ backgroundColor }} className='header !rounded-full !p-4'>
           <Icon icon={node.icon} className='!h-14 !w-14  cursor-grab focus:cursor-grabbing' />
         </div>
       </div>

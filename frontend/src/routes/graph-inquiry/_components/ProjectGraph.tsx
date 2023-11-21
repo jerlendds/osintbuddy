@@ -34,7 +34,9 @@ export default function ProjectGraph({
   onSelectionCtxMenu,
   onMultiSelectionCtxMenu,
   activeProject,
-  setIsEditingMini
+  setIsEditingMini,
+  isEditingMini,
+  closeMiniRef
 }: JSONObject) {
   const dispatch = useAppDispatch();
   const onEdgeUpdate = useCallback(
@@ -79,10 +81,28 @@ export default function ProjectGraph({
     [graphInstance]
   );
 
+
+
   const nodeTypes = useMemo(
     () => ({
-      base: (data: JSONObject) => <BaseNode ctx={data} sendJsonMessage={sendJsonMessage} />,
-      mini: (data: JSONObject) => <BaseMiniNode setIsEditing={setIsEditingMini} ctx={data} sendJsonMessage={sendJsonMessage} />,
+      base: (data: JSONObject) => (
+        <BaseNode
+          dispatch={dispatch}
+          ctx={data}
+          closeRef={closeMiniRef}
+          sendJsonMessage={sendJsonMessage}
+        />),
+      mini: (data: JSONObject) => (
+        <BaseMiniNode
+          dispatch={dispatch}
+          isOpen={isEditingMini}
+          setIsOpen={setIsEditingMini}
+          closeRef={closeMiniRef}
+          setIsEditing={setIsEditingMini}
+          ctx={data}
+          sendJsonMessage={sendJsonMessage}
+        />
+      ),
     }),
     []
   );

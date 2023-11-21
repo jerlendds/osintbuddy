@@ -173,7 +173,7 @@ export default function OsintPage() {
       if (lastJsonMessage && lastJsonMessage.action === 'error') toast.error(`${lastJsonMessage.detail}`);
       if (!Array.isArray(lastJsonMessage)) {
         if (lastJsonMessage.action === 'addInitialLoad') {
-          lastJsonMessage.nodes.forEach((node: JSONObject, idx: JSONObject) => addNode(node.id.toString(), node.data, node.position));
+          lastJsonMessage.nodes.forEach((node: JSONObject, idx: JSONObject) => addNode(node.id.toString(), node.data, node.position, 'mini'));
           lastJsonMessage.edges.forEach((edge: JSONObject) => addEdge(edge.source.toString(), edge.target.toString()));
         }
         if (lastJsonMessage.action === 'addNode') {
@@ -250,9 +250,7 @@ export default function OsintPage() {
   };
 
   const { ref, isOpen, setIsOpen } = useComponentVisible(false);
-  const activeNodeId = useAppSelector((state) => selectEditId(state));
-  const activeNode = useAppSelector((state) => selectNode(state, activeNodeId));
-
+  console.log('isOpen?!', isOpen)
   return (
     <>
       {isError && (
@@ -265,19 +263,9 @@ export default function OsintPage() {
         <HotKeys keyMap={keyMap} handlers={handlers}>
           <div className='h-screen flex flex-col w-full'>
             <EntityOptions activeProject={activeGraph} options={nodeOptions} />
-            <div className='h-full w-full justify-between bg-mirage-700/90'>
+            <div className='h-full w-full justify-between bg-mirage-700/95'>
               <DisplayOptions />
               <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
-
-                <MiniEditDialog
-                  setIsOpen={setIsOpen}
-                  closeRef={ref}
-                  isOpen={isOpen}
-                  activeNode={activeNode}
-                  nodeId={activeNodeId}
-                  sendJsonMessage={sendJsonMessage}
-                />
-
                 <ProjectGraph
                   activeProject={activeGraph}
                   onSelectionCtxMenu={onSelectionCtxMenu}
@@ -296,6 +284,8 @@ export default function OsintPage() {
                   lastMessage={lastMessage}
                   updateNode={createNodeUpdate}
                   setIsEditingMini={setIsOpen}
+                  isEditingMini={isOpen}
+                  closeMiniRef={ref}
                 />
               </div>
             </div>

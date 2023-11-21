@@ -8,7 +8,7 @@ import { GripIcon, Icon } from '@/components/Icons';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { type ThunkDispatch } from 'redux-thunk';
-import { type Graph, EditState, saveUserEdits, selectNodeValue } from '@/features/graph/graphSlice';
+import { type Graph, EditState, saveUserEdits, selectNodeValue, setEditId } from '@/features/graph/graphSlice';
 import { AnyAction } from '@reduxjs/toolkit';
 
 var dropdownKey = 0;
@@ -34,7 +34,7 @@ type NodeElement = NodeInput & {
   Dispatch<AnyAction>;
 };
 
-export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject; sendJsonMessage: () => void }) {
+export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject) {
   const node = ctx.data;
 
   const dispatch = useAppDispatch();
@@ -118,7 +118,7 @@ export default function BaseNode({ ctx, sendJsonMessage }: { ctx: JSONObject; se
       <Handle position={Position.Top} id='t2' key='t2' type='target' style={handleStyle} />
       <Handle position={Position.Bottom} id='b2' key='b2' type='target' style={handleStyle} />
       <Handle position={Position.Left} id='l2' key='l2' type='target' style={handleStyle} />
-      <div data-label-type={node.label} className=' node container' style={node.style}>
+      <div onDoubleClick={() => dispatch(setEditId(null))} data-label-type={node.label} className=' node container' style={node.style}>
         <div style={{ backgroundColor }} className='header '>
           <GripIcon className='' />
           <div className='text-container '>
