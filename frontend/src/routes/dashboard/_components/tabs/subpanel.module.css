@@ -6,8 +6,6 @@
   @apply flex flex-col pb-2 first:pt-8 pl-1 
 }
 
-
-
 .subpanel > p {
   @apply text-sm py-4 font-medium text-slate-500 focus:outline-none cursor-pointer px-2
 }
@@ -24,11 +22,11 @@
 }
 
 .show-header-icon-true {
-  @apply !rotate-0
+  @apply !-rotate-180
 }
 
 .show-header-icon-false {
-  @apply -rotate-180;
+  @apply rotate-0;
 }
 
 .subpanel-section {
@@ -36,15 +34,19 @@
 }
 
 .subpanel-link {
-  @apply mb-1  focus:outline-none py-3 bg-transparent border rounded-md border-transparent hover:to-mirage-400/20 hover:bg-gradient-to-bl hover:border-mirage-700/70  px-3 hover:translate-x-px z-50 transition-transform   hover:from-mirage-500/90 text-slate-400 hover:text-slate-400/20 focus:bg-mirage-500/60 focus:text-slate-400/40  w-full  flex items-center -translate-x-px
+  @apply mb-1  focus:outline-none py-3 bg-transparent border rounded-md border-transparent hover:to-mirage-400/20 hover:bg-gradient-to-bl hover:border-mirage-700/70  px-3 hover:translate-x-px z-50 transition-transform   hover:from-mirage-400/10 text-slate-400 hover:text-slate-400/20 focus:bg-mirage-500/60 focus:text-slate-400/40  w-full  flex items-center -translate-x-px
+}
+
+.subpanel-link div:hover .subpanel-label  {
+  @apply !text-slate-400/95
 }
 
 .subpanel-link-true {
-  @apply !border-mirage-300/30 from-mirage-400/10 to-mirage-400/30 hover:from-mirage-400/10 hover:to-mirage-400/30 bg-gradient-to-br hover:bg-gradient-to-br hover:translate-x-0 shadow translate-x-0
+  @apply !border-mirage-300/30 from-mirage-400/10 to-mirage-400/30 hover:from-mirage-400/10 hover:to-mirage-400/30 bg-gradient-to-br hover:bg-gradient-to-br hover:translate-x-0 shadow translate-x-0 
 }
 
 .subpanel-link div {
-  @apply flex w-full flex-col items-start mr-3 space-y-1.5 text-slate-600 hover:text-slate-400/60
+  @apply flex w-full flex-col items-start space-y-1.5 text-slate-400/30 hover:text-slate-400/60
 }
 
 svg.link-icon {
@@ -64,11 +66,13 @@ svg.link-icon-false {
   @apply text-sm font-medium leading-none 
 }
 .subpanel-label-true {
-  @apply text-slate-400;
+  @apply text-slate-400/95;
 }
-
+.subpanel-label-false {
+  @apply text-slate-500/60;
+}
 .subpanel-desc {
-  @apply text-xs font-medium leading-none text-slate-400/30 text-left;
+  @apply text-xs font-medium leading-none  text-left;
 }
 .subpanel-desc-true {
   @apply !text-slate-400/60

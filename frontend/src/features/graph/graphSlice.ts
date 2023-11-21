@@ -73,6 +73,20 @@ export const graph = createSlice({
 
     setEditId: (state, action: PayloadAction<string>) => {
       state.editId = action.payload;
+
+      if (action.payload === null) {
+        state.nodes = state.nodes.map((node) => ({
+          ...node,
+          type: 'mini'})
+        )
+      } else {
+        state.nodes = state.nodes.map((node) => node.id === action.payload ?
+          {
+            ...node,
+            type: 'base'
+          } : node
+        )
+      }
     },
 
     setEditState: (state, action: PayloadAction<EditState>) => {

@@ -76,7 +76,7 @@ export default function EntityEditor({ activeEntity }: JSONObject) {
           data-grid={{
             x: 0,
             y: 0,
-            w: 15,
+            w: 15.5,
             h: 14,
             maxH: 20,
             minH: 1,

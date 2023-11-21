@@ -166,8 +166,8 @@ export default function DashboardPage() {
             </button>
           ) : (
             <button
-              className='btn-primary'
-            >Upload a plugin</button>
+              className='btn-primary mx-4 mr-6'
+            >Upload plugin</button>
           )}
         </aside>
         <Outlet context={{

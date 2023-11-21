@@ -22,15 +22,15 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
   return (
     <div
       className={classNames(
-        "fixed inset-y-0 flex border-r from-mirage-600/30 to-mirage-500/30 bg-gradient-to-br shadow border-mirage-800/80 w-64 flex-col transition-transform duration-100",
+        "fixed inset-y-0 flex border-r from-mirage-400/20 to-mirage-500/20 bg-gradient-to-br shadow border-mirage-800/80 w-64 flex-col transition-transform duration-100",
         showSidebar ? "translate-x-0" : "-translate-x-52 border-r-2"
       )}
     >
-      <div className="flex min-h-0 flex-1 flex-col ">
+      <div className="flex min-h-0 flex-1 flex-col mt-2 ">
         <div
           className={classNames(
-            "flex h-11 mt-1 flex-shrink-0 items-center justify-between",
-            showSidebar ? "px-3" : "px-1"
+            "flex h-10 my-1 flex-shrink-0 items-center justify-between",
+            showSidebar ? "px-4" : "px-1"
           )}
         >
           <Link to="/" replace>
@@ -44,7 +44,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
           />
         </div>
         <div className="flex flex-1 flex-col overflow-y-auto">
-          <nav className="flex-1 flex py-4 pt-3 flex-col">
+          <nav className="flex-1 flex py-4 pt-1 flex-col">
             {navigation.map((item) => (
               <NavLink
                 key={item.name}

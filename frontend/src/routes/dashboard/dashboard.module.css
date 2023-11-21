@@ -41,7 +41,7 @@
   @apply translate-x-[0px] w-[98px]
 }
 .entities-tab[aria-selected="true"] ~ div {
-  @apply translate-x-[102px] w-[99px]
+  @apply translate-x-[101px] w-[100px]
 }
 .market-tab[aria-selected="true"] ~ div {
   @apply translate-x-[205px] w-[93px]
