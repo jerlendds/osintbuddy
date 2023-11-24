@@ -84,7 +84,7 @@ An almost incomprehensible amount of data is created every day. And each year, f
 - Grey literature *(technical reports, preprints, patents, business documents, etc)*
 
 
-OSINT is a method of working with, assessing and ranking information — We are living in the [Information Age](https://en.wikipedia.org/wiki/Information_Age) and the volume of information OSINT research has to deal with [(information explosion)](https://en.wikipedia.org/wiki/Information_explosion) and the issue of low quality data leaves researchers drowning. The majority of this data is unstructured introducing many challenges to analyzing it and producing actionable intelligence since most data analytics databases are designed for structured data.
+OSINT is a method of working with, assessing and ranking information — We are living in the [information Age](https://en.wikipedia.org/wiki/Information_Age) and the volume of information OSINT research has to deal with [(information explosion)](https://en.wikipedia.org/wiki/Information_explosion) and the issue of low quality data leaves researchers drowning. The majority of this data is unstructured introducing many challenges to analyzing it and producing actionable intelligence since most data analytics databases are designed for structured data.
 
 
 We've decided to do something about it. The rapid developments in technologies such as AI and big data analytics have opened new horizons for OSINT which weren't previously available. We want our information quick and to the point, that's why we're building an open-source OSINT tool that's free. Free to use, free to modify, free to do with as you wish, and built with plain old web technologies anyone can learn. But this isn't really the project. This is a free new community. A community for OSINT enthusiasts around the world and we need your help to design it, to program it, and to build it. We want to hear your suggestions, your ideas, and we're going to build it right in front of your eyes. The notion of a “needle in a haystack” is taken to the extreme on the internet. Let's build a magnet.
@@ -95,6 +95,30 @@ We've decided to do something about it. The rapid developments in technologies s
 - Visual representation of fetched data for easy understanding.
 - A development platform that is open for contributions.
 - Plugin-based system for transforming data, check out the [osintbuddy](https://pypi.org/project/osintbuddy/) package.
+- Works sometimes :)
+
+
+### The future
+
+At the core of the OSINTBuddy project lies a vision far beyond the mere creation of a data aggregation tool. What we aspire to start is the birth of a knowledge-driven community, passionately dedicated to the development of an evolving intelligence system- a system and platform designed for the discovery, interaction, and visualization of information to derive actionable insights. We imagine a system that not only learns from and evolves with human intellectual capabilities but also augments the same. We dream of a future where the vast expanse of information online, instead of being insurmountable, becomes a well-organized catalogue, where finding the "needle" is as straightforward as requesting it. Heres some of our ideas for the future in no particular order:
+
+
+#### Collective intelligence through collaborative workspaces
+
+- We want to create a platform that promotes collective intelligence. Consider currently popular collaborative workspaces such as Notion, Logseq, or Obsidian integrated seamlessly into our data workspace. A system where each individual user contributes to the pool of knowledge, where insights from your workspaces can be published and enagaged with by a global community. Where every connection made, every data source integrated, every plugin created and shared by members of our community contributes to advancing your insights and the community behind the OSINTBuddy project. 
+
+
+#### Intuitive search and discovery tools
+
+- To make the 'needle-hunt' in the haystack of the internet a breeze, we plan to include intuitive search and discovery tools. We want you to be able to interact with our algorithms, search for particular data, apply advanced query filters, data layouts, and more so you can uncover insights that matter via an easy-to-navigate web-based interface.
+
+#### Real-time monitoring
+
+- This functionality aims to provide real-time updates, alerting users to new relevant data, changes in trends, and emerging patterns in their field of interest, offering insights as they unfold.
+
+#### AI, swarm intelligence, and evolutionary algorithms
+
+- Inspired by nature, where simple creatures achieve complex tasks through collective decision making, our tool will mimic these principles where it can. Integrating AI, swarm intelligence, and evolutionary algorithms could let us create a tool that can continually evolve and optimize its operations over time. Imagine an intelligence system that fluidly adapts to the ever-changing landscapes of the internet.
 
 
 ## Getting Started
@@ -135,41 +159,11 @@ To start using OSINTBuddy, follow these simple installation steps:
  
 ~~See the [trello board](https://trello.com/b/99Q70frX/) for a list of our upcoming features.~~
 
-See the forum: [forum.osintbuddy.com](https://forum.osintbuddy.com), for a list of our upcoming features, to contribute feedback, ideas, and more (*Note: We're currently in the process of setting up the forum and moving trello issues over. We're not sure when this will be completed. For the time being you can count on dev log updates being on the forum from now on*).
+See the forum: [forum.osintbuddy.com](https://forum.osintbuddy.com), for a list of our upcoming features, to contribute feedback, ideas, and more (*Note: We're currently in the process of setting up the forum and moving trello issues over. We're not sure when this will be completed. For the time being you can count on dev log updates being on the forum or discord from now on*).
 
 
 See the [open issues](https://github.com/jerlendds/osintbuddy/issues)
 for a list of requested features (and known issues).
-
-### [↑](#introducing-osintbuddy)Progress Notes
-
-- [x] Website node
-- [x] Google search node
-- [x] Google cache search node
-- [x] DNS node
-- [x] URL node
-- [x] IP node
-- [x] CSE node
-- [x] Username node
-- [x] Added a plugin system
-- [x] Updated plugin system to be easier to work with
-- [x] Implemented automatic saving for project graphs
-- [x] Added `ob` and `launcher` CLI tools
-- [x] Added Casdoor for auth
-- [x] Improved UI/UX
-
-*Coming soon*
- - [] Add wizards for plugin create and custom `.env` setup
- - [] Rework plugin system to its own service
- - [] Add playwright and start reworking existing selenium based plugins  
-
-If you're a developer I recommend running bootstrap first, this sets up the new environment for containers: run`./launcher bootstrap` then afterwards start the stack with `./launcher start`! After 10m up to an hour depending on network speeds you'll be rewarded with:
-
-- a new UX
-- an updated plugin system now running as its own service
-- Casdoor managed auth for signing in/up, where the default user and password is `osintbuddy`
-- a new CLI tool, `ob`, for managing plugin development and the plugin server
-- and another CLI `./launcher` for managing the OSINTBuddy stack
 
 
 ## [↑](#introducing-osintbuddy)Contributing
