@@ -100,7 +100,7 @@ We've decided to do something about it. The rapid developments in technologies s
 
 ### The future
 
-At the core of the OSINTBuddy project lies a vision far beyond the mere creation of a data aggregation tool. What we aspire to start is the birth of a knowledge-driven community, passionately dedicated to the development of an evolving intelligence system- a system and platform designed for the discovery, interaction, and visualization of information to derive actionable insights. We imagine a system that not only learns from and evolves with human intellectual capabilities but also augments the same. We dream of a future where the vast expanse of information online, instead of being insurmountable, becomes a well-organized catalogue, where finding the "needle" is as straightforward as requesting it. Heres some of our ideas for the future in no particular order:
+At the core of this project lies a far more ambitious vision than the mere creation of a data aggregation tool. What we aspire to start is the birth of a knowledge-driven community, passionately dedicated to the development of an evolving intelligence tool - a system and platform designed for the discovery, interaction, and visualization of information to derive actionable insights. We imagine a system that not only learns from and evolves with human intellectual capabilities but also augments the same. We dream of a future where the vast expanse of information online, instead of being insurmountable, becomes a well-organized catalogue, where finding the "needle" is as straightforward as requesting it. Here are some of our ideas for the future in no particular order:
 
 
 #### Collective intelligence through collaborative workspaces
