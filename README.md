@@ -112,9 +112,11 @@ At the core of this project lies a far more ambitious vision than the mere creat
 
 - To make the 'needle-hunt' in the haystack of the internet a breeze, we plan to include intuitive search and discovery tools. We want you to be able to interact with our algorithms, search for particular data, apply advanced query filters, data layouts, and more so you can uncover insights that matter via an easy-to-navigate web-based interface.
 
+
 #### Real-time monitoring
 
 - This functionality aims to provide real-time updates, alerting users to new relevant data, changes in trends, and emerging patterns in their field of interest, offering insights as they unfold.
+
 
 #### AI, swarm intelligence, and evolutionary algorithms
 
@@ -128,10 +130,10 @@ To start using OSINTBuddy, follow these simple installation steps:
 ### Installation
 1. Clone the repo and submodules
    ```sh
-   git clone --depth=1 --recurse-submodules https://github.com/jerlendds/osintbuddy.git
+   git clone --recurse-submodules https://github.com/jerlendds/osintbuddy.git
    cd osintbuddy
    # using ssh?
-   # git clone --depth=1 --recurse-submodules git@github.com:jerlendds/osintbuddy.git 
+   # git clone --recurse-submodules git@github.com:jerlendds/osintbuddy.git 
    ```
 
 2. Install Docker & Compose
@@ -179,7 +181,26 @@ Contributions are what make the open source community such an amazing place to l
 
 ## [↑](#introducing-osintbuddy)License
 
-[GNU Affero General Public License v3.0](https://choosealicense.com/licenses/apache-2.0/)
+We are using the [GNU Affero General Public License v3.0](https://choosealicense.com/licenses/agpl-3.0/)
+
+[Why the AGPLv3?](https://ploum.net/2023-06-19-more-rms.html)
+
+> In the early eighties, RMS realised that software was transformed from "a way to use a machine" to a product or a commodity. He foresaw that this would put an end to collective intelligence and to knowledge sharing. He also foresaw that if we were not the master of our software, we would quickly become the slave of the machines controlled by soulless corporations.
+> For the last 30 years, businesses and proponents of Open Source, including Linus Torvalds, have been decrying the GPL because of the essential right of "doing business" aka "privatising the common". Microsoft, through Github, Google and Apple pushed for MIT/BSD licensed software as the open source standard.
+
+> Our freedoms were taken away by proprietary software which is mostly coded by ourselves. For free. We spent our free time developing, debugging, testing software before handing them to corporations that we rever, hoping to maybe get a job offer or a small sponsorship from them. Without Non-copyleft Open Source, there would be no proprietary MacOS, OSX nor Android. There would be no Facebook, no Amazon. We created all the components...
+> We see that young student are taught "computer" with Word and PowerPoint, that young hackers are mostly happy with rooting Android phones or blindly using the API of a trendy JS framework. That Linux distributions are only used by computer science students in virtualised containers. 
+
+### The four freedoms and one obligation of free software
+- The right to use the software at your own discretion
+- The right to study the software
+- The right to modify the software
+- The right to redistribute the software, including with modifications
+- The obligation to keep those four rights, effectively keeping the software in the commons.
+
+> We need to realise that any software without that last obligation will, sooner or later, become an oppression tool against ourselves. And that maintaining the commons is not only about software. It’s about everything we are as a society and everything we are losing against individual greed. Ultimately, our planet is our only common resource. We should defend it from becoming a commodity.
+
+
 
 *Note: the [OSINTBuddy PyPi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*.
 
