@@ -56,7 +56,7 @@
     "test": "craco test",
     "client:openapi:gen:deprecated": "rm -f -dr ./src/app/openapi && mkdir ./src/app/openapi && openapi --name obSDK -i http://localhost:48997/api/v1/openapi.json --output ./src/app/openapi --exportModels true --exportSchemas true --indent 2 --postfixServices v1",
     "client:gen": "npx @rtk-query/codegen-openapi openapi-config.ts",
-    "prepare": "cd .. && husky install frontend/.husky",
+    "install:hooks": "cd .. && husky install frontend/.husky",
     "rm:husky": "yarn remove husky && git config --unset core.hooksPath"
   },
   "eslintConfig": {
