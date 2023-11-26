@@ -7,6 +7,10 @@ import { Link } from 'react-router-dom';
 import 'react-grid-layout/css/styles.css';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useGetEntitiesQuery } from '@/app/api';
+import { selectViewMode, setNodeType, setViewMode } from '@/features/graph/graphSlice';
+import classNames from 'classnames';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { Square2StackIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
 
 type UseResizeProps = {
   minWidth: number;
@@ -139,14 +143,21 @@ export default function EntityOptions({ activeProject }: JSONObject) {
   };
 
   const [isDraggable, setDraggable] = useState(false);
+  const viewMode = useAppSelector((state) => selectViewMode(state))
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setNodeType(viewMode))
+  }, [viewMode])
 
   return (
     <ResponsiveGridLayout
       compactType={null}
       className='z-[99] absolute'
-      rowHeight={46}
+      rowHeight={38}
       breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-      cols={{ lg: 40, md: 38, sm: 28, xs: 22, xxs: 18 }}
+      cols={{ lg: 40, md: 40, sm: 28, xs: 22, xxs: 18 }}
       isDraggable={isDraggable}
       isResizable={true}
     >
@@ -154,7 +165,8 @@ export default function EntityOptions({ activeProject }: JSONObject) {
         draggable={false}
         className=' overflow-hidden rounded-md z-10 border border-mirage-400/70  from-mirage-500/95 to-mirage-800/80 bg-gradient-to-br flex flex-col h-min'
         key='a'
-        data-grid={dataGrid}
+        data-grid={{ ...dataGrid, isBounded: true }}
+
       >
         <ol className='text-sm flex select-none relative px-4 pt-2'>
           <li className='flex mr-auto'>
@@ -199,6 +211,65 @@ export default function EntityOptions({ activeProject }: JSONObject) {
             </ul>
           </>
         )}
+      </div>
+      <div key='b' draggable={true} data-grid={{ ...dataGrid, x: 50, y: 0, h: 1, w: 6 }} className=' overflow-hidden rounded-md z-10 border border-mirage-400/70  from-mirage-500/95 to-mirage-800/80 bg-gradient-to-br flex flex-col h-min'>
+        <ol className='text-sm flex select-none relative px-4 pt-2'>
+          <li className='flex mr-auto'>
+            <h5
+              title={activeProject.name}
+              className='flex whitespace-nowrap truncate justify-between items-center w-full text-slate-600 text-inherit font-display '>
+              <Link title='View all graphs' className='text-slate-600' to='/dashboard/graph' replace>
+                Layouts&nbsp;
+              </Link>{" /"}&nbsp;
+              <span className="text-slate-400/60">
+                Force
+              </span>
+              &nbsp;/
+            </h5>
+          </li>
+          <li className='flex'>
+            <div className='flex justify-between items-center w-full '>
+              <button
+                onClick={() => setDraggable(!isDraggable)}
+                className='text-slate-600 hover:text-alert-700 text-inherit whitespace-nowrap font-display'
+                title={activeProject.name}
+                aria-current={activeProject.description}
+              >
+                {isDraggable ? <LockOpenIcon className='w-5 h-5 text-inherit' /> : <LockClosedIcon className='w-5 h-5 text-inherit' />}
+              </button>
+            </div>
+          </li>
+        </ol>
+        <fieldset className='isolate inline-flex shadow-sm pt-2'>
+          <button
+            onClick={() => dispatch(setViewMode('base'))}
+            type='button'
+            className={classNames(
+              'relative py-3 inline-flex items-center rounded-l-md outline-none hover:ring-2 px-3 text-slate-400 ring-1 focus:bg-dark-800 ring-inset hover:bg-dark-600 focus:z-10 ring-dark-300',
+              viewMode === 'base' && 'bg-dark-900'
+            )}
+          >
+            <span className='sr-only'>List view</span>
+            <Square2StackIcon
+              className={classNames('h-5 w-5', viewMode === 'base' && 'text-info-100')}
+              aria-hidden='true'
+            />
+          </button>
+          <button
+            onClick={() => dispatch(setViewMode('mini'))}
+            type='button'
+            className={classNames(
+              'relative py-3 inline-flex items-center rounded-r-md  outline-none hover:ring-2 px-3 text-slate-400 ring-1 focus:bg-dark-800 ring-inset hover:bg-dark-600 focus:z-10 ring-dark-300',
+              viewMode === 'mini' && 'bg-mirage-800'
+            )}
+          >
+            <span className='sr-only'>List view</span>
+            <Squares2X2Icon
+              className={classNames('h-5 w-5', viewMode === 'mini' && 'text-info-100')}
+              aria-hidden='true'
+            />
+          </button>
+        </fieldset>
       </div>
     </ResponsiveGridLayout>
   );

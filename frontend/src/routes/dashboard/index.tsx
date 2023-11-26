@@ -101,7 +101,7 @@ export default function DashboardPage() {
                 {({ selected }) => (
                   <Link
                     to='graph'
-                    className={styles["tab"] + ` ${styles["graph-tab"]} ` + styles[`tab-${selected}`]}
+                    className={`${styles["tab"]} ${styles["graph-tab"]} ${styles[`tab-${selected}`]}`}
                   >
                     Graphs
                   </Link>
@@ -111,7 +111,7 @@ export default function DashboardPage() {
                 {({ selected }) => (
                   <Link
                     to='entity'
-                    className={styles["tab"] + ` ${styles["entities-tab"]} ` + styles[`tab-${selected}`]}
+                    className={`${styles["tab"]} ${styles["entities-tab"]} ${styles[`tab-${selected}`]}`}
                   >
                     Entities
                   </Link>
@@ -121,7 +121,7 @@ export default function DashboardPage() {
                 {({ selected }) => (
                   <Link
                     to='market'
-                    className={styles["tab"] + ` ${styles["market-tab"]} ` + styles[`tab-${selected}`]}
+                    className={`${styles["tab"]} ${styles["market-tab"]} ${styles[`tab-${selected}`]}`}
                   >
                     Market
                   </Link>

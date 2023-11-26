@@ -20,7 +20,6 @@ import {
   selectNode,
   selectViewMode,
 } from '@/features/graph/graphSlice';
-import DisplayOptions from './_components/DisplayOptions';
 import { MiniEditDialog } from './_components/BaseMiniNode';
 import { WS_URL } from '@/app/baseApi';
 import CommandPallet from './_components/CommandPallet';
@@ -264,7 +263,6 @@ export default function OsintPage() {
           <div className='h-screen flex flex-col w-full'>
             <EntityOptions activeProject={activeGraph} options={nodeOptions} />
             <div className='h-full w-full justify-between bg-mirage-700/95'>
-              <DisplayOptions />
               <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
                 <ProjectGraph
                   activeProject={activeGraph}

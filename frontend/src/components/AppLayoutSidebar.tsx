@@ -30,7 +30,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
         <div
           className={classNames(
             "flex h-10 my-1 flex-shrink-0 items-center justify-between",
-            showSidebar ? "px-4" : "px-1"
+            showSidebar ? "px-3.5" : "px-1"
           )}
         >
           <Link to="/" replace>
