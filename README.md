@@ -105,12 +105,12 @@ At the core of this project lies a far more ambitious vision than the mere creat
 
 #### Collective intelligence through collaborative workspaces
 
-- We want to create a platform that promotes collective intelligence. Consider currently popular collaborative workspaces such as Notion, Logseq, or Obsidian integrated seamlessly into our data workspace. A system where each individual user contributes to the pool of knowledge, where insights from your workspaces can be published and enagaged with by a global community. Where every connection made, every data source integrated, every plugin created and shared by members of our community contributes to advancing your insights and the community behind the OSINTBuddy project. 
+- We want to create a platform that promotes collective intelligence. Consider currently popular collaborative workspaces such as Notion, Logseq, or Obsidian integrated seamlessly into our data workspace. A system where each individual user contributes to the pool of knowledge, where insights from your workspaces can be published and engaged with by a global community. Where every connection made, every data source integrated, every plugin created and shared by members of our community contributes to advancing your insights. 
 
 
 #### Intuitive search and discovery tools
 
-- To make the 'needle-hunt' in the haystack of the internet a breeze, we plan to include intuitive search and discovery tools. We want you to be able to interact with our algorithms, search for particular data, apply advanced query filters, data layouts, and more so you can uncover insights that matter via an easy-to-navigate web-based interface.
+- We want you to be able to interact with our algorithms, search for particular data, apply advanced query filters, data layouts, and more so you can uncover insights that matter via an easy-to-navigate web-based interface.
 
 
 #### Real-time monitoring
@@ -189,7 +189,6 @@ We are using the [GNU Affero General Public License v3.0](https://choosealicense
 > For the last 30 years, businesses and proponents of Open Source, including Linus Torvalds, have been decrying the GPL because of the essential right of "doing business" aka "privatising the common". Microsoft, through Github, Google and Apple pushed for MIT/BSD licensed software as the open source standard.
 
 > Our freedoms were taken away by proprietary software which is mostly coded by ourselves. For free. We spent our free time developing, debugging, testing software before handing them to corporations that we rever, hoping to maybe get a job offer or a small sponsorship from them. Without Non-copyleft Open Source, there would be no proprietary MacOS, OSX nor Android. There would be no Facebook, no Amazon. We created all the components...
-> We see that young student are taught "computer" with Word and PowerPoint, that young hackers are mostly happy with rooting Android phones or blindly using the API of a trendy JS framework. That Linux distributions are only used by computer science students in virtualised containers. 
 
 ### The four freedoms and one obligation of free software
 - The right to use the software at your own discretion
