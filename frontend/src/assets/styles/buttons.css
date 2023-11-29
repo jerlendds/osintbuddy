@@ -19,3 +19,12 @@
 .btn-form span {
   @apply mx-2
 }
+
+
+.form-input-wrapper {
+  @apply mt-2.5 hover:border-mirage-200/40 transition-colors duration-200 ease-in-out block justify-between items-center to-mirage-400/50 from-mirage-300/20 bg-gradient-to-br rounded border mb-2 mx-4 focus-within:!border-primary/40  px-3.5 py-1 text-slate-100 shadow-sm border-mirage-400/20 focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l
+}
+
+.form-input {
+  @apply block w-full placeholder:text-slate-700 bg-transparent focus:outline-none outline-none  sm:text-sm
+}

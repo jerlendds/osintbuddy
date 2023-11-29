@@ -1,8 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { Edge, XYPosition, Node } from 'reactflow';
 import { HotKeys } from 'react-hotkeys';
 import { useParams } from 'react-router-dom';
-import useWebSocket, { ReadyState, SendMessage } from 'react-use-websocket';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { SendJsonMessage } from 'react-use-websocket/dist/lib/types';
+import { forceSimulation, forceLink, forceManyBody, forceX, forceY } from 'd3-force';
 import 'reactflow/dist/style.css';
 import EntityOptions from './_components/EntityOptions';
 import ContextMenu from './_components/ContextMenu';
@@ -16,16 +18,16 @@ import {
   graphEdges,
   graphNodes,
   resetGraph,
-  selectEditId,
-  selectNode,
+  selectAllEdges,
+  selectPositionMode,
   selectViewMode,
+  setAllNodes,
 } from '@/features/graph/graphSlice';
-import { MiniEditDialog } from './_components/BaseMiniNode';
 import { WS_URL } from '@/app/baseApi';
 import CommandPallet from './_components/CommandPallet';
 import { useGetGraphQuery } from '@/app/api';
 import RoundLoader from '@/components/Loaders';
-import { SendJsonMessage } from 'react-use-websocket/dist/lib/types';
+import { selectAllNodes } from '../../features/graph/graphSlice';
 
 const keyMap = {
   TOGGLE_PALETTE: ['shift+p'],
@@ -47,13 +49,14 @@ export default function OsintPage() {
   const { data: activeGraph, isSuccess, isLoading, isError } = useGetGraphQuery({ hid: hid as string })
   const initialNodes = useAppSelector((state) => graphNodes(state));
   const initialEdges = useAppSelector((state) => graphEdges(state));
+
+  const [nodesBeforeLayout, setNodesBeforeLayout] = useState(initialNodes)
+  const [edgesBeforeLayout, setEdgesBeforeLayout] = useState(initialEdges)
+
   const graphRef = useRef<HTMLDivElement>(null);
   const [graphInstance, setGraphInstance] = useState(null);
 
-  const [nodes, setNodes] = useState<Node[]>(initialNodes);
-  const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const [nodeOptions, setNodeOptions] = useState([]);
-  const [showNodeOptions, setShowNodeOptions] = useState<boolean>(false);
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
 
   const [messageHistory, setMessageHistory] = useState<JSONObject[]>([]);
@@ -61,8 +64,10 @@ export default function OsintPage() {
   const viewMode = useAppSelector((state) => selectViewMode(state));
   const [shouldConnect, setShouldConnect] = useState(false)
 
+
   useEffect(() => {
     if (activeGraph && !socketUrl.includes(activeGraph?.id)) {
+      dispatch(resetGraph());
       setSocketUrl(`${WS_GRAPH_INQUIRE}/${activeGraph.id}`)
       setShouldConnect(true)
     }
@@ -100,21 +105,10 @@ export default function OsintPage() {
   }
 
   const togglePalette = () => setShowCommandPalette(!showCommandPalette);
-  const toggleShowNodeOptions = () => setShowNodeOptions(!showNodeOptions);
 
   const handlers = {
     TOGGLE_PALETTE: togglePalette,
   };
-
-  // @todo ... https://reactflow.dev/docs/examples/layout/dagre/
-  // const onLayout = useCallback(
-  //   (direction) => {
-  //     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(initialNodes, initialEdges, direction);
-  //     setNodes([...layoutedNodes]);
-  //     setEdges([...layoutedEdges]);
-  //   },
-  //   [initialNodes, initialEdges]
-  // );
 
   const addNodeAction = (node: JSONObject) => {
     const position = node?.position;
@@ -248,8 +242,76 @@ export default function OsintPage() {
     setCtxSelection(null);
   };
 
+  const positionMode = useAppSelector((state) => selectPositionMode(state))
+
   const { ref, isOpen, setIsOpen } = useComponentVisible(false);
-  console.log('isOpen?!', isOpen)
+
+  const useForceLayoutElements = () => {
+    const allNodes = [...useAppSelector(state => selectAllNodes(state))]
+    const allEdges = [...useAppSelector(state => selectAllEdges(state))]
+
+    const nodesInitialized = initialNodes.every((node: any) => node.width && node.height)
+
+    return useMemo(() => {
+      const simulation = forceSimulation()
+        .force('charge', forceManyBody().strength(-4000))
+        .force('x', forceX().x(0).strength(0.05))
+        .force('y', forceY().y(0).strength(0.05))
+        .alphaTarget(0.05)
+        .stop();
+
+      setNodesBeforeLayout(allNodes)
+      setEdgesBeforeLayout(allEdges)
+      let forceNodes = allNodes.map((node: any) => ({ ...node, x: node.position.x, y: node.position.y }));
+      let forceEdges = allEdges.map((edge: any) => ({ ...edge }));
+
+
+      // if no width or height or no nodes in the flow, can't run the simulation!
+      if (!nodesInitialized || forceNodes.length === 0) return [false, {} as any];
+      let running = false;
+      simulation.nodes(forceNodes).force(
+        'link',
+        forceLink(forceEdges)
+          .id((d: any) => d.id)
+          .strength(0.05)
+          .distance(100)
+      );
+
+      // The tick function is called every animation frame while the simulation is
+      // running and progresses the simulation one step forward each time.
+      const tick = () => {
+        forceNodes.forEach((node: any, i: number) => {
+          const dragging = Boolean(document.querySelector(`[data-id="${node.id}"].dragging`));
+
+          // Setting the fx/fy properties of a node tells the simulation to "fix"
+          // the node at that position and ignore any forces that would normally
+          // cause it to move.
+          forceNodes[i].fx = dragging ? node.position.x : null;
+          forceNodes[i].fy = dragging ? node.position.y : null;
+        });
+
+        simulation.tick();
+        dispatch(setAllNodes(forceNodes.map((node: any) => ({ ...node, position: { x: node.x, y: node.y } }))) as any);
+
+        window.requestAnimationFrame(() => {
+          if (running) tick();
+        });
+      };
+
+      const toggle = (setForce?: boolean) => {
+        if (typeof setForce === 'boolean') {
+          running = setForce
+        } else {
+          running = !running
+        }
+        running && window.requestAnimationFrame(tick);
+      };
+
+      return [true, { toggle, isForceRunning: running }];
+    }, [nodesInitialized]);
+  }
+
+  const [forceInitialized, { toggle, isForceRunning }] = useForceLayoutElements();
   return (
     <>
       {isError && (
@@ -261,8 +323,17 @@ export default function OsintPage() {
       {isSuccess && (
         <HotKeys keyMap={keyMap} handlers={handlers}>
           <div className='h-screen flex flex-col w-full'>
-            <EntityOptions activeProject={activeGraph} options={nodeOptions} />
-            <div className='h-full w-full justify-between bg-mirage-700/95'>
+            <button id="wtf2"></button>
+            <EntityOptions
+              positionMode={positionMode}
+              toggleForceLayout={toggle}
+              isForceActive={isForceRunning}
+              activeGraph={activeGraph}
+              options={nodeOptions}
+              allNodes={nodesBeforeLayout}
+              allEdges={edgesBeforeLayout}
+            />
+            <div className='h-full w-full justify-between bg-mirage-600/95'>
               <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
                 <ProjectGraph
                   activeProject={activeGraph}
@@ -273,9 +344,7 @@ export default function OsintPage() {
                   addEdge={addEdge}
                   graphRef={graphRef}
                   nodes={initialNodes}
-                  setNodes={setNodes}
                   edges={initialEdges}
-                  setEdges={setEdges}
                   graphInstance={graphInstance}
                   setGraphInstance={setGraphInstance}
                   sendJsonMessage={sendJsonMessage}

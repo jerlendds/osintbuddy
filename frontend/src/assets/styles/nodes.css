@@ -1,10 +1,10 @@
 /* Start node */
 .node.container {
-  @apply flex flex-col w-full max-w-sm justify-between rounded-md transition duration-150 ease-in-out bg-dark-900/95 active:bg-dark-600 ring-1 ring-dark-400 backdrop-blur  active:ring-dark-300;
+  @apply flex flex-col w-full max-w-sm justify-between rounded-md transition-all duration-150 ease-in-out ring-1 ring-mirage-400/30 backdrop-blur-lg hover:ring-mirage-400/70 to-mirage-700/70 from-slate-800/20 from-30%  bg-gradient-to-br hover:shadow-md shadow-sm;
 }
 
 .node .side-header {
-  @apply px-0 py-2 flex-shrink-0 flex flex-col items-center justify-center w-10 text-slate-100 text-sm font-medium rounded-l-sm;
+  @apply px-0 py-2 flex-shrink-0 flex flex-col items-center justify-center w-10 text-slate-200 text-sm font-medium rounded-l-sm;
 }
 
 .node .side-header svg {
@@ -36,7 +36,7 @@
 }
 
 .node .header {
-  @apply flex h-full w-full items-center justify-between rounded-t-md text-slate-100 py-2 px-1 cursor-grab focus:cursor-grabbing;
+  @apply flex h-full w-full items-center justify-between rounded-t-md text-slate-400/40 py-2 px-1 cursor-grab focus:cursor-grabbing;
 }
 
 .node .header svg {
@@ -57,20 +57,20 @@
 }
 
 .node-field {
-  @apply block mt-1 w-full bg-slate-800 rounded-sm border-0 py-0.5 ring-dark-300 relative text-slate-400 shadow-sm ring-1 sm:text-sm sm:leading-6;
+  @apply block mt-1 w-full  rounded-sm  py-0.5 relative sm:text-sm sm:leading-6  hover:border-mirage-200/40 transition-colors duration-75 ease-in-out justify-between items-center to-mirage-400/50 from-mirage-300/20 bg-gradient-to-br border focus-within:!border-primary/40  px-1 text-slate-100 shadow-sm border-mirage-400/20  focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l;
 }
 
 .node-field svg {
-  @apply h-4 w-4 pl-0.5 mt-0.5 absolute top-1 text-slate-700 z-50;
+  @apply h-4 w-4 mt-0.5 absolute top-1 text-slate-700 z-50;
 }
 
 .node-field input {
-  @apply placeholder:text-slate-600 text-slate-400 bg-slate-800 focus:outline-none pl-5 w-full;
+  @apply placeholder:text-slate-600 text-slate-400 bg-transparent focus:outline-none pl-5 w-full;
 }
 
 /* @todo :has is not supported by firefox yet :( */
 .node-field:has(input:focus) {
-  @apply ring-info-400;
+  @apply ring-info-400/70;
 }
 
 .node-field:has(input:focus) svg {
@@ -88,7 +88,7 @@ p.node-label {
 }
 
 .node-context button {
-  @apply hover:bg-dark-800 hover:text-slate-300 text-slate-400 flex items-center px-4 py-2 text-sm w-full;
+  @apply hover:bg-mirage-800 hover:text-slate-300 text-slate-400 flex items-center px-4 py-2 text-sm w-full;
 }
 
 .node-context svg {
@@ -109,7 +109,6 @@ p.node-label {
 }
 
 .elements:nth-child(even) {
-  @apply bg-dark-600;
 }
 
 

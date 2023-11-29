@@ -36,7 +36,8 @@
   🚧  <ins>Work in progress</ins>  🚧
 <br/>
 
-  ![uidemo-2023-11-20 19-35-58 mp4](https://github.com/jerlendds/osintbuddy/assets/29207058/6610e8a1-2a95-46fb-a920-41fa908847e0)
+  ![demo-2023-11-28_17-06 mp4](https://github.com/jerlendds/osintbuddy/assets/29207058/13df3d5c-b171-4b34-adf4-d7b3464c6198)
+
 
   ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum](https://forum.osintbuddy.com)** or on the **[discord](https://discord.gg/gsbbYHA3K3)** ⚠️
 

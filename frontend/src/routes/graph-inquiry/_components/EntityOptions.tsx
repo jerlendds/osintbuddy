@@ -1,16 +1,18 @@
 import {
   LockClosedIcon,
   LockOpenIcon,
+  TableCellsIcon,
 } from '@heroicons/react/24/outline';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useLayoutEffect } from 'react';
 import { Link } from 'react-router-dom';
 import 'react-grid-layout/css/styles.css';
-import { Responsive, WidthProvider } from 'react-grid-layout';
+import { Responsive, WidthProvider, Layout } from 'react-grid-layout';
 import { useGetEntitiesQuery } from '@/app/api';
-import { selectViewMode, setNodeType, setViewMode } from '@/features/graph/graphSlice';
+import { selectPositionMode, selectViewMode, setAllEdges, setAllNodes, setNodeType, setPositionMode, setViewMode } from '@/features/graph/graphSlice';
 import classNames from 'classnames';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { Square2StackIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
+import { useAppDispatch, useAppSelector, useEffectOnce } from '@/app/hooks';
+import { ArrowsPointingInIcon, ArrowsPointingOutIcon, CubeTransparentIcon, HandRaisedIcon, RectangleStackIcon, Square2StackIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
+import { Icon } from '@/components/Icons';
 
 type UseResizeProps = {
   minWidth: number;
@@ -64,14 +66,14 @@ const statuses: JSONObject = {
   'Not Installed': 'text-yellow-800 bg-yellow-50 ring-yellow-600/20',
 };
 
-export function ListItem({ entity, onDragStart }: JSONObject) {
+export function EntityOption({ entity, onDragStart }: JSONObject) {
   return (
     <>
       <li key={entity.id} className='flex items-center w-full justify-between py-3'>
         <div
           draggable
           onDragStart={(event) => onDragStart(event, entity.label)}
-          className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-500/20 hover:from-40% hover:to-mirage-300/30  border-mirage-300/20 border max-h-[160px] border-l-primary-300/50 hover:border-primary-400 transition-colors duration-150 border-l-[6px] hover:border-l-[6px] rounded-md w-full'
+          className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-500/20 hover:from-40% hover:to-mirage-300/30  border-mirage-300/20 border max-h-[160px] border-l-primary-300/50 hover:border-primary-400 transition-colors duration-100 ease-out border-l-[6px] hover:border-l-[6px] rounded-md w-full'
         >
           <div className='flex flex-col w-full select-none'>
             <div className='flex items-start justify-between gap-x-3 w-full relative'>
@@ -108,7 +110,7 @@ export function ListItem({ entity, onDragStart }: JSONObject) {
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-export default function EntityOptions({ activeProject }: JSONObject) {
+export default function EntityOptions({ allNodes, allEdges, positionMode, activeGraph, toggleForceLayout, isForceActive, setIsForceActive, }: JSONObject) {
   const {
     data: entitiesData = { entities: [], count: 0, favorite_entities: [], favorite_count: 0 },
     isLoading,
@@ -123,17 +125,6 @@ export default function EntityOptions({ activeProject }: JSONObject) {
     ...entitiesData?.favorite_entities.filter((entity: JSONObject) => entity.label.toLowerCase().includes(searchFilter.toLowerCase()))]
     : [...entitiesData?.entities, ...entitiesData?.favorite_entities], [searchFilter, entitiesData])
 
-  const dataGrid = {
-    x: 0.1,
-    y: 0,
-    w: 7,
-    h: 15,
-    maxH: 50,
-    minH: 1,
-    maxW: 44,
-    minW: 1,
-  };
-
   const onDragStart = (event: DragEvent, nodeType: string) => {
     if (event?.dataTransfer) {
       event.dataTransfer.setData('application/reactflow', nodeType);
@@ -141,15 +132,41 @@ export default function EntityOptions({ activeProject }: JSONObject) {
     }
     event.stopPropagation();
   };
+  const [isEntitiesDraggable, setIsEntitiesDraggable] = useState(false);
+  const [isPositionsDraggable, setIsPositionDraggable] = useState(false);
 
-  const [isDraggable, setDraggable] = useState(false);
-  const viewMode = useAppSelector((state) => selectViewMode(state))
+  const [entitiesLayout, setEntitiesLayout] = useState<Layout>({
+    i: "entities",
+    w: 7,
+    h: 17.25,
+    x: 0,
+    y: 0,
+    minW: 1,
+    maxW: 44,
+    minH: 1,
+    maxH: 50,
+    isDraggable: false,
+    isBounded: true
+  })
+
+  const [positionsLayout, setPositionsLayout] = useState<Layout>({
+    i: "positions",
+    w: 5,
+    h: 2,
+    x: 35,
+    y: 0,
+    minW: 1,
+    maxW: 44,
+    minH: 1,
+    maxH: 50,
+    isDraggable: false,
+    isBounded: true
+  })
+
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(setNodeType(viewMode))
-  }, [viewMode])
+
 
   return (
     <ResponsiveGridLayout
@@ -158,26 +175,41 @@ export default function EntityOptions({ activeProject }: JSONObject) {
       rowHeight={38}
       breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
       cols={{ lg: 40, md: 40, sm: 28, xs: 22, xxs: 18 }}
-      isDraggable={isDraggable}
+      isDraggable={true}
       isResizable={true}
+      layouts={{
+        lg: [
+          { ...positionsLayout, isDraggable: isPositionsDraggable },
+          { ...entitiesLayout, isDraggable: isEntitiesDraggable }
+        ]
+      }}
+      onLayoutChange={(layout, layouts) => {
+        setPositionsLayout({
+          ...layouts.lg.find((layout) => layout.i === 'positions') as Layout,
+          isDraggable: isPositionsDraggable,
+          isBounded: true
+        })
+        setEntitiesLayout({
+          ...layouts.lg.find((layout) => layout.i === 'entities') as Layout,
+          isDraggable: isEntitiesDraggable,
+          isBounded: true
+        })
+      }}
     >
       <div
-        draggable={false}
-        className=' overflow-hidden rounded-md z-10 border border-mirage-400/70  from-mirage-500/95 to-mirage-800/80 bg-gradient-to-br flex flex-col h-min'
-        key='a'
-        data-grid={{ ...dataGrid, isBounded: true }}
-
+        className=' overflow-hidden rounded-md z-10 border border-mirage-400/70  from-mirage-700/95 to-mirage-500/95 bg-gradient-to-br flex flex-col h-min'
+        key='entities'
       >
         <ol className='text-sm flex select-none relative px-4 pt-2'>
           <li className='flex mr-auto'>
             <h5
-              title={activeProject.name}
+              title={activeGraph.name}
               className='flex whitespace-nowrap truncate justify-between items-center w-full text-slate-600 text-inherit font-display '>
               <Link title='View all graphs' className='text-slate-600' to='/dashboard/graph' replace>
                 Entities&nbsp;
               </Link>{" /"}&nbsp;
               <span className="text-slate-400/60">
-                {activeProject.label.length > 22 ? `${activeProject.label.slice(0, 22)}...` : activeProject.label}
+                {activeGraph.label.length > 22 ? `${activeGraph.label.slice(0, 22)}...` : activeGraph.label}
               </span>
               &nbsp;/
             </h5>
@@ -185,12 +217,12 @@ export default function EntityOptions({ activeProject }: JSONObject) {
           <li className='flex'>
             <div className='flex justify-between items-center w-full '>
               <button
-                onClick={() => setDraggable(!isDraggable)}
+                onClick={() => setIsEntitiesDraggable(!isEntitiesDraggable)}
                 className='text-slate-600 hover:text-alert-700 text-inherit whitespace-nowrap font-display'
-                title={activeProject.name}
-                aria-current={activeProject.description}
+                title={activeGraph.name}
+                aria-current={activeGraph.description}
               >
-                {isDraggable ? <LockOpenIcon className='w-5 h-5 text-inherit' /> : <LockClosedIcon className='w-5 h-5 text-inherit' />}
+                {isEntitiesDraggable ? <LockOpenIcon className='w-5 h-5 text-inherit' /> : <LockClosedIcon className='w-5 h-5 text-inherit' />}
               </button>
             </div>
           </li>
@@ -206,23 +238,25 @@ export default function EntityOptions({ activeProject }: JSONObject) {
             </div>
             <ul className='overflow-y-scroll ml-4 pr-4 h-full relative'>
               {entities.map((entity) => (
-                <ListItem onDragStart={onDragStart} key={entity.id} entity={entity} />
+                <EntityOption onDragStart={onDragStart} key={entity.id} entity={entity} />
               ))}
             </ul>
           </>
         )}
       </div>
-      <div key='b' draggable={true} data-grid={{ ...dataGrid, x: 50, y: 0, h: 1, w: 6 }} className=' overflow-hidden rounded-md z-10 border border-mirage-400/70  from-mirage-500/95 to-mirage-800/80 bg-gradient-to-br flex flex-col h-min'>
-        <ol className='text-sm flex select-none relative px-4 pt-2'>
+      <div
+        key='positions'
+        className=' overflow-hidden rounded-md z-10 border border-mirage-400/70  from-mirage-700/95 to-mirage-500/95 bg-gradient-to-br flex flex-col h-min'>
+        <ol className='text-sm flex select-none relative px-4 pt-1'>
           <li className='flex mr-auto'>
             <h5
-              title={activeProject.name}
+              title={activeGraph.name}
               className='flex whitespace-nowrap truncate justify-between items-center w-full text-slate-600 text-inherit font-display '>
-              <Link title='View all graphs' className='text-slate-600' to='/dashboard/graph' replace>
+              <p className='text-slate-600' >
                 Layouts&nbsp;
-              </Link>{" /"}&nbsp;
-              <span className="text-slate-400/60">
-                Force
+              </p>{" /"}&nbsp;
+              <span className="text-slate-400/60 capitalize">
+                {positionMode}
               </span>
               &nbsp;/
             </h5>
@@ -230,46 +264,94 @@ export default function EntityOptions({ activeProject }: JSONObject) {
           <li className='flex'>
             <div className='flex justify-between items-center w-full '>
               <button
-                onClick={() => setDraggable(!isDraggable)}
+                onClick={() => setIsPositionDraggable(!isPositionsDraggable)}
                 className='text-slate-600 hover:text-alert-700 text-inherit whitespace-nowrap font-display'
-                title={activeProject.name}
-                aria-current={activeProject.description}
+                title={activeGraph.name}
+                aria-current={activeGraph.description}
               >
-                {isDraggable ? <LockOpenIcon className='w-5 h-5 text-inherit' /> : <LockClosedIcon className='w-5 h-5 text-inherit' />}
+                {isPositionsDraggable ? <LockOpenIcon className='w-5 h-5 text-inherit' /> : <LockClosedIcon className='w-5 h-5 text-inherit' />}
               </button>
             </div>
           </li>
         </ol>
-        <fieldset className='isolate inline-flex shadow-sm pt-2'>
+        <ul className='isolate inline-flex shadow-sm pt-2.5 w-full'>
           <button
-            onClick={() => dispatch(setViewMode('base'))}
+            onClick={() => {
+              console.log('isForce to manual', isForceActive, toggleForceLayout, allNodes, allEdges)
+              isForceActive !== undefined && !isForceActive && toggleForceLayout(false)
+              dispatch(setPositionMode('manual'))
+              dispatch(setAllNodes([...allNodes]))
+              dispatch(setAllEdges(allEdges))
+            }}
             type='button'
             className={classNames(
-              'relative py-3 inline-flex items-center rounded-l-md outline-none hover:ring-2 px-3 text-slate-400 ring-1 focus:bg-dark-800 ring-inset hover:bg-dark-600 focus:z-10 ring-dark-300',
-              viewMode === 'base' && 'bg-dark-900'
+              'justify-center flex-grow rounded-l-md from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-500/20 hover:from-40% hover:to-mirage-300/30  border-mirage-300/20 relative py-3 inline-flex items-center  border transition-colors duration-100 ease-in-out hover:border-primary-400/50 outline-none px-3 text-slate-500 hover:text-primary-300/80 focus:bg-mirage-800 hover:bg-mirage-600 focus:z-10',
+              positionMode === 'manual' && 'bg-mirage-800 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
             )}
           >
             <span className='sr-only'>List view</span>
-            <Square2StackIcon
-              className={classNames('h-5 w-5', viewMode === 'base' && 'text-info-100')}
+            <HandRaisedIcon
+              className={classNames('h-5 w-5 ', positionMode === 'manual' && 'text-primary-300')}
               aria-hidden='true'
             />
           </button>
           <button
-            onClick={() => dispatch(setViewMode('mini'))}
+            onClick={() => {
+              dispatch(setPositionMode('force'))
+              console.log('isForceActive', isForceActive)
+              isForceActive !== undefined && toggleForceLayout()
+            }}
             type='button'
             className={classNames(
-              'relative py-3 inline-flex items-center rounded-r-md  outline-none hover:ring-2 px-3 text-slate-400 ring-1 focus:bg-dark-800 ring-inset hover:bg-dark-600 focus:z-10 ring-dark-300',
-              viewMode === 'mini' && 'bg-mirage-800'
+              'justify-center flex-grow from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-500/20 hover:from-40% hover:to-mirage-300/30  border-mirage-300/20 relative py-3 inline-flex items-center  border transition-colors duration-100 ease-in-out hover:border-primary-400/50 outline-none px-3 text-slate-500 hover:text-primary-300/80 focus:bg-mirage-800 hover:bg-mirage-600 focus:z-10',
+              positionMode === 'force' && 'bg-mirage-800 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
             )}
           >
             <span className='sr-only'>List view</span>
-            <Squares2X2Icon
-              className={classNames('h-5 w-5', viewMode === 'mini' && 'text-info-100')}
+            <CubeTransparentIcon
+              className={classNames('h-5 w-5 ', positionMode === 'force' && 'text-primary-300')}
               aria-hidden='true'
             />
           </button>
-        </fieldset>
+          <button
+            onClick={() => {
+              isForceActive && toggleForceLayout()
+
+              dispatch(setPositionMode('hierarchy'))
+            }}
+            type='button'
+            className={classNames(
+              'justify-center flex-grow from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-500/20 hover:from-40% hover:to-mirage-300/30  border-mirage-300/20 relative py-3 inline-flex items-center  border transition-colors duration-100 ease-in-out hover:border-primary-400/50 outline-none px-3 text-slate-500 hover:text-primary-300/80 focus:bg-mirage-800 hover:bg-mirage-600 focus:z-10',
+              positionMode === 'hierarchy' && 'bg-mirage-800 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
+            )}
+          >
+            <span className='sr-only'>List view</span>
+            <Icon
+              icon="route"
+              className={classNames('h-5 w-5 text-inherit', positionMode === 'hierarchy' && 'text-primary-300')}
+              aria-hidden='true'
+            />
+          </button>
+          <button
+            onClick={() => {
+              isForceActive && toggleForceLayout()
+
+              dispatch(setPositionMode('tree'))
+            }}
+            type='button'
+            className={classNames(
+              'justify-center rounded-r-md flex-grow from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-500/20 hover:from-40% hover:to-mirage-300/30  border-mirage-300/20 relative py-3 inline-flex items-center  border transition-colors duration-100 ease-in-out hover:border-primary-400/50 outline-none px-3 text-slate-500 hover:text-primary-300/80 focus:bg-mirage-800 hover:bg-mirage-600 focus:z-10',
+              positionMode === 'tree' && 'bg-mirage-800 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
+            )}
+          >
+            <span className='sr-only'>List view</span>
+            <Icon
+              icon="binary-tree"
+              className={classNames('h-5 w-5 text-inherit', positionMode === 'tree' && 'text-primary-300')}
+              aria-hidden='true'
+            />
+          </button>
+        </ul>
       </div>
     </ResponsiveGridLayout>
   );

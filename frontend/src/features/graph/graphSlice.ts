@@ -16,11 +16,14 @@ import {
 
 export type ProjectViewModes = 'base' | 'mini'
 
+export type PositionModes = 'manual' | 'force' | 'hierarchy' | 'tree' | 'cola'
+
 export interface Graph extends EditState {
   nodes: Node[];
   edges: Edge[];
   project: ActiveProject;
   viewMode: ProjectViewModes;
+  positionMode: PositionModes
 }
 
 const initialState: Graph = {
@@ -35,7 +38,8 @@ const initialState: Graph = {
     uuid: '',
     name: '',
   },
-  viewMode: 'base'
+  viewMode: 'base',
+  positionMode: 'manual'
 };
 
 
@@ -60,6 +64,9 @@ export const graph = createSlice({
   name: 'graph',
   initialState,
   reducers: {
+    setPositionMode: (state, action: PayloadAction<PositionModes>) => {
+      state.positionMode = action.payload
+    },
     setActiveProject: (state, action: PayloadAction<ActiveProjectGraph>) => {
       state.project.uuid = action.payload.uuid;
       state.project.name = action.payload.name;
@@ -73,27 +80,33 @@ export const graph = createSlice({
 
     setEditId: (state, action: PayloadAction<string>) => {
       state.editId = action.payload;
-
-      if (action.payload === null) {
-        state.nodes = state.nodes.map((node) => ({
+      state.nodes = state.nodes.map((node) => node.id === action.payload ?
+        {
           ...node,
-          type: 'mini'})
-        )
-      } else {
-        state.nodes = state.nodes.map((node) => node.id === action.payload ?
-          {
-            ...node,
-            type: 'base'
-          } : node
-        )
-      }
+          type: 'base'
+        } : node
+      )
     },
-
+    clearEditId: (state, action: PayloadAction<string>) => {
+      state.editId = action.payload;
+      state.nodes = state.nodes.map((node) => node.id === action.payload ?
+        {
+          ...node,
+          type: 'mini'
+        } : node
+      )
+    },
     setEditState: (state, action: PayloadAction<EditState>) => {
       state.editId = action.payload.editId;
       state.editLabel = action.payload.editLabel;
     },
 
+    setAllNodes: (state, action) => {
+      state.nodes = action.payload
+    }, 
+    setAllEdges: (state, action) => {
+      state.edges = action.payload
+    }, 
     saveUserEdits: (state, action) => {
       const { value, nodeId, label } = action.payload;
       const nodeToUpdate = state.nodes.find((n) => n.id === nodeId);
@@ -160,6 +173,8 @@ export const graph = createSlice({
     resetGraph: (state) => {
       state.nodes = [];
       state.edges = [];
+      state.positionMode = 'manual';
+      state.viewMode = 'base';
     },
 
     updateNodeData: (state, action: PayloadAction<Node>) => {
@@ -239,7 +254,11 @@ export const {
   setActiveProject,
   setNodeType,
   setViewMode,
-  addNodeUpdate
+  addNodeUpdate,
+  clearEditId,
+  setAllNodes,
+  setPositionMode,
+  setAllEdges
 } = graph.actions;
 
 export const graphNodes = (state: RootState) => state.graph.nodes;
@@ -252,15 +271,19 @@ export const selectNodeValue = (state: RootState, id: string, label: string) => 
   return '';
 };
 
+export const selectAllNodes = (state: RootState) => state.graph.nodes;
+export const selectAllEdges = (state: RootState) => state.graph.edges;
 export const selectNode = (state: RootState, id: string) =>
   state.graph.nodes.find((node: any) => {
     return node.id === id;
   });
 
+
 export const selectEditLabel = (state: RootState) => state.graph.editLabel;
 export const selectEditId = (state: RootState) => state.graph.editId;
 export const selectEditValue = (state: RootState) => state.graph.editValue;
 export const selectViewMode = (state: RootState) => state.graph.viewMode;
+export const selectPositionMode = (state: RootState) => state.graph.positionMode;
 
 export const selectEditState = createSelector([selectEditId, selectEditLabel], (id, label) => ({
   id,

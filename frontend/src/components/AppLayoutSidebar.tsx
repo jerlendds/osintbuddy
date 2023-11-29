@@ -3,13 +3,13 @@ import { ReactComponent as OSINTBuddyLogo } from "@images/logo.svg";
 import { Link, NavLink } from "react-router-dom";
 import HamburgerMenu from "./HamburgerMenu";
 import { toast } from "react-toastify";
-import { CogIcon, DocumentMagnifyingGlassIcon, FolderOpenIcon, InboxIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { CogIcon, DocumentMagnifyingGlassIcon, FolderOpenIcon, PlusIcon, HomeIcon } from "@heroicons/react/24/outline";
 
 
 const navigation = [
-  { name: "Dashboard", to: "/dashboard", icon: InboxIcon },
+  { name: "Dashboard", to: "/dashboard", icon: HomeIcon },
   { name: "Incidents *", to: "/incidents", icon: FolderOpenIcon },
-  { name: "Scans", to: "/scans", icon: DocumentMagnifyingGlassIcon },
+  { name: "Scans *", to: "/scans", icon: DocumentMagnifyingGlassIcon },
 ];
 
 interface AppLayoutSidebarProps {
@@ -22,7 +22,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
   return (
     <div
       className={classNames(
-        "fixed inset-y-0 flex border-r from-mirage-400/20 to-mirage-500/20 bg-gradient-to-br shadow border-mirage-800/80 w-64 flex-col transition-transform duration-100",
+        "fixed inset-y-0 flex border-r from-mirage-900/20 to-mirage-600/20 bg-gradient-to-br shadow border-mirage-800/80 w-64 flex-col transition-transform duration-100",
         showSidebar ? "translate-x-0" : "-translate-x-52 border-r-2"
       )}
     >
@@ -66,7 +66,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                     "mr-3 flex-shrink-0 h-6 w-6 duration-100",
                     showSidebar
                       ? "translate-x-0"
-                      : "translate-x-[13.16rem]"
+                      : "translate-x-[13.15rem]"
                   )}
                   aria-hidden="true"
                 />

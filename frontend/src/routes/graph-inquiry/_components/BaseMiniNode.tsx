@@ -109,7 +109,7 @@ export default function BaseMiniNode({
   const node = ctx.data;
 
 
-  const backgroundColor = node?.color?.length === 7 ? `${node.color}76` : node?.color ? node.color : '#145070';
+  const backgroundColor = node?.color?.length === 7 ? `${node.color}77` : node?.color ? node.color : '#145070';
 
   return (
     <>
@@ -138,63 +138,14 @@ export default function BaseMiniNode({
       >
         <div
           style={{ backgroundColor }} className='header !rounded-full !p-4'>
-          <Icon icon={node.icon} className='!h-14 !w-14  cursor-grab focus:cursor-grabbing' />
+          <Icon icon={node.icon} className='!h-20 !w-20  cursor-grab focus:cursor-grabbing' />
         </div>
       </div>
     </>
   );
 }
 
-export function MiniEditDialog({ closeRef, isOpen, setIsOpen, activeNode, nodeId, sendJsonMessage }) {
-  return (
-    <>
-      {activeNode && (
-        <div ref={closeRef} className='flex flex-col'>
-          <div
-            className={classNames(
-              'z-50',
-              isOpen
-                ? 'absolute top-0 right-0 max-w-sm w-full min-h-[4.5rem] pl-2 bg-dark-700 border-dark-300 border pt-2 pb-4 rounded-md rounded-t-none'
-                : 'hidden '
-            )}
-          >
-            <button
-              onClick={() => setIsOpen(false)}
-              className='absolute top-0 right-2 z-0 bg-dark-700 hover:text-slate-200 text-slate-400'
-            >
-              <XMarkIcon className='w-6 h-6 text-inherit' />
-            </button>
-            <h2 className=' pr-20 text-slate-400 font-display text-lg font-medium leading-5 flex'>
-              {activeNode.data.label}{' '}
-              <span className='font-display mt-1 text-xs font-light ml-auto mr-2'>{nodeId}</span>
-            </h2>
-            {activeNode.data.elements.map((element) => {
-              if (Array.isArray(element)) {
-                return element.map((elm, i) => (
-                  <div key={i.toString()} className='flex flex-col mr-2 last:mr-0'>
-                    {' '}
-                    {getNodeElement(nodeId, elm.value, elm, `${elm.label}-${elm.id}-${nodeId}`, sendJsonMessage)}
-                  </div>
-                ));
-              }
-              return (
-                <div className='mr-2'>
-                  {getNodeElement(
-                    nodeId,
-                    element.value,
-                    element,
-                    `${element.label}-${element.id}-${nodeId}`,
-                    sendJsonMessage
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
+
 
 function TextInput({ nodeId, label, sendJsonMessage, icon, dispatch }: NodeElement) {
   // @todo remove this hack once firefox supports `:has`

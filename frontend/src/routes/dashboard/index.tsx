@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Tab } from "@headlessui/react";
@@ -6,13 +6,15 @@ import GraphPanel from "./_components/tabs/GraphPanel";
 import EntitiesPanel from "./_components/tabs/EntitiesPanel";
 import MarketPanel from './_components/tabs/MarketPanel';
 import CreateGraphModal from "./_components/modals/CreateGraphModal";
-import styles from "./dashboard.module.css"
+import styles from "./index.module.css"
 import { AllGraphsList, useGetEntitiesQuery, useGetGraphStatsQuery, useGetGraphsQuery } from "@/app/api";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
 import { GetGraphStatsApiResponse } from '../../app/api';
 import CreateEntityModal from "./_components/modals/CreateEntityModal";
 import { UseQueryStateOptions } from "@reduxjs/toolkit/dist/query/react/buildHooks";
+import { useAppDispatch } from "@/app/hooks";
+import { resetGraph, setPositionMode } from "@/features/graph/graphSlice";
 
 export interface ScrollGraphs {
   skip?: number | undefined
@@ -32,6 +34,7 @@ export type DashboardContextType = {
 
 export default function DashboardPage() {
   const { hid } = useParams();
+  const dispatch = useAppDispatch()
   const location = useLocation()
   const initialTab = location.pathname.includes("entity") ?
     1 : location.pathname.includes("market")
@@ -77,6 +80,10 @@ export default function DashboardPage() {
         refetchOnMountOrArgChange: true
       }
     )
+
+  useEffect(() => {
+    dispatch(resetGraph())
+  }, [])
 
   return (
     <>

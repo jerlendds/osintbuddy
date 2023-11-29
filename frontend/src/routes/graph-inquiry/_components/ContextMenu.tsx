@@ -34,28 +34,21 @@ export default function ContextMenu({
       <div id='context-menu' className='z-[999] absolute' style={ctxPosition}>
         {showMenu && (
           <div className='relative z-50 inline-block text-left'>
-            <div className='absolute  right-0 z-10 mt-2 w-56 origin-top-right divide-y border border-dark-300 divide-dark-300 rounded-md bg-dark-700 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+            <div className='absolute  right-0 z-10 mt-2 w-56 origin-top-right divide-y border border-mirage-400/70 divide-mirage-400/70 rounded-md to-mirage-700/95 from-mirage-600/95 bg-gradient-to-br shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
               <div className='py-1'>
                 <div>
                   <div
-                    className={classNames(
-                      false ? 'bg-dark-700 text-slate-400' : 'text-slate-400',
-                      'group flex items-center py-2 text-sm font-display'
-                    )}
+                    className='text-slate-400 group flex items-center py-2 text-sm font-display'
                   >
-                    <span className='pl-2 text-slate-400 font-semibold font-display mr-3'>ID: </span>
+                    <span className='pl-2 text-slate-600 font-semibold font-display mr-3'>ID: </span>
                     {ctxSelection?.id ? ctxSelection.id : 'No node selected'}
-                    {ctxSelection?.label && (
-                      <span className='inline-flex ml-auto items-center rounded-full whitespace-nowrap truncate bg-dark-700 px-1.5 py-0.5 text-sm font-medium text-blue-800 mr-1'>
-                        {transformsData?.type ?? ''}
-                      </span>
-                    )}
+
                   </div>
                 </div>
               </div>
               {transformsData && transformsData?.transforms && (
                 <>
-                  <div className='pb-2  '>
+                  <div className=' '>
                     <div>
                       <div className='sm:col-span-2'>
                         <label
@@ -64,13 +57,13 @@ export default function ContextMenu({
                         >
                           Search through the installed transforms for the {ctxSelection?.label} plugin
                         </label>
-                        <div className='mt-2 pl-3 flex justify-between items-center'>
+                        <div className='mt-2.5 hover:border-mirage-200/40 transition-colors duration-200 ease-in-out block justify-between items-center to-mirage-400/50 from-mirage-300/20 bg-gradient-to-br rounded border mb-2 mx-4 focus-within:!border-primary/40  px-3.5 py-1 text-slate-100 shadow-sm border-mirage-400/20 ring-light-900/10 focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l'>
                           <input
                             value={query}
                             onChange={(e) => setQuery(e.currentTarget.value)}
                             name='message'
                             id='message'
-                            className='block w-full transition-colors ease-in-out duration-100  bg-dark-900  rounded-md  px-3.5 py-1 text-slate-100 shadow-sm  placeholder:text-gray-400  outline-none 200 sm:text-sm sm:leading-6 mr-3'
+                            className='block w-full placeholder:text-slate-700 bg-transparent outline-none  sm:text-sm'
                             placeholder='Search transforms...'
                           />
                         </div>

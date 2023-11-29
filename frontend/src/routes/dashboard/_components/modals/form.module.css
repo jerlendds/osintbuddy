@@ -1,5 +1,5 @@
 .modal-form {
-  @apply bg-dark-600 w-full  shadow sm:rounded-lg
+  @apply from-mirage-600 to-mirage-600 bg-gradient-to-br w-full  shadow sm:rounded-lg
 }
 
 .modal-form section:first-child {

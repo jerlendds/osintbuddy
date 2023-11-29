@@ -12,7 +12,7 @@ services:
   ui:
     container_name: "ob_dev_ui"
     tty: true
-    command: sh -c "cd /app/ && npm install && npm run ui:dev"
+    command: sh -c "cd /app/ && yarn && yarn ui:dev"
     env_file:
       - .env.alpha
 

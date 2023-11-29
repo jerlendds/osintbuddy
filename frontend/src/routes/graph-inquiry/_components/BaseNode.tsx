@@ -8,7 +8,7 @@ import { GripIcon, Icon } from '@/components/Icons';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { type ThunkDispatch } from 'redux-thunk';
-import { type Graph, EditState, saveUserEdits, selectNodeValue, setEditId } from '@/features/graph/graphSlice';
+import { type Graph, EditState, saveUserEdits, selectNodeValue, setEditId, clearEditId } from '@/features/graph/graphSlice';
 import { AnyAction } from '@reduxjs/toolkit';
 
 var dropdownKey = 0;
@@ -105,7 +105,7 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
     }
   };
 
-  const backgroundColor = node?.color?.length === 7 ? `${node.color}76` : node?.color ? node.color : '#145070';
+  const backgroundColor = node?.color?.length === 7 ? `${node.color}70` : node?.color ? node.color : '#145070';
 
   return (
     <>
@@ -118,7 +118,7 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
       <Handle position={Position.Top} id='t2' key='t2' type='target' style={handleStyle} />
       <Handle position={Position.Bottom} id='b2' key='b2' type='target' style={handleStyle} />
       <Handle position={Position.Left} id='l2' key='l2' type='target' style={handleStyle} />
-      <div onDoubleClick={() => dispatch(setEditId(null))} data-label-type={node.label} className=' node container' style={node.style}>
+      <div onDoubleClick={() => dispatch(clearEditId(ctx.id))} data-label-type={node.label} className=' node container' style={node.style}>
         <div style={{ backgroundColor }} className='header '>
           <GripIcon className='' />
           <div className='text-container '>
@@ -134,7 +134,7 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
           id={`${ctx.id}-form`}
           style={node.style}
           onSubmit={(event) => event.preventDefault()}
-          className='nodrag elements gap-x-1'
+          className='elements gap-x-1'
         >
           {node.elements.map((element: NodeInput, i: number) => {
             if (Array.isArray(element))
@@ -268,9 +268,9 @@ export function TextInput({ nodeId, label, sendJsonMessage, icon, dispatch }: No
   return (
     <>
       <div className='flex flex-col'>
-        <p className='text-[0.5rem] ml-1 text-slate-400 whitespace-wrap font-semibold font-display mt-1'>{label}</p>
+        <p className='text-[0.5rem] ml-1 text-slate-400 whitespace-wrap font-semibold font-display mt-1 '>{label}</p>
         <div className='flex items-center mb-1 '>
-          <div className={classNames('nodrag node-field', isFocused && 'ring-info-400')}>
+          <div className='nodrag node-field'>
             <Icon icon={icon} className='h-6 w-6' />
             <input
               id={`${nodeId}-${label}`}
@@ -338,20 +338,20 @@ export function DropdownInput({ options, label, nodeId, sendJsonMessage, dispatc
         }}
       >
         <Combobox.Label>
-          <p className='text-[0.5rem] ml-1 text-slate-400 whitespace-wrap font-semibold font-display mt-1'>{label}</p>
+          <p className='text-[0.5rem] ml-1 text-slate-400 whitespace-wrap font-semibold font-display mt-1 '>{label}</p>
         </Combobox.Label>
-        <div className='relative mt-1 '>
+        <div className='relative mt-1 node-field !px-0'>
           <Combobox.Input
             onChange={(event) => setQuery(event.target.value)}
             displayValue={(option: DropdownOption) => option.label}
-            className='nodrag focus:ring-info-400 node-field outline-none pl-2'
+            className='nodrag focus:ring-info-400 mr-4 outline-none !px-2'
           />
-          <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
-            <ChevronUpDownIcon className='h-5 w-5 text-slate-600' aria-hidden='true' />
+          <Combobox.Button className='absolute mr-3 inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
+            <ChevronUpDownIcon className='h-7 w-7 !text-slate-600 ' aria-hidden='true' />
           </Combobox.Button>
 
           {filteredOptions.length > 0 && (
-            <Combobox.Options className='absolute z-10 mt-1 max-h-80 w-full overflow-auto rounded-b-md bg-dark-400 py-1 text-base shadow-lg ring-1 ring-gray-200 ring-opacity-5 focus:outline-none sm:text-sm'>
+            <Combobox.Options className='absolute mr-1 z-10 mt-1 max-h-80 w-full overflow-auto rounded-b-md from-mirage-700/90 to-mirage-800/80 from-30%  bg-gradient-to-br py-1 text-base shadow-lg  focus:outline-none sm:text-sm'>
               {filteredOptions.map((option: DropdownOption) => (
                 <Combobox.Option
                   key={getKey()}
@@ -359,7 +359,7 @@ export function DropdownInput({ options, label, nodeId, sendJsonMessage, dispatc
                   className={({ active }) =>
                     classNames(
                       'relative nodrag nowheel cursor-default select-none py-2 pl-3 pr-9',
-                      active ? 'bg-slate-900 text-slate-300' : 'text-slate-400'
+                      active ? 'bg-mirage-700 text-slate-400' : 'text-slate-500'
                     )
                   }
                 >

@@ -59,12 +59,11 @@ background-image: radial-gradient(49% 81% at 45% 47%, rgba(157, 45, 255, 0.689) 
 
 /* https://gradienta.io/editor */
 body {
-  @apply min-h-screen from-mirage-900/90 to-mirage-700/60 bg-gradient-to-br;
-  
+  @apply min-h-screen from-mirage-800/90 to-mirage-700/50 bg-gradient-to-br;
 }
+
 #root {
   @apply flex flex-col min-h-screen relative bg-mirage-800/60
-
 }
 
 svg.icon {

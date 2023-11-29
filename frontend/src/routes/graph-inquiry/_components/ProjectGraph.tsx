@@ -7,6 +7,7 @@ import ReactFlow, {
   FitViewOptions,
   NodeDragHandler,
   Connection,
+  Panel,
 } from 'reactflow';
 import BaseNode from './BaseNode';
 import { addNodeUpdate, createEdge, onEdgesChange, updateEdgeEvent, updateNodeFlow } from '@/features/graph/graphSlice';
@@ -21,6 +22,10 @@ const viewOptions: FitViewOptions = {
   padding: 50,
 };
 
+// im lazy so im extending the generic JSONObject for now, feel free to fix...
+interface ProjectGraphProps extends JSONObject {
+}
+
 export default function ProjectGraph({
   graphRef,
   nodes,
@@ -33,11 +38,10 @@ export default function ProjectGraph({
   onPaneCtxMenu,
   onSelectionCtxMenu,
   onMultiSelectionCtxMenu,
-  activeProject,
   setIsEditingMini,
   isEditingMini,
-  closeMiniRef
-}: JSONObject) {
+  closeMiniRef,
+}: ProjectGraphProps) {
   const dispatch = useAppDispatch();
   const onEdgeUpdate = useCallback(
     (oldEdge: Edge, newConnection: Connection) => dispatch(updateEdgeEvent({ oldEdge, newConnection })),
@@ -119,7 +123,7 @@ export default function ProjectGraph({
 
   return (
     <ReactFlow
-      minZoom={0.2}
+      minZoom={0.05}
       maxZoom={2.0}
       nodes={nodes}
       edges={edges}
@@ -141,8 +145,9 @@ export default function ProjectGraph({
       onNodeContextMenu={onSelectionCtxMenu}
       onSelectionContextMenu={onMultiSelectionCtxMenu}
     >
-      <Background variant={BackgroundVariant.Dots} className='bg-transparent' color='#1F3057' />
-      <Controls />
+
+      <Background variant={BackgroundVariant.Dots} className='bg-transparent' color='#394778' />
+      {/* <Controls /> */}
     </ReactFlow>
   );
 }

@@ -1,6 +1,4 @@
 import { auraInit } from "@uiw/codemirror-theme-aura";
-import { draculaInit } from "@uiw/codemirror-theme-dracula";
-import { materialLightInit } from "@uiw/codemirror-theme-material";
 import CodeMirror, { Extension } from "@uiw/react-codemirror";
 import { tags as t } from "@lezer/highlight";
 import { python } from "@codemirror/lang-python";
@@ -22,26 +20,14 @@ export const tokyoNightTheme = auraInit({
   styles: [{ tag: t.comment, color: "#6272a4" }],
 })
 
-export function CodeEditor({ code, setCode, lsp }: JSONObject) {
+export function CodeEditor({ code, setCode }: JSONObject) {
   return (
-    <>{lsp ? (
-      <CodeMirror
-        theme={tokyoNightTheme}
-        value={code}
-        onChange={(value) => setCode(value)}
-        extensions={[python(), lsp]}
-
-      />
-    ) : (
-      <CodeMirror
-        theme={tokyoNightTheme}
-        value={code}
-        onChange={(value) => setCode(value)}
-        extensions={[python()]}
-
-      />
-    )}
-    </>
+    <CodeMirror
+      theme={tokyoNightTheme}
+      value={code}
+      onChange={(value) => setCode(value)}
+      extensions={[python()]}
+    />
   )
 }
 

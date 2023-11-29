@@ -26,7 +26,7 @@ const graphSchema: Yup.ObjectSchema<GraphFormData> = Yup.object().shape({
 });
 
 
-export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
+export function CreateGraphForm({ closeModal, refreshGraphs }: JSONObject) {
   const navigate = useNavigate()
   const [showTour, setShowTour] = useState(false)
   const { setIsOpen, setCurrentStep } = useTour();
@@ -62,7 +62,7 @@ export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
     setShowTour(graphCreate?.showTour ?? false)
     delete graphCreate.showTour
     await createGraph({ graphCreate })
-    await updateTable()
+    await refreshGraphs()
   };
 
   return (
@@ -75,7 +75,7 @@ export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
 
       <InputField register={register} name="label" label="Label" />
       <InputTextarea register={register} name="description" label="Description" />
-      <InputToggleSwitch label="Enable Guide" className="mt-4" control={control} name={"showTour"} description="Get a step-by-step tour on how to perform OSINTBuddy investigations" />
+      <InputToggleSwitch label="Enable Guide" className="mt-4" control={control} name={"showTour"} description="Click the toggle and get a step-by-step tour on how to perform OSINTBuddy investigations" />
 
       <section>
         <div>
@@ -89,7 +89,7 @@ export function CreateGraphForm({ closeModal, updateTable }: JSONObject) {
           <button
             type='submit'
             disabled={isSubmitting}
-            className='btn-form '
+            className='btn-primary ml-4'
           >
             <span>Create graph</span>
             <PlusIcon />
@@ -113,7 +113,7 @@ export default function CreateGraphModal({
   return (
     <OverlayModal isOpen={isOpen} closeModal={closeModal} cancelCreateRef={cancelCreateRef}>
       <CreateGraphForm
-        updateTable={async (graph: Graph) => await refreshAllGraphs()}
+        refreshGraphs={async (graph: Graph) => await refreshAllGraphs()}
         closeModal={() => closeModal()}
       />
     </OverlayModal>

@@ -5,7 +5,7 @@ export interface IconProps {
   className?: string;
 }
 
-export const Icon = ({ icon, className }: { icon: string, className?: string }) => {
+export const Icon = ({ icon, className  }: { icon: string, className?: string }) => {
   return (
     <svg className={className ? className : 'h-5 w-5'} fill='#fff' color='#fff'>
       <use href={`${Sprite}#tabler-${icon}`} />
