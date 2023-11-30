@@ -4,7 +4,6 @@
 run_restart() {
     if [ ! -z "$OB_CMD" ] & [ ! -z "$OB_CMD_ARGS" ]; then
         ob_compose restart $OB_CMD_ARGS;
-        ob_compose logs $OB_CMD_ARGS -f
         exit 0
     else
         ob_compose restart;

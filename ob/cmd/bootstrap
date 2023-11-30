@@ -215,7 +215,7 @@ setup_python_env() {
 
 
 setup_ui_env() {
-    cd ../frontend/ && npm install
+    cd ../frontend/ && yarn && yarn install:hooks
     info "Generate the UI API client with: ./launcher api:gen"
     cd "$OB_DIR"
 }
