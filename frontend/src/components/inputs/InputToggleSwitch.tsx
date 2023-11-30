@@ -17,8 +17,8 @@ export const SwitchButton = forwardRef<HTMLButtonElement, SwitchButtonProps>(({ 
     as={Fragment}
   >
     <button ref={ref} className={classNames(
-      value ? 'bg-info-400' : 'bg-dark-600',
-      'relative inline-flex h-7 w-14 flex-shrink-0 ring-2 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-3 focus:ring-info-200 focus:ring-offset-2 hover:ring-3 ring-primary-400 active:ring-3'
+      value ? 'bg-primary-400' : 'bg-dark-600',
+      'relative inline-flex h-7 w-14 flex-shrink-0 ring-3 ring-offset-0 cursor-pointer rounded-full border-2 border-primary transition-colors duration-200 ease-in-out focus:outline-none focus:ring-3 focus:ring-primary-200 focus:ring-offset-3 hover:ring-3 ring-primary-400 active:ring-3'
     )}>
       <span
         aria-hidden='true'

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { PlusIcon } from '@heroicons/react/24/outline';
-import { useTour } from '@reactour/tour';
+import { useTour } from '@reactour/tour'
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from "yup";
@@ -12,24 +12,26 @@ import InputToggleSwitch from '@/components/inputs/InputToggleSwitch';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import styles from "./form.module.css"
+import { useAppDispatch } from '@/app/hooks';
+import { setGraphTour } from '@/features/account/accountSlice';
 
 type GraphFormData = {
   label: string
   description: string
-  showTour?: boolean | undefined
+  enableGraphGuide?: boolean | undefined
 }
 
 const graphSchema: Yup.ObjectSchema<GraphFormData> = Yup.object().shape({
   label: Yup.string().required("Required"),
   description: Yup.string().optional().default("No description found..."),
-  showTour: Yup.boolean()
+  enableGraphGuide: Yup.boolean()
 });
 
 
 export function CreateGraphForm({ closeModal, refreshGraphs }: JSONObject) {
   const navigate = useNavigate()
-  const [showTour, setShowTour] = useState(false)
-  const { setIsOpen, setCurrentStep } = useTour();
+  const dispatch = useAppDispatch()
+  const [showGraphGuide, setShowGraphGuide] = useState(false);
   const [createGraph, { data: newGraph, isError: createGraphError }] = useCreateGraphMutation()
 
   const {
@@ -45,9 +47,10 @@ export function CreateGraphForm({ closeModal, refreshGraphs }: JSONObject) {
     if (newGraph && newGraph?.id) {
       closeModal()
       const replace = { replace: true }
-      if (showTour) {
-        setIsOpen(true)
-        navigate(`/graph/inquiry/${newGraph.id}`, replace)
+      // we only navigate to the graph when the guide is enabled
+      refreshGraphs()
+      if (showGraphGuide) {
+        navigate(`/graph/inquiry/${newGraph.id}`, { ...replace, state: { showGraphGuide, } })
       } else {
         navigate(`/dashboard/graph/${newGraph.id}`, replace)
       }
@@ -55,14 +58,16 @@ export function CreateGraphForm({ closeModal, refreshGraphs }: JSONObject) {
       console.error(createGraphError)
       toast.error("We ran into an error creating your graph. Please try again")
     }
-    reset({ label: "", description: "", showTour: false })
-  }, [isSubmitSuccessful])
+    reset({ label: "", description: "", enableGraphGuide: false })
+  }, [isSubmitSuccessful, showGraphGuide])
 
   const onSubmitHandler = async (graphCreate: GraphFormData) => {
-    setShowTour(graphCreate?.showTour ?? false)
-    delete graphCreate.showTour
+    if (graphCreate?.enableGraphGuide) {
+      dispatch(setGraphTour())
+      setShowGraphGuide(true)
+    }
+    delete graphCreate.enableGraphGuide
     await createGraph({ graphCreate })
-    await refreshGraphs()
   };
 
   return (
@@ -75,7 +80,7 @@ export function CreateGraphForm({ closeModal, refreshGraphs }: JSONObject) {
 
       <InputField register={register} name="label" label="Label" />
       <InputTextarea register={register} name="description" label="Description" />
-      <InputToggleSwitch label="Enable Guide" className="mt-4" control={control} name={"showTour"} description="Click the toggle and get a step-by-step tour on how to perform OSINTBuddy investigations" />
+      <InputToggleSwitch label="Enable Guide" className="mt-4" control={control} name={"enableGraphGuide"} description="Click the toggle and get a step-by-step tour on how to perform OSINTBuddy investigations" />
 
       <section>
         <div>

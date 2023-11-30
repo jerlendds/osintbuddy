@@ -199,6 +199,7 @@ export default function EntityOptions({ allNodes, allEdges, positionMode, active
       <div
         className=' overflow-hidden rounded-md z-10 border border-mirage-400/70  from-mirage-700/95 to-mirage-500/95 bg-gradient-to-br flex flex-col h-min'
         key='entities'
+        id='node-options-tour'
       >
         <ol className='text-sm flex select-none relative px-4 pt-2'>
           <li className='flex mr-auto'>
@@ -277,7 +278,6 @@ export default function EntityOptions({ allNodes, allEdges, positionMode, active
         <ul className='isolate inline-flex shadow-sm pt-2.5 w-full'>
           <button
             onClick={() => {
-              console.log('isForce to manual', isForceActive, toggleForceLayout, allNodes, allEdges)
               isForceActive !== undefined && !isForceActive && toggleForceLayout(false)
               dispatch(setPositionMode('manual'))
               dispatch(setAllNodes([...allNodes]))
@@ -298,7 +298,6 @@ export default function EntityOptions({ allNodes, allEdges, positionMode, active
           <button
             onClick={() => {
               dispatch(setPositionMode('force'))
-              console.log('isForceActive', isForceActive)
               isForceActive !== undefined && toggleForceLayout()
             }}
             type='button'

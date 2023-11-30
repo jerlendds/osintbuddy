@@ -1,5 +1,5 @@
 .btn-primary {
-  @apply ring-1 ring-primary-300/95 hover:ring-primary-200 text-left text-sm font-semibold text-primary-300 hover:text-primary-100/90 flex items-center border hover:ring-inset border-primary-300/95 hover:border-primary-200 py-2 px-3 rounded-md  hover:shadow justify-center transition-colors duration-100 ease-in-out;
+  @apply ring-1 ring-primary-300/95 whitespace-nowrap hover:ring-primary-200 text-left text-sm font-semibold text-primary-300 hover:text-primary-100/90 flex items-center border hover:ring-inset border-primary-300/95 hover:border-primary-200 py-2 px-3 rounded-md  hover:shadow justify-center transition-colors duration-100 ease-in-out;
 }
 
 .btn-primary svg {

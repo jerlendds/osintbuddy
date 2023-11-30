@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback, useContext } from 'react';
+import { UNSAFE_NavigationContext as NavigationContext, unstable_BlockerFunction } from 'react-router-dom';
 import { Edge, XYPosition, Node } from 'reactflow';
 import { HotKeys } from 'react-hotkeys';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation, useBlocker, useBeforeUnload } from 'react-router-dom';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { SendJsonMessage } from 'react-use-websocket/dist/lib/types';
 import { forceSimulation, forceLink, forceManyBody, forceX, forceY } from 'd3-force';
@@ -22,12 +23,15 @@ import {
   selectPositionMode,
   selectViewMode,
   setAllNodes,
+  setPositionMode,
 } from '@/features/graph/graphSlice';
 import { WS_URL } from '@/app/baseApi';
 import CommandPallet from './_components/CommandPallet';
 import { useGetGraphQuery } from '@/app/api';
 import RoundLoader from '@/components/Loaders';
 import { selectAllNodes } from '../../features/graph/graphSlice';
+import { useTour } from '@reactour/tour';
+import { setGraphTour } from '@/features/account/accountSlice';
 
 const keyMap = {
   TOGGLE_PALETTE: ['shift+p'],
@@ -40,10 +44,26 @@ interface UseWebsocket {
   lastMessage: MessageEvent<any> | null
 }
 
+interface GraphInquiryProps {
+}
 
-export default function OsintPage() {
+
+
+
+
+export default function GraphInquiry({ }: GraphInquiryProps) {
   const dispatch = useAppDispatch();
   const { hid } = useParams()
+  const location = useLocation()
+  const { setIsOpen: setIsTourOpen, steps, setCurrentStep: setCurrentTourStep } = useTour();
+
+  useEffect(() => {
+    if (location.state?.showGraphGuide) {
+      setCurrentTourStep(0)
+      setIsTourOpen(true)
+    }
+  }, [])
+
   const WS_GRAPH_INQUIRE = `ws://${WS_URL}/node/graph/${hid}`
 
   const { data: activeGraph, isSuccess, isLoading, isError } = useGetGraphQuery({ hid: hid as string })
@@ -56,7 +76,6 @@ export default function OsintPage() {
   const graphRef = useRef<HTMLDivElement>(null);
   const [graphInstance, setGraphInstance] = useState(null);
 
-  const [nodeOptions, setNodeOptions] = useState([]);
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
 
   const [messageHistory, setMessageHistory] = useState<JSONObject[]>([]);
@@ -244,8 +263,6 @@ export default function OsintPage() {
 
   const positionMode = useAppSelector((state) => selectPositionMode(state))
 
-  const { ref, isOpen, setIsOpen } = useComponentVisible(false);
-
   const useForceLayoutElements = () => {
     const allNodes = [...useAppSelector(state => selectAllNodes(state))]
     const allEdges = [...useAppSelector(state => selectAllEdges(state))]
@@ -267,7 +284,7 @@ export default function OsintPage() {
 
 
       // if no width or height or no nodes in the flow, can't run the simulation!
-      if (!nodesInitialized || forceNodes.length === 0) return [false, {} as any];
+      if (!nodesInitialized || forceNodes.length === 0) return [false, { toggleForceLayout: (setForce?: boolean) => null } as any];
       let running = false;
       simulation.nodes(forceNodes).force(
         'link',
@@ -298,7 +315,7 @@ export default function OsintPage() {
         });
       };
 
-      const toggle = (setForce?: boolean) => {
+      const toggleForceLayout = (setForce?: boolean) => {
         if (typeof setForce === 'boolean') {
           running = setForce
         } else {
@@ -307,11 +324,21 @@ export default function OsintPage() {
         running && window.requestAnimationFrame(tick);
       };
 
-      return [true, { toggle, isForceRunning: running }];
+      return [true, { toggleForceLayout, isForceRunning: running }];
     }, [nodesInitialized]);
   }
 
-  const [forceInitialized, { toggle, isForceRunning }] = useForceLayoutElements();
+  const [forceInitialized, { toggleForceLayout, isForceRunning }] = useForceLayoutElements();
+  const { ref, isOpen, setIsOpen } = useComponentVisible(false);
+
+
+  // Prevents bugs from occurring on navigate away and returning to a graph
+  // https://reactrouter.com/en/main/hooks/use-blocker
+  useBlocker(useCallback(
+    (tx: any) => tx.historyAction && toggleForceLayout(false),
+    [toggleForceLayout]
+  ));
+
   return (
     <>
       {isError && (
@@ -323,13 +350,11 @@ export default function OsintPage() {
       {isSuccess && (
         <HotKeys keyMap={keyMap} handlers={handlers}>
           <div className='h-screen flex flex-col w-full'>
-            <button id="wtf2"></button>
             <EntityOptions
               positionMode={positionMode}
-              toggleForceLayout={toggle}
+              toggleForceLayout={toggleForceLayout}
               isForceActive={isForceRunning}
               activeGraph={activeGraph}
-              options={nodeOptions}
               allNodes={nodesBeforeLayout}
               allEdges={edgesBeforeLayout}
             />
@@ -362,8 +387,8 @@ export default function OsintPage() {
             setOpen={setShowCommandPalette}
           />
           <div
-            id='node-options-tour'
-            className='absolute top-[3.5rem] w-48 bg-red -z-10 h-20 left-[0.7rem] text-slate-900'
+
+            className='absolute top-[3.5rem] w-52 bg-red -z-10 h-20  text-slate-900'
           />
           <ContextMenu
             activeTransformLabel={activeTransformLabel}
