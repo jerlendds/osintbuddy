@@ -48,11 +48,11 @@ export default function InputToggleSwitch({ control, name, defaultValue, classNa
   })
 
   return (
-    <Switch.Group as='div' className={'px-4 pb-5 sm:px-6 sm:col-span-2 ' + className ?? ''}>
-      <Switch.Label as='h3' className='mx-4 font-display font-semibold leading-6 text-slate-400' passive>
+    <Switch.Group as='div' className={' pb-5  sm:col-span-2 ' + className ?? ''}>
+      <Switch.Label as='h3' className=' font-display font-semibold leading-6 text-slate-400' passive>
         {label ?? ""}
       </Switch.Label>
-      <div className='mt-2 mx-4 sm:flex sm:items-start sm:justify-between'>
+      <div className='mt-2 sm:flex sm:items-start sm:justify-between'>
         {description && (
           <div className='max-w-xl text-sm text-slate-400'>
             <Switch.Description>

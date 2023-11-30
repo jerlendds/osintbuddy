@@ -71,13 +71,14 @@ export default function DashboardPage() {
     if (skip !== undefined && limit !== undefined) setGraphsQuery({ skip, limit })
     if (favoriteSkip !== undefined && favoriteLimit !== undefined) setFavoriteGraphsQuery({ favoriteSkip, favoriteLimit })
   }
+
   const {
     data: graphStats,
     refetch: refreshGraphStats } = useGetGraphStatsQuery(
       { hid: hid as string },
       {
-        skip: hid === undefined && !location.pathname.includes("/dashboard/graph/"),
-        refetchOnMountOrArgChange: true
+        skip: hid === undefined || !location.pathname.includes("/dashboard/graph/"),
+        refetchOnMountOrArgChange: !location.pathname.includes("/dashboard/entity/")
       }
     )
 
@@ -152,7 +153,7 @@ export default function DashboardPage() {
                   isLoading={isLoading}
                   isError={isError}
                   isSuccess={isSuccess}
-                  refreshAllEntities={refreshAllEntities}
+                  updateEntities={refreshAllEntities}
                 />
               </Tab.Panel>
               <Tab.Panel className={styles["tab-panel"]}>
@@ -193,7 +194,7 @@ export default function DashboardPage() {
         refreshAllGraphs={async () => await refetchGraphs()}
       />
       <CreateEntityModal
-        refreshAllEntities={refreshAllEntities}
+        refreshAllEntities={async () => await refreshAllEntities()}
         cancelCreateRef={cancelCreateEntityRef}
         isOpen={showCreateEntityModal}
         closeModal={() => setShowCreateEntityModal(false)}

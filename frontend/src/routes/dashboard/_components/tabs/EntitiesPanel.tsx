@@ -18,13 +18,13 @@ export default function EntitiesPanel({
 
   const entities = useMemo(() => {
     const sortedEntities = entitiesData.entities.slice()
-    sortedEntities.sort((a: any, b: any) => b.created.localeCompare(a.created))
+    sortedEntities.sort((a: any, b: any) => b.last_edited.localeCompare(a.last_edited))
     return sortedEntities
   }, [entitiesData])
 
   const favoriteEntities = useMemo(() => {
     const sortedEntities = entitiesData.favorite_entities.slice()
-    sortedEntities.sort((a: any, b: any) => b.created.localeCompare(a.created))
+    sortedEntities.sort((a: any, b: any) => b.last_edited.localeCompare(a.last_edited))
     return sortedEntities
   }, [entitiesData])
 

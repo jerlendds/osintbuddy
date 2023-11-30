@@ -39,7 +39,7 @@ export default function OverlayModal({
               leaveFrom='opacity-100 translate-y-0 sm:scale-100'
               leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
             >
-              <Dialog.Panel className='relative max-w-2xl w-full transform overflow-hidden rounded-lg text-left shadow-xl transition-all'>
+              <Dialog.Panel className='relative max-w-2xl w-full transform overflow-hidden rounded-lg text-left transition-all'>
                 {children}
               </Dialog.Panel>
             </Transition.Child>

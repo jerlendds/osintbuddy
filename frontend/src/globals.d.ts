@@ -15,6 +15,7 @@ interface InputProps {
   name: string
   label?: string
   className?: string
+  description?: string
 }
 
 interface NodeData {

@@ -3,7 +3,7 @@
 }
 
 .modal-form section:first-child {
-  @apply border-b border-dark-300 mx-4 py-5 sm:px-6;
+  @apply border-b border-dark-300 py-5 pb-1 sm:px-6;
 }
 
 .modal-form section:first-child > div {
@@ -12,12 +12,12 @@
 
 
 .modal-form section:first-child > div h1 {
-  @apply font-display text-2xl tracking-tight text-slate-200 dark:text-white
+  @apply font-display text-2xl tracking-tight text-slate-400;
 }
 
 
 .modal-form section:last-child {
-  @apply flex justify-end items-center px-8 pb-6 w-full relative;
+  @apply flex justify-end items-center pb-6 w-full relative;
 }
 
 .modal-form section:last-child > div {

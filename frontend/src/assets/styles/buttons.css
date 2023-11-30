@@ -2,13 +2,15 @@
   @apply ring-1 ring-primary-300/95 whitespace-nowrap hover:ring-primary-200 text-left text-sm font-semibold text-primary-300 hover:text-primary-100/90 flex items-center border hover:ring-inset border-primary-300/95 hover:border-primary-200 py-2 px-3 rounded-md  hover:shadow justify-center transition-colors duration-100 ease-in-out;
 }
 
-.btn-primary svg {
+.btn-primary svg,
+.btn-danger svg {
   @apply ml-5 w-5 h-5
 }
 
 .btn-danger {
   @apply ring-1 hover:shadow ring-danger-500/70 hover:ring-danger-500 text-left text-sm font-semibold text-danger-500/70 hover:text-danger-500 flex items-center border hover:ring-inset border-danger-500/70 hover:border-danger-500 py-2 px-3 rounded-md   justify-center transition-colors duration-100 ease-in-out
 }
+
 
 .btn-form {
   @apply flex px-2 py-2 hover:ring-2 focus:ring-1 focus:ring-inset outline-none items-center text-slate-400 hover:text-slate-200 rounded-md ring-1
@@ -22,7 +24,7 @@
 
 
 .form-input-wrapper {
-  @apply mt-2.5 hover:border-mirage-200/40 transition-colors duration-200 ease-in-out block justify-between items-center to-mirage-400/50 from-mirage-300/20 bg-gradient-to-br rounded border mb-2 mx-4 focus-within:!border-primary/40  px-3.5 py-1 text-slate-100 shadow-sm border-mirage-400/20 focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l
+  @apply mt-2.5 hover:border-mirage-200/40 transition-colors duration-200 ease-in-out block justify-between items-center to-mirage-400/50 from-mirage-300/20 bg-gradient-to-br rounded border  focus-within:!border-primary/40  px-3.5 py-1 text-slate-100 shadow-sm border-mirage-400/20 focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l
 }
 
 .form-input {

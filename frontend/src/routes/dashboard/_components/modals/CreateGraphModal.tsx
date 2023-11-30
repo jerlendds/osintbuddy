@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useTour } from '@reactour/tour'
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -71,7 +71,7 @@ export function CreateGraphForm({ closeModal, refreshGraphs }: JSONObject) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmitHandler)} className={styles["modal-form"]}>
+    <form onSubmit={handleSubmit(onSubmitHandler)} className={`${styles["modal-form"]} px-8`}>
       <section>
         <div>
           <h1>New Graph</h1>
@@ -90,6 +90,7 @@ export function CreateGraphForm({ closeModal, refreshGraphs }: JSONObject) {
             className="btn-danger"
           >
             <span>Cancel</span>
+            <TrashIcon />
           </button>
           <button
             type='submit'

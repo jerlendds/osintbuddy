@@ -7,6 +7,9 @@ import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import { Icon } from "../Icons";
+import { useCreateEntityMutation, useGetEntitiesQuery, useUpdateEntityByIdMutation, useGetEntityQuery, Entity } from '@/app/api';
+import { UpdateEntityByIdApiArg } from '../../app/api';
+import { useParams } from "react-router-dom";
 
 export const tokyoNightTheme = auraInit({
   settings: {
@@ -34,15 +37,21 @@ export function CodeEditor({ code, setCode }: JSONObject) {
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
+interface EntityEditorProps {
+  activeEntity?: Entity
+}
 
-export default function EntityEditor({ activeEntity }: JSONObject) {
-
+export default function EntityEditor({ activeEntity }: EntityEditorProps) {
   const [isEntityDraggable, setEntityDraggable] = useState(false);
   const [code, setCode] = useState(activeEntity?.source)
-
   useEffect(() => {
     if (activeEntity?.source) setCode(activeEntity.source)
   }, [activeEntity?.source])
+  const [updateEntityById] = useUpdateEntityByIdMutation()
+  const { refetch: refetchEntities } = useGetEntitiesQuery({
+    limit: 50,
+    skip: 0,
+  })
 
   return (
     <>
@@ -76,6 +85,7 @@ export default function EntityEditor({ activeEntity }: JSONObject) {
                 <span className="text-slate-500 font-display truncate">
                   Entity Editor
                   <span className="font-medium font-display">/&nbsp;</span>
+
                 </span>
               </div>
             </li>
@@ -85,7 +95,7 @@ export default function EntityEditor({ activeEntity }: JSONObject) {
                   className="text-inherit whitespace-nowrap font-display"
                   title={"placeholder"}
                 >
-                  {activeEntity && activeEntity.label}
+                  {activeEntity?.label && activeEntity.label}
                   <span className="font-medium font-display text-slate-500">&nbsp;/</span>
                 </span>
               </div>
@@ -104,6 +114,7 @@ export default function EntityEditor({ activeEntity }: JSONObject) {
                     //     `The ${activeEntity.label} entity has been saved.`
                     //   );
                     // }).catch(error => console.error(error));
+                    updateEntityById({ hid: activeEntity?.id ?? "", entityBase: { source: code } })
                   }}
                 >
                   <Icon
