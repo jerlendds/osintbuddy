@@ -30,7 +30,7 @@
       Welcome to the OSINTBuddy project where you can connect, combine,
       and get insight from unstructured and public data as results that
       can be explored step-by-step. An easy-to-use plugin system allows any
-      Python developer to quickly integrate new data sources.
+      Python developer to quickly integrate new data sources. 
   </p>
 
   🚧  <ins>Work in progress</ins>  🚧
@@ -86,10 +86,10 @@ An almost incomprehensible amount of data is created every day. And each year, f
 - Grey literature *(technical reports, preprints, patents, business documents, etc)*
 
 
-OSINT is a method of working with, assessing and ranking information — We are living in the [information Age](https://en.wikipedia.org/wiki/Information_Age) and the volume of information OSINT research has to deal with [(information explosion)](https://en.wikipedia.org/wiki/Information_explosion) and the issue of low quality data leaves researchers drowning. The majority of this data is unstructured introducing many challenges to analyzing it and producing actionable intelligence since most data analytics databases are designed for structured data.
+OSINT is a method of working with, assessing and ranking information — We are living in the [information age](https://en.wikipedia.org/wiki/Information_Age) and the volume of information OSINT research has to deal with [(information explosion)](https://en.wikipedia.org/wiki/Information_explosion) and the issue of low quality data leaves researchers drowning. The majority of this data is unstructured introducing many challenges to analyzing it and producing actionable intelligence since most data analytics databases are designed for structured data. We are surrounded by information and nearly none of it is useful. 
 
 
-We've decided to do something about it. The rapid developments in technologies such as AI and big data analytics have opened new horizons for OSINT which weren't previously available. We want our information quick and to the point, that's why we're building an open-source OSINT tool that's free. Free to use, free to modify, free to do with as you wish, and built with plain old web technologies anyone can learn. But this isn't really the project. This is a free new community. A community for OSINT enthusiasts around the world and we need your help to design it, to program it, and to build it. We want to hear your suggestions, your ideas, and we're going to build it right in front of your eyes. The notion of a “needle in a haystack” is taken to the extreme on the internet. Let's build a magnet.
+We've decided to do something about it. The rapid developments in technologies such as AI and big data analytics have opened new horizons for OSINT which weren't previously available. We want to put all of that information at our fingertips, quickly and to the point, that's why we're building an open-source OSINT tool that's free. Free to use, free to modify, free to do with as you wish, and built with plain old web technologies anyone can learn. But this isn't really the project. This is a free new community. A community for OSINT enthusiasts around the world and we need your help to design it, to program it, and to build it. We want to hear your suggestions, your ideas, and we're going to build it right in front of your eyes. The notion of a “needle in a haystack” is taken to the extreme on the internet. Let's build a magnet.
 
 
 ### Key Alpha Features
@@ -97,7 +97,7 @@ We've decided to do something about it. The rapid developments in technologies s
 - Visual representation of fetched data for easy understanding.
 - A development platform that is open for contributions.
 - Plugin-based system for transforming data, check out the [osintbuddy](https://pypi.org/project/osintbuddy/) package.
-- Works sometimes :)
+- Works most of the time :)
 
 
 ### The future

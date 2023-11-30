@@ -3,6 +3,7 @@
 # Dependencies
 - [react](https://react.dev/)
 - [reactflow](https://www.npmjs.com/package/reactflow)
+- [@blocksuite/*](https://block-suite.com/quick-start.html)
 - [@reduxjs/toolkit](https://www.npmjs.com/package/@reduxjs/toolkit)
 - [react-table](https://www.npmjs.com/package/react-table)
 - [headlessui](https://headlessui.com)
@@ -20,23 +21,34 @@
 - [react-toastify](https://www.npmjs.com/package/react-toastify)
 - [tagify](https://github.com/yairEO/tagify)
 - [react-grid-layout](https://github.com/react-grid-layout/react-grid-layout)
-- [sigmajs](https://www.sigmajs.org/)
+- [sigma](https://www.sigmajs.org/)
 - [i18next](https://www.npmjs.com/package/i18next)
 - [chartist](https://www.npmjs.com/package/chartist)
 - [casdoor-js-sdk](https://www.npmjs.com/package/casdoor-js-sdk)
+- [webcola](https://github.com/tgdwyer/WebCola)
+- [d3-force](https://github.com/d3/d3-force)
+- [d3-hierarchy](https://github.com/d3/d3-hierarchy)
+- [dagre](https://github.com/dagrejs/dagre)
+- [entitree-flex](https://github.com/codeledge/entitree-flex)
+- [graphology](https://github.com/graphology/graphology)
+- [react-hotkeys](https://www.npmjs.com/package/react-hotkeys)
+- [@headlessui/react](https://headlessui.com/)
+- [@tabler/icons](https://www.npmjs.com/package/@tabler/icons)
+- [color](https://www.npmjs.com/package/color)
+- [react-virtualized](https://www.npmjs.com/package/react-virtualized)
 
 # Getting Started
 
   1. Clone the repo
       ```bash
-      git clone --depth=1 --recurse-submodules https://github.com/jerlendds/osintbuddy.git 
+      git clone --recurse-submodules https://github.com/jerlendds/osintbuddy.git 
       cd osintbuddy
       ```
 
-  2. Install the dependencies. From the `osintbuddy` directory run:
+  2. Setup your dev environment. From the `osintbuddy` directory run:
       ```bash
       ./launcher bootstrap
-      # alternatively from the frontend directory try:  npm install && npm run ui:dev
+      # alternatively from the frontend directory try:  yarn && yarn ui:dev
       ```
 
   3. From the `osintbuddy` directory, start the stack:

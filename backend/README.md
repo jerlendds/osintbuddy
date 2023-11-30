@@ -1,10 +1,7 @@
 # OSINTBuddy Backend
 
-<!-- https://nvd.nist.gov/developers/vulnerabilities
-https://www.exploit-db.com/google-hacking-database -->
-
 ## About the Project
-  The core of the backend is a FastAPI app running on Python 3.11.4. Since we're using an undetected version of Selenium to provide plugin authors access to a browser instance the container also has chromium installed. You can find the [backend dockerfile here](./backend.Dockerfile) and the [selenium provider here](./app/app/api/deps.py) among a few other things.
+  The core of the backend is a FastAPI app running on Python 3.11.4.You can find the [backend dockerfile here](./backend.Dockerfile) and the [selenium provider here](./app/app/api/deps.py) among a few other things.
 
 
 # Dependencies
@@ -18,17 +15,14 @@ https://www.exploit-db.com/google-hacking-database -->
 - [pyfiglet](https://pypi.org/project/pyfiglet/0.8.post1/)
 - [termcolor](https://pypi.org/project/termcolor/2.3.0/)
 
-#### **For creating and saving WARC files we're planning to use:**
+#### **For creating and saving WARC files we're planning to use (todo):**
 - [selenium-wire](https://pypi.org/project/selenium-wire/5.1.0/)
 - [warc](https://pypi.org/project/warc/0.2.1/)
 - [celery](https://pypi.org/project/celery/5.3.0/)
 - [minio](https://pypi.org/project/minio/7.1.15/)
 
-#### **For telemetry we're planning to add:**
+#### **For telemetry we're planning to add (todo):**
 - [opentelemetry.io](https://opentelemetry.io/docs/instrumentation/python/automatic/)
-
-#### **Plugin dependencies:**
-- [undetected-chromedriver](https://pypi.org/project/undetected-chromedriver/)
 
 #### **Testing, Linting, Formatting, and Githooks (todo):**
 - [pytest](https://pypi.org/project/pytest/7.3.2/)
@@ -41,13 +35,13 @@ https://www.exploit-db.com/google-hacking-database -->
 
   1. Clone the repo
       ```sh
-      git clone --depth=1 --recurse-submodules https://github.com/jerlendds/osintbuddy.git
+      git clone --recurse-submodules https://github.com/jerlendds/osintbuddy.git
       # using ssh?
       # git clone --depth=1 --recurse-submodules git@github.com:jerlendds/osintbuddy.git 
       cd osintbuddy
       ```
 
-  2. *(optional)* Setup your `venv` and install development dependencies. From the `osintbuddy` directory run:
+  2. Setup your dev env/`venv` and install development dependencies. From the `osintbuddy` directory run:
       ```bash
       ./launcher bootstrap 
       ```
