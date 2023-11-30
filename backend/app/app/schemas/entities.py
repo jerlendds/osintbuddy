@@ -54,22 +54,27 @@ class EntityInDBBase(EntityBase):
     created: datetime.datetime
 
 
-# Additional properties to return via API
 class Entity(EntityInDBBase):
     model_config = ConfigDict(from_attributes=True)
 
 
+class EntityInList(PostEntityCreate):
+    id: str
+    last_edited: datetime.datetime
+    is_favorite: bool
+
 class AllEntitiesList(BaseModel):
-    entities: List[Entity]
+    entities: List[EntityInList]
     count: int
-    favorite_entities: List[Entity]
+    favorite_entities: List[EntityInList]
     favorite_count: int
+
 
 class EntitiesList(BaseModel):
     entities: List[Entity]
     count: int
 
-# Additional properties stored in DB
+
 class EntityInDB(EntityInDBBase):
     id: Optional[int] = None
     pass

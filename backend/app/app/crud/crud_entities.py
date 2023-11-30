@@ -41,7 +41,7 @@ class CRUDEntities(CRUDBase[
     def get_many_by_favorites(
         self, db: Session, *, skip: int = 0, limit: int = 100, is_favorite: bool = False
     ) -> List[ModelType]:
-        entities = db.query(self.model).where(self.model.is_favorite == is_favorite).offset(skip).limit(limit).all()
+        entities = db.query(self.model.id, self.model.is_favorite, self.model.last_edited, self.model.label, self.model.description, self.model.author).where(self.model.is_favorite == is_favorite).offset(skip).limit(limit).all()
         entities_count = self.count_by_favorites(db, is_favorite=is_favorite)[0][0]
         return entities, entities_count
 
