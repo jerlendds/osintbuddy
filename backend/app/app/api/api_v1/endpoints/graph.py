@@ -144,6 +144,8 @@ async def create_graph(
     db: Annotated[Session, Depends(deps.get_db)],
 ):
     try:
+        if obj_in.description == "":
+            obj_in.description = "No description."
         obj_out = crud.graphs.create(db=db, obj_in=obj_in)
         cluster = await Cluster.open(**{'hosts': ['janus'], 'port': 8182})
         client = await cluster.connect(hostname='janus')
