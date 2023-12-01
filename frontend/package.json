@@ -22,6 +22,7 @@
     "d3-force": "^3.0.0",
     "d3-hierarchy": "^3.1.2",
     "dagre": "^0.8.5",
+    "elkjs": "^0.8.2",
     "entitree-flex": "^0.4.1",
     "graphology": "^0.25.4",
     "i18next": "^23.6.0",

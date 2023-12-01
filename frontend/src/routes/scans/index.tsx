@@ -8,6 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import { useEffectOnce } from "@/app/hooks";
+import { UnderConstruction } from "@/components/Loaders";
 
 interface SettingCardProps {
   title: string;
@@ -28,7 +29,7 @@ export function ScanMachineCard({
 
   return (
     <>
-      <section className="relative  bg-slate-900 mb-4 border border-dark-400 font-medium text-slate-400 p-4 rounded-md max-w-md min-w-[32rem]  mx-2 text-sm flex-col flex justify-between">
+      <section className="relative  bg-slate-900 mb-4 border border-mirage-400 font-medium text-slate-400 p-4 rounded-md max-w-md min-w-[32rem]  mx-2 text-sm flex-col flex justify-between">
         <div className="flex flex-col">
           <div className="flex w-full justify-between">
             <div className="flex flex-col">
@@ -46,7 +47,7 @@ export function ScanMachineCard({
         </div>
         <ul className="flex w-full items-center justify-between mt-4">
           <li className="w-full mr-4">
-            <button className="w-full ml-auto pr-3 text-left text-sm font-semibold text-info-100 hover:text-info-200 flex items-center justify-between border border-info-200 hover:border-info-300 py-2 px-3 rounded-md mr-1">
+            <button className="w-full ml-auto pr-3 text-left text-sm font-semibold text-info-100 hover:text-info-200 flex items-center justify-between border border-mirage-400 hover:border-info-300 py-2 px-3 rounded-md mr-1">
               <span className="mr-4 whitespace-nowrap">Start scan</span>
               <DocumentMagnifyingGlassIcon className="h-5 w-5" />
             </button>
@@ -54,7 +55,7 @@ export function ScanMachineCard({
           <li className="w-full mr-4">
             <button
               onClick={() => navigate(`${id}`)}
-              className="w-ful ml-auto pr-3 text-left text-sm font-semibold text-info-100 hover:text-info-200 flex items-center justify-between border border-info-200 hover:border-info-300 py-2 px-3 rounded-md mr-1"
+              className="w-ful ml-auto pr-3 text-left text-sm font-semibold text-info-100 hover:text-info-200 flex items-center justify-between border border-mirage-400 hover:border-info-300 py-2 px-3 rounded-md mr-1"
             >
               <span className="mr-4 whitespace-nowrap">Edit workflow</span>
               <PencilIcon className="h-5 w-5" />
@@ -86,41 +87,18 @@ export default function ScansPage() {
 
   return (
     <>
-      <InquiryHeader title="Scans" header="Passive Reconnaissance" />
+      {/* <InquiryHeader title="Scans" header="Passive Reconnaissance" />
       <div className="flex flex-col sm:px-2 lg:px-6 my-2 relative mx-auto w-full justify-center">
         <p className="text-slate-400">
           Automate your data gathering by scheduling scans
         </p>
 
-        <div className="mt-6 flex flex-col ">
-          <div className="flex items-center">
-            <h3 className="font-display leading-4 mt-6 text-xl tracking-tight text-slate-400 dark:text-slate-300">
-              Browse your scan machines
-            </h3>
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(true)}
-              className="ring-1 ml-auto bg-dark-800 pr-3 text-left text-sm font-semibold text-info-100 hover:text-info-200 flex items-center border border-info-200 hover:border-info-300 py-2 px-3 rounded-md mr-1"
-            >
-              Create template
-              <PlusIcon className="ml-2 w-5 h-5 " />
-            </button>
-          </div>
-          <section className="border-dark-300 w-full flex-wrap  overflow-y-scroll my-3 border-t flex py-6">
-            {scanMachines.map((machine: JSONObject) => {
-              return (
-                <ScanMachineCard
-                  title={machine.name}
-                  updatedAt={machine.updated}
-                  created={machine.created}
-                  id={machine.id}
-                  description={machine.description}
-                />
-              );
-            })}
-          </section>
-        </div>
-      </div>
+      </div> */}
+      <UnderConstruction
+        header='OSINTBuddy Scans'
+        description='This feature is currently being planned out and created and will be finished eventually. 
+            You can help shape this feature by contributing to a discussion on Github!'
+      />
       {/* <CreateScanModal
         closeModal={closeModal}
         isOpen={isModalOpen}

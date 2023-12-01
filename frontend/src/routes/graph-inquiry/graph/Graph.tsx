@@ -2,21 +2,20 @@ import { useCallback, useState, useMemo, DragEventHandler, useEffect } from 'rea
 import ReactFlow, {
   Edge,
   Background,
-  Controls,
   BackgroundVariant,
   FitViewOptions,
   NodeDragHandler,
   Connection,
-  Panel,
 } from 'reactflow';
-import BaseNode from './BaseNode';
+import BaseNode from '../_components/BaseNode';
 import { addNodeUpdate, createEdge, onEdgesChange, updateEdgeEvent, updateNodeFlow } from '@/features/graph/graphSlice';
 import { useAppDispatch } from '@/app/hooks';
 import { toast } from 'react-toastify';
-import BaseMiniNode from './BaseMiniNode';
-import { CreateGraphEntityApiResponse, CreateNode, useCreateEntityMutation, useCreateGraphEntityMutation, useGetEntityTransformsQuery, useRefreshPluginsQuery } from '@/app/api';
-import { CreateGraphEntityApiArg } from '../../../app/api';
+import BaseMiniNode from '../_components/BaseMiniNode';
+import { CreateGraphEntityApiResponse, useCreateGraphEntityMutation, useRefreshPluginsQuery } from '@/app/api';
 import { useParams } from 'react-router-dom';
+import NewConnectionLine from './ConnectionLine';
+import SimpleFloatingEdge from './SimpleFloatingEdge';
 
 const viewOptions: FitViewOptions = {
   padding: 50,
@@ -26,21 +25,19 @@ const viewOptions: FitViewOptions = {
 interface ProjectGraphProps extends JSONObject {
 }
 
-export default function ProjectGraph({
+export default function Graph({
+  onSelectionCtxMenu,
+  onMultiSelectionCtxMenu,
+  onPaneCtxMenu,
+  onPaneClick,
+  addEdge,
   graphRef,
   nodes,
   edges,
   graphInstance,
   setGraphInstance,
-  addEdge,
   sendJsonMessage,
-  onPaneClick,
-  onPaneCtxMenu,
-  onSelectionCtxMenu,
-  onMultiSelectionCtxMenu,
-  setIsEditingMini,
-  isEditingMini,
-  closeMiniRef,
+  fitView
 }: ProjectGraphProps) {
   const dispatch = useAppDispatch();
   const onEdgeUpdate = useCallback(
@@ -76,7 +73,7 @@ export default function ProjectGraph({
         const createNode = { label, position }
         createGraphEntity({ createNode, hid })
           .then(({ data }: CreateGraphEntityApiResponse) => dispatch(addNodeUpdate({ position, label, ...data, })))
-          .catch((error) => {
+          .catch((error: any) => {
             console.error(error)
             toast.error(`We ran into a problem creating the ${label} entity. Please try again`)
           })
@@ -91,20 +88,13 @@ export default function ProjectGraph({
     () => ({
       base: (data: JSONObject) => (
         <BaseNode
-          dispatch={dispatch}
           ctx={data}
-          closeRef={closeMiniRef}
-          sendJsonMessage={sendJsonMessage}
+          dispatch={dispatch}
         />),
       mini: (data: JSONObject) => (
         <BaseMiniNode
-          dispatch={dispatch}
-          isOpen={isEditingMini}
-          setIsOpen={setIsEditingMini}
-          closeRef={closeMiniRef}
-          setIsEditing={setIsEditingMini}
           ctx={data}
-          sendJsonMessage={sendJsonMessage}
+          dispatch={dispatch}
         />
       ),
     }),
@@ -112,7 +102,9 @@ export default function ProjectGraph({
   );
 
   const edgeTypes = useMemo(
-    () => ({}),
+    () => ({
+      float: SimpleFloatingEdge
+    }),
     []
   );
 
@@ -120,6 +112,11 @@ export default function ProjectGraph({
     sendJsonMessage({ action: 'update:node', node: { id: node.id, x: node.position.x } });
     sendJsonMessage({ action: 'update:node', node: { id: node.id, y: node.position.y } });
   };
+
+  useEffect(() => {
+    fitView && fitView()
+
+  }, [fitView])
 
   return (
     <ReactFlow
@@ -144,6 +141,8 @@ export default function ProjectGraph({
       onPaneContextMenu={onPaneCtxMenu}
       onNodeContextMenu={onSelectionCtxMenu}
       onSelectionContextMenu={onMultiSelectionCtxMenu}
+      connectionLineComponent={NewConnectionLine}
+
     >
 
       <Background variant={BackgroundVariant.Dots} className='bg-transparent' color='#394778' />

@@ -1,19 +1,19 @@
 
 /* global table styles */
 .primary-table {
-  @apply min-w-full divide-y-2 rounded-t-lg overflow-hidden divide-dark-800 table-fixed;
+  @apply min-w-full divide-y-2 rounded-t-lg overflow-hidden divide-mirage-800 table-fixed;
 }
 .primary-table-wrap {
   @apply overflow-y-scroll max-h-[20rem];
 }
 .primary-table thead {
-  @apply min-w-full w-full bg-dark-600;
+  @apply min-w-full w-full bg-mirage-600;
 }
 .primary-table thead tr th {
-  @apply bg-dark-600 text-slate-300 sticky top-0 z-50 first:py-3.5 pr-2 py-3.5 text-left text-sm font-semibold first:sm:pl-8 last:w-96 even:w-52 first:w-20  first:pr-20 whitespace-nowrap truncate ;
+  @apply bg-mirage-600 text-slate-300 sticky top-0 z-50 first:py-3.5 pr-2 py-3.5 text-left text-sm font-semibold first:sm:pl-8 last:w-96 even:w-52 first:w-20  first:pr-20 whitespace-nowrap truncate ;
 }
 .primary-table tbody {
-  @apply bg-dark-500 pb-2 max-h-[20rem];
+  @apply bg-mirage-500 pb-2 max-h-[20rem];
 }
 .primary-table-wrap.no-scroll {
   @apply overflow-hidden;
@@ -30,7 +30,7 @@
   @apply lg:first:w-48  py-2 pr-3 text-sm text-slate-400 first:pl-8
 }
 .entity-row > td:nth-child(2) {
- @apply min-w-[32rem];
+  @apply min-w-[32rem];
 }
 /* end global table styles */
 

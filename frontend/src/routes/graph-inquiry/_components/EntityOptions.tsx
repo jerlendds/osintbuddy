@@ -110,7 +110,9 @@ export function EntityOption({ entity, onDragStart }: JSONObject) {
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-export default function EntityOptions({ allNodes, allEdges, positionMode, activeGraph, toggleForceLayout, isForceActive, setIsForceActive, }: JSONObject) {
+const MAX_GRAPH_LABEL_LENGTH = 22;
+
+export default function EntityOptions({ allManualNodes, allManualEdges, positionMode, activeGraph, setElkLayout, toggleForceLayout, isForceActive }: JSONObject) {
   const {
     data: entitiesData = { entities: [], count: 0, favorite_entities: [], favorite_count: 0 },
     isLoading,
@@ -204,13 +206,13 @@ export default function EntityOptions({ allNodes, allEdges, positionMode, active
         <ol className='text-sm flex select-none relative px-4 pt-2'>
           <li className='flex mr-auto'>
             <h5
-              title={activeGraph.name}
+              title={activeGraph.label}
               className='flex whitespace-nowrap truncate justify-between items-center w-full text-slate-600 text-inherit font-display '>
               <Link title='View all graphs' className='text-slate-600' to='/dashboard/graph' replace>
                 Entities&nbsp;
               </Link>{" /"}&nbsp;
               <span className="text-slate-400/60">
-                {activeGraph.label.length > 22 ? `${activeGraph.label.slice(0, 22)}...` : activeGraph.label}
+                {activeGraph.label.length > MAX_GRAPH_LABEL_LENGTH ? `${activeGraph.label.slice(0, MAX_GRAPH_LABEL_LENGTH)}...` : activeGraph.label}
               </span>
               &nbsp;/
             </h5>
@@ -251,7 +253,6 @@ export default function EntityOptions({ allNodes, allEdges, positionMode, active
         <ol className='text-sm flex select-none relative px-4 pt-1'>
           <li className='flex mr-auto'>
             <h5
-              title={activeGraph.name}
               className='flex whitespace-nowrap truncate justify-between items-center w-full text-slate-600 text-inherit font-display '>
               <p className='text-slate-600' >
                 Layouts&nbsp;
@@ -280,8 +281,8 @@ export default function EntityOptions({ allNodes, allEdges, positionMode, active
             onClick={() => {
               isForceActive !== undefined && !isForceActive && toggleForceLayout(false)
               dispatch(setPositionMode('manual'))
-              dispatch(setAllNodes([...allNodes]))
-              dispatch(setAllEdges(allEdges))
+              dispatch(setAllNodes(allManualNodes))
+              dispatch(setAllEdges(allManualEdges))
             }}
             type='button'
             className={classNames(
@@ -314,28 +315,38 @@ export default function EntityOptions({ allNodes, allEdges, positionMode, active
           </button>
           <button
             onClick={() => {
-              isForceActive && toggleForceLayout()
-
-              dispatch(setPositionMode('hierarchy'))
+              isForceActive !== undefined && !isForceActive && toggleForceLayout(false)
+              // setElkLayout({ 'elk.algorithm': 'org.eclipse.elk.radial', })
+              // setElkLayout({ 'elk.algorithm': 'layered', 'elk.direction': 'DOWN' })
+              // setElkLayout({ 'elk.algorithm': 'layered', 'elk.direction': 'RIGHT' })
+              dispatch(setPositionMode('right tree'))
+              setElkLayout({
+                'elk.algorithm': 'layered',
+                'elk.direction': 'RIGHT'
+              })
             }}
             type='button'
             className={classNames(
               'justify-center flex-grow from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-500/20 hover:from-40% hover:to-mirage-300/30  border-mirage-300/20 relative py-3 inline-flex items-center  border transition-colors duration-100 ease-in-out hover:border-primary-400/50 outline-none px-3 text-slate-500 hover:text-primary-300/80 focus:bg-mirage-800 hover:bg-mirage-600 focus:z-10',
-              positionMode === 'hierarchy' && 'bg-mirage-800 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
+              positionMode === 'right tree' && 'bg-mirage-800 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
             )}
           >
             <span className='sr-only'>List view</span>
             <Icon
-              icon="route"
-              className={classNames('h-5 w-5 text-inherit', positionMode === 'hierarchy' && 'text-primary-300')}
+              icon="binary-tree-2"
+              className={classNames('h-5 w-5 -rotate-90 origin-center text-inherit', positionMode === 'right tree' && 'text-primary-300')}
               aria-hidden='true'
             />
           </button>
           <button
             onClick={() => {
-              isForceActive && toggleForceLayout()
+              isForceActive && toggleForceLayout(false)
 
               dispatch(setPositionMode('tree'))
+              setElkLayout({
+                'elk.algorithm': 'layered',
+                'elk.direction': 'DOWN'
+              })
             }}
             type='button'
             className={classNames(
@@ -351,6 +362,9 @@ export default function EntityOptions({ allNodes, allEdges, positionMode, active
             />
           </button>
         </ul>
+        <section>
+          <p className='py-4 px-2 text-slate-500 text-xs'>More layouts, options, and controls for managing entity layouts will be here one day. Get the latest updates on the <a className='text-primary-300' href="https://forum.osintbuddy.com/">forum</a> or <a className='text-primary-300' href="https://discord.gg/gsbbYHA3K3">discord</a></p>
+        </section>
       </div>
     </ResponsiveGridLayout>
   );

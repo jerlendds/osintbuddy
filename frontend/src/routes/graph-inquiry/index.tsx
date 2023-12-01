@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo, useCallback, useContext } from 'react';
 import { UNSAFE_NavigationContext as NavigationContext, unstable_BlockerFunction } from 'react-router-dom';
-import { Edge, XYPosition, Node } from 'reactflow';
+import { Edge, XYPosition, Node, ReactFlowInstance } from 'reactflow';
 import { HotKeys } from 'react-hotkeys';
 import { useParams, useLocation, useBlocker, useBeforeUnload } from 'react-router-dom';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
@@ -10,7 +10,8 @@ import 'reactflow/dist/style.css';
 import EntityOptions from './_components/EntityOptions';
 import ContextMenu from './_components/ContextMenu';
 import { toast } from 'react-toastify';
-import ProjectGraph from './_components/ProjectGraph';
+import Graph from './graph/Graph';
+import ELK from 'elkjs/lib/elk.bundled.js';
 import { useAppDispatch, useAppSelector, useComponentVisible, useEffectOnce } from '@/app/hooks';
 import {
   ProjectViewModes,
@@ -22,6 +23,7 @@ import {
   selectAllEdges,
   selectPositionMode,
   selectViewMode,
+  setAllEdges,
   setAllNodes,
   setPositionMode,
 } from '@/features/graph/graphSlice';
@@ -47,10 +49,6 @@ interface UseWebsocket {
 interface GraphInquiryProps {
 }
 
-
-
-
-
 export default function GraphInquiry({ }: GraphInquiryProps) {
   const dispatch = useAppDispatch();
   const { hid } = useParams()
@@ -74,7 +72,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   const [edgesBeforeLayout, setEdgesBeforeLayout] = useState(initialEdges)
 
   const graphRef = useRef<HTMLDivElement>(null);
-  const [graphInstance, setGraphInstance] = useState(null);
+  const [graphInstance, setGraphInstance] = useState<ReactFlowInstance>();
 
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
 
@@ -110,17 +108,34 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
     target: string,
     sourceHandle: string = 'r1',
     targetHandle: string = 'l2',
-    type: string = 'default'
+    type: string = 'float',
+    label: string = '',
+    id: any = null
   ): void {
-    dispatch(
-      createEdge({
-        source,
-        target,
-        sourceHandle,
-        targetHandle,
-        type,
-      })
-    );
+    if (id) {
+      dispatch(
+        createEdge({
+          source,
+          target,
+          sourceHandle,
+          targetHandle,
+          type,
+          label,
+          id
+        })
+      );
+    } else {
+      dispatch(
+        createEdge({
+          source,
+          target,
+          sourceHandle,
+          targetHandle,
+          type,
+          label
+        })
+      );
+    }
   }
 
   const togglePalette = () => setShowCommandPalette(!showCommandPalette);
@@ -186,7 +201,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
       if (!Array.isArray(lastJsonMessage)) {
         if (lastJsonMessage.action === 'addInitialLoad') {
           lastJsonMessage.nodes.forEach((node: JSONObject, idx: JSONObject) => addNode(node.id.toString(), node.data, node.position, 'mini'));
-          lastJsonMessage.edges.forEach((edge: JSONObject) => addEdge(edge.source.toString(), edge.target.toString()));
+          lastJsonMessage.edges.forEach((edge: JSONObject) => addEdge(`${edge.source}`, `${edge.target}`, 'r1', 'l2', 'float', '', `${edge.id}`));
         }
         if (lastJsonMessage.action === 'addNode') {
           lastJsonMessage.position.x += 560;
@@ -263,6 +278,50 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
 
   const positionMode = useAppSelector((state) => selectPositionMode(state))
 
+  let fitView: any;
+  if (graphInstance) {
+    fitView = graphInstance.fitView
+  }
+
+  // TODO: Also implement d3-hierarchy, entitree-flex, dagre, webcola, and graphology layout modes
+  //       Once implemented measure performance and deprecate whatever performs worse
+  const elk = new ELK();
+  const useElkLayoutElements = () => {
+    const defaultOptions = {
+      'elk.algorithm': 'layered',
+      'elk.layered.spacing.nodeNodeBetweenLayers': 420,
+      'elk.spacing.nodeNode': 180,
+    };
+    const allNodes = [...useAppSelector(state => selectAllNodes(state))]
+    const allEdges = [...useAppSelector(state => selectAllEdges(state))]
+    const setElkLayout = useCallback((options: any) => {
+      const layoutOptions = { ...defaultOptions, ...options };
+      const graph = {
+        id: 'root',
+        layoutOptions: layoutOptions,
+        children: allNodes.map((node: any) => ({ ...node, x: node.position.x, y: node.position.y })),
+        edges: allEdges.map((edge: any) => ({ ...edge, })),
+      };
+      elk.layout(graph as any).then(({ children, edges }: any) => {
+        children.forEach((node: any) => {
+          node.position = { x: node.x, y: node.y };
+        });
+        console.log('children', children)
+        dispatch(resetGraph())
+        dispatch(setAllNodes(children));
+        dispatch(setAllEdges(edges))
+        window.requestAnimationFrame(() => {
+          fitView && fitView();
+        });
+      });
+    }, [allNodes]);
+
+    return { setElkLayout };
+  };
+
+  const { setElkLayout } = useElkLayoutElements();
+
+
   const useForceLayoutElements = () => {
     const allNodes = [...useAppSelector(state => selectAllNodes(state))]
     const allEdges = [...useAppSelector(state => selectAllEdges(state))]
@@ -311,7 +370,9 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         dispatch(setAllNodes(forceNodes.map((node: any) => ({ ...node, position: { x: node.x, y: node.y } }))) as any);
 
         window.requestAnimationFrame(() => {
-          if (running) tick();
+          if (running) {
+            tick()
+          };
         });
       };
 
@@ -322,6 +383,8 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
           running = !running
         }
         running && window.requestAnimationFrame(tick);
+        running && fitView && fitView();
+
       };
 
       return [true, { toggleForceLayout, isForceRunning: running }];
@@ -329,7 +392,6 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   }
 
   const [forceInitialized, { toggleForceLayout, isForceRunning }] = useForceLayoutElements();
-  const { ref, isOpen, setIsOpen } = useComponentVisible(false);
 
 
   // Prevents bugs from occurring on navigate away and returning to a graph
@@ -338,6 +400,10 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
     (tx: any) => tx.historyAction && toggleForceLayout(false),
     [toggleForceLayout]
   ));
+
+  useEffect(() => {
+    dispatch(setPositionMode('manual'))
+  }, [activeGraph?.id])
 
   return (
     <>
@@ -355,13 +421,13 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
               toggleForceLayout={toggleForceLayout}
               isForceActive={isForceRunning}
               activeGraph={activeGraph}
-              allNodes={nodesBeforeLayout}
-              allEdges={edgesBeforeLayout}
+              allManualNodes={nodesBeforeLayout}
+              allManualEdges={edgesBeforeLayout}
+              setElkLayout={setElkLayout}
             />
             <div className='h-full w-full justify-between bg-mirage-600/95'>
               <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
-                <ProjectGraph
-                  activeProject={activeGraph}
+                <Graph
                   onSelectionCtxMenu={onSelectionCtxMenu}
                   onMultiSelectionCtxMenu={onMultiSelectionCtxMenu}
                   onPaneCtxMenu={onPaneCtxMenu}
@@ -373,11 +439,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
                   graphInstance={graphInstance}
                   setGraphInstance={setGraphInstance}
                   sendJsonMessage={sendJsonMessage}
-                  lastMessage={lastMessage}
-                  updateNode={createNodeUpdate}
-                  setIsEditingMini={setIsOpen}
-                  isEditingMini={isOpen}
-                  closeMiniRef={ref}
+                  fitView={fitView}
                 />
               </div>
             </div>

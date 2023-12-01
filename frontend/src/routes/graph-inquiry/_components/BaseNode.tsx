@@ -25,7 +25,7 @@ const getNodeKey = () => {
   return `k_${nodeKey}`;
 };
 
-const handleStyle = { borderColor: '#60666A' };
+const handleStyle = { borderColor: '#39477899', background: '#12172720', width: 12, margin: -1, height: 12 }
 
 type NodeElement = NodeInput & {
   nodeId: string;
@@ -105,8 +105,6 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
     }
   };
 
-  const backgroundColor = node?.color?.length === 7 ? `${node.color}70` : node?.color ? node.color : '#145070';
-
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
@@ -119,14 +117,18 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
       <Handle position={Position.Bottom} id='b2' key='b2' type='target' style={handleStyle} />
       <Handle position={Position.Left} id='l2' key='l2' type='target' style={handleStyle} />
       <div onDoubleClick={() => dispatch(clearEditId(ctx.id))} data-label-type={node.label} className=' node container' style={node.style}>
-        <div style={{ backgroundColor }} className='header '>
-          <GripIcon className='' />
+        <div
+          // 99 === 0.6 opacity
+          style={{ backgroundColor: node?.color?.length === 7 ? `${node.color}99` : node?.color ?? '#145070' }}
+          className='header '
+        >
+          <GripIcon />
           <div className='text-container '>
-            <p className='text-[0.4rem] text-light-900  whitespace-wrap font-display'>
-              <span className='text-[0.5rem] text-light-900 max-w-xl whitespace-wrap font-display'>ID: </span>
+            <p className='text-[0.4rem] flex font-black  text-mirage-900  whitespace-wrap font-display'>
+              <span className='mr-1 text-[0.5rem] text-mirage-900 font-extralight max-w-xl whitespace-wrap '> ID: </span>
               {ctx.id}
             </p>
-            <p className='text-xs text-light-200 max-w-xl whitespace-wrap font-display font-bold'>{node.label}</p>
+            <p className='text-xs text-slate-200 max-w-xl whitespace-wrap font-display font-bold'>{node.label}</p>
           </div>
           <Icon icon={node.icon} className='h-5 w-5 mr-2 cursor-grab focus:cursor-grabbing' />
         </div>

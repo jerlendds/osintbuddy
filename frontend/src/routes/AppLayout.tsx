@@ -58,10 +58,10 @@ export default function AppLayout() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme="dark"
         toastStyle={{
-          backgroundColor: "rgb(23 35 65)",
-          color: "rgb(148, 163, 184)",
+          backgroundColor: "#1C233B",
+          color: "#94a3b8",
         }}
       />
     </>

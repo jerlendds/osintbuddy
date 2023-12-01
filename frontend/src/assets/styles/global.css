@@ -83,7 +83,7 @@ h6,
 button,
 a,
 figcaption {
-  @apply text-dark-400 font-display;
+  @apply text-mirage-400 font-display;
 }
 
 /* 
@@ -194,26 +194,22 @@ input[type='number'] {
 /* end hide number inputs */
 
 /* start react flow style overrides */
-.react-flow__controls-button {
-  @apply !border-dark-400 !fill-slate-400 hover:!bg-dark-200 !bg-dark-600;
-}
+
 .react-flow__attribution {
-  @apply !bg-dark-600;
+  @apply !bg-mirage-600;
 }
 .react-flow__attribution a {
   @apply !text-slate-500;
 }
 
 .react-flow__edge-path {
-  stroke: #3a3c40 !important;
+  stroke: #334155 !important;
 }
-.react-flow__edge-path:active {
-  stroke: #60666a !important;
-}
-.react-flow__edge {
+
+/* .react-flow__edge {
   cursor: grab !important;
   pointer-events: none !important;
-}
+} */
 .react-flow__node {
   cursor: default !important;
 }
@@ -236,10 +232,10 @@ input[type='file'] {
 :root {
   --toastify-color-light: #fff;
   --toastify-color-dark: #121212;
-  --toastify-color-info: #3498db;
-  --toastify-color-success: #07bc0c;
-  --toastify-color-warning: #f1c40f;
-  --toastify-color-error: #e74c3c;
+  --toastify-color-info: #0163A4;
+  --toastify-color-success: #48B758;
+  --toastify-color-warning: #CC9900;
+  --toastify-color-error: #C1292E;
   --toastify-color-transparent: rgba(255, 255, 255, 0.7);
 
   --toastify-icon-color-info: var(--toastify-color-info);
@@ -250,7 +246,7 @@ input[type='file'] {
   --toastify-toast-width: 320px;
   --toastify-toast-background: #fff;
   --toastify-toast-min-height: 64px;
-  --toastify-toast-max-height: 800px;
+  --toastify-toast-max-height: 600px;
   --toastify-font-family: sans-serif;
   --toastify-z-index: 9999;
 

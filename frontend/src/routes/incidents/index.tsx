@@ -50,20 +50,20 @@ export function SearchBar() {
 
   return (
     <>
-      <div className='flex items-start w-full pl-6 my-3'>
-        <div className='h-12 flex items-center flex-col bg-dark-700 mr-2'>
+      <div className='flex items-start  w-full pl-6 my-3'>
+        <div className='h-12 flex items-center  flex-col bg-mirage-700 mr-2'>
           <fieldset className='isolate inline-flex shadow-sm '>
             <button
               onClick={() => setViewMode('list')}
               type='button'
               className={classNames(
-                'relative py-3 inline-flex items-center rounded-l-md outline-none hover:ring-2 px-3 text-slate-400 ring-1 focus:bg-dark-800 ring-inset hover:bg-dark-600 focus:z-10 ring-dark-300',
+                'relative py-3 inline-flex items-center rounded-l-md outline-none hover:ring-2 px-3 text-slate-400 ring-1 ring-primary-400 focus:bg-dark-800 ring-inset hover:bg-dark-600 focus:z-10 ring-dark-300',
                 viewMode === 'list' && 'bg-dark-900'
               )}
             >
               <span className='sr-only'>List view</span>
               <ListBulletIcon
-                className={classNames('h-6 w-6', viewMode === 'list' && 'text-info-100')}
+                className={classNames('h-6 w-6', viewMode === 'list' && 'text-primary-100')}
                 aria-hidden='true'
               />
             </button>
@@ -71,24 +71,24 @@ export function SearchBar() {
               onClick={() => setViewMode('map')}
               type='button'
               className={classNames(
-                'relative py-3 inline-flex items-center outline-none hover:ring-2 px-3 text-slate-400 ring-1 focus:bg-dark-800 ring-inset hover:bg-dark-600 focus:z-10 ring-dark-300',
+                'relative py-3 inline-flex items-center outline-none hover:ring-2 px-3 text-slate-400 ring-1 focus:bg-dark-800 ring-primary-400 ring-inset hover:bg-dark-600 focus:z-10 ring-dark-300',
                 viewMode === 'map' && 'bg-dark-900'
               )}
             >
               <span className='sr-only'>List view</span>
-              <MapIcon className={classNames('h-6 w-6', viewMode === 'map' && 'text-info-100')} aria-hidden='true' />
+              <MapIcon className={classNames('h-6 w-6', viewMode === 'map' && 'text-primary-100')} aria-hidden='true' />
             </button>
             <button
               onClick={() => setViewMode('grid')}
               type='button'
               className={classNames(
-                'relative py-3 inline-flex items-center rounded-r-md  outline-none hover:ring-2 px-3 text-slate-400 ring-1 focus:bg-dark-800 ring-inset hover:bg-dark-600 focus:z-10 ring-dark-300',
+                'relative py-3 inline-flex items-center rounded-r-md  outline-none hover:ring-2 px-3 text-slate-400 ring-1 ring-primary-400 focus:bg-dark-800 ring-inset hover:bg-dark-600 focus:z-10 ring-dark-300',
                 viewMode === 'grid' && 'bg-dark-900'
               )}
             >
               <span className='sr-only'>List view</span>
               <Squares2X2Icon
-                className={classNames('h-6 w-6', viewMode === 'grid' && 'text-info-100')}
+                className={classNames('h-6 w-6', viewMode === 'grid' && 'text-primary-100')}
                 aria-hidden='true'
               />
             </button>
@@ -255,12 +255,12 @@ export function SearchBar() {
 export default function IncidentsPage() {
   return (
     <>
-      <InquiryHeader title='Incidents' />
-      <SearchBar />
+      {/* <InquiryHeader title='Incidents' /> */}
+      {/* <SearchBar /> */}
       <UnderConstruction
         header='OSINTBuddy Incidents'
-        description='This feature is currently being planned out and created and will be finished by around August. 
-            You can help shape this feature by contributing to the discussions on Github!'
+        description='This feature is currently being planned out and created and will be finished eventually. 
+            You can help shape this feature by creating/contributing to a discussion on Github!'
       />
     </>
   );

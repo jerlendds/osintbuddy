@@ -16,7 +16,7 @@ import {
 
 export type ProjectViewModes = 'base' | 'mini'
 
-export type PositionModes = 'manual' | 'force' | 'hierarchy' | 'tree' | 'cola'
+export type PositionModes = 'manual' | 'force' | 'hierarchy' | 'tree' | 'cola' | 'right tree' | 'tree 1'
 
 export interface Graph extends EditState {
   nodes: Node[];
@@ -139,13 +139,13 @@ export const graph = createSlice({
       state.edges.push({
         ...action.payload,
         style: {
-          strokeWidth: 1.5,
+          strokeWidth: 2.5,
         },
         markerEnd: {
           type: MarkerType.ArrowClosed,
-          width: 16,
-          height: 16,
-          color: '#3a3c40',
+          width: 19,
+          height: 20,
+          color: '#334155',
         },
       });
     },
@@ -173,8 +173,8 @@ export const graph = createSlice({
     resetGraph: (state) => {
       state.nodes = [];
       state.edges = [];
-      state.positionMode = 'manual';
-      state.viewMode = 'base';
+      // state.positionMode = 'manual';
+      // state.viewMode = 'base';
     },
 
     updateNodeData: (state, action: PayloadAction<Node>) => {
@@ -221,6 +221,7 @@ export const graph = createSlice({
     },
 
     updateEdgeEvent: (state, action: PayloadAction<UpdateEdgeEvent>) => {
+      console.log(updateEdge(action.payload.oldEdge, action.payload.newConnection, state.edges))
       state.edges = updateEdge(action.payload.oldEdge, action.payload.newConnection, state.edges);
     },
     addNodeUpdate: (state, action: PayloadAction<any>) => {

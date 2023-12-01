@@ -20,7 +20,7 @@ export default function GraphOverview() {
   return <>
     <div className="w-full items-center justify-center my-14">
       <div className="grid place-items-center relative z-10 text-slate-400">
-        <div className="from-mirage-400/30 bg-gradient-to-tr from-40% to-mirage-300/10 border-dark-400 border rounded-md grid place-items-center my-8 py-16 px-4 md:px-16 lg:px-20">
+        <div className="from-mirage-400/30 bg-gradient-to-tr from-40% to-mirage-300/10 border-mirage-400 border rounded-md grid place-items-center my-8 py-16 px-4 md:px-16 lg:px-20">
           {favoriteGraphs.length === 0 && graphs.length === 0 && (
             <>
               <h1 className="text-slate-300 text-3xl lg:text-4xl font-bold pt-12 sm:pt-14 lg:pt-8 ">Oh no!</h1>

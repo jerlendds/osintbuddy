@@ -3,13 +3,12 @@
 }
 
 .modal-form section:first-child {
-  @apply border-b border-dark-300 py-5 pb-1 sm:px-6;
+  @apply border-b border-mirage-300 py-5 pb-1 sm:px-6;
 }
 
 .modal-form section:first-child > div {
   @apply -ml-6 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap
 }
-
 
 .modal-form section:first-child > div h1 {
   @apply font-display text-2xl tracking-tight text-slate-400;

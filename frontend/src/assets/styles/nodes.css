@@ -4,7 +4,7 @@
 }
 
 .node .side-header {
-  @apply px-0 py-2 flex-shrink-0 flex flex-col items-center justify-center w-10 text-slate-200 text-sm font-medium rounded-l-sm;
+  @apply px-0 py-2 flex-shrink-0 flex flex-col items-center justify-center w-10 text-slate-50 text-sm font-medium rounded-l-sm;
 }
 
 .node .side-header svg {
@@ -36,7 +36,7 @@
 }
 
 .node .header {
-  @apply flex h-full w-full items-center justify-between rounded-t-md text-slate-400/40 py-2 px-1 cursor-grab focus:cursor-grabbing;
+  @apply flex h-full w-full items-center justify-between rounded-t-md text-slate-50/70 py-2 px-1 cursor-grab focus:cursor-grabbing;
 }
 
 .node .header svg {
@@ -49,7 +49,7 @@
 
 .text-container p:first-child,
 .text-container p:first-child > span {
-  @apply text-[0.4rem] text-slate-400 font-display;
+  @apply text-[0.4rem] text-slate-100/90 font-display;
 }
 
 .text-container p:last-child {

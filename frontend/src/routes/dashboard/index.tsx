@@ -175,7 +175,7 @@ export default function DashboardPage() {
           ) : (
             <button
               className='btn-primary mx-4 mr-6'
-            >Upload plugin</button>
+            >Share plugin(s)</button>
           )}
         </aside>
         <Outlet context={{

@@ -10,6 +10,7 @@ import { Icon } from "../Icons";
 import { useCreateEntityMutation, useGetEntitiesQuery, useUpdateEntityByIdMutation, useGetEntityQuery, Entity } from '@/app/api';
 import { UpdateEntityByIdApiArg } from '../../app/api';
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const tokyoNightTheme = auraInit({
   settings: {
@@ -39,19 +40,17 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 interface EntityEditorProps {
   activeEntity?: Entity
+  refetchEntity: () => void
 }
 
-export default function EntityEditor({ activeEntity }: EntityEditorProps) {
+export default function EntityEditor({ activeEntity, refetchEntity }: EntityEditorProps) {
   const [isEntityDraggable, setEntityDraggable] = useState(false);
   const [code, setCode] = useState(activeEntity?.source)
   useEffect(() => {
     if (activeEntity?.source) setCode(activeEntity.source)
   }, [activeEntity?.source])
   const [updateEntityById] = useUpdateEntityByIdMutation()
-  const { refetch: refetchEntities } = useGetEntitiesQuery({
-    limit: 50,
-    skip: 0,
-  })
+
 
   return (
     <>
@@ -104,17 +103,10 @@ export default function EntityEditor({ activeEntity }: EntityEditorProps) {
               <div className="flex justify-between items-center w-full text-slate-400 ">
                 <button
                   onClick={() => {
-                    // sdk.entities.updateEntityByUuid(activeEntity.uuid, {
-                    //   source: pythonCode,
-                    //   label: activeEntity.label,
-                    //   description: activeEntity.description,
-                    //   author: activeEntity.author
-                    // }).then(() => {
-                    //   toast.info(
-                    //     `The ${activeEntity.label} entity has been saved.`
-                    //   );
-                    // }).catch(error => console.error(error));
-                    updateEntityById({ hid: activeEntity?.id ?? "", entityBase: { source: code } })
+                    updateEntityById({ hid: activeEntity?.id ?? "", entityBase: { source: code } }).then(() => toast.info(
+                      `The ${activeEntity?.label} entity has been saved.`
+                    ))
+                    refetchEntity()
                   }}
                 >
                   <Icon
