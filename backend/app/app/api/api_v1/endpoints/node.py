@@ -191,10 +191,12 @@ async def read_graph(action_type, send_json, project_uuid):
     edges_data = []
     if len(edges[0]) >= 1:
         [edges_data.append({
+            'id': i, 
             'source': e[2]['from'].id,
             'target': e[3]['to'].id,
-            'label': e[1][T.label]
-        }) for e in chunks(edges[0], 4)]
+            'label': e[1][T.label],
+            'type': 'float'
+        }) for i, e in enumerate(chunks(edges[0], 4))]
     await send_json({
         'action': 'addInitialLoad',
         'nodes': nodes,
