@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo, DragEventHandler, useEffect } from 'react';
+import { useCallback, useState, useMemo, DragEventHandler, useEffect, MouseEvent } from 'react';
 import ReactFlow, {
   Edge,
   Background,
@@ -6,6 +6,7 @@ import ReactFlow, {
   FitViewOptions,
   NodeDragHandler,
   Connection,
+  Node,
 } from 'reactflow';
 import BaseNode from '../_components/BaseNode';
 import { addNodeUpdate, createEdge, onEdgesChange, updateEdgeEvent, updateNodeFlow } from '@/features/graph/graphSlice';
@@ -16,6 +17,7 @@ import { CreateGraphEntityApiResponse, useCreateGraphEntityMutation, useRefreshP
 import { useParams } from 'react-router-dom';
 import NewConnectionLine from './ConnectionLine';
 import SimpleFloatingEdge from './SimpleFloatingEdge';
+import { SendJsonMessage } from 'react-use-websocket/dist/lib/types';
 
 const viewOptions: FitViewOptions = {
   padding: 50,
@@ -37,7 +39,8 @@ export default function Graph({
   graphInstance,
   setGraphInstance,
   sendJsonMessage,
-  fitView
+  fitView,
+  positionMode,
 }: ProjectGraphProps) {
   const dispatch = useAppDispatch();
   const onEdgeUpdate = useCallback(
@@ -90,6 +93,7 @@ export default function Graph({
         <BaseNode
           ctx={data}
           dispatch={dispatch}
+          sendJsonMessage={sendJsonMessage}
         />),
       mini: (data: JSONObject) => (
         <BaseMiniNode
@@ -109,14 +113,16 @@ export default function Graph({
   );
 
   const onNodeDragStop: NodeDragHandler = (_, node) => {
-    sendJsonMessage({ action: 'update:node', node: { id: node.id, x: node.position.x } });
-    sendJsonMessage({ action: 'update:node', node: { id: node.id, y: node.position.y } });
+    if (positionMode === 'manual') {
+      sendJsonMessage({ action: 'update:node', node: { id: node.id, x: node.position.x } });
+      sendJsonMessage({ action: 'update:node', node: { id: node.id, y: node.position.y } });
+    }
   };
 
   useEffect(() => {
     fitView && fitView()
-
   }, [fitView])
+
 
   return (
     <ReactFlow
@@ -142,9 +148,8 @@ export default function Graph({
       onNodeContextMenu={onSelectionCtxMenu}
       onSelectionContextMenu={onMultiSelectionCtxMenu}
       connectionLineComponent={NewConnectionLine}
-
+      elevateNodesOnSelect={true}
     >
-
       <Background variant={BackgroundVariant.Dots} className='bg-transparent' color='#394778' />
       {/* <Controls /> */}
     </ReactFlow>

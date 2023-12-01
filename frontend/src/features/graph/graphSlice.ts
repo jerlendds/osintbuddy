@@ -105,8 +105,21 @@ export const graph = createSlice({
       state.nodes = action.payload
     }, 
     setAllEdges: (state, action) => {
-      state.edges = action.payload
-    }, 
+      state.edges = action.payload.map((edge: Edge) => {
+        return { 
+          ...edge,
+          style: {
+            strokeWidth: 2.5,
+          },
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            width: 19,
+            height: 20,
+            color: '#334155',
+          },
+        }
+      })
+    },
     saveUserEdits: (state, action) => {
       const { value, nodeId, label } = action.payload;
       const nodeToUpdate = state.nodes.find((n) => n.id === nodeId);
@@ -221,7 +234,6 @@ export const graph = createSlice({
     },
 
     updateEdgeEvent: (state, action: PayloadAction<UpdateEdgeEvent>) => {
-      console.log(updateEdge(action.payload.oldEdge, action.payload.newConnection, state.edges))
       state.edges = updateEdge(action.payload.oldEdge, action.payload.newConnection, state.edges);
     },
     addNodeUpdate: (state, action: PayloadAction<any>) => {

@@ -49,6 +49,13 @@ interface UseWebsocket {
 interface GraphInquiryProps {
 }
 
+let edgeId = 0;
+
+const getEdgeId = () => {
+  edgeId += 1
+  return `e-tmp-${edgeId}`
+}
+
 export default function GraphInquiry({ }: GraphInquiryProps) {
   const dispatch = useAppDispatch();
   const { hid } = useParams()
@@ -65,11 +72,10 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   const WS_GRAPH_INQUIRE = `ws://${WS_URL}/node/graph/${hid}`
 
   const { data: activeGraph, isSuccess, isLoading, isError } = useGetGraphQuery({ hid: hid as string })
-  const initialNodes = useAppSelector((state) => graphNodes(state));
-  const initialEdges = useAppSelector((state) => graphEdges(state));
 
-  const [nodesBeforeLayout, setNodesBeforeLayout] = useState(initialNodes)
-  const [edgesBeforeLayout, setEdgesBeforeLayout] = useState(initialEdges)
+  useEffect(() => {
+    dispatch(setPositionMode('manual'))
+  }, [activeGraph?.id])
 
   const graphRef = useRef<HTMLDivElement>(null);
   const [graphInstance, setGraphInstance] = useState<ReactFlowInstance>();
@@ -110,32 +116,19 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
     targetHandle: string = 'l2',
     type: string = 'float',
     label: string = '',
-    id: any = null
+    id: any = getEdgeId()
   ): void {
-    if (id) {
-      dispatch(
-        createEdge({
-          source,
-          target,
-          sourceHandle,
-          targetHandle,
-          type,
-          label,
-          id
-        })
-      );
-    } else {
-      dispatch(
-        createEdge({
-          source,
-          target,
-          sourceHandle,
-          targetHandle,
-          type,
-          label
-        })
-      );
-    }
+    dispatch(
+      createEdge({
+        source,
+        target,
+        sourceHandle,
+        targetHandle,
+        type,
+        label,
+        id
+      })
+    );
   }
 
   const togglePalette = () => setShowCommandPalette(!showCommandPalette);
@@ -200,8 +193,8 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
       if (lastJsonMessage && lastJsonMessage.action === 'error') toast.error(`${lastJsonMessage.detail}`);
       if (!Array.isArray(lastJsonMessage)) {
         if (lastJsonMessage.action === 'addInitialLoad') {
-          lastJsonMessage.nodes.forEach((node: JSONObject, idx: JSONObject) => addNode(node.id.toString(), node.data, node.position, 'mini'));
-          lastJsonMessage.edges.forEach((edge: JSONObject) => addEdge(`${edge.source}`, `${edge.target}`, 'r1', 'l2', 'float', '', `${edge.id}`));
+          dispatch(setAllNodes(lastJsonMessage.nodes))
+          dispatch(setAllEdges(lastJsonMessage.edges))
         }
         if (lastJsonMessage.action === 'addNode') {
           lastJsonMessage.position.x += 560;
@@ -238,13 +231,19 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
     }
   }, [lastJsonMessage, setMessageHistory]);
 
+
+  const initialNodes = useAppSelector((state) => graphNodes(state));
+  const initialEdges = useAppSelector((state) => graphEdges(state));
+
+  const [nodesBeforeLayout, setNodesBeforeLayout] = useState(initialNodes)
+  const [edgesBeforeLayout, setEdgesBeforeLayout] = useState(initialEdges)
   const [ctxPosition, setCtxPosition] = useState<XYPosition>({ x: 0, y: 0 });
   const [ctxSelection, setCtxSelection] = useState<JSONObject | null>(null);
   const [showMenu, setShowMenu] = useState(false);
   const [activeTransformLabel, setActiveTransformLabel] = useState<string | null>(null)
   // @todo implement support for multi-select transforms -
   // hm, actually, how will the transforms work if different plugin types/nodes are in the selection?
-  // just delete?
+  // just delete/save position on drag?
   const onMultiSelectionCtxMenu = (event: MouseEvent, nodes: Node[]) => {
     event.preventDefault();
   };
@@ -270,18 +269,27 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
     });
   };
 
-
   const onPaneClick = () => {
     setShowMenu(false);
     setCtxSelection(null);
   };
 
   const positionMode = useAppSelector((state) => selectPositionMode(state))
+  useEffect
+
 
   let fitView: any;
   if (graphInstance) {
     fitView = graphInstance.fitView
   }
+  useEffect(() => {
+    if (positionMode === 'manual') {
+      setNodesBeforeLayout(initialNodes)
+      setEdgesBeforeLayout(initialEdges)
+    }
+  }, [initialNodes])
+  const allNodes = [...useAppSelector(state => selectAllNodes(state))]
+  const allEdges = [...useAppSelector(state => selectAllEdges(state))]
 
   // TODO: Also implement d3-hierarchy, entitree-flex, dagre, webcola, and graphology layout modes
   //       Once implemented measure performance and deprecate whatever performs worse
@@ -292,9 +300,12 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
       'elk.layered.spacing.nodeNodeBetweenLayers': 420,
       'elk.spacing.nodeNode': 180,
     };
-    const allNodes = [...useAppSelector(state => selectAllNodes(state))]
-    const allEdges = [...useAppSelector(state => selectAllEdges(state))]
+
     const setElkLayout = useCallback((options: any) => {
+      if (positionMode === 'manual') {
+        setNodesBeforeLayout(allNodes)
+        setEdgesBeforeLayout(allEdges)
+      }
       const layoutOptions = { ...defaultOptions, ...options };
       const graph = {
         id: 'root',
@@ -306,7 +317,6 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         children.forEach((node: any) => {
           node.position = { x: node.x, y: node.y };
         });
-        console.log('children', children)
         dispatch(resetGraph())
         dispatch(setAllNodes(children));
         dispatch(setAllEdges(edges))
@@ -320,11 +330,9 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   };
 
   const { setElkLayout } = useElkLayoutElements();
-
+  const [forceDragPosition, setForceDragPosition] = useState<any>();
 
   const useForceLayoutElements = () => {
-    const allNodes = [...useAppSelector(state => selectAllNodes(state))]
-    const allEdges = [...useAppSelector(state => selectAllEdges(state))]
 
     const nodesInitialized = initialNodes.every((node: any) => node.width && node.height)
 
@@ -333,14 +341,12 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         .force('charge', forceManyBody().strength(-4000))
         .force('x', forceX().x(0).strength(0.05))
         .force('y', forceY().y(0).strength(0.05))
-        .alphaTarget(0.05)
+        .alphaTarget(0.01)
         .stop();
 
-      setNodesBeforeLayout(allNodes)
-      setEdgesBeforeLayout(allEdges)
+
       let forceNodes = allNodes.map((node: any) => ({ ...node, x: node.position.x, y: node.position.y }));
       let forceEdges = allEdges.map((edge: any) => ({ ...edge }));
-
 
       // if no width or height or no nodes in the flow, can't run the simulation!
       if (!nodesInitialized || forceNodes.length === 0) return [false, { toggleForceLayout: (setForce?: boolean) => null } as any];
@@ -350,20 +356,17 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         forceLink(forceEdges)
           .id((d: any) => d.id)
           .strength(0.05)
-          .distance(100)
+          .distance(42)
       );
 
       // The tick function is called every animation frame while the simulation is
       // running and progresses the simulation one step forward each time.
       const tick = () => {
         forceNodes.forEach((node: any, i: number) => {
-          const dragging = Boolean(document.querySelector(`[data-id="${node.id}"].dragging`));
-
-          // Setting the fx/fy properties of a node tells the simulation to "fix"
-          // the node at that position and ignore any forces that would normally
-          // cause it to move.
-          forceNodes[i].fx = dragging ? node.position.x : null;
-          forceNodes[i].fy = dragging ? node.position.y : null;
+          const activeNode = document.querySelector(`[data-id="${node.id}"].dragging`)
+          const dragging = Boolean(activeNode);
+          forceNodes[i].fx = dragging ? node.x : null;
+          forceNodes[i].fy = dragging ? node.y : null;
         });
 
         simulation.tick();
@@ -393,17 +396,14 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
 
   const [forceInitialized, { toggleForceLayout, isForceRunning }] = useForceLayoutElements();
 
-
-  // Prevents bugs from occurring on navigate away and returning to a graph
+  // Prevents layout bugs from occurring on navigate away and returning to a graph
   // https://reactrouter.com/en/main/hooks/use-blocker
   useBlocker(useCallback(
     (tx: any) => tx.historyAction && toggleForceLayout(false),
     [toggleForceLayout]
   ));
 
-  useEffect(() => {
-    dispatch(setPositionMode('manual'))
-  }, [activeGraph?.id])
+
 
   return (
     <>
@@ -440,6 +440,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
                   setGraphInstance={setGraphInstance}
                   sendJsonMessage={sendJsonMessage}
                   fitView={fitView}
+                  positionMode={positionMode}
                 />
               </div>
             </div>

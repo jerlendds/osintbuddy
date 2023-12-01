@@ -299,7 +299,7 @@ export default function EntityOptions({ allManualNodes, allManualEdges, position
           <button
             onClick={() => {
               dispatch(setPositionMode('force'))
-              isForceActive !== undefined && toggleForceLayout()
+              toggleForceLayout && toggleForceLayout()
             }}
             type='button'
             className={classNames(
@@ -340,7 +340,7 @@ export default function EntityOptions({ allManualNodes, allManualEdges, position
           </button>
           <button
             onClick={() => {
-              isForceActive && toggleForceLayout(false)
+              isForceActive !== undefined && !isForceActive && toggleForceLayout(false)
 
               dispatch(setPositionMode('tree'))
               setElkLayout({

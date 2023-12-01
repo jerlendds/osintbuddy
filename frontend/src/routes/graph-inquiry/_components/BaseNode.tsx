@@ -104,7 +104,6 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
         return <div className='hidden' />;
     }
   };
-
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
@@ -119,7 +118,7 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
       <div onDoubleClick={() => dispatch(clearEditId(ctx.id))} data-label-type={node.label} className=' node container' style={node.style}>
         <div
           // 99 === 0.6 opacity
-          style={{ backgroundColor: node?.color?.length === 7 ? `${node.color}99` : node?.color ?? '#145070' }}
+          style={{ backgroundColor: node?.color?.length === 7 ? `${node.color}99` : node?.color }}
           className='header '
         >
           <GripIcon />
