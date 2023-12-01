@@ -14,6 +14,8 @@ from app import schemas, crud
 from app.db.session import SessionLocal
 from app.core.logger import get_logger
 from app.api.utils import APIRequest, HidChecker, hid
+from app.core.config import settings
+
 
 log = get_logger("api.deps")
 
@@ -30,6 +32,8 @@ async def get_user_from_session(
     request: APIRequest,
     db: Session = Depends(get_db)
 ) -> schemas.User:
+    if 'dev' in settings.ENVIRONMENT:
+        return {}
     if user := request.session.get("member"):
         ob_user: schemas.User | None = crud.user.get_by_cid(db=db, cid=user.get("id"))
         if ob_user:
@@ -41,6 +45,8 @@ async def get_user_from_ws(
     websocket: WebSocket,
     db: Session = Depends(get_db)
 ) -> schemas.User:
+    if 'dev' in settings.ENVIRONMENT:
+        return {}
     if user := websocket.session.get("member"):
         ob_user: schemas.User | None = crud.user.get_by_cid(db=db, cid=user.get("id"))
         if ob_user:

@@ -36,7 +36,6 @@ def add_node_element(vertex, element: dict or List[dict], data_labels: List[str]
     options = element.pop('options', None)
 
     label = element.pop('label')
-    style = element.pop('style')
     placeholder = element.pop('placeholder')
     elm_type = element.pop('type')
     if elm_type == 'empty':
@@ -54,7 +53,6 @@ def add_node_element(vertex, element: dict or List[dict], data_labels: List[str]
     element['type'] = elm_type
     element['icon'] = icon
     element['label'] = label
-    element['style'] = style
     element['placeholder'] = placeholder
     if options:
         element['options'] = options
@@ -105,7 +103,6 @@ async def save_node_on_drop(
         node_blueprint['data'] = {
             'color': node_blueprint.pop('color', '#145070'),
             'icon': node_blueprint.pop('icon', 'atom-2'),
-            'style': node_blueprint.pop('style', {}),
             'label': node_blueprint.pop('label'),
             'elements': node_blueprint.pop('elements'),
         }
@@ -127,8 +124,8 @@ async def load_initial_graph(uuid: UUID) -> tuple[list, list]:
         return nodes, edges
 
 
-def map_read_to_blueprint(blueprint, map_element, data, position, entity_id) -> None:
-    data_keys = data.keys()
+def map_node_to_blueprint_elements(blueprint, map_element, node) -> None:
+    data_keys = node.keys()
     obmap = {}
     if len(data_keys) > 1:
         for d_key in data_keys:
@@ -137,63 +134,56 @@ def map_read_to_blueprint(blueprint, map_element, data, position, entity_id) -> 
                 obmap[key_split[1]] = d_key
 
     data_label = to_snake_case(map_element['label'])
-    color = blueprint.get('color')
-
-    if data.get(data_label):
-        map_element['value'] = data[data_label][0]
+    if node.get(data_label):
+        map_element['value'] = node[data_label][0]
     else:
         for k, v in obmap.items():
-            map_element[k] = data[v][0]
-
-    blueprint['position'] = position
-    blueprint['id'] = entity_id
-    blueprint['type'] = 'mini'
-    blueprint['data'] = {
-        'color': color,
-        'icon': blueprint.get('icon'),
-        'style': blueprint.pop('style', {}),
-        'label': blueprint.get('label'),
-        'elements': blueprint.get('elements'),
-    }
+            map_element[k] = node[v][0]
 
 
 async def read_graph(action_type, send_json, project_uuid):
     nodes = []
-    nodes_data, edges = await load_initial_graph(project_uuid)
-    for data in nodes_data:
+    data_nodes, edges = await load_initial_graph(project_uuid)
+    for node in data_nodes:
         position = {
-            'x': data.pop('x', [0])[0],
-            'y': data.pop('y', [0])[0]
+            'x': node.pop('x', [0])[0],
+            'y': node.pop('y', [0])[0]
         }
-        entity_id = data.pop(T.id)
-        label_data = data.pop(T.label)
+        entity_id = node.pop(T.id)
+        label_data = node.pop(T.label)
         plugin = await Registry.get_plugin(to_snake_case(label_data))
         blueprint = plugin.blueprint()
-
+        
         for element in blueprint['elements']:
             if isinstance(element, list):
-                [map_read_to_blueprint(
-                    blueprint,
-                    elm,
-                    data,
-                    position,
-                    entity_id
-                ) for elm in element]
+                for elm in element:
+                    map_node_to_blueprint_elements(
+                        blueprint,
+                        elm,
+                        node
+                    )
             else:
-                map_read_to_blueprint(
+                map_node_to_blueprint_elements(
                     blueprint,
                     element,
-                    data,
-                    position,
-                    entity_id
+                    node
                 )
+        blueprint['position'] = position
+        blueprint['id'] = f"{entity_id}"
+        blueprint['type'] = 'mini'
+        blueprint['data'] = {
+            'color': blueprint.pop('color'),
+            'icon': blueprint.pop('icon', 'atom-2'),
+            'label': blueprint.pop('label'),
+            'elements': blueprint.pop('elements'),
+        }
         nodes.append(blueprint)
     edges_data = []
     if len(edges[0]) >= 1:
         [edges_data.append({
-            'id': i, 
-            'source': e[2]['from'].id,
-            'target': e[3]['to'].id,
+            'id': f"{i}", 
+            'source': f"{e[2]['from'].id}",
+            'target': f"{e[3]['to'].id}",
             'label': e[1][T.label],
             'type': 'float'
         }) for i, e in enumerate(chunks(edges[0], 4))]
@@ -256,7 +246,6 @@ async def nodes_transform(
             transform_ctx['data'] = {
                 'color': transform_ctx.pop('color', '#145070'),
                 'icon': transform_ctx.pop('icon', 'atom-2'),
-                'style': transform_ctx.pop('style', {}),
                 'label': transform_ctx.pop('label'),
                 'elements': transform_ctx.pop('elements'),
             }
