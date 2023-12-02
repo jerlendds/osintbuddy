@@ -3,7 +3,7 @@
 }
 
 .subpanel {
-  @apply flex flex-col pb-2 first:pt-8 pl-1 
+  @apply flex flex-col pb-2 first:pt-8 
 }
 
 .subpanel > p {
