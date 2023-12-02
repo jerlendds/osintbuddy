@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo, useCallback, useContext } from 'react';
 import { UNSAFE_NavigationContext as NavigationContext, unstable_BlockerFunction } from 'react-router-dom';
-import { Edge, XYPosition, Node, ReactFlowInstance } from 'reactflow';
+import { Edge, XYPosition, Node, ReactFlowInstance, FitView } from 'reactflow';
 import { HotKeys } from 'react-hotkeys';
 import { useParams, useLocation, useBlocker, useBeforeUnload } from 'react-router-dom';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
@@ -21,6 +21,7 @@ import {
   graphNodes,
   resetGraph,
   selectAllEdges,
+  selectEditId,
   selectPositionMode,
   selectViewMode,
   setAllEdges,
@@ -275,21 +276,22 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   };
 
   const positionMode = useAppSelector((state) => selectPositionMode(state))
-  useEffect
 
 
-  let fitView: any;
+  let fitView: FitView | undefined;
   if (graphInstance) {
     fitView = graphInstance.fitView
   }
+
+  const activeNodeEditId = useAppSelector(state => selectEditId(state))
+
   useEffect(() => {
     if (positionMode === 'manual') {
       setNodesBeforeLayout(initialNodes)
       setEdgesBeforeLayout(initialEdges)
     }
-  }, [initialNodes])
-  const allNodes = [...useAppSelector(state => selectAllNodes(state))]
-  const allEdges = [...useAppSelector(state => selectAllEdges(state))]
+  }, [initialNodes, activeNodeEditId])
+
 
   // TODO: Also implement d3-hierarchy, entitree-flex, dagre, webcola, and graphology layout modes
   //       Once implemented measure performance and deprecate whatever performs worse
@@ -302,16 +304,13 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
     };
 
     const setElkLayout = useCallback((options: any) => {
-      if (positionMode === 'manual') {
-        setNodesBeforeLayout(allNodes)
-        setEdgesBeforeLayout(allEdges)
-      }
+
       const layoutOptions = { ...defaultOptions, ...options };
       const graph = {
         id: 'root',
         layoutOptions: layoutOptions,
-        children: allNodes.map((node: any) => ({ ...node, x: node.position.x, y: node.position.y })),
-        edges: allEdges.map((edge: any) => ({ ...edge, })),
+        children: nodesBeforeLayout.map((node: any) => ({ ...node })),
+        edges: edgesBeforeLayout.map((edge: any) => ({ ...edge, })),
       };
       elk.layout(graph as any).then(({ children, edges }: any) => {
         children.forEach((node: any) => {
@@ -321,10 +320,10 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         dispatch(setAllNodes(children));
         dispatch(setAllEdges(edges))
         window.requestAnimationFrame(() => {
-          fitView && fitView();
+          fitView && fitView({ padding: 0.25 });
         });
       });
-    }, [allNodes]);
+    }, [nodesBeforeLayout]);
 
     return { setElkLayout };
   };
@@ -334,7 +333,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
 
   const useForceLayoutElements = () => {
 
-    const nodesInitialized = initialNodes.every((node: any) => node.width && node.height)
+    const nodesInitialized = nodesBeforeLayout.every((node: any) => node.width && node.height)
 
     return useMemo(() => {
       const simulation = forceSimulation()
@@ -344,9 +343,9 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         .alphaTarget(0.01)
         .stop();
 
-
-      let forceNodes = allNodes.map((node: any) => ({ ...node, x: node.position.x, y: node.position.y }));
-      let forceEdges = allEdges.map((edge: any) => ({ ...edge }));
+      // console.log('insideForce allLayoutNodes', allLayoutNodes)
+      let forceNodes = nodesBeforeLayout.map((node: any) => ({ ...node, x: node.position.x, y: node.position.y }));
+      let forceEdges = edgesBeforeLayout.map((edge: any) => ({ ...edge }));
 
       // if no width or height or no nodes in the flow, can't run the simulation!
       if (!nodesInitialized || forceNodes.length === 0) return [false, { toggleForceLayout: (setForce?: boolean) => null } as any];
@@ -375,6 +374,8 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         window.requestAnimationFrame(() => {
           if (running) {
             tick()
+            fitView && fitView({ padding: 0.25 });
+
           };
         });
       };
@@ -386,12 +387,11 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
           running = !running
         }
         running && window.requestAnimationFrame(tick);
-        running && fitView && fitView();
 
       };
 
       return [true, { toggleForceLayout, isForceRunning: running }];
-    }, [nodesInitialized]);
+    }, [nodesBeforeLayout]);
   }
 
   const [forceInitialized, { toggleForceLayout, isForceRunning }] = useForceLayoutElements();

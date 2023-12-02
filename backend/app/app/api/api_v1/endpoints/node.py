@@ -278,7 +278,7 @@ async def get_command_type(event):
     return USER_ACTION, IS_READ, IS_UPDATE, IS_DELETE, IS_TRANSFORM
 
 
-async def execute_event(event: dict, send_json: Callable, uuid: UUID) -> None:
+async def run_user_graph_event(event: dict, send_json: Callable, uuid: UUID) -> None:
     USER_ACTION, IS_READ, IS_UPDATE, IS_DELETE, IS_TRANSFORM = await get_command_type(event)
     if USER_ACTION == 'node':
         if IS_READ:
@@ -309,7 +309,7 @@ async def active_graph_inquiry(
     while is_project_active:
         try:
             event: dict = await websocket.receive_json()
-            await execute_event(
+            await run_user_graph_event(
                 event=event,
                 send_json=websocket.send_json,
                 uuid=active_inquiry.uuid

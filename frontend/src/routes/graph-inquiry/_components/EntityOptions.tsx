@@ -112,7 +112,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const MAX_GRAPH_LABEL_LENGTH = 22;
 
-export default function EntityOptions({ allManualNodes, allManualEdges, positionMode, activeGraph, setElkLayout, toggleForceLayout, isForceActive }: JSONObject) {
+export default function EntityOptions({ allManualNodes, allManualEdges, positionMode, activeGraph, setElkLayout, toggleForceLayout, isForceActive, fitView }: JSONObject) {
   const {
     data: entitiesData = { entities: [], count: 0, favorite_entities: [], favorite_count: 0 },
     isLoading,
@@ -283,6 +283,7 @@ export default function EntityOptions({ allManualNodes, allManualEdges, position
               dispatch(setPositionMode('manual'))
               dispatch(setAllNodes(allManualNodes))
               dispatch(setAllEdges(allManualEdges))
+              fitView && fitView({ padding: 0.25 })
             }}
             type='button'
             className={classNames(
