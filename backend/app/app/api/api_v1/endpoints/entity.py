@@ -97,14 +97,11 @@ async def get_entities(
         entity = entity._asdict()
         entity["id"] = deps.hid(db_id=entity.get("id"), ns=ENTITY_NAMESPACE)
         entities.append(entity)
-        print(entity)
     favorite_entities = []
     for entity in db_favorite_entities:
         entity = entity._asdict()
         entity["id"] = deps.hid(db_id=entity.get("id"), ns=ENTITY_NAMESPACE)
         favorite_entities.append(entity)
-        print(entity)
-
         
     return {
         "entities": entities,

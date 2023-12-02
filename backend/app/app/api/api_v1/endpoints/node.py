@@ -199,8 +199,8 @@ async def update_node(node, action_type, send_json, uuid: UUID):
         async with ProjectGraphConnection(uuid) as graph:
             updateTarget = graph.V(updateTargetId)
             for k, v in node.items():
-                await updateTarget.property(Cardinality.single, to_snake_case(k), v).next()
-            node['id'] = updateTargetId
+                updateTarget.property(Cardinality.single, to_snake_case(k), v)
+            await updateTarget.next()
 
 
 async def remove_nodes(node, action_type, send_json, uuid: UUID):
