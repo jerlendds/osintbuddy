@@ -102,27 +102,31 @@ We've decided to do something about it. The rapid developments in technologies s
 
 ### The future
 
-At the core of this project lies a far more ambitious vision than the mere creation of a data aggregation tool. What we aspire to start is the birth of a knowledge-driven community, passionately dedicated to the development of an evolving intelligence tool - a system and platform designed for the discovery, interaction, and visualization of information to derive actionable insights. We imagine a system that not only learns from and evolves with human intellectual capabilities but also augments the same. We dream of a future where the vast expanse of information online, instead of being insurmountable, becomes a well-organized catalogue, where finding the "needle" is as straightforward as requesting it. Here are some of our ideas for the future in no particular order:
+At the core of this project lies a far more ambitious vision than the mere creation of a data aggregation tool. What we aspire to start is the birth of a knowledge-driven community, passionately dedicated to the development of an evolving intelligence tool - a system and platform designed for the discovery, interaction, and visualization of information to derive actionable insights. We imagine a system that not only learns from and evolves with human intellectual capabilities but also augments the same. Here are some of our ideas for the future in no particular order:
 
 
 #### Collective intelligence through collaborative workspaces
 
-- We want to create a platform that promotes collective intelligence. Consider currently popular collaborative workspaces such as Notion, Logseq, or Obsidian integrated seamlessly into our data workspace. A system where each individual user contributes to the pool of knowledge, where insights from your workspaces can be published and engaged with by a global community. Where every connection made, every data source integrated, every plugin created and shared by members of our community contributes to advancing your insights. 
+- We want to create a platform that promotes collective intelligence. Consider currently popular collaborative workspaces such as AFFiNE, Logseq, or Obsidian integrated into our data workspace. A system where each individual user contributes to the pool of knowledge, where insights from your workspaces can be published and and optionally engaged with by a global community. Where every connection made, every data source integrated, every plugin created and shared by members of our community contributes to advancing your insights. 
 
 
 #### Intuitive search and discovery tools
 
-- We want you to be able to interact with our algorithms, search for particular data, apply advanced query filters, data layouts, and more so you can uncover insights that matter via an easy-to-navigate web-based interface.
+- We want you to be able to interact with our algorithms, search for particular data, apply advanced query filters, data layouts, query graphs visually, and more so you can uncover insights that matter via an easy-to-navigate web-based interface.
 
 
 #### Real-time monitoring
 
-- This functionality aims to provide real-time updates, alerting users to new relevant data, changes in trends, and emerging patterns in their field of interest, offering insights as they unfold.
+- We want functionality that can provide real-time updates for a set of entities or scans, alerting you to new relevant data, changes, and emerging patterns in your field of interests. Automatically retrieve insights as time goes on.
 
 
 #### AI, swarm intelligence, and evolutionary algorithms
 
-- Inspired by nature, where simple creatures achieve complex tasks through collective decision making, our tool will mimic these principles where it can. Integrating AI, swarm intelligence, and evolutionary algorithms could let us create a tool that can continually evolve and optimize its operations over time. Imagine an intelligence system that fluidly adapts to the ever-changing landscapes of the internet.
+- Inspired by nature, where simple creatures achieve complex tasks through collective decision making, our tool will mimic these principles where it can. Integrating AI, swarm intelligence, and or evolutionary algorithms could let us create a tool that can continually evolve and optimize its operations over time.
+
+#### History graphs
+
+We want to create a browser extension that allows you to seamlessly browse the web while also populating your OSINTBuddy graph. Each website you visit is mapped as an entity, with lines connecting them in the sequence you’ve traveled. Not just a bookmark list or a history tab, the history graph maintains the context, showing not just where you’ve been, but also how and when you got there, and with the ability to extract a comment or piece of data out of a website you visit into an entity, you'll rarely have to leave your favorite web browser.
 
 
 ## Getting Started
@@ -187,7 +191,8 @@ We are using the [GNU Affero General Public License v3.0](https://choosealicense
 
 [Why the AGPLv3?](https://ploum.net/2023-06-19-more-rms.html)
 
-> In the early eighties, RMS realised that software was transformed from "a way to use a machine" to a product or a commodity. He foresaw that this would put an end to collective intelligence and to knowledge sharing. He also foresaw that if we were not the master of our software, we would quickly become the slave of the machines controlled by soulless corporations.
+> In the early eighties, RMS realised that software was transformed from "a way to use a machine" to a product or a commodity. He foresaw that this would put an end to collective intelligence and to knowledge sharing.
+
 > For the last 30 years, businesses and proponents of Open Source, including Linus Torvalds, have been decrying the GPL because of the essential right of "doing business" aka "privatising the common". Microsoft, through Github, Google and Apple pushed for MIT/BSD licensed software as the open source standard.
 
 > Our freedoms were taken away by proprietary software which is mostly coded by ourselves. For free. We spent our free time developing, debugging, testing software before handing them to corporations that we rever, hoping to maybe get a job offer or a small sponsorship from them. Without Non-copyleft Open Source, there would be no proprietary MacOS, OSX nor Android. There would be no Facebook, no Amazon. We created all the components...
@@ -199,8 +204,7 @@ We are using the [GNU Affero General Public License v3.0](https://choosealicense
 - The right to redistribute the software, including with modifications
 - The obligation to keep those four rights, effectively keeping the software in the commons.
 
-> We need to realise that any software without that last obligation will, sooner or later, become an oppression tool against ourselves. And that maintaining the commons is not only about software. It’s about everything we are as a society and everything we are losing against individual greed. Ultimately, our planet is our only common resource. We should defend it from becoming a commodity.
-
+> We need to realise that any software without that last obligation will, sooner or later, become an oppression tool against ourselves. And that maintaining the commons is not only about software. It’s about everything we are as a society and everything we are losing against individual greed. 
 
 
 *Note: the [OSINTBuddy PyPi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*.
