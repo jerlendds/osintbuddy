@@ -9,7 +9,7 @@ import ReactFlow, {
   Node,
 } from 'reactflow';
 import BaseNode from '../_components/BaseNode';
-import { addNodeUpdate, createEdge, onEdgesChange, updateEdgeEvent, updateNodeFlow } from '@/features/graph/graphSlice';
+import { addNodeUpdate, createEdge, onEdgesChange, setEditState, updateEdgeEvent, updateNodeFlow } from '@/features/graph/graphSlice';
 import { useAppDispatch } from '@/app/hooks';
 import { toast } from 'react-toastify';
 import BaseMiniNode from '../_components/BaseMiniNode';
@@ -75,7 +75,12 @@ export default function Graph({
       if (label && position && hid) {
         const createNode = { label, position }
         createGraphEntity({ createNode, hid })
-          .then(({ data }: CreateGraphEntityApiResponse) => dispatch(addNodeUpdate({ position, label, ...data, })))
+          .then(({ data }: CreateGraphEntityApiResponse) => {
+
+            dispatch(addNodeUpdate({ position, label, ...data, }))
+            dispatch(setEditState({ editId: data.id, editLabel: 'addNode' }))
+
+          })
           .catch((error: any) => {
             console.error(error)
             toast.error(`We ran into a problem creating the ${label} entity. Please try again`)

@@ -3,7 +3,7 @@ import ContextAction from './ContextAction';
 import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import { useAppDispatch } from '@/app/hooks';
-import { deleteNode } from '@/features/graph/graphSlice';
+import { deleteNode, setEditId, setEditState } from '@/features/graph/graphSlice';
 import { useState } from 'react';
 import { useGetEntityTransformsQuery } from '@/app/api';
 
@@ -89,6 +89,7 @@ export default function ContextMenu({
                           node: { id: ctxSelection.id },
                         });
                         dispatch(deleteNode(ctxSelection.id));
+                        dispatch(setEditState({ editId: ctxSelection.id, editLabel: 'deleteNode' }))
                       }}
                       type='button'
                     >

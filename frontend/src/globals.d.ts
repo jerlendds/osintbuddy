@@ -52,8 +52,8 @@ interface ActiveProject {
 
 interface EditState {
   editId: string;
-  editLabel: string;
-  editValue: string;
+  editLabel?: string;
+  editValue?: string;
 }
 
 
