@@ -11,7 +11,7 @@
 }
 
 .subpanel-header {
-  @apply  flex pb-1 items-center hover:border-mirage-400/60 border-b transition-colors duration-100 ease-in-out border-transparent
+  @apply  flex pb-1 items-center hover:border-mirage-400/60 border-b transition-colors duration-100 ease-in-out border-transparent 
 }
 .subpanel-header p {
   @apply text-sm px-1 font-black  leading-3 text-slate-600 focus:outline-none cursor-pointer
@@ -30,7 +30,7 @@
 }
 
 .subpanel-section {
-  @apply overflow-x-clip overflow-y-hidden;
+  @apply overflow-x-clip overflow-y-hidden py-1 px-1;
 }
 
 .subpanel-link {
@@ -46,7 +46,7 @@
 }
 
 .subpanel-link div {
-  @apply flex w-full py-3 px-4 flex-col items-start space-y-1.5 text-slate-400/30 hover:text-slate-400/60
+  @apply flex w-full p-3 flex-col items-start space-y-1.5 text-slate-400/30 hover:text-slate-400/60
 }
 
 svg.link-icon {

@@ -152,7 +152,6 @@ export default function Graph({
       elevateNodesOnSelect={true}
     >
       <Background variant={BackgroundVariant.Dots} className='bg-transparent' color='#394778' />
-      {/* <Controls /> */}
     </ReactFlow>
   );
 }
