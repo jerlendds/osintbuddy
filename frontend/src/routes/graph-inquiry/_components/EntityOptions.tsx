@@ -283,7 +283,6 @@ export default function EntityOptions({ allManualNodes, allManualEdges, position
               dispatch(setPositionMode('manual'))
               dispatch(setAllNodes(allManualNodes))
               dispatch(setAllEdges(allManualEdges))
-              fitView && fitView({ padding: 0.25 })
             }}
             type='button'
             className={classNames(

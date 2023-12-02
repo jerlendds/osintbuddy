@@ -114,14 +114,9 @@ export default function Graph({
 
   const onNodeDragStop: NodeDragHandler = (_, node) => {
     if (positionMode === 'manual') {
-      sendJsonMessage({ action: 'update:node', node: { id: node.id, x: node.position.x } });
-      sendJsonMessage({ action: 'update:node', node: { id: node.id, y: node.position.y } });
+      sendJsonMessage({ action: 'update:node', node: { id: node.id, x: node.position.x, y: node.position.y } });
     }
   };
-
-  useEffect(() => {
-    fitView && fitView()
-  }, [fitView])
 
 
   return (
@@ -139,6 +134,7 @@ export default function Graph({
       onInit={setGraphInstance}
       onNodesChange={(changes) => dispatch(updateNodeFlow(changes))}
       fitView
+      onDragEnd={() => console.log('onDragEnd')}
       fitViewOptions={viewOptions}
       nodeTypes={nodeTypes}
       panActivationKeyCode='Space'

@@ -197,15 +197,10 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
           dispatch(setAllNodes(lastJsonMessage.nodes))
           dispatch(setAllEdges(lastJsonMessage.edges))
         }
-        if (lastJsonMessage.action === 'addNode') {
-          lastJsonMessage.position.x += 560;
-          lastJsonMessage.position.y += 140;
-          addNodeAction(lastJsonMessage);
-          toast.success(`Found 1 result`);
-        }
-      } else if (Array.isArray(lastJsonMessage)) {
+      } else {
         lastJsonMessage.map((node, idx) => {
           if (node?.action === 'addNode') {
+            console.log('adding node')
             const isOdd = idx % 2 === 0;
             const pos = node.position;
             const x = isOdd ? pos.x + 560 : pos.x + 970;
@@ -214,9 +209,8 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
               x,
               y,
             };
-            sendJsonMessage({ action: 'update:node', node: { id: node.id, x } });
-            sendJsonMessage({ action: 'update:node', node: { id: node.id, y } });
             addNodeAction(node);
+            sendJsonMessage({ action: 'update:node', node: { id: node.id, x, y } });
           }
         });
         if (lastJsonMessage.length > 0) {
@@ -292,7 +286,9 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
     }
   }, [initialNodes, activeNodeEditId])
 
-
+  useEffect(() => {
+    if (positionMode === 'manual') fitView && fitView({ padding: 0.25 })
+  }, [positionMode])
   // TODO: Also implement d3-hierarchy, entitree-flex, dagre, webcola, and graphology layout modes
   //       Once implemented measure performance and deprecate whatever performs worse
   const elk = new ELK();
@@ -323,6 +319,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
           fitView && fitView({ padding: 0.25 });
         });
       });
+
     }, [nodesBeforeLayout]);
 
     return { setElkLayout };
@@ -361,6 +358,8 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
       // The tick function is called every animation frame while the simulation is
       // running and progresses the simulation one step forward each time.
       const tick = () => {
+        fitView && fitView({ padding: 0.25 })
+
         forceNodes.forEach((node: any, i: number) => {
           const activeNode = document.querySelector(`[data-id="${node.id}"].dragging`)
           const dragging = Boolean(activeNode);
@@ -374,10 +373,10 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         window.requestAnimationFrame(() => {
           if (running) {
             tick()
-            fitView && fitView({ padding: 0.25 });
 
           };
         });
+
       };
 
       const toggleForceLayout = (setForce?: boolean) => {
@@ -386,8 +385,9 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         } else {
           running = !running
         }
-        running && window.requestAnimationFrame(tick);
 
+
+        running && window.requestAnimationFrame(tick);
       };
 
       return [true, { toggleForceLayout, isForceRunning: running }];
