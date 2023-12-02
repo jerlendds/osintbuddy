@@ -105,14 +105,14 @@ We've decided to do something about it. The rapid developments in technologies s
 At the core of this project lies a far more ambitious vision than the mere creation of a data aggregation tool. What we aspire to start is the birth of a knowledge-driven community, passionately dedicated to the development of an evolving intelligence tool - a system and platform designed for the discovery, interaction, and visualization of information to derive actionable insights. We imagine a system that not only learns from and evolves with human intellectual capabilities but also augments the same. Here are some of our ideas for the future in no particular order:
 
 
-#### Collective intelligence through collaborative workspaces
-
-- We want to create a platform that promotes collective intelligence. Consider currently popular collaborative workspaces such as AFFiNE, Logseq, or Obsidian integrated into our data workspace. A system where each individual user contributes to the pool of knowledge, where insights from your workspaces can be published and and optionally engaged with by a global community. Where every connection made, every data source integrated, every plugin created and shared by members of our community contributes to advancing your insights. 
-
-
 #### Intuitive search and discovery tools
 
 - We want you to be able to interact with our algorithms, search for particular data, apply advanced query filters, data layouts, query graphs visually, and more so you can uncover insights that matter via an easy-to-navigate web-based interface.
+
+
+#### Collective intelligence through collaborative workspaces
+
+- We want to create a platform that promotes collective intelligence. Consider currently popular collaborative workspaces such as AFFiNE, Logseq, or Obsidian integrated into our data workspace. A system where each individual user contributes to the pool of knowledge, where insights from your workspaces can be published and and optionally engaged with by a global community. Where every connection made, every data source integrated, every plugin created and shared by members of our community contributes to advancing your insights. 
 
 
 #### Real-time monitoring
@@ -120,13 +120,16 @@ At the core of this project lies a far more ambitious vision than the mere creat
 - We want functionality that can provide real-time updates for a set of entities or scans, alerting you to new relevant data, changes, and emerging patterns in your field of interests. Automatically retrieve insights as time goes on.
 
 
-#### AI, swarm intelligence, and evolutionary algorithms
-
-- Inspired by nature, where simple creatures achieve complex tasks through collective decision making, our tool will mimic these principles where it can. Integrating AI, swarm intelligence, and or evolutionary algorithms could let us create a tool that can continually evolve and optimize its operations over time.
-
 #### History graphs
 
-We want to create a browser extension that allows you to seamlessly browse the web while also populating your OSINTBuddy graph. Each website you visit is mapped as an entity, with lines connecting them in the sequence you’ve traveled. Not just a bookmark list or a history tab, the history graph maintains the context, showing not just where you’ve been, but also how and when you got there, and with the ability to extract a comment or piece of data out of a website you visit into an entity, you'll rarely have to leave your favorite web browser.
+- We want to create a browser extension that allows you to seamlessly browse the web while also populating your OSINTBuddy graph. Each website you visit is mapped as an entity, with lines connecting them in the sequence you’ve traveled. Not just a bookmark list or a history tab, the history graph maintains the context, showing not just where you’ve been, but also how and when you got there, and with the ability to extract a comment or piece of data out of a website you visit into an entity, you'll rarely have to leave your favorite web browser.
+
+
+#### AI, swarm intelligence, and evolutionary algorithms
+
+- Integrating AI, swarm intelligence, and or evolutionary algorithms could let us create a tool that can continually evolve and optimize its operations over time.
+
+
 
 
 ## Getting Started
