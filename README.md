@@ -20,7 +20,7 @@
 
 
 -------
-| &nbsp;&nbsp; [osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins) &nbsp;&nbsp; | &nbsp;&nbsp; [osintbuddy.com](https://osintbuddy.com) &nbsp;&nbsp; | &nbsp;&nbsp; [forum.osintbuddy.com](https://forum.osintbuddy.com) &nbsp;&nbsp; | &nbsp;&nbsp; [osintbuddy-core-plugins](https://github.com/jerlendds/osintbuddy-core-plugins) &nbsp;&nbsp; |
+| &nbsp;&nbsp; [osintbuddy-plugins](https://github.com/jerlendds/osintbuddy-plugins) &nbsp;&nbsp; | &nbsp;&nbsp; [osintbuddy.com](https://osintbuddy.com) &nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; [osintbuddy discord](https://discord.gg/gsbbYHA3K3) &nbsp;&nbsp; | &nbsp;&nbsp; [osintbuddy-core-plugins](https://github.com/jerlendds/osintbuddy-core-plugins) &nbsp;&nbsp; |
 <span style="display: inline-block; width:830px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   </span>
 
 
@@ -43,7 +43,7 @@
 
 
 
-  ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum](https://forum.osintbuddy.com)** or on the **[discord](https://discord.gg/gsbbYHA3K3)** ⚠️
+  ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum (wip)](https://forum.osintbuddy.com)** or on the **[discord](https://discord.gg/gsbbYHA3K3)** ⚠️
 
   ---
 </p>
@@ -242,4 +242,3 @@ Sponsor the OSINTBuddy project for unique benefits. Learn more on the [OSINTBudd
 [stars-url]: https://github.com/jerlendds/osintbuddy/stargazers
 [issues-shield]: https://img.shields.io/github/issues/jerlendds/osintbuddy.svg?style=for-the-badge
 [issues-url]: https://github.com/jerlendds/osintbuddy/issues
-
