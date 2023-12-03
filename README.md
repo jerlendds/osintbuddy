@@ -118,7 +118,7 @@ At the core of this project lies a far more ambitious vision than the mere creat
 
 #### Collective intelligence through collaborative workspaces
 
-- We want to create a platform that promotes collective intelligence. Think of the currently popular collaborative workspaces such as AFFiNE, Logseq, or Obsidian but built into our data workspace. A system where each individual user contributes to the pool of knowledge, where you can share your graph environments, where you can track changes with annotations and comments, where insights from your workspaces can be optionally published and engaged with by a global community. Where every connection made, every data source integrated, every plugin created and shared by members of our community contributes to advancing insights around the world. 
+- We want to create a platform that promotes collective intelligence. Think of the currently popular collaborative workspaces such as [AFFiNE](https://github.com/toeverything/AFFiNE), Logseq, or Obsidian but built into our data workspace. A system where each individual user contributes to the pool of knowledge, where you can share your graph environments, where you can track changes with annotations and comments, where insights from your workspaces can be optionally published and engaged with by a global community. Where every connection made, every data source integrated, every plugin created and shared by members of our community contributes to advancing insights around the world. 
 
 
 #### Real-time monitoring
