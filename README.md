@@ -140,6 +140,8 @@ This is a project that will most likely not be finished for many years if ever, 
 
 To start using OSINTBuddy, follow these simple installation steps:
 
+*Note that if you're on windows and want this project to work you need unix line endings [(context)](https://stackoverflow.com/a/13154031). Before cloning, run: `git config --global core.autocrlf false`*
+
 ### Installation
 1. Clone the repo and submodules
    ```sh
