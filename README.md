@@ -43,7 +43,7 @@
 
 
 
-  ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum (wip)](https://forum.osintbuddy.com)** or on the **[discord](https://discord.gg/gsbbYHA3K3)** ⚠️
+  ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum (a work-in-progress)](https://forum.osintbuddy.com)** or on the **[discord](https://discord.gg/gsbbYHA3K3)** ⚠️
 
   ---
 </p>
