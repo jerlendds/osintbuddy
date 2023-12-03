@@ -43,7 +43,7 @@
 
 
 
-  ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum (a work-in-progress)](https://forum.osintbuddy.com)** or on the **[discord](https://discord.gg/gsbbYHA3K3)** ⚠️
+  ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum (work-in-progress)](https://forum.osintbuddy.com)** or on the **[discord](https://discord.gg/gsbbYHA3K3)**. To get started with developing you can see how to start with *[CONTRIBUTING.md](./.github/CONTRIBUTING.md)* and what you agree to *[CONTRIBUTOR_AGREEMENT.md](./.github/CONTRIBUTOR_AGREEMENT.md)* ⚠️
 
   ---
 </p>
