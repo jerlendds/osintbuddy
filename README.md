@@ -30,7 +30,8 @@
       Welcome to the OSINTBuddy project where you can connect, combine,
       and get insight from unstructured and public data as results that
       can be explored step-by-step. An easy-to-use plugin system allows any
-      Python developer to quickly integrate new data sources. 
+      Python developer to quickly integrate new data sources so you can focus 
+      on discovering, interacting, and visualizing what's important to you
   </p>
 
   🚧  <ins>Work in progress</ins>  🚧
@@ -104,34 +105,35 @@ We've decided to do something about it. The rapid developments in technologies s
 
 ### The future
 
-At the core of this project lies a far more ambitious vision than the mere creation of a data aggregation tool. What we aspire to start is the birth of a knowledge-driven community, passionately dedicated to the development of an evolving intelligence tool - a system and platform designed for the discovery, interaction, and visualization of information to derive actionable insights. We imagine a system that not only learns from and evolves with human intellectual capabilities but also augments the same. Here are some of our ideas for the future in no particular order:
+At the core of this project lies a far more ambitious vision than the mere creation of an all-in-one data aggregation and analysis tool. What we aspire to start is the birth of a knowledge-driven community, passionately dedicated to the development of an evolving intelligence tool - a system and platform designed for discovering, interacting, and visualizing information to derive actionable insights. We imagine a system that not only learns from and evolves with your skills but also augments them. Here are some of our ideas for the future in no particular order:
 
 
 #### Intuitive search and discovery tools
 
-- We want you to be able to interact with our algorithms, search for particular data, apply advanced query filters, data layouts, query graphs visually, and more so you can uncover insights that matter via an easy-to-navigate web-based interface.
+- We want you to be able to interact with our algorithms, filter, segment, search for particular data, apply advanced query filters, data layouts, build queries visually, and more so you can uncover insights that matter via an easy-to-navigate web-based interface.
 
 
 #### Collective intelligence through collaborative workspaces
 
-- We want to create a platform that promotes collective intelligence. Consider currently popular collaborative workspaces such as AFFiNE, Logseq, or Obsidian integrated into our data workspace. A system where each individual user contributes to the pool of knowledge, where insights from your workspaces can be published and and optionally engaged with by a global community. Where every connection made, every data source integrated, every plugin created and shared by members of our community contributes to advancing your insights. 
+- We want to create a platform that promotes collective intelligence. Think of the currently popular collaborative workspaces such as AFFiNE, Logseq, or Obsidian but built into our data workspace. A system where each individual user contributes to the pool of knowledge, where you can share your graph environments, where you can track changes with annotations and comments, where insights from your workspaces can be optionally published and engaged with by a global community. Where every connection made, every data source integrated, every plugin created and shared by members of our community contributes to advancing insights around the world. 
 
 
 #### Real-time monitoring
 
-- We want functionality that can provide real-time updates for a set of entities or scans, alerting you to new relevant data, changes, and emerging patterns in your field of interests. Automatically retrieve insights as time goes on.
+- We want functionality that can provide real-time updates for a set of entities or scans, notifying you when theres new data, changes, and or emerging patterns in your field of interest. Automatically retrieve insights as time goes on and learn from history with snapshots of your past data.
 
 
 #### History graphs
 
-- We want to create a browser extension that allows you to seamlessly browse the web while also populating your OSINTBuddy graph. Each website you visit is mapped as an entity, with lines connecting them in the sequence you’ve traveled. Not just a bookmark list or a history tab, the history graph maintains the context, showing not just where you’ve been, but also how and when you got there, and with the ability to extract a comment or piece of data out of a website you visit into an entity, you'll rarely have to leave your favorite web browser.
+- We want to create a browser extension that allows you to seamlessly browse the web while also populating your OSINTBuddy graph. Each website you visit is mapped as an entity, with lines connecting them in the sequence you’ve traveled. Not just a bookmark list or a history tab, the history graph could maintain the context, showing not just where you’ve been, but also how and when you got there, and with the ability to extract a comment or piece of data out of a website you visit into an entity, you'll rarely have to leave your favorite web browser. 
 
 
 #### AI, swarm intelligence, and evolutionary algorithms
 
-- Integrating AI, swarm intelligence, and or evolutionary algorithms could let us create a tool that can continually evolve and optimize its operations over time.
+- Integrating AI, swarm intelligence, and evolutionary algorithms could let us create a tool that can continually evolve and optimize your operations over time. From NLP and sentiment analysis to search and anomaly detection with swarm intelligence, bringing data science tools and techniques to OSINTBuddy could let use create a powerful tool that reveals deep insights among a "haystack" of noisy information. 
 
 
+This is a project that will most likely not be finished for many years if ever, and that will require collaboration among experts in many fields. We're always looking for help, from writing documentation, researching feature ideas, designing the UX/UI, donating, to simply marketing and sharing the project, anything you contribute helps realize a vision for what could turn into a cross-disciplinary toolkit for working with information. Will you join me?
 
 
 ## Getting Started
@@ -172,7 +174,7 @@ To start using OSINTBuddy, follow these simple installation steps:
  
 ~~See the [trello board](https://trello.com/b/99Q70frX/) for a list of our upcoming features.~~
 
-See the forum: [forum.osintbuddy.com](https://forum.osintbuddy.com), for a list of our upcoming features, to contribute feedback, ideas, and more (*Note: We're currently in the process of setting up the forum and moving trello issues over. We're not sure when this will be completed. For the time being you can count on dev log updates being on the forum or discord from now on*).
+See the forum: [forum.osintbuddy.com](https://forum.osintbuddy.com), for a list of our upcoming features, to contribute feedback, ideas, and more (*Note: We're currently in the process of theming and setting up the forum so we can move trello issues over. We're not sure when this will be completed. For the time being you can count on dev log updates being on the forum or on discord from now on*).
 
 
 See the [open issues](https://github.com/jerlendds/osintbuddy/issues)
@@ -181,7 +183,7 @@ for a list of requested features (and known issues).
 
 ## [↑](#introducing-osintbuddy)Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. But if you'd like to make a significant change to this project or the `osintbuddy-plugins` project, please first [create an issue](https://github.com/jerlendds/osintbuddy/issues/new?assignees=jerlendds&labels=Type%3A+Suggestion&projects=&template=feature.md&title=%5BFEATURE+REQUEST%5D+Your_feature_request_here) or open a contributor post on the [forum](https://forum.osintbuddy.com/c/osintbuddy-contributors/11) to get feedback before spending too much time. We don't want you to invest your time on changes we are already working on.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. But if you'd like to make a significant change to this project or the `osintbuddy-plugins` project, please first [create an issue](https://github.com/jerlendds/osintbuddy/issues/new?assignees=jerlendds&labels=Type%3A+Suggestion&projects=&template=feature.md&title=%5BFEATURE+REQUEST%5D+Your_feature_request_here) or open a contributor post on the [forum](https://forum.osintbuddy.com/c/osintbuddy-contributors/11) to get feedback before spending too much time. We don't want you to invest your time on changes we are already working on. Also, for details on how to get up and running with the project you can check out [CONTRIBUTING.md](./.github/CONTRIBUTING.md). If you want to contribute directly please ensure you agree with the [CONTRIBUTOR_AGREEMENT.md](./.github/CONTRIBUTOR_AGREEMENT.md), in short, we want to ensure you're okay with your changes being licensed under the AGPLv3.
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/add-core-feature`)
@@ -189,6 +191,7 @@ Contributions are what make the open source community such an amazing place to l
 4. Push to the Branch (`git push origin feature/add-core-feature`)
 5. Open a Pull Request
 
+*Note: If you're working on the `develop` branch you want to ensure the `osintbuddy-plugins` submodule is also on the develop branch.*
 
 ## [↑](#introducing-osintbuddy)License
 
@@ -209,10 +212,10 @@ We are using the [GNU Affero General Public License v3.0](https://choosealicense
 - The right to redistribute the software, including with modifications
 - The obligation to keep those four rights, effectively keeping the software in the commons.
 
-> We need to realise that any software without that last obligation will, sooner or later, become an oppression tool against ourselves. And that maintaining the commons is not only about software. It’s about everything we are as a society and everything we are losing against individual greed. 
+> We need to realize that any software without that last obligation will, sooner or later, become an oppression tool against ourselves. And that maintaining the commons is not only about software. It’s about everything we are as a society and everything we are losing against individual greed. 
 
 
-*Note: the [OSINTBuddy PyPi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed*.
+*Note: the [OSINTBuddy PyPi package](https://github.com/jerlendds/osintbuddy-plugins) is MIT licensed. We understand some individuals and businesses may not want to share their plugins developed in-house.*
 
 Patched `aiogremlin` library: [jerlendds/gremlinpy](https://github.com/jerlendds/gremlinpy/)
 
