@@ -138,7 +138,6 @@ export default function Graph({
       onInit={setGraphInstance}
       onNodesChange={(changes) => dispatch(updateNodeFlow(changes))}
       fitView
-      onDragEnd={() => console.log('onDragEnd')}
       fitViewOptions={viewOptions}
       nodeTypes={nodeTypes}
       panActivationKeyCode='Space'

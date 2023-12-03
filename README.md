@@ -36,7 +36,7 @@
   🚧  <ins>Work in progress</ins>  🚧
 <br/>
 
-  ![2023-12-02_demo.webm](https://github.com/jerlendds/osintbuddy/assets/29207058/a7feba13-d1ca-43a0-ba25-b5c899eae89c)
+  [2023-12-02_demo.webm](https://github.com/jerlendds/osintbuddy/assets/29207058/a7feba13-d1ca-43a0-ba25-b5c899eae89c)
 
   <!-- ![2023-12-02 12-23 mp4](https://github.com/jerlendds/osintbuddy/assets/29207058/89a2c952-6b6f-4533-872b-e12348fa0a78) -->
 

@@ -260,6 +260,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
 
   useEffect(() => {
     if (positionMode === 'manual') {
+      console.log('setting nodes', activeEditState, initialNodes, initialEdges)
       setNodesBeforeLayout(initialNodes)
       setEdgesBeforeLayout(initialEdges)
     }
@@ -383,6 +384,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
     if (activeEditState.label === 'addNode') {
       setNodesBeforeLayout([...nodesBeforeLayout, initialNodes.find((node) => node.id === activeEditState.id) as Node])
     }
+    console.log('activeEditState', activeEditState, nodesBeforeLayout.length, edgesBeforeLayout.length)
   }, [activeEditState])
 
   // Prevents layout bugs from occurring on navigate away and returning to a graph
