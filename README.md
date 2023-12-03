@@ -43,7 +43,10 @@
 
 
 
-  ⚠️ **Searching for contributors**, if you want to help, please contact me on the **[forum (work-in-progress)](https://forum.osintbuddy.com)** or on the **[discord](https://discord.gg/gsbbYHA3K3)**. To get started please see *[CONTRIBUTING.md](./.github/CONTRIBUTING.md)* and *[CONTRIBUTOR_AGREEMENT.md](./.github/CONTRIBUTOR_AGREEMENT.md)* ⚠️
+  ⚠️ **Searching for contributors**, please contact me on the **[forum (work-in-progress)](https://forum.osintbuddy.com)** 
+    or on  the **[discord](https://discord.gg/gsbbYHA3K3)** ⚠️ 
+    
+  To get started please see [CONTRIBUTING.md](./.github/CONTRIBUTING.md), and [CONTRIBUTOR_AGREEMENT.md](./.github/CONTRIBUTOR_AGREEMENT.md) to agree with the AGPLv3
 
   ---
 </p>
