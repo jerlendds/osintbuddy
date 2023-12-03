@@ -202,10 +202,9 @@ We are using the [GNU Affero General Public License v3.0](https://choosealicense
 [Why the AGPLv3?](https://ploum.net/2023-06-19-more-rms.html)
 
 > In the early eighties, RMS realised that software was transformed from "a way to use a machine" to a product or a commodity. He foresaw that this would put an end to collective intelligence and to knowledge sharing.
-
 > For the last 30 years, businesses and proponents of Open Source, including Linus Torvalds, have been decrying the GPL because of the essential right of "doing business" aka "privatising the common". Microsoft, through Github, Google and Apple pushed for MIT/BSD licensed software as the open source standard.
 
-> Our freedoms were taken away by proprietary software which is mostly coded by ourselves. For free. We spent our free time developing, debugging, testing software before handing them to corporations that we rever, hoping to maybe get a job offer or a small sponsorship from them. Without Non-copyleft Open Source, there would be no proprietary MacOS, OSX nor Android. There would be no Facebook, no Amazon. We created all the components...
+> Our freedoms were taken away by proprietary software which is mostly coded by ourselves. For free. We spent our free time developing, debugging, testing software before handing them to corporations... Without Non-copyleft Open Source, there would be no proprietary MacOS, OSX nor Android. There would be no Facebook, no Amazon. We created all the components.
 
 ### The four freedoms and one obligation of free software
 - The right to use the software at your own discretion
