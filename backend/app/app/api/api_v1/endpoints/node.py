@@ -32,28 +32,35 @@ async def fetch_node_transforms(plugin_label):
 def add_node_element(vertex, element: dict or List[dict], data_labels: List[str]):
     # Remove stylistic values unrelated to element data
     # Some osintbuddy.elements of type displays dont have an icon or options 
+
+    # print('adding elm', element, data_labels)
     icon = element.pop('icon', None)
     options = element.pop('options', None)
 
     label = element.pop('label')
-    placeholder = element.pop('placeholder')
+    # placeholder = element.pop('placeholder')
     elm_type = element.pop('type')
+
     if elm_type == 'empty':
         return
     if value := element.get('value'):
+        print("elm_type, label, element.get('value')", label, value)
         vertex.property(to_snake_case(label), value)
     else:
-        [
+        for k, v in element.items():
+            print('in k v', k, v)
             vertex.property(f'{to_snake_case(label)}_{to_snake_case(k)}', v)
-            for k, v in element.items()
-        ]
+        # [
+        #     vertex.property(f'{to_snake_case(label)}_{to_snake_case(k)}', v)
+        #     for k, v in element.items()
+        # ]
     # Save the data labels so we can assign these as meta properties later
     data_labels.append(to_snake_case(label))
 
     element['type'] = elm_type
     element['icon'] = icon
     element['label'] = label
-    element['placeholder'] = placeholder
+    # element['placeholder'] = placeholder
     if options:
         element['options'] = options
     return element
@@ -227,12 +234,15 @@ async def nodes_transform(
                 get_graph=lambda: None
             )
         )
+        print(node_output)
         async def create_node_transform_context(
             graph: AsyncGraphTraversal,
             transform_ctx: dict,
             node_transform: dict
         ):
-            edge_label = transform_ctx.pop('edge_label', None)
+            edge_label = None
+            if transform_ctx:
+                edge_label = transform_ctx.pop('edge_label', None)
             new_entity = await save_node_to_graph(
                 graph,
                 transform_ctx.get('label'),
