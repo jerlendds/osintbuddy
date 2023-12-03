@@ -38,29 +38,21 @@ def add_node_element(vertex, element: dict or List[dict], data_labels: List[str]
     options = element.pop('options', None)
 
     label = element.pop('label')
-    # placeholder = element.pop('placeholder')
     elm_type = element.pop('type')
 
     if elm_type == 'empty':
         return
     if value := element.get('value'):
-        print("elm_type, label, element.get('value')", label, value)
         vertex.property(to_snake_case(label), value)
     else:
         for k, v in element.items():
-            print('in k v', k, v)
             vertex.property(f'{to_snake_case(label)}_{to_snake_case(k)}', v)
-        # [
-        #     vertex.property(f'{to_snake_case(label)}_{to_snake_case(k)}', v)
-        #     for k, v in element.items()
-        # ]
     # Save the data labels so we can assign these as meta properties later
     data_labels.append(to_snake_case(label))
 
     element['type'] = elm_type
     element['icon'] = icon
     element['label'] = label
-    # element['placeholder'] = placeholder
     if options:
         element['options'] = options
     return element

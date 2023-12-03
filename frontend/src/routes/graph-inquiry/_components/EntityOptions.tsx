@@ -298,13 +298,8 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
           <button
             onClick={() => {
               dispatch(setPositionMode('force'))
-
-              console.log('setting to isForceActive', !isForceActive)
               toggleForceLayout && toggleForceLayout(!isForceActive)
               setIsForceActive(!isForceActive)
-              // dispatch(setEditState({ editId: '', editLabel: 'force' }))
-
-
             }}
             type='button'
             className={classNames(

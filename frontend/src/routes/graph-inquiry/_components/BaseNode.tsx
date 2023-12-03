@@ -145,7 +145,6 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
         >
           {node.elements.map((element: NodeInput, i: number) => {
             if (Array.isArray(element)) {
-              console.log('columnsCount', columnsCount)
               return (
                 <div style={{ display: 'grid', columnGap: '0.5rem', gridTemplateColumns: `repeat(${gridRepeat}, minmax(0, 1fr))` }} key={i.toString()}>
                   {element.map((elm, i: number) => (
