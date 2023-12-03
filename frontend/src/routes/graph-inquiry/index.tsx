@@ -24,6 +24,7 @@ import {
   selectViewMode,
   setAllEdges,
   setAllNodes,
+  setEditState,
   setPositionMode,
 } from '@/features/graph/graphSlice';
 import { WS_URL } from '@/app/baseApi';
@@ -109,11 +110,11 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   function addEdge(
     source: string,
     target: string,
+    id: any = getEdgeId(),
     sourceHandle: string = 'r1',
     targetHandle: string = 'l2',
     type: string = 'float',
     label: string = '',
-    id: any = getEdgeId()
   ): void {
     dispatch(
       createEdge({
@@ -165,7 +166,6 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
     return updatedNode;
   };
 
-  // websocket updates happen here
   useEffect(() => {
     if (lastJsonMessage) {
       setMessageHistory((prev) => prev.concat(lastJsonMessage));
@@ -178,7 +178,6 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
       } else {
         lastJsonMessage.map((node, idx) => {
           if (node?.action === 'addNode') {
-            console.log('adding node')
             const isOdd = idx % 2 === 0;
             const pos = node.position;
             const x = isOdd ? pos.x + 560 : pos.x + 970;
@@ -188,9 +187,11 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
               y,
             };
             addNodeAction(node);
+            dispatch(setEditState({ editId: node.id, editLabel: 'addNode' }))
             sendJsonMessage({ action: 'update:node', node: { id: node.id, x, y } });
           }
         });
+
         if (lastJsonMessage.length > 0) {
           toast.success(`Found ${lastJsonMessage.length} results`);
         } else {
@@ -262,19 +263,14 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
       setNodesBeforeLayout(initialNodes)
       setEdgesBeforeLayout(initialEdges)
     }
-  }, [initialNodes, activeEditState])
+  }, [initialNodes, initialEdges]) // , activeEditState
 
   useEffect(() => {
-    if (activeEditState.label === 'deleteNode') {
-      setNodesBeforeLayout(nodesBeforeLayout.filter((node) => node.id !== activeEditState.id))
+    if (positionMode === 'manual') {
+      fitView && fitView({ padding: 0.25 })
+      dispatch(setAllNodes(nodesBeforeLayout))
+      dispatch(setAllEdges(edgesBeforeLayout))
     }
-    if (activeEditState.label === 'addNode') {
-      setNodesBeforeLayout([...nodesBeforeLayout, initialNodes.find((node) => node.id === activeEditState.id) as Node])
-    }
-  }, [activeEditState])
-
-  useEffect(() => {
-    if (positionMode === 'manual') fitView && fitView({ padding: 0.25 })
   }, [positionMode])
   // TODO: Also implement d3-hierarchy, entitree-flex, dagre, webcola, and graphology layout modes
   //       Once implemented measure performance and deprecate whatever performs worse
@@ -306,8 +302,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
           fitView && fitView({ padding: 0.25 });
         });
       });
-
-    }, [nodesBeforeLayout]);
+    }, [nodesBeforeLayout, activeEditState]);
 
     return { setElkLayout };
   };
@@ -325,55 +320,70 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         .alphaTarget(0.01)
         .stop();
 
-      // console.log('insideForce allLayoutNodes', allLayoutNodes)
       let forceNodes = initialNodes.map((node: any) => ({ ...node, x: node.position.x, y: node.position.y }));
       let forceEdges = initialEdges.map((edge: any) => ({ ...edge }));
 
+      const forceSimOff = [false, { toggleForceLayout: (setForce?: boolean) => null } as any]
       // if no width or height or no nodes in the flow, can't run the simulation!
-      if (!nodesInitialized || forceNodes.length === 0) return [false, { toggleForceLayout: (setForce?: boolean) => null } as any];
+      if (!nodesInitialized || forceNodes.length === 0) return forceSimOff;
       let running = false;
+      try {
+        simulation.nodes(forceNodes).force(
+          'link',
+          forceLink(forceEdges)
+            .id((d: any) => d.id)
+            .strength(0.05)
+            .distance(42)
+        );
 
-      simulation.nodes(forceNodes).force(
-        'link',
-        forceLink(forceEdges)
-          .id((d: any) => d.id)
-          .strength(0.05)
-          .distance(42)
-      );
+        // The tick function is called every animation frame while the simulation is
+        // running and progresses the simulation one step forward each time.
+        const tick = () => {
+          fitView && fitView({ padding: 0.25 })
+          forceNodes.forEach((node: any, i: number) => {
+            const activeNode = document.querySelector(`[data-id="${node.id}"].dragging`)
+            const dragging = Boolean(activeNode);
+            forceNodes[i].fx = dragging ? node.x : null;
+            forceNodes[i].fy = dragging ? node.y : null;
+          });
+          simulation.tick();
+          dispatch(setAllNodes(forceNodes.map((node: any) => ({ ...node, position: { x: node.x, y: node.y } }))) as any);
 
-      // The tick function is called every animation frame while the simulation is
-      // running and progresses the simulation one step forward each time.
-      const tick = () => {
-        fitView && fitView({ padding: 0.25 })
-        forceNodes.forEach((node: any, i: number) => {
-          const activeNode = document.querySelector(`[data-id="${node.id}"].dragging`)
-          const dragging = Boolean(activeNode);
-          forceNodes[i].fx = dragging ? node.x : null;
-          forceNodes[i].fy = dragging ? node.y : null;
-        });
-        simulation.tick();
-        dispatch(setAllNodes(forceNodes.map((node: any) => ({ ...node, position: { x: node.x, y: node.y } }))) as any);
+          window.requestAnimationFrame(() => {
+            if (running) {
+              tick()
+            };
+          });
+        };
 
-        window.requestAnimationFrame(() => {
-          if (running) {
-            tick()
-          };
-        });
-      };
-
-      const toggleForceLayout = (setForce?: boolean) => {
-        if (typeof setForce === 'boolean') {
-          running = setForce
-        } else {
-          running = !running
-        }
-        running && window.requestAnimationFrame(tick);
-      };
-      return [true, { toggleForceLayout, isForceRunning: running }];
+        const toggleForceLayout = (setForce?: boolean) => {
+          if (typeof setForce === 'boolean') {
+            running = setForce
+          } else {
+            running = !running
+          }
+          running && window.requestAnimationFrame(tick);
+        };
+        return [true, { toggleForceLayout, isForceRunning: running }];
+      } catch (e) { console.warn(e) }
+      return forceSimOff
     }, [nodesBeforeLayout, activeEditState]);
   }
 
+
+
   const [forceInitialized, { toggleForceLayout, isForceRunning }] = useForceLayoutElements();
+
+
+
+  useEffect(() => {
+    if (activeEditState.label === 'deleteNode') {
+      setNodesBeforeLayout(nodesBeforeLayout.filter((node) => node.id !== activeEditState.id))
+    }
+    if (activeEditState.label === 'addNode') {
+      setNodesBeforeLayout([...nodesBeforeLayout, initialNodes.find((node) => node.id === activeEditState.id) as Node])
+    }
+  }, [activeEditState])
 
   // Prevents layout bugs from occurring on navigate away and returning to a graph
   // https://reactrouter.com/en/main/hooks/use-blocker
@@ -398,10 +408,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
             <EntityOptions
               positionMode={positionMode}
               toggleForceLayout={toggleForceLayout}
-              isForceActive={isForceRunning}
               activeGraph={activeGraph}
-              allManualNodes={nodesBeforeLayout}
-              allManualEdges={edgesBeforeLayout}
               setElkLayout={setElkLayout}
             />
             <div className='h-full w-full justify-between bg-mirage-600/95'>
@@ -411,7 +418,6 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
                   onMultiSelectionCtxMenu={onMultiSelectionCtxMenu}
                   onPaneCtxMenu={onPaneCtxMenu}
                   onPaneClick={onPaneClick}
-                  addEdge={addEdge}
                   graphRef={graphRef}
                   nodes={initialNodes}
                   edges={initialEdges}

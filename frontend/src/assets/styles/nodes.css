@@ -1,6 +1,6 @@
 /* Start node */
 .node.container {
-  @apply flex flex-col w-full max-w-sm justify-between rounded-md transition-all duration-150 ease-in-out ring-1 ring-mirage-400/30 backdrop-blur-lg hover:ring-mirage-400/70 to-mirage-700/70 from-slate-800/20 from-30%  bg-gradient-to-br hover:shadow-md shadow-sm;
+  @apply flex flex-col w-full max-w-sm justify-between rounded-md transition-all duration-150 ease-in-out ring-1 ring-mirage-400/30 backdrop-blur-lg hover:ring-mirage-400/70 to-mirage-600/50 from-mirage-500/40 from-60%  bg-gradient-to-br hover:shadow-md shadow-sm;
 }
 
 .node .side-header {
@@ -97,7 +97,7 @@ p.node-label {
 /* End node context menu */
 
 .elements {
-  @apply p-2 grid rounded-b-md;
+  @apply p-2 grid rounded-b-md  gap-x-1;
 }
 
 .elements > div.dropdown-input:last-child {

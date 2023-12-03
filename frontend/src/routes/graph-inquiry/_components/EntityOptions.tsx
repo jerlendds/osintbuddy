@@ -8,10 +8,10 @@ import { Link } from 'react-router-dom';
 import 'react-grid-layout/css/styles.css';
 import { Responsive, WidthProvider, Layout } from 'react-grid-layout';
 import { useGetEntitiesQuery } from '@/app/api';
-import { selectPositionMode, selectViewMode, setAllEdges, setAllNodes, setNodeType, setPositionMode, setViewMode } from '@/features/graph/graphSlice';
+import { selectPositionMode, selectViewMode, setAllEdges, setAllNodes, setEditState, setNodeType, setPositionMode, setViewMode } from '@/features/graph/graphSlice';
 import classNames from 'classnames';
-import { useAppDispatch, useAppSelector, useEffectOnce } from '@/app/hooks';
-import { ArrowsPointingInIcon, ArrowsPointingOutIcon, CubeTransparentIcon, HandRaisedIcon, RectangleStackIcon, Square2StackIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
+import { useAppDispatch, } from '@/app/hooks';
+import { HandRaisedIcon } from '@heroicons/react/20/solid';
 import { Icon } from '@/components/Icons';
 
 type UseResizeProps = {
@@ -112,7 +112,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const MAX_GRAPH_LABEL_LENGTH = 22;
 
-export default function EntityOptions({ allManualNodes, allManualEdges, positionMode, activeGraph, setElkLayout, toggleForceLayout, isForceActive, fitView }: JSONObject) {
+export default function EntityOptions({ positionMode, activeGraph, setElkLayout, toggleForceLayout, fitView }: JSONObject) {
   const {
     data: entitiesData = { entities: [], count: 0, favorite_entities: [], favorite_count: 0 },
     isLoading,
@@ -168,7 +168,7 @@ export default function EntityOptions({ allManualNodes, allManualEdges, position
 
   const dispatch = useAppDispatch();
 
-
+  const [isForceActive, setIsForceActive] = useState(false);
 
   return (
     <ResponsiveGridLayout
@@ -279,10 +279,9 @@ export default function EntityOptions({ allManualNodes, allManualEdges, position
         <ul className='isolate inline-flex shadow-sm pt-2.5 w-full'>
           <button
             onClick={() => {
-              isForceActive !== undefined && !isForceActive && toggleForceLayout(false)
+              setIsForceActive(false)
+              toggleForceLayout && toggleForceLayout(false)
               dispatch(setPositionMode('manual'))
-              dispatch(setAllNodes(allManualNodes))
-              dispatch(setAllEdges(allManualEdges))
             }}
             type='button'
             className={classNames(
@@ -299,7 +298,13 @@ export default function EntityOptions({ allManualNodes, allManualEdges, position
           <button
             onClick={() => {
               dispatch(setPositionMode('force'))
-              toggleForceLayout && toggleForceLayout()
+
+              console.log('setting to isForceActive', !isForceActive)
+              toggleForceLayout && toggleForceLayout(!isForceActive)
+              setIsForceActive(!isForceActive)
+              // dispatch(setEditState({ editId: '', editLabel: 'force' }))
+
+
             }}
             type='button'
             className={classNames(
@@ -308,17 +313,18 @@ export default function EntityOptions({ allManualNodes, allManualEdges, position
             )}
           >
             <span className='sr-only'>List view</span>
-            <CubeTransparentIcon
-              className={classNames('h-5 w-5 ', positionMode === 'force' && 'text-primary-300')}
-              aria-hidden='true'
+            <Icon
+              icon={isForceActive !== undefined && isForceActive ? "3d-cube-sphere" : "3d-cube-sphere-off"}
+              className={classNames('h-5 w-5 text-inherit', positionMode === 'force' && 'text-primary-300')}
             />
           </button>
           <button
             onClick={() => {
-              isForceActive !== undefined && !isForceActive && toggleForceLayout(false)
+              toggleForceLayout && toggleForceLayout(false)
               // setElkLayout({ 'elk.algorithm': 'org.eclipse.elk.radial', })
               // setElkLayout({ 'elk.algorithm': 'layered', 'elk.direction': 'DOWN' })
               // setElkLayout({ 'elk.algorithm': 'layered', 'elk.direction': 'RIGHT' })
+              setIsForceActive(false)
               dispatch(setPositionMode('right tree'))
               setElkLayout({
                 'elk.algorithm': 'layered',
@@ -335,13 +341,12 @@ export default function EntityOptions({ allManualNodes, allManualEdges, position
             <Icon
               icon="binary-tree-2"
               className={classNames('h-5 w-5 -rotate-90 origin-center text-inherit', positionMode === 'right tree' && 'text-primary-300')}
-              aria-hidden='true'
             />
           </button>
           <button
             onClick={() => {
-              isForceActive !== undefined && !isForceActive && toggleForceLayout(false)
-
+              setIsForceActive(false)
+              toggleForceLayout && toggleForceLayout(false)
               dispatch(setPositionMode('tree'))
               setElkLayout({
                 'elk.algorithm': 'layered',
@@ -358,7 +363,6 @@ export default function EntityOptions({ allManualNodes, allManualEdges, position
             <Icon
               icon="binary-tree"
               className={classNames('h-5 w-5 text-inherit', positionMode === 'tree' && 'text-primary-300')}
-              aria-hidden='true'
             />
           </button>
         </ul>

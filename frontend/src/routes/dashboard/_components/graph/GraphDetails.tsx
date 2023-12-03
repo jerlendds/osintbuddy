@@ -125,7 +125,7 @@ export default function GraphDetails() {
             isBounded: true
           }} key="u-edges-count" className={isEdgesLocked ? 'z-50' : '-z-10'}>
 
-            <GridPanel setIsLocked={setIsEdgesLocked} isLocked={isEdgesLocked} icon='graph' label="Outgoing Relations Count by Entity">
+            <GridPanel setIsLocked={setIsEdgesLocked} isLocked={isEdgesLocked} icon='graph' label="Outgoing Edges Count by Entity">
               <div className="w-full mb-0 bar-hz" ref={uniqueOutEdgesChartRef} />
             </GridPanel>
           </div>

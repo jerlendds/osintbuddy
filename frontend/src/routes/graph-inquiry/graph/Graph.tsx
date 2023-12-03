@@ -32,7 +32,6 @@ export default function Graph({
   onMultiSelectionCtxMenu,
   onPaneCtxMenu,
   onPaneClick,
-  addEdge,
   graphRef,
   nodes,
   edges,

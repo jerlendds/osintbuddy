@@ -8,7 +8,7 @@ import { GripIcon, Icon } from '@/components/Icons';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { type ThunkDispatch } from 'redux-thunk';
-import { type Graph, EditState, saveUserEdits, selectNodeValue, setEditId, clearEditId } from '@/features/graph/graphSlice';
+import { type Graph, EditState, saveUserEdits, selectNodeValue, clearEditId } from '@/features/graph/graphSlice';
 import { AnyAction } from '@reduxjs/toolkit';
 
 var dropdownKey = 0;
@@ -39,7 +39,7 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
 
   const dispatch = useAppDispatch();
 
-  const getNodeElement = (element: NodeInput, key: string | null = getNodeKey()) => {
+  const getNodeElement = (element: NodeInput, key: string | null = getNodeKey(), width: number = 1) => {
     switch (element.type) {
       case 'dropdown':
         return (
@@ -104,6 +104,9 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
         return <div className='hidden' />;
     }
   };
+
+  const columnsCount = Math.max(0, ...node.elements.map(s => s.length))
+  const gridRepeat = columnsCount === 0 ? 1 : columnsCount
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
@@ -135,23 +138,28 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
           id={`${ctx.id}-form`}
           style={node.style}
           onSubmit={(event) => event.preventDefault()}
-          className='elements gap-x-1'
+          className='elements'
+          style={{
+            gridTemplateColumns: '100%'
+          }}
         >
           {node.elements.map((element: NodeInput, i: number) => {
-            if (Array.isArray(element))
+            if (Array.isArray(element)) {
+              console.log('columnsCount', columnsCount)
               return (
-                <Fragment key={i.toString()}>
+                <div style={{ display: 'grid', columnGap: '0.5rem', gridTemplateColumns: `repeat(${gridRepeat}, minmax(0, 1fr))` }} key={i.toString()}>
                   {element.map((elm, i: number) => (
-                    <div key={i.toString()} className='flex flex-col mr-2 last:mr-0'>
-                      {getNodeElement(elm, `${elm.label}-${elm.id}-${ctx.id}`)}
-                    </div>
+                    <Fragment key={i.toString()}>
+                      {getNodeElement(elm, `${elm.label}-${elm.id}-${ctx.id}`, 1)}
+                    </Fragment>
                   ))}
-                </Fragment>
+                </div>
               );
+            }
             return getNodeElement(element, `${element.label}-${element.id}-${ctx.id}`);
           })}
         </form>
-      </div>
+      </div >
     </>
   );
 }
@@ -318,7 +326,7 @@ export function DropdownInput({ options, label, nodeId, sendJsonMessage, dispatc
   return (
     <>
       <Combobox
-        className=' w-full z-[999] dropdown-input'
+        className=' w-full z-[999] dropdown-input col-span-1'
         as='div'
         value={activeOption}
         onChange={(option) => {

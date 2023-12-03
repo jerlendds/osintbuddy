@@ -78,7 +78,7 @@ export const graph = createSlice({
       state.editLabel = action.payload;
     },
 
-    setEditId: (state, action: PayloadAction<string>) => {
+    toggleEntityEdit: (state, action: PayloadAction<string>) => {
       state.editId = action.payload;
       state.nodes = state.nodes.map((node) => node.id === action.payload ?
         {
@@ -176,7 +176,10 @@ export const graph = createSlice({
     },
 
     deleteNode: (state, action: PayloadAction<Node['id']>) => {
+      // state.editId = action.payload
+      // state.editLabel = 'deleteNode'
       state.nodes = state.nodes.filter((n) => n.id !== action.payload);
+      state.edges = state.edges.filter((e) => e.target !== action.payload && e.source !== action.payload)
     },
 
     updateNodeFlow: (state, action: PayloadAction<NodeChange[]>) => {
@@ -259,7 +262,7 @@ export const {
   setEditLabel,
   setEditValue,
   saveUserEdits,
-  setEditId,
+  toggleEntityEdit,
   onEdgesChange,
   setEditState,
   setNodeSelected,
