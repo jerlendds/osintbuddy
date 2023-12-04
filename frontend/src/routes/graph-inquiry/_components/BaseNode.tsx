@@ -104,9 +104,8 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
         return <div className='hidden' />;
     }
   };
-
-  const columnsCount = Math.max(0, ...node.elements.map(s => s.length))
-  const gridRepeat = columnsCount === 0 ? 1 : columnsCount
+  const columnsCount = Math.max(0, ...node.elements.map(s => s.length === undefined ? 1 : s.length))
+  const gridRepeat = columnsCount === 0 ? 1 : columnsCount ?? 1
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
@@ -145,6 +144,7 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
         >
           {node.elements.map((element: NodeInput, i: number) => {
             if (Array.isArray(element)) {
+              console.log('columnsCount', columnsCount)
               return (
                 <div style={{ display: 'grid', columnGap: '0.5rem', gridTemplateColumns: `repeat(${gridRepeat}, minmax(0, 1fr))` }} key={i.toString()}>
                   {element.map((elm, i: number) => (

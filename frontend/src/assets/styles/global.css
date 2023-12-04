@@ -213,6 +213,12 @@ input[type='number'] {
 .react-flow__node {
   cursor: default !important;
 }
+
+
+.react-flow__background #pattern-1undefined {
+  width: 100px;
+  height: 100px;
+}
 /* .react-flow__pane, .react-flow__renderer {
   top: 13rem !important;
   bottom: 0;

@@ -435,7 +435,6 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
             setOpen={setShowCommandPalette}
           />
           <div
-
             className='absolute top-[3.5rem] w-52 bg-red -z-10 h-20  text-slate-900'
           />
           <ContextMenu
