@@ -174,7 +174,9 @@ To start using OSINTBuddy, follow these simple installation steps:
   - Backend: http://localhost:48997/api
   - Documentation: http://localhost:48997/docs
 - Access OSINTBuddy through the URLs provided for the frontend, backend, and documentation.
-
+  - Default login:
+    - *username:* osintbuddy
+    - *password:* osintbuddy
 ## [↑](#introducing-osintbuddy)Roadmap
  
 ~~See the [trello board](https://trello.com/b/99Q70frX/) for a list of our upcoming features.~~
