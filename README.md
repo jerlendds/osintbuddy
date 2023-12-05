@@ -99,8 +99,8 @@ We've decided to do something about it. The rapid developments in technologies s
 
 
 ### Key Alpha Features
-- Simplified data fetching/transformations from custom sources using Python plugins, custom plugin/entity layouts, check out the [osintbuddy](https://pypi.org/project/osintbuddy/) PyPi package for more details and expect many more input fields for things like files and checkboxes/toggles to come in the future.
 - Visual representation and layout modes for fetched data for easy understanding and editing. 
+- Simplified data fetching/transformations from custom sources using Python plugins, custom plugin/entity field layouts, check out the [osintbuddy](https://pypi.org/project/osintbuddy/) PyPi package for more details and expect many more input fields like files and checkboxes/toggles to come in the future.
 - A development platform that is open for contributions.
 - Works most of the time :)
 
