@@ -2,13 +2,13 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useOutletContext, useParams } from "react-router-dom"
 import 'chartist/dist/index.css';
 import { BarChart } from "chartist"
-import { Graph, useGetGraphQuery, } from "@/app/api";
+import { Graph, useGetGraphQuery, } from "@src/app/api";
 import GraphHeader from "./GraphHeader"
 import { DashboardContextType } from "../..";
-import { GridPanel } from "@/components/Grid";
+import { GridPanel } from "@src/components/Grid";
 import { Responsive, WidthProvider } from "react-grid-layout";
-import { useAppSelector } from "@/app/hooks";
-import { selectIsSidebarOpen } from "@/features/account/accountSlice";
+import { useAppSelector } from "@src/app/hooks";
+import { selectIsSidebarOpen } from "@src/features/account/accountSlice";
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 

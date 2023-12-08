@@ -11,7 +11,7 @@ import ContextMenu from './_components/ContextMenu';
 import { toast } from 'react-toastify';
 import Graph from './graph/Graph';
 import ELK from 'elkjs/lib/elk.bundled.js';
-import { useAppDispatch, useAppSelector, useEffectOnce } from '@/app/hooks';
+import { useAppDispatch, useAppSelector, useEffectOnce } from '@src/app/hooks';
 import {
   ProjectViewModes,
   createEdge,
@@ -26,11 +26,11 @@ import {
   setAllNodes,
   setEditState,
   setPositionMode,
-} from '@/features/graph/graphSlice';
-import { WS_URL } from '@/app/baseApi';
+} from '@src/features/graph/graphSlice';
+import { WS_URL } from '@src/app/baseApi';
 import CommandPallet from './_components/CommandPallet';
-import { useGetGraphQuery } from '@/app/api';
-import RoundLoader from '@/components/Loaders';
+import { useGetGraphQuery } from '@src/app/api';
+import RoundLoader from '@src/components/Loaders';
 import { useTour } from '@reactour/tour';
 
 const keyMap = {

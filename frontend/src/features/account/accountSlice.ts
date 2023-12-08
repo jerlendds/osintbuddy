@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { RootState } from '@/app/store';
-import { LS_USER_KEY, lUserDefault } from '@/app/baseApi';
-import { lStorage } from '@/app/utilities';
+import { RootState } from '@src/app/store';
+import { LS_USER_KEY, lUserDefault } from '@src/app/baseApi';
+import { lStorage } from '@src/app/utilities';
 import { useNavigate } from 'react-router-dom';
 import { StepType } from '@reactour/tour';
 

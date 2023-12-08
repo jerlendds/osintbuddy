@@ -1,7 +1,7 @@
-import { BASE_URL, LS_USER_KEY, lUserDefault } from "@/app/baseApi";
-import { useAppDispatch } from "@/app/hooks";
-import { lStorage } from "@/app/utilities";
-import { setIsAuthenticated } from "@/features/account/accountSlice";
+import { BASE_URL, LS_USER_KEY, lUserDefault } from "@src/app/baseApi";
+import { useAppDispatch } from "@src/app/hooks";
+import { lStorage } from "@src/app/utilities";
+import { setIsAuthenticated } from "@src/features/account/accountSlice";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 

@@ -7,12 +7,12 @@ import { useState, useEffect, useCallback, useMemo, useLayoutEffect } from 'reac
 import { Link } from 'react-router-dom';
 import 'react-grid-layout/css/styles.css';
 import { Responsive, WidthProvider, Layout } from 'react-grid-layout';
-import { useGetEntitiesQuery } from '@/app/api';
-import { selectPositionMode, selectViewMode, setAllEdges, setAllNodes, setEditState, setNodeType, setPositionMode, setViewMode } from '@/features/graph/graphSlice';
+import { useGetEntitiesQuery } from '@src/app/api';
+import { selectPositionMode, selectViewMode, setAllEdges, setAllNodes, setEditState, setNodeType, setPositionMode, setViewMode } from '@src/features/graph/graphSlice';
 import classNames from 'classnames';
-import { useAppDispatch, } from '@/app/hooks';
+import { useAppDispatch, } from '@src/app/hooks';
 import { HandRaisedIcon } from '@heroicons/react/20/solid';
-import { Icon } from '@/components/Icons';
+import { Icon } from '@src/components/Icons';
 
 type UseResizeProps = {
   minWidth: number;

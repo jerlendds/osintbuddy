@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { AnyAction, createAsyncThunk, createSelector, createSlice, current, PayloadAction } from '@reduxjs/toolkit';
-import { type RootState } from '@/app/store';
+import { type RootState } from '@src/app/store';
 import {
   XYPosition,
   type Edge,

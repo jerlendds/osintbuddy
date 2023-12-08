@@ -1,4 +1,4 @@
-import AppRoutes from '@/routes/AppRoutes';
+import AppRoutes from '@src/routes/AppRoutes';
 import SDK from 'casdoor-js-sdk'
 import { CASDOOR_CONFIG } from './app/baseApi';
 import { useState } from 'react';
@@ -12,7 +12,7 @@ window.sdk = new SDK(CASDOOR_CONFIG)
 
 function App() {
   return (
-      <AppRoutes />
+    <AppRoutes />
   );
 }
 

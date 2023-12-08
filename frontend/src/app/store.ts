@@ -1,6 +1,6 @@
 import { configureStore, ThunkAction, Action, combineReducers, Middleware} from '@reduxjs/toolkit';
-import account, { signOut } from '@/features/account/accountSlice';
-import graph from '@/features/graph/graphSlice';
+import account, { signOut } from '@src/features/account/accountSlice';
+import graph from '@src/features/graph/graphSlice';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { api } from './api';
 import { rtkQueryAuthHandler } from './middleware';

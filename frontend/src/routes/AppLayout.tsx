@@ -6,11 +6,11 @@ import { TourProvider, StepType } from "@reactour/tour";
 import classNames from "classnames";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { selectIsSidebarOpen, selectIsAuthenticated, setSidebar, selectActiveTour } from "@/features/account/accountSlice";
-import IncidentCard from "@/components/IncidentCard";
-import OverlayModal from "@/components/modals/OverlayModal";
-import AppLayoutSidebar from "@/components/AppLayoutSidebar";
+import { useAppDispatch, useAppSelector } from "@src/app/hooks";
+import { selectIsSidebarOpen, selectIsAuthenticated, setSidebar, selectActiveTour } from "@src/features/account/accountSlice";
+import IncidentCard from "@src/components/IncidentCard";
+import OverlayModal from "@src/components/modals/OverlayModal";
+import AppLayoutSidebar from "@src/components/AppLayoutSidebar";
 
 export default function AppLayout() {
   const dispatch = useAppDispatch();

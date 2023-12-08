@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeroBackground } from '@/components/Icons';
+import { HeroBackground } from '@src/components/Icons';
 import blurCyanImage from '@images/blur-cyan.png';
 import blurIndigoImage from '@images/blur-indigo.png';
 

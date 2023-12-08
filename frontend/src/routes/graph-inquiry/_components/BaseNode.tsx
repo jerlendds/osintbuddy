@@ -4,11 +4,11 @@ import { Combobox } from '@headlessui/react';
 import classNames from 'classnames';
 import { ChangeEvent, Dispatch, Fragment, useEffect, useState } from 'react';
 import { Handle, Position } from 'reactflow';
-import { GripIcon, Icon } from '@/components/Icons';
+import { GripIcon, Icon } from '@src/components/Icons';
 import { toast } from 'react-toastify';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@src/app/hooks';
 import { type ThunkDispatch } from 'redux-thunk';
-import { type Graph, EditState, saveUserEdits, selectNodeValue, clearEditId } from '@/features/graph/graphSlice';
+import { type Graph, EditState, saveUserEdits, selectNodeValue, clearEditId } from '@src/features/graph/graphSlice';
 import { AnyAction } from '@reduxjs/toolkit';
 
 var dropdownKey = 0;
@@ -105,7 +105,6 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
     }
   };
   const columnsCount = Math.max(0, ...node.elements.map(s => s.length === undefined ? 1 : s.length))
-  const gridRepeat = columnsCount === 0 ? 1 : columnsCount ?? 1
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
@@ -144,9 +143,8 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
         >
           {node.elements.map((element: NodeInput, i: number) => {
             if (Array.isArray(element)) {
-              console.log('columnsCount', columnsCount)
               return (
-                <div style={{ display: 'grid', columnGap: '0.5rem', gridTemplateColumns: `repeat(${gridRepeat}, minmax(0, 1fr))` }} key={i.toString()}>
+                <div style={{ display: 'grid', columnGap: '0.5rem', gridTemplateColumns: `repeat(${columnsCount}, minmax(0, 1fr))` }} key={i.toString()}>
                   {element.map((elm, i: number) => (
                     <Fragment key={i.toString()}>
                       {getNodeElement(elm, `${elm.label}-${elm.id}-${ctx.id}`, 1)}
@@ -187,14 +185,18 @@ export function CopyText({ nodeId, label, value }: { nodeId: string; label: stri
 
 export function Text({ nodeId, label, value, icon }: { nodeId: string; label: string; value: string; icon?: any }) {
   return (
-    <div className='w-full flex flex-col px-2 pb-1'>
-      <p className='text-xs text-slate-300 whitespace-wrap font-medium'>{label}</p>
-      <div className=' w-full flex relative text-slate-500 text-xs sm:text-sm'>
-        {icon && <Icon icon={icon} className='h-6 w-6' />}
-        <p className='text-xs text-slate-400 truncate'>{value}</p>
-        <input data-label={label} id={`${nodeId}-${label}`} className='hidden' readOnly value={value} />
-      </div>
-    </div>
+    <div className=' flex px-2 pb-1 relative'>
+      <section className="flex flex-col">
+        <p className='text-xs  text-slate-400 whitespace-wrap font-medium relative'>{label} </p>
+        <div className=' w-full flex  text-slate-400 text-xs sm:text-sm'>
+          {icon && <Icon icon={icon} className='h-6 w-6' />}
+          <p onClick={() => {
+            navigator.clipboard.writeText(value)
+            toast.success(`Copied ${label.toLowerCase()} to clipboard!`)
+          }} className='text-xs text-slate-400 hover:text-slate-300/80 truncate transition-colors duration-500 ease-out pr-2.5'>{value} </p>
+        </div>
+      </section>
+    </div >
   );
 }
 
@@ -216,9 +218,6 @@ export function Title({
       {title && <h1 data-type='title'>{title}</h1>}
       {subtitle && <h2 data-type='subtitle'>{subtitle}</h2>}
       {text && <p data-type='text'>{text}</p>}
-      <input className='hidden' readOnly data-label={label} id={`${nodeId}-${label}`} value={title} />
-      <input className='hidden' readOnly data-label={label} id={`${nodeId}-${label}`} value={subtitle} />
-      <input className='hidden' readOnly data-label={label} id={`${nodeId}-${label}`} value={text} />
     </div>
   );
 }
@@ -276,10 +275,10 @@ export function TextInput({ nodeId, label, sendJsonMessage, icon, dispatch }: No
   return (
     <>
       <div className='flex flex-col'>
-        <p className='text-[0.5rem] ml-1 text-slate-400 whitespace-wrap font-semibold font-display mt-1 '>{label}</p>
-        <div className='flex items-center mb-1 '>
+        <p className='text-[0.5rem] -mb-px text-slate-400 whitespace-wrap font-semibold font-display mt-1'>{label}</p>
+        <div className='flex items-center mb-1'>
           <div className='nodrag node-field'>
-            <Icon icon={icon} className='h-6 w-6' />
+            <Icon icon={icon} className='h-5 w-5' />
             <input
               id={`${nodeId}-${label}`}
               type='text'
@@ -359,24 +358,30 @@ export function DropdownInput({ options, label, nodeId, sendJsonMessage, dispatc
           </Combobox.Button>
 
           {filteredOptions.length > 0 && (
-            <Combobox.Options className='absolute mr-1 z-10 mt-1 max-h-80 w-full overflow-auto rounded-b-md from-mirage-700/90 to-mirage-800/80 from-30%  bg-gradient-to-br py-1 text-base shadow-lg  focus:outline-none sm:text-sm'>
+            <Combobox.Options className='absolute mr-1 z-10 mt-1 max-h-80 w-full overflow-auto rounded-b-md from-mirage-700/90 to-mirage-800/80 from-30%  bg-gradient-to-br py-1 text-[0.6rem] shadow-lg  focus:outline-none sm:text-sm'>
               {filteredOptions.map((option: DropdownOption) => (
                 <Combobox.Option
                   key={getKey()}
                   value={option}
                   className={({ active }) =>
                     classNames(
-                      'relative nodrag nowheel cursor-default select-none py-2 pl-3 pr-9',
+                      'relative flex flex-col nodrag nowheel cursor-default select-none py-2 pl-2 pr-9',
                       active ? 'bg-mirage-700 text-slate-400' : 'text-slate-500'
                     )
                   }
                 >
                   <span
-                    className={classNames('block truncate pl-2')}
+                    className={'block truncate pl-2'}
                     title={option?.tooltip !== option.label ? option.tooltip : 'No description found'}
                   >
                     {option.label}
                   </span>
+                  {option?.value && <span
+                    className={'flex truncate pl-2 leading-3 text-[0.5rem]'}
+                    title={option?.tooltip !== option.label ? option.tooltip : 'No description found'}
+                  >
+                    {option.value}
+                  </span>}
                 </Combobox.Option>
               ))}
             </Combobox.Options>

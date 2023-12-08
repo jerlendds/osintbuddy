@@ -1,5 +1,5 @@
-import { Graph, useDeleteGraphMutation } from "@/app/api";
-import { formatPGDate } from "@/app/utilities";
+import { Graph, useDeleteGraphMutation } from "@src/app/api";
+import { formatPGDate } from "@src/app/utilities";
 import { ClockIcon, EyeIcon, FingerPrintIcon, ScaleIcon, TrashIcon, UserIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";

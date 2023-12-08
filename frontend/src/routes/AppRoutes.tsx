@@ -10,8 +10,8 @@ const AboutPage = lazy(() => import("@routes/public/AboutPage"));
 import CallbackPage from './public/CallbackPage';
 import { TourProvider } from "@reactour/tour";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-import { selectActiveTour } from "@/features/account/accountSlice";
-import { useAppSelector } from "@/app/hooks";
+import { selectActiveTour } from "@src/features/account/accountSlice";
+import { useAppSelector } from "@src/app/hooks";
 
 // Private routes
 const DashboardPage = lazy(() => import("./dashboard"));

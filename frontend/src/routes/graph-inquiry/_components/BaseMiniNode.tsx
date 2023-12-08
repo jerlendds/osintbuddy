@@ -4,9 +4,9 @@ import { Combobox } from '@headlessui/react';
 import classNames from 'classnames';
 import { ChangeEvent, Dispatch, Fragment, useEffect, useRef, useState } from 'react';
 import { Handle, Position } from 'reactflow';
-import { GripIcon, Icon } from '@/components/Icons';
+import { GripIcon, Icon } from '@src/components/Icons';
 import { Dialog } from '@headlessui/react';
-import { useAppDispatch, useAppSelector, useComponentVisible } from '@/app/hooks';
+import { useAppDispatch, useAppSelector, useComponentVisible } from '@src/app/hooks';
 import Color from 'color';
 import { type ThunkDispatch } from 'redux-thunk';
 import {
@@ -16,7 +16,7 @@ import {
   saveUserEdits,
   selectNodeValue,
   toggleEntityEdit,
-} from '@/features/graph/graphSlice';
+} from '@src/features/graph/graphSlice';
 import { toast } from 'react-toastify';
 
 var dropdownKey = 0;

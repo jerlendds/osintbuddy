@@ -12,7 +12,7 @@
     "@hookform/resolvers": "^3.3.2",
     "@reactour/tour": "^3.6.1",
     "@reduxjs/toolkit": "^1.9.1",
-    "@tabler/icons": "^2.42.0",
+    "@tabler/icons-react": "^2.42.0",
     "@uiw/codemirror-theme-aura": "^4.21.20",
     "@uiw/react-codemirror": "^4.21.20",
     "casdoor-js-sdk": "^0.11.0",

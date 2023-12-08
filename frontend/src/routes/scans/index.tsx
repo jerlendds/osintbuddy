@@ -1,4 +1,4 @@
-import { InquiryHeader } from "@/components/Headers";
+import { InquiryHeader } from "@src/components/Headers";
 import {
   DocumentMagnifyingGlassIcon,
   PencilIcon,
@@ -7,8 +7,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
-import { useEffectOnce } from "@/app/hooks";
-import { UnderConstruction } from "@/components/Loaders";
+import { useEffectOnce } from "@src/app/hooks";
+import { UnderConstruction } from "@src/components/Loaders";
 
 interface SettingCardProps {
   title: string;

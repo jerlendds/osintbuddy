@@ -12,7 +12,7 @@
 }
 
 .node .node-display {
-  @apply w-full flex flex-col px-2 pb-1;
+  @apply w-full flex flex-col ;
 }
 
 .node .node-display h1 {
@@ -23,13 +23,15 @@
   @apply leading-4;
 }
 
+
+
 .node .node-display h1,
 .node .node-display h2,
 .node .node-display p {
-  @apply font-medium text-slate-400 font-sans break-words text-sm hover:cursor-pointer;
+  @apply font-semibold text-slate-400 font-sans break-words text-sm hover:cursor-pointer;
 }
 .node .node-display p {
-  @apply text-xs font-normal pb-1 pt-1.5;
+  @apply text-xs font-normal pt-1.5;
 }
 .node .node-display h2 {
   @apply text-xs;
@@ -57,15 +59,15 @@
 }
 
 .node-field {
-  @apply block mt-1 w-full  rounded-sm  py-0.5 relative sm:text-sm sm:leading-6  hover:border-mirage-200/40 transition-colors duration-75 ease-in-out justify-between items-center to-mirage-400/50 from-mirage-300/20 bg-gradient-to-br border focus-within:!border-primary/40  px-1 text-slate-100 shadow-sm border-mirage-400/20  focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l;
+  @apply block mt-1 w-full  rounded-sm  py-0.5 relative sm:text-sm sm:leading-6  hover:border-mirage-200/40 transition-colors duration-75 ease-in-out justify-between items-center to-mirage-400/50 from-mirage-300/20 bg-gradient-to-br border focus-within:!border-primary/40  text-slate-100 shadow-sm border-mirage-400/20  focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l pl-0.5;
 }
 
 .node-field svg {
-  @apply h-4 w-4 mt-0.5 absolute top-1 text-slate-700 z-50;
+  @apply h-4 w-4 mt-0.5 absolute top-1 text-slate-700 z-50 pointer-events-none;
 }
 
 .node-field input {
-  @apply placeholder:text-slate-600 text-slate-400 bg-transparent focus:outline-none pl-5 w-full;
+  @apply placeholder:text-slate-600 text-slate-400 bg-transparent focus:outline-none pl-[1.15rem] w-full;
 }
 
 /* @todo :has is not supported by firefox yet :( */
@@ -88,7 +90,7 @@ p.node-label {
 }
 
 .node-context button {
-  @apply hover:bg-mirage-800 hover:text-slate-300 text-slate-400 flex items-center px-4 py-2 text-sm w-full;
+  @apply hover:bg-mirage-800 hover:text-slate-300 text-slate-400 flex items-center px-3 py-2 text-sm w-full;
 }
 
 .node-context svg {

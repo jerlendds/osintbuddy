@@ -7,7 +7,7 @@ import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import { Icon } from "../Icons";
-import { useCreateEntityMutation, useGetEntitiesQuery, useUpdateEntityByIdMutation, useGetEntityQuery, Entity } from '@/app/api';
+import { useUpdateEntityByIdMutation, Entity } from '@app/api';
 import { UpdateEntityByIdApiArg } from '../../app/api';
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";

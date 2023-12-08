@@ -1,4 +1,4 @@
-import { useUpdateEntityFavoriteIdMutation } from "@/app/api";
+import { useUpdateEntityFavoriteIdMutation } from "@src/app/api";
 import { useMemo, useState } from "react";
 import styles from "./subpanel.module.css"
 import Subpanel from "./Subpanel";

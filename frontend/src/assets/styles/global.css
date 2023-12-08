@@ -8,24 +8,24 @@
 
 @font-face {
   font-family: 'Lexend';
-  src: url('@/assets/fonts/Lexend-Regular.woff2') format('woff2'),
-      url('@/assets/fonts/Lexend-Regular.woff') format('woff');
+  src: url('@assets/fonts/Lexend-Regular.woff2') format('woff2'),
+      url('@assets/fonts/Lexend-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'Inter';
-  src: url('@/assets/fonts/Inter-Regular.woff2') format('woff2'),
-      url('@/assets/fonts/Inter-Regular.woff') format('woff');
+  src: url('@assets/fonts/Inter-Regular.woff2') format('woff2'),
+      url('@assets/fonts/Inter-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'Fira Code';
-  src: url('@/assets/fonts/FiraCode-Light.woff2') format('woff2'),
-      url('@/assets/fonts/FiraCode-Light.woff') format('woff');
+  src: url('@assets/fonts/FiraCode-Light.woff2') format('woff2'),
+      url('@assets/fonts/FiraCode-Light.woff') format('woff');
   font-weight: 300;
   font-style: normal;
   font-display: swap;

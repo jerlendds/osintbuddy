@@ -3,7 +3,7 @@ import { useTable, usePagination, type Column } from "react-table";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import Graph from "graphology";
-import { InquiryHeader } from "@/components/Headers";
+import { InquiryHeader } from "@src/components/Headers";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 

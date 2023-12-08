@@ -9,11 +9,11 @@ import ReactFlow, {
   Node,
 } from 'reactflow';
 import BaseNode from '../_components/BaseNode';
-import { addNodeUpdate, createEdge, onEdgesChange, setEditState, updateEdgeEvent, updateNodeFlow } from '@/features/graph/graphSlice';
-import { useAppDispatch } from '@/app/hooks';
+import { addNodeUpdate, createEdge, onEdgesChange, setEditState, updateEdgeEvent, updateNodeFlow } from '@src/features/graph/graphSlice';
+import { useAppDispatch } from '@src/app/hooks';
 import { toast } from 'react-toastify';
 import BaseMiniNode from '../_components/BaseMiniNode';
-import { CreateGraphEntityApiResponse, useCreateGraphEntityMutation, useRefreshPluginsQuery } from '@/app/api';
+import { CreateGraphEntityApiResponse, useCreateGraphEntityMutation, useRefreshPluginsQuery } from '@src/app/api';
 import { useParams } from 'react-router-dom';
 import NewConnectionLine from './ConnectionLine';
 import SimpleFloatingEdge from './SimpleFloatingEdge';

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 import EntityEditor from "../../../../components/EntityEditor/EntityEditor";
-import { useGetEntityQuery } from "@/app/api";
+import { useGetEntityQuery } from "@src/app/api";
 
 
 export default function EntityDetailsPage() {

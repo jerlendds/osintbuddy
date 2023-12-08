@@ -1,6 +1,6 @@
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { Bars4Icon, BookmarkSquareIcon, BookOpenIcon, RssIcon } from '@heroicons/react/24/outline';
-import OSINTBuddyLogo from '@/assets/images/logo.svg';
+import OSINTBuddyLogo from '@src/assets/images/logo.svg';
 import { Link } from 'react-router-dom';
 
 const links = [

@@ -3,11 +3,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
-import { PostEntityCreate, useCreateEntityMutation } from '@/app/api';
-import InputField from '@/components/inputs/InputField';
-import OverlayModal, { OverlayModalProps } from '@/components/modals/OverlayModal';
+import { PostEntityCreate, useCreateEntityMutation } from '@src/app/api';
+import InputField from '@src/components/inputs/InputField';
+import OverlayModal, { OverlayModalProps } from '@src/components/modals/OverlayModal';
 import styles from "./form.module.css"
-import InputTextarea from '@/components/inputs/InputTextArea';
+import InputTextarea from '@src/components/inputs/InputTextArea';
 import { TrashIcon } from '@heroicons/react/20/solid';
 import { CreateEntityApiArg } from '../../../../app/api';
 

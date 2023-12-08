@@ -2,10 +2,10 @@ import { XYPosition } from 'reactflow';
 import ContextAction from './ContextAction';
 import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
-import { useAppDispatch } from '@/app/hooks';
-import { deleteNode, setEditState } from '@/features/graph/graphSlice';
+import { useAppDispatch } from '@src/app/hooks';
+import { deleteNode, setEditState } from '@src/features/graph/graphSlice';
 import { useState } from 'react';
-import { useGetEntityTransformsQuery } from '@/app/api';
+import { useGetEntityTransformsQuery } from '@src/app/api';
 
 export default function ContextMenu({
   closeMenu,

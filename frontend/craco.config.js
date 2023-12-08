@@ -1,5 +1,5 @@
-const path = require('path');
-const cracoSwcPlugin = require('craco-swc');
+const path = require("path");
+const cracoSwcPlugin = require("craco-swc");
 
 module.exports = {
   plugins: [
@@ -9,9 +9,9 @@ module.exports = {
         swcLoaderOptions: {
           jsc: {
             externalHelpers: true,
-            target: 'es2015',
+            target: "es2015",
             parser: {
-              syntax: 'typescript',
+              syntax: "typescript",
               tsx: true,
               dynamicImport: true,
               exportDefaultFrom: true,
@@ -21,33 +21,34 @@ module.exports = {
               decorators: false,
               decoratorsBeforeExport: false,
               topLevelAwait: false,
-              importMeta: false
+              importMeta: false,
             },
             transform: {
               react: {
-                runtime: 'automatic'
-              }
-            }
+                runtime: "automatic",
+              },
+            },
           },
         },
       },
-    }
+    },
   ],
   webpack: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
-      '@assets': path.resolve(__dirname, 'src/assets'),
-      '@images': path.resolve(__dirname, 'src/assets/images'),
-      '@styles': path.resolve(__dirname, 'src/assets/styles'),
-      '@components': path.resolve(__dirname, 'src/components'),
-      '@routes': path.resolve(__dirname, 'src/routes'),
+      "@src": path.resolve(__dirname, "src"),
+      "@app": path.resolve(__dirname, "src/app"),
+      "@assets": path.resolve(__dirname, "src/assets"),
+      "@images": path.resolve(__dirname, "src/assets/images"),
+      "@styles": path.resolve(__dirname, "src/assets/styles"),
+      "@components": path.resolve(__dirname, "src/components"),
+      "@routes": path.resolve(__dirname, "src/routes"),
     },
     resolve: {
       fallback: {
-        util: require.resolve('util/'),
-        buffer: require.resolve('buffer/'),
-      }
-    }
+        util: require.resolve("util/"),
+        buffer: require.resolve("buffer/"),
+      },
+    },
   },
   eslint: {
     enable: false,

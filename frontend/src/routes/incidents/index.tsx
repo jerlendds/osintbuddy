@@ -1,4 +1,4 @@
-import { InquiryHeader } from '@/components/Headers';
+import { InquiryHeader } from '@src/components/Headers';
 import classNames from 'classnames';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { Combobox } from '@headlessui/react';
@@ -14,7 +14,7 @@ import {
   XMarkIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
-import { UnderConstruction } from '@/components/Loaders';
+import { UnderConstruction } from '@src/components/Loaders';
 
 const items = [
   {

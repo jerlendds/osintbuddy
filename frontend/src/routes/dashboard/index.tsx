@@ -7,14 +7,14 @@ import EntitiesPanel from "./_components/tabs/EntitiesPanel";
 import MarketPanel from './_components/tabs/MarketPanel';
 import CreateGraphModal from "./_components/modals/CreateGraphModal";
 import styles from "./index.module.css"
-import { AllGraphsList, useGetEntitiesQuery, useGetGraphStatsQuery, useGetGraphsQuery } from "@/app/api";
+import { AllGraphsList, useGetEntitiesQuery, useGetGraphStatsQuery, useGetGraphsQuery } from "@src/app/api";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
 import { GetGraphStatsApiResponse } from '../../app/api';
 import CreateEntityModal from "./_components/modals/CreateEntityModal";
 import { UseQueryStateOptions } from "@reduxjs/toolkit/dist/query/react/buildHooks";
-import { useAppDispatch } from "@/app/hooks";
-import { resetGraph, setPositionMode } from "@/features/graph/graphSlice";
+import { useAppDispatch } from "@src/app/hooks";
+import { resetGraph, setPositionMode } from "@src/features/graph/graphSlice";
 
 export interface ScrollGraphs {
   skip?: number | undefined
@@ -175,7 +175,9 @@ export default function DashboardPage() {
           ) : (
             <button
               className='btn-primary mx-4 mr-6'
-            >Share plugin(s)</button>
+            >Add transforms
+
+            </button>
           )}
         </aside>
         <Outlet context={{
