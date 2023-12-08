@@ -20,6 +20,14 @@ from app.db.janus import ProjectGraphConnection
 log = get_logger("api_v1.endpoints.nodes")
 router = APIRouter(prefix="/node")
 
+# TODO: Refactor to somewhere that makes sense...
+def refresh_local_entities(db: Session):
+    Registry.plugins = []
+    Registry.labels = []
+    Registry.ui_labels = []
+    entities = crud.entities.get_many(db, skip=0, limit=100)
+    load_plugins(entities)
+
 
 async def fetch_node_transforms(plugin_label):
     plugin = await Registry.get_plugin(plugin_label=plugin_label)
@@ -123,69 +131,77 @@ async def load_initial_graph(uuid: UUID) -> tuple[list, list]:
         return nodes, edges
 
 
-def map_node_to_blueprint_elements(blueprint, map_element, node) -> None:
-    data_keys = node.keys()
+def node_to_blueprint_entity(map_element, node) -> None:
+    node_element_labels = node.keys()
     obmap = {}
-    if len(data_keys) > 1:
-        for d_key in data_keys:
+    if len(node_element_labels) > 1:
+        for d_key in node_element_labels:
             key_split = d_key.split(MAP_KEY)
-            if len(key_split) >= 2:
+            if len(key_split) > 1:
                 obmap[key_split[1]] = d_key
-
-    data_label = to_snake_case(map_element['label'])
-    if node.get(data_label):
-        map_element['value'] = node[data_label][0]
+            else:
+                obmap[key_split[0]] = ""
+    entity_label = to_snake_case(map_element['label'])
+    if node.get(entity_label):
+        map_element['value'] = node[entity_label][0]
     else:
-        for k, v in obmap.items():
-            map_element[k] = node[v][0]
-
+        json_element = {k: v for k, v in obmap.items() if entity_label in k}
+        for k, v in json_element.items():
+            if entity_label in k:
+                print('todo')
+            else:
+                map_element[k] = node[v][0]
 
 async def read_graph(action_type, send_json, project_uuid):
     nodes = []
     data_nodes, edges = await load_initial_graph(project_uuid)
+    print('plugin??', Registry.plugins)
     for node in data_nodes:
+        print(node)
+        
         position = {
             'x': node.pop('x', [0])[0],
             'y': node.pop('y', [0])[0]
         }
         entity_id = node.pop(T.id)
-        label_data = node.pop(T.label)
-        plugin = await Registry.get_plugin(to_snake_case(label_data))
-        blueprint = plugin.blueprint()
-        
-        for element in blueprint['elements']:
-            if isinstance(element, list):
-                for elm in element:
-                    map_node_to_blueprint_elements(
-                        blueprint,
-                        elm,
+        entity_type = node.pop(T.label)
+        print(entity_type)
+        plugin = await Registry.get_plugin(to_snake_case(entity_type))
+        print('plugin??', plugin, entity_type)
+        if plugin:
+            blueprint = plugin.blueprint()
+            
+            for element in blueprint['elements']:
+                if isinstance(element, list):
+                    for elm in element:
+                        node_to_blueprint_entity(
+                            elm,
+                            node
+                        )
+                else:
+                    node_to_blueprint_entity(
+                        element,
                         node
                     )
-            else:
-                map_node_to_blueprint_elements(
-                    blueprint,
-                    element,
-                    node
-                )
-        blueprint['position'] = position
-        blueprint['id'] = f"{entity_id}"
-        blueprint['type'] = 'mini'
-        blueprint['data'] = {
-            'color': blueprint.pop('color'),
-            'icon': blueprint.pop('icon', 'atom-2'),
-            'label': blueprint.pop('label'),
-            'elements': blueprint.pop('elements'),
-        }
-        nodes.append(blueprint)
-    edges_data = []
-    if len(edges[0]) >= 1:
-        [edges_data.append({
-            'id': f"{i}", 
-            'source': f"{e[2]['from'].id}",
-            'target': f"{e[3]['to'].id}",
-            'label': e[1][T.label],
-            'type': 'float'
-        }) for i, e in enumerate(chunks(edges[0], 4))]
+            blueprint['position'] = position
+            blueprint['id'] = f"{entity_id}"
+            blueprint['type'] = 'mini'
+            blueprint['data'] = {
+                'color': blueprint.pop('color'),
+                'icon': blueprint.pop('icon', 'atom-2'),
+                'label': blueprint.pop('label'),
+                'elements': blueprint.pop('elements'),
+            }
+            nodes.append(blueprint)
+        edges_data = []
+        if len(edges[0]) >= 1:
+            [edges_data.append({
+                'id': f"{i}", 
+                'source': f"{e[2]['from'].id}",
+                'target': f"{e[3]['to'].id}",
+                'label': e[1][T.label],
+                'type': 'float'
+            }) for i, e in enumerate(chunks(edges[0], 4))]
     await send_json({
         'action': 'addInitialLoad',
         'nodes': nodes,
@@ -334,11 +350,7 @@ async def refresh_plugins(
     db: Session = Depends(deps.get_db)
 ):
     try:
-        Registry.plugins = []
-        Registry.labels = []
-        Registry.ui_labels = []
-        entities = crud.entities.get_many(db, skip=0, limit=100)
-        load_plugins(entities)
+        refresh_local_entities(db)
         return {"status": "success", "plugins": Registry.ui_labels}
     except Exception as e:
         log.error("Error inside node.refresh_plugins")

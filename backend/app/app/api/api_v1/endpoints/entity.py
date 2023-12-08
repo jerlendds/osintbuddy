@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from starlette import status
 
 from app.api import deps
+from app.api.api_v1.endpoints.node import refresh_local_entities
 from app import crud, schemas
 from app.core.logger import get_logger
 
@@ -44,7 +45,7 @@ async def get_entity_transforms(
         log.error(e)
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="There was an error refreshing, please try again."
+            detail="There was an error fetching transforms, please try again."
         )
 
 
@@ -153,6 +154,8 @@ async def update_entity_by_id(
     try:
         db_obj = crud.entities.get(db=db, id=hid)
         entity = crud.entities.update(db=db, db_obj=db_obj, obj_in=obj_in)
+        refresh_local_entities(db)
+
         return entity
     except Exception as e:
         log.error('Error inside entity.update_entity_by_uuid:')
