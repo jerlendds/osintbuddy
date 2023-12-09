@@ -188,14 +188,14 @@ async def read_graph(action_type, send_json, project_uuid):
                 'elements': blueprint.pop('elements'),
             }
             nodes.append(blueprint)
-        if len(edges[0]) >= 1:
-            [edges_data.append({
-                'id': f"{i}", 
-                'source': f"{e[2]['from'].id}",
-                'target': f"{e[3]['to'].id}",
-                'label': e[1][T.label],
-                'type': 'float'
-            }) for i, e in enumerate(chunks(edges[0], 4))]
+    if len(edges[0]) >= 1:
+        [edges_data.append({
+            'id': f"{i}", 
+            'source': f"{e[2]['from'].id}",
+            'target': f"{e[3]['to'].id}",
+            'label': e[1][T.label],
+            'type': 'float'
+        }) for i, e in enumerate(chunks(edges[0], 4))]
     await send_json({
         'action': 'addInitialLoad',
         'nodes': nodes,
