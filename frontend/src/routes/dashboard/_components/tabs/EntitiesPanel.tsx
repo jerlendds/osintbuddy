@@ -9,7 +9,7 @@ export default function EntitiesPanel({
   isLoading,
   isError,
   isSuccess,
-  refreshAllEntities,
+  refetchEntities,
 }: JSONObject) {
   const [showFavoriteEntities, setShowFavoriteEntities] = useState<boolean>(true);
   const [showEntities, setShowEntities] = useState(true);
@@ -32,7 +32,7 @@ export default function EntitiesPanel({
 
   const updateEntityOnBookmark = async (hid: string) => {
     await updateEntityIsFavorite({ hid })
-    refreshAllEntities()
+    refetchEntities()
   }
 
   return (
