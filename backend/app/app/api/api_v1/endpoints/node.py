@@ -41,7 +41,6 @@ def add_node_element(vertex, element: dict or List[dict], data_labels: List[str]
     # Remove stylistic values unrelated to element data
     # Some osintbuddy.elements of type displays dont have an icon or options 
 
-    # print('adding elm', element, data_labels)
     icon = element.pop('icon', None)
     options = element.pop('options', None)
 
@@ -128,6 +127,7 @@ async def load_initial_graph(uuid: UUID) -> tuple[list, list]:
             _g.project('to').by(_g.select('to')).unfold()
         ).fold().toList()
         nodes: list = await graph.V().valueMap(True).toList()
+        
         return nodes, edges
 
 
@@ -147,30 +147,24 @@ def node_to_blueprint_entity(map_element, node) -> None:
     else:
         json_element = {k: v for k, v in obmap.items() if entity_label in k}
         for k, v in json_element.items():
-            if entity_label in k:
-                print('todo')
-            else:
+            if entity_label not in k:
                 map_element[k] = node[v][0]
+            # else:
+                # print('todo', entity_label, json_element, map_element)
 
 async def read_graph(action_type, send_json, project_uuid):
     nodes = []
     data_nodes, edges = await load_initial_graph(project_uuid)
-    print('plugin??', Registry.plugins)
     for node in data_nodes:
-        print(node)
-        
         position = {
             'x': node.pop('x', [0])[0],
             'y': node.pop('y', [0])[0]
         }
         entity_id = node.pop(T.id)
         entity_type = node.pop(T.label)
-        print(entity_type)
         plugin = await Registry.get_plugin(to_snake_case(entity_type))
-        print('plugin??', plugin, entity_type)
         if plugin:
             blueprint = plugin.blueprint()
-            
             for element in blueprint['elements']:
                 if isinstance(element, list):
                     for elm in element:
@@ -242,7 +236,6 @@ async def nodes_transform(
                 get_graph=lambda: None
             )
         )
-        print(node_output)
         async def create_node_transform_context(
             graph: AsyncGraphTraversal,
             transform_ctx: dict,
@@ -323,7 +316,6 @@ async def active_graph_inquiry(
         is_project_active = False
     else:
         await websocket.send_json({"action": "refresh"})
-
     while is_project_active:
         try:
             event: dict = await websocket.receive_json()
