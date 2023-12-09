@@ -154,6 +154,7 @@ def node_to_blueprint_entity(map_element, node) -> None:
 
 async def read_graph(action_type, send_json, project_uuid):
     nodes = []
+    edges_data = []
     data_nodes, edges = await load_initial_graph(project_uuid)
     for node in data_nodes:
         position = {
@@ -187,7 +188,6 @@ async def read_graph(action_type, send_json, project_uuid):
                 'elements': blueprint.pop('elements'),
             }
             nodes.append(blueprint)
-        edges_data = []
         if len(edges[0]) >= 1:
             [edges_data.append({
                 'id': f"{i}", 
