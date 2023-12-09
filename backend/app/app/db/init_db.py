@@ -19,7 +19,7 @@ core_plugins = {
     'Google Result': 'google_result',
     'Google Search': 'google_search',
     'IP': 'ip',
-    'IP Geolocation': 'ip_geo',
+    'IP Geolocation': 'ip_geolocation',
     'Subdomain': 'subdomain',
     'Telegram Websearch': 'telegram_websearch',
     'URL': 'url',
