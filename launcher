@@ -44,10 +44,10 @@ usage () {
     echo -e "    $(c YsB)stop$(c):        Stop the OSINTBuddy app (or a specific container ./launcher stop janus)."
     echo -e "    $(c YsB)build$(c):       Build the OSINTBuddy app (or a specific container ./launcher build ui)."
     echo -e "    $(c YsB)restart$(c):     Restart the app (or a specific container: ./launcher restart janus)."
-    echo -e "    $(c YsB)api:gen$(c):     Generate API client SDK from the backend OpenAPI spec; launch the UI outside of the container"
-    echo -e "    $(c YsB)setup:dev$(c):   Create python3 venv and install dev dependencies"
+    echo -e "    $(c YsB)api_gen$(c):     Generate API client SDK from the backend OpenAPI spec; launch the UI outside of the container"
+    echo -e "    $(c YsB)setup_dev$(c):   Create python3 venv and install dev dependencies"
     echo -e "    $(c YsB)bootstrap$(c):   Initialize and download dependencies and check for environment misconfigurations"
-    echo -e "    $(c YsB)debug:send$(c):  Upload all logs to https://paste.c-net.org for help with debugging"
+    echo -e "    $(c YsB)debug_send$(c):  Upload all logs to https://paste.c-net.org for help with debugging"
     echo -e "    $(c YsB)cleanup$(c):     Remove docker volumes."
     echo -e "    $(c YsB)exec$(c):        Execute commands for a container."
     echo -e "    $(c YsB)migrate$(c):     Generate a migration."
@@ -55,7 +55,7 @@ usage () {
     echo -e "    $(c YsB)ui$(c):          Stop the UI container and launch the frontend locally."
     echo -e "    $(c YsB)kill$(c):        Kill containers; down the stack."
     echo -e "    $(c YsB)containers$(c):  List the names you can access the containers by"
-    echo -e "    $(c YsB)pkg:update$(c):  Update the osintbuddy package locally and in docker from the osintbuddy-plugins repo (used in dev)"
+    echo -e "    $(c YsB)pkg_update$(c):  Update the osintbuddy package locally and in docker from the osintbuddy-plugins repo (used in dev)"
     usage_containers
     
     exit 1
@@ -85,8 +85,8 @@ case "$OB_CMD" in
     logs)
         ./cmd/logs
     ;;
-    api:gen)
-        ./cmd/api:gen
+    api_gen)
+        ./cmd/api_gen
     ;;
     kill)
         ./cmd/downkill
@@ -94,8 +94,8 @@ case "$OB_CMD" in
     ui)
         ./cmd/ui_dev
     ;;
-    debug:send)
-        ./cmd/debug:send
+    debug_send)
+        ./cmd/debug_send
     ;;
     cleanup)
         ./cmd/stop
@@ -110,11 +110,11 @@ case "$OB_CMD" in
     migrate)
         ./cmd/migrate
     ;;
-    setup:dev)
-        ./cmd/setup:dev
+    setup_dev)
+        ./cmd/setup_dev
     ;;
-    pkg:update)
-        ./cmd/pkg:update
+    pkg_update)
+        ./cmd/pkg_update
     ;;
     ps)
         ./cmd/ps

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Helpful utility functions used by various scripts
+
+function get_is_windows() {
+  # Check if the OSTYPE variable is null or unset
+  if [ -z "$OSTYPE" ]; then
+    return 1 # Not Windows
+  else
+    # Check the operating system to determine if it is Windows
+    case "$OSTYPE" in
+      msys*|cygwin*|mingw*|win32*)
+        return 0 # Windows
+        ;;
+      *)
+        return 1 # Not Windows
+        ;;
+    esac
+  fi
+}
