@@ -64,7 +64,7 @@ export default function DashboardPage() {
     isLoading,
     isError,
     isSuccess,
-    refetch: refreshAllEntities,
+    refetch: refetchEntities,
   } = useGetEntitiesQuery({ skip: 0, limit: 50 })
 
   const scrollGraphs = ({ skip, limit, favoriteSkip, favoriteLimit }: ScrollGraphs) => {
@@ -153,7 +153,8 @@ export default function DashboardPage() {
                   isLoading={isLoading}
                   isError={isError}
                   isSuccess={isSuccess}
-                  updateEntities={refreshAllEntities}
+                  refetchEntities={refetchEntities}
+                  
                 />
               </Tab.Panel>
               <Tab.Panel className={styles["tab-panel"]}>
@@ -196,7 +197,7 @@ export default function DashboardPage() {
         refreshAllGraphs={async () => await refetchGraphs()}
       />
       <CreateEntityModal
-        refreshAllEntities={async () => await refreshAllEntities()}
+        refreshAllEntities={async () => await refetchEntities()}
         cancelCreateRef={cancelCreateEntityRef}
         isOpen={showCreateEntityModal}
         closeModal={() => setShowCreateEntityModal(false)}
