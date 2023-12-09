@@ -1,11 +1,13 @@
 #!/usr/bin/bash
 # used by ./ob/cmd/* scripts ran by this ./launcher
 . ./cmd/_colors
+. ./cmd/utils
 
 export node=`which node`
 export python3=`which python`
 export docker_path=`which docker`
 export git_path=`which git`
+export is_windows=get_is_windows
 
 
 # https://docs.docker.com/compose/environment-variables/envvars/
@@ -16,7 +18,7 @@ export COMPOSE_FILE="$(pwd)/alpha-compose.yml"
 export OB_COMPOSE_OVERRIDE="$(pwd)/alpha-compose.override.yml"
 
 ob_compose() {
-    $docker_path compose -f $COMPOSE_FILE -f $OB_COMPOSE_OVERRIDE "$@"
+    "$docker_path" compose -f $COMPOSE_FILE -f $OB_COMPOSE_OVERRIDE "$@"
 }
 
 # Colored logs...

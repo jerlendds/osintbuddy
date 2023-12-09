@@ -90,30 +90,29 @@ check_prereqs() {
     python_min_version='3.11.0'
     python_rec_version='3.11.4'
     
-    # 0. TODO: Install windows and test git crlf config...
-    # (Please, someone else do this, I really don't want to install windows..)
-    if [[ $(grep -i Microsoft /proc/version) ]]; then
+    # Test git crlf config for windows devices
+    if [ $is_windows ]; then
         heading "Windows detected! Checking for environment issues..."
         prepare_windows
     fi
-    
-    if [ -z $docker_path ]; then
+
+    if [ -z "$docker_path" ]; then
         install_docker
     fi
-    
+
     # 1. docker daemon running?
     # we send stderr to /dev/null cause we don't care about warnings,
     # it usually complains about swap which does not matter
-    test=`$docker_path info 2> /dev/null`
+    test=`"$docker_path" info 2> /dev/null`
     if [[ $? -ne 0 ]] ; then
         error "Cannot connect to the docker daemon - verify it is running and you have access"
         exit 1
     fi
     
     # 2. running recommended docker version
-    test=($($docker_path --version))  # Get docker version string
+    test=($("$docker_path" --version))  # Get docker version string
     test=${test[2]//,/}  # Get version alone and strip comma if exists
-    
+
     # At least minimum docker version
     if compare_version "${docker_min_version}" "${test}"; then
         echo "ERROR: Docker version ${test} not supported, please upgrade to at least ${docker_min_version}, or recommended ${docker_rec_version}"
@@ -122,19 +121,17 @@ check_prereqs() {
     
     
     # 3. has node and running recommended node version
-    if [ -z "$(which $node)" ]; then
+    if [ -z "$node" ]; then
         warning "Node environment not detected! We recommend installing Node 18.18.2 for this project."
         warning "Some ./launcher commands may not work without a node environment."
         heading "Attempting to continue without Node..."
     fi
     
-    test=($($node --version))
+    test=($("$node" --version))
     test=${test[0]//v/}  # Get version alone and strip the prefixed v
     
-    
-    
     if compare_version "${node_min_version}" "${test}"; then
-        echo "WARNING: Node version ${test} not supported, please upgrade to at least ${node_min_version}, or recommended ${node_rec_version}"
+        warning "WARNING: Node version ${test} not supported, please upgrade to at least ${node_min_version}, or recommended ${node_rec_version}"
     fi
     
     # Recommend best Node version
@@ -143,7 +140,7 @@ check_prereqs() {
     fi
     
     # 4. running recommended Python version
-    test=($($python3 --version))
+    test=($("$python3" --version))
     test=${test[1]///}  # Get version alone and strip the prefixed v
     
     if compare_version "${python_min_version}" "${test}"; then
@@ -180,7 +177,7 @@ check_prereqs() {
     esac
     
     # 4. running recommended git version
-    test=($($git_path --version))  # Get git version string
+    test=($("$git_path" --version))  # Get git version string
     test=${test[2]//,/}  # Get version alone and strip comma if exists
     
     # At least minimum version
@@ -216,7 +213,7 @@ setup_python_env() {
 
 setup_ui_env() {
     cd ../frontend/ && yarn && yarn install:hooks
-    info "Generate the UI API client with: ./launcher api:gen"
+    info "Generate the UI API client with: ./launcher api_gen"
     cd "$OB_DIR"
 }
 

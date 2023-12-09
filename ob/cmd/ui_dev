@@ -3,7 +3,7 @@
 
 run_uidev() {
     unset ERR
-    cmd/api:gen || ERR=$?
+    cmd/api_gen || ERR=$?
     if [[ $ERR > 0 ]]; then
         error "We ran into an error generating the frontends API client. Is the backend running?"
     fi
