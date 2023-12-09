@@ -362,10 +362,18 @@ export type Entity = {
   updated: string;
   created: string;
 };
+export type EntityInList = {
+  label: string;
+  author: string;
+  description: string;
+  id: string;
+  last_edited: string;
+  is_favorite: boolean;
+};
 export type AllEntitiesList = {
-  entities: Entity[];
+  entities: EntityInList[];
   count: number;
-  favorite_entities: Entity[];
+  favorite_entities: EntityInList[];
   favorite_count: number;
 };
 export type PostEntityCreate = {

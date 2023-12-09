@@ -2,15 +2,15 @@ import classNames from 'classnames';
 import Sprite from '@assets/images/tabler-sprite.svg';
 
 export const Icon = ({ icon, className }: { icon: string, className?: string }) => {
-  // console.log('wtf', wtf)
-  console.log(import(`@tabler/icons/12-hours.svg`).then(x => console.log(x)))
-  // console.log('sprite', Sprite)
-
+  // TODO: Remove sprite and figure this approach out somehow
+  // const svgIcon = import(`@tabler/icons/${icon}.svg`).then(x => x).catch(() => <>why no work?!</>)
 
   return (
-    <svg className={className ? className : 'h-5 w-5'} fill='#fff' color='#fff'>
-      <use href={`${Sprite}#tabler-${icon}`} />
-    </svg>
+    <>
+      <svg className={className ? className : 'h-5 w-5'} fill='#fff' color='#fff'>
+        <use href={`${Sprite}#tabler-${icon}`} />
+      </svg>
+    </>
   );
 };
 
