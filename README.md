@@ -144,6 +144,10 @@ To start using OSINTBuddy, follow these simple installation steps:
 
 *Note that if you're on windows and want this project to work you need unix line endings [(context)](https://stackoverflow.com/a/13154031). Before cloning, run: `git config --global core.autocrlf false`*
 
+
+*Note that if you're running on an **Apple** device you will need to open your Docker app, select the **features in development** tab on the left hand side of the docker app, and enable/checkmark the `Use Rosetta for x86/64 emulation on Apple Silicon` option if you want this application to work*
+
+
 ### Installation
 1. Clone the repo and submodules
    ```sh
@@ -157,8 +161,6 @@ To start using OSINTBuddy, follow these simple installation steps:
     - [Install Guide for Mac](https://docs.docker.com/desktop/install/mac-install/)
     - [Install Guide for Windows](https://docs.docker.com/desktop/install/windows-install/)
     - [Install Guide for Linux](https://docs.docker.com/desktop/install/linux-install/)
-
-    *Note that if you're running on an **Apple** device you will need to open your Docker app, select the **features in development** tab on the left hand side of the docker app, and enable/checkmark the `Use Rosetta for x86/64 emulation on Apple Silicon` option if you want this application to work*
 
 3. Start the stack with Docker:
    ```sh
