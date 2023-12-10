@@ -8,7 +8,7 @@ import { GripIcon, Icon } from '@src/components/Icons';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@src/app/hooks';
 import { type ThunkDispatch } from 'redux-thunk';
-import { type Graph, EditState, saveUserEdits, selectNodeValue, clearEditId } from '@src/features/graph/graphSlice';
+import { type Graph, EditState, saveUserEdits, selectNodeValue, disableEntityEdit, setEditState } from '@src/features/graph/graphSlice';
 import { AnyAction } from '@reduxjs/toolkit';
 
 var dropdownKey = 0;
@@ -116,7 +116,7 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
       <Handle position={Position.Top} id='t2' key='t2' type='target' style={handleStyle} />
       <Handle position={Position.Bottom} id='b2' key='b2' type='target' style={handleStyle} />
       <Handle position={Position.Left} id='l2' key='l2' type='target' style={handleStyle} />
-      <div onDoubleClick={() => dispatch(clearEditId(ctx.id))} data-label-type={node.label} className=' node container' style={node.style}>
+      <div onDoubleClick={() => dispatch(disableEntityEdit(ctx.id))} data-label-type={node.label} className=' node container' style={node.style}>
         <div
           // 99 === 0.6 opacity
           style={{ backgroundColor: node?.color?.length === 7 ? `${node.color}99` : node?.color }}

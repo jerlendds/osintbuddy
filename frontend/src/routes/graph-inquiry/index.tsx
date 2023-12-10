@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { XYPosition, Node, ReactFlowInstance, FitView } from 'reactflow';
+import { XYPosition, Node, ReactFlowInstance, FitView, Edge } from 'reactflow';
 import { HotKeys } from 'react-hotkeys';
 import { useParams, useLocation, useBlocker } from 'react-router-dom';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
@@ -378,10 +378,24 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
 
   useEffect(() => {
     if (activeEditState.label === 'deleteNode') {
-      setNodesBeforeLayout(nodesBeforeLayout.filter((node) => node.id !== activeEditState.id))
+      setEdgesBeforeLayout(edgesBeforeLayout.filter((edge: Edge) => edge.target !== activeEditState.id || edge.source !== activeEditState.id))
+      setNodesBeforeLayout(nodesBeforeLayout.filter((node: Node) => node.id !== activeEditState.id))
     }
     if (activeEditState.label === 'addNode') {
-      setNodesBeforeLayout([...nodesBeforeLayout, initialNodes.find((node) => node.id === activeEditState.id) as Node])
+      setNodesBeforeLayout([...nodesBeforeLayout, initialNodes.find((node: Node) => node.id === activeEditState.id) as Node])
+    }
+    if (activeEditState.label?.includes("layoutChange")) {
+      setNodesBeforeLayout([...nodesBeforeLayout])
+    }
+    if (activeEditState.label === "enableEditMode") {
+      setNodesBeforeLayout([...nodesBeforeLayout.map((node: Node) =>
+        node.id === activeEditState.id ? { ...node, type: 'base' } : node
+      )])
+    }
+    if (activeEditState.label === "disableEditMode") {
+      setNodesBeforeLayout([...nodesBeforeLayout.map((node: Node) =>
+        node.id === activeEditState.id ? { ...node, type: 'mini' } : node
+      )])
     }
   }, [activeEditState])
 

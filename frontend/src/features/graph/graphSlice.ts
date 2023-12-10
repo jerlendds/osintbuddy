@@ -77,9 +77,10 @@ export const graph = createSlice({
     setEditLabel: (state, action: PayloadAction<string>) => {
       state.editLabel = action.payload;
     },
-
-    toggleEntityEdit: (state, action: PayloadAction<string>) => {
+    // TODO abstract into one later...
+    enableEntityEdit: (state, action: PayloadAction<string>) => {
       state.editId = action.payload;
+      state.editLabel = "enableEditMode"
       state.nodes = state.nodes.map((node) => node.id === action.payload ?
         {
           ...node,
@@ -87,8 +88,9 @@ export const graph = createSlice({
         } : node
       )
     },
-    clearEditId: (state, action: PayloadAction<string>) => {
+    disableEntityEdit: (state, action: PayloadAction<string>) => {
       state.editId = action.payload;
+      state.editLabel = "disableEditMode"
       state.nodes = state.nodes.map((node) => node.id === action.payload ?
         {
           ...node,
@@ -262,7 +264,7 @@ export const {
   setEditLabel,
   setEditValue,
   saveUserEdits,
-  toggleEntityEdit,
+  enableEntityEdit,
   onEdgesChange,
   setEditState,
   setNodeSelected,
@@ -271,7 +273,7 @@ export const {
   setNodeType,
   setViewMode,
   addNodeUpdate,
-  clearEditId,
+  disableEntityEdit,
   setAllNodes,
   setPositionMode,
   setAllEdges

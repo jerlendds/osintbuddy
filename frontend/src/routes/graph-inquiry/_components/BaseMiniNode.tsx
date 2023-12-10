@@ -15,7 +15,7 @@ import {
   EditState,
   saveUserEdits,
   selectNodeValue,
-  toggleEntityEdit,
+  enableEntityEdit,
 } from '@src/features/graph/graphSlice';
 import { toast } from 'react-toastify';
 
@@ -61,7 +61,7 @@ export default function BaseMiniNode({
       <Handle position={Position.Left} id='l2' key='l2' type='target' style={handleStyle} />
       <div
         onDoubleClick={() => {
-          dispatch(toggleEntityEdit(ctx.id))
+          dispatch(enableEntityEdit(ctx.id))
         }}
         data-label-type={node.label}
         className='node container !rounded-full'

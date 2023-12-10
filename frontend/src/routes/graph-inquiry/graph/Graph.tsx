@@ -120,6 +120,7 @@ export default function Graph({
     if (positionMode === 'manual') {
       sendJsonMessage({ action: 'update:node', node: { id: node.id, x: node.position.x, y: node.position.y } });
     }
+    dispatch(setEditState({ editId: node.id, editLabel: "dragEntity" }))
   };
 
 

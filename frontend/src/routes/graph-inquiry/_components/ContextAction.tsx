@@ -12,6 +12,9 @@ export default function ContextAction({
   sendJsonMessage: Function
   closeMenu: Function
 }) {
+
+    console.log('id', ctx?.id)
+
   return (
     <>
       {transforms && <div className='node-context max-h-32 overflow-y-scroll'>

@@ -3,31 +3,31 @@ import { Route, RouterProvider, Routes, createBrowserRouter } from "react-router
 import NotFound from "./NotFound";
 import AppLayout from "./AppLayout";
 import PublicLayout from "./PublicLayout";
-
-// Public routes
-const LandingPage = lazy(() => import("@routes/public/LandingPage"));
-const AboutPage = lazy(() => import("@routes/public/AboutPage"));
-import CallbackPage from './public/CallbackPage';
+import CallbackPage from '@routes/public/CallbackPage';
 import { TourProvider } from "@reactour/tour";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { selectActiveTour } from "@src/features/account/accountSlice";
 import { useAppSelector } from "@src/app/hooks";
 
+// Public routes
+const LandingPage = lazy(() => import("@routes/public/LandingPage"));
+const AboutPage = lazy(() => import("@routes/public/AboutPage"));
 // Private routes
-const DashboardPage = lazy(() => import("./dashboard"));
+const DashboardPage = lazy(() => import("@routes/dashboard"));
+const Market = lazy(() => import("@routes/dashboard/_components/Market"))
 
-const Market = lazy(() => import("./dashboard/_components/Market"))
-const GraphOverview = lazy(() => import("./dashboard/_components/graph/GraphOverview"))
-const GraphDetails = lazy(() => import("./dashboard/_components/graph/GraphDetails"))
-const EntitiesOverview = lazy(() => import("./dashboard/_components/entity/EntitiesOverview"))
-const EntityDetails = lazy(() => import("./dashboard/_components/entity/EntityDetails"))
-const GraphInquiry = lazy(() => import("./graph-inquiry"));
+const GraphOverview = lazy(() => import("@routes/dashboard/_components/graph/GraphOverview"))
+const GraphDetails = lazy(() => import("@routes/dashboard/_components/graph/GraphDetails"))
+const GraphInquiry = lazy(() => import("@routes/graph-inquiry/index"));
 
-const Settings = lazy(() => import("./settings"));
-const Incidents = lazy(() => import("./incidents"));
+const EntitiesOverview = lazy(() => import("@routes/dashboard/_components/entity/EntitiesOverview"))
+const EntityDetails = lazy(() => import("@routes/dashboard/_components/entity/EntityDetails"))
 
-const ScansCreate = lazy(() => import("./scans-create"))
-const ScansOverview = lazy(() => import("./scans"));
+const Settings = lazy(() => import("@routes/settings"));
+const Incidents = lazy(() => import("@routes/incidents"));
+
+const ScansCreate = lazy(() => import("@routes/scans-create"))
+const ScansOverview = lazy(() => import("@routes/scans"));
 
 
 const router = createBrowserRouter([

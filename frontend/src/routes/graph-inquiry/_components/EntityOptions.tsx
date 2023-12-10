@@ -196,6 +196,7 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
           isDraggable: isEntitiesDraggable,
           isBounded: true
         })
+
       }}
     >
       <div
@@ -282,6 +283,7 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
               setIsForceActive(false)
               toggleForceLayout && toggleForceLayout(false)
               dispatch(setPositionMode('manual'))
+              dispatch(setEditState({ editId: "", editLabel: "layoutChangeM" }))
             }}
             type='button'
             className={classNames(
@@ -289,7 +291,6 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
               positionMode === 'manual' && 'bg-mirage-800 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
             )}
           >
-            <span className='sr-only'>List view</span>
             <HandRaisedIcon
               className={classNames('h-5 w-5 ', positionMode === 'manual' && 'text-primary-300')}
               aria-hidden='true'
@@ -307,7 +308,6 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
               positionMode === 'force' && 'bg-mirage-800 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
             )}
           >
-            <span className='sr-only'>List view</span>
             <Icon
               icon={isForceActive !== undefined && isForceActive ? "3d-cube-sphere" : "3d-cube-sphere-off"}
               className={classNames('h-5 w-5 text-inherit', positionMode === 'force' && 'text-primary-300')}
@@ -325,6 +325,7 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
                 'elk.algorithm': 'layered',
                 'elk.direction': 'RIGHT'
               })
+              dispatch(setEditState({ editId: "", editLabel: "layoutChangeRT" }))
             }}
             type='button'
             className={classNames(
@@ -332,7 +333,6 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
               positionMode === 'right tree' && 'bg-mirage-800 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
             )}
           >
-            <span className='sr-only'>List view</span>
             <Icon
               icon="binary-tree-2"
               className={classNames('h-5 w-5 -rotate-90 origin-center text-inherit', positionMode === 'right tree' && 'text-primary-300')}
@@ -347,6 +347,7 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
                 'elk.algorithm': 'layered',
                 'elk.direction': 'DOWN'
               })
+              dispatch(setEditState({ editId: "", editLabel: "layoutChangeDT" }))
             }}
             type='button'
             className={classNames(
@@ -354,7 +355,6 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
               positionMode === 'tree' && 'bg-mirage-800 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
             )}
           >
-            <span className='sr-only'>List view</span>
             <Icon
               icon="binary-tree"
               className={classNames('h-5 w-5 text-inherit', positionMode === 'tree' && 'text-primary-300')}
