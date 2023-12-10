@@ -37,7 +37,7 @@
   🚧  <ins>Work in progress</ins>  🚧
 <br/>
 
-  [2023-12-02_demo.webm](https://github.com/jerlendds/osintbuddy/assets/29207058/a7feba13-d1ca-43a0-ba25-b5c899eae89c)
+  [2023-12-09_demo.webm](https://github.com/jerlendds/osintbuddy/assets/29207058/50060fc0-563a-4b7d-a0fd-e124c3ba1ce2)
 
   <!-- ![2023-12-02 12-23 mp4](https://github.com/jerlendds/osintbuddy/assets/29207058/89a2c952-6b6f-4533-872b-e12348fa0a78) -->
 
@@ -158,12 +158,15 @@ To start using OSINTBuddy, follow these simple installation steps:
     - [Install Guide for Windows](https://docs.docker.com/desktop/install/windows-install/)
     - [Install Guide for Linux](https://docs.docker.com/desktop/install/linux-install/)
 
+    *Note that if you're running on an **Apple** device you will need to open your Docker app, select the **features in development** tab on the left hand side of the docker app, and enable/checkmark the `Use Rosetta for x86/64 emulation on Apple Silicon` option if you want this application to work*
+
 3. Start the stack with Docker:
    ```sh
    # ./launcher               # display usage information.
-   # ./launcher bootstrap     # first time working on osintbuddy? build images and 
-   #                            setup development environments for the frontend and backend.
-     ./launcher start         # start the osintbuddy stack.
+   # ./launcher bootstrap     # first time developing osintbuddy? read .github/CONTRIBUTING.md then run  
+   #                            bootstrap to setup the development environments for the stack.
+     ./launcher start         # start the osintbuddy app.
+   # ./launcher stop          # stop the osintbuddy app.
    ```
    - **Note:** the stack will take a few minutes to startup while Solr and ScyllaDB configure themselves for JanusGraph. If you try to connect before all the databases are ready you will encounter errors.
 
