@@ -48,28 +48,31 @@ export default function ContextMenu({
               </div>
               {transformsData && transformsData?.transforms && (
                 <>
-                  <div className=' '>
-                    <div>
-                      <div className='sm:col-span-2'>
-                        <label
-                          htmlFor='message'
-                          className='sr-only block font-semibold leading-6 mt-4 text-slate-200 pl-8'
-                        >
-                          Search through the installed transforms for the {ctxSelection?.label} plugin
-                        </label>
-                        <div className='mt-2.5 hover:border-mirage-200/40 transition-colors duration-200 ease-in-out block justify-between items-center to-mirage-400/50 from-mirage-300/20 bg-gradient-to-br rounded border mb-2 mx-4 focus-within:!border-primary/40  px-3.5 py-1 text-slate-100 shadow-sm border-mirage-400/20 ring-light-900/10 focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l'>
-                          <input
-                            value={query}
-                            onChange={(e) => setQuery(e.currentTarget.value)}
-                            name='message'
-                            id='message'
-                            className='block w-full placeholder:text-slate-700 bg-transparent outline-none  sm:text-sm'
-                            placeholder='Search transforms...'
-                          />
+                  {ctxSelection && (
+                    <div className=' '>
+                      <div>
+                        <div className='sm:col-span-2'>
+                          <label
+                            htmlFor='message'
+                            className='sr-only block font-semibold leading-6 mt-4 text-slate-200 pl-8'
+                          >
+                            Search through the installed transforms for the {ctxSelection?.label} plugin
+                          </label>
+                          <div className='mt-2.5 hover:border-mirage-200/40 transition-colors duration-200 ease-in-out block justify-between items-center to-mirage-400/50 from-mirage-300/20 bg-gradient-to-br rounded border mb-2 mx-4 focus-within:!border-primary/40  px-3.5 py-1 text-slate-100 shadow-sm border-mirage-400/20 ring-light-900/10 focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l'>
+                            <input
+                              value={query}
+                              onChange={(e) => setQuery(e.currentTarget.value)}
+                              name='message'
+                              id='message'
+                              className='block w-full placeholder:text-slate-700 bg-transparent outline-none  sm:text-sm'
+                              placeholder='Search transforms...'
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )}
+
                   <ContextAction
                     closeMenu={closeMenu}
                     nodeCtx={ctxSelection}

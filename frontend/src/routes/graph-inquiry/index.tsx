@@ -375,7 +375,8 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   const [forceInitialized, { toggleForceLayout, isForceRunning }] = useForceLayoutElements();
 
 
-
+  // If not on a manual layout, update the manual layout positions 
+  // for any drag changes, entity edit mode toggles, and transforms/deletions
   useEffect(() => {
     if (activeEditState.label === 'deleteNode') {
       setEdgesBeforeLayout(edgesBeforeLayout.filter((edge: Edge) => edge.target !== activeEditState.id || edge.source !== activeEditState.id))
@@ -383,9 +384,6 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
     }
     if (activeEditState.label === 'addNode') {
       setNodesBeforeLayout([...nodesBeforeLayout, initialNodes.find((node: Node) => node.id === activeEditState.id) as Node])
-    }
-    if (activeEditState.label?.includes("layoutChange")) {
-      setNodesBeforeLayout([...nodesBeforeLayout])
     }
     if (activeEditState.label === "enableEditMode") {
       setNodesBeforeLayout([...nodesBeforeLayout.map((node: Node) =>
