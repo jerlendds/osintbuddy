@@ -14,9 +14,8 @@ pkg_update () {
         pip install backend/osintbuddy-plugins
 
         ob_compose exec backend pip install /tmp/osintbuddy-plugins
-        ob_compose build backend
-        ob_compose restart
-        ob_compose restart janus # fix for when first janus restart fails
+        ob_compose restart backend
+        # ob_compose restart janus # crappy fix for when first janus restart fails
         success "The osintbuddy Python package has been updated locally and in docker!"
     else
         error "Error: Python venv not found!"
