@@ -2,7 +2,7 @@
 import { ChevronUpDownIcon, PaperClipIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Combobox } from '@headlessui/react';
 import classNames from 'classnames';
-import { ChangeEvent, Dispatch, Fragment, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, Dispatch, Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { GripIcon, Icon } from '@src/components/Icons';
 import { Dialog } from '@headlessui/react';
@@ -48,6 +48,12 @@ export default function BaseMiniNode({
   dispatch
 }: JSONObject) {
   const node = ctx.data;
+
+  console.log()
+  const displayRef = useRef()
+  const displayValue = useMemo(() => Array.isArray(node.elements[0]) ? node.elements[0][0]?.value : node.elements[0]?.value, [node.elements])
+  const displayValuePosition = displayRef?.current?.clientWidth < 100 ? 0 : displayRef?.current?.clientWidth / 3
+  console.log(displayRef?.current?.clientWidth)
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />
@@ -69,10 +75,13 @@ export default function BaseMiniNode({
         <div
           // 99 === 0.6 opacity
           style={{ backgroundColor: node?.color?.length === 7 ? `${node.color}99` : node?.color }}
-          className='header !rounded-full !p-4'
+          className='header !rounded-full !p-3'
         >
           <Icon icon={node.icon} className='!h-20 !w-20  cursor-grab focus:cursor-grabbing' />
         </div>
+        <h2 ref={displayRef} className={`absolute -left-28 -right-28 max-w-xl pointer-events-none text-center text-slate-500 text-lg top-full -bottom-10 h-auto`}>
+          {displayValue?.length >= 90 ? `${displayValue.slice(0, 90)}...` : displayValue}
+        </h2>
       </div>
     </>
   );

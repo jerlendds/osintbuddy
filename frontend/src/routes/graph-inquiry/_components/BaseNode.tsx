@@ -2,18 +2,19 @@
 import { ChevronUpDownIcon, PaperClipIcon } from '@heroicons/react/24/outline';
 import { Combobox } from '@headlessui/react';
 import classNames from 'classnames';
-import { ChangeEvent, Dispatch, Fragment, useEffect, useState } from 'react';
+import { ChangeEvent, Dispatch, Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { GripIcon, Icon } from '@src/components/Icons';
 import { toast } from 'react-toastify';
+import List from 'react-virtualized/dist/es/List'
 import { useAppDispatch, useAppSelector } from '@src/app/hooks';
 import { type ThunkDispatch } from 'redux-thunk';
 import { type Graph, EditState, saveUserEdits, selectNodeValue, disableEntityEdit, setEditState } from '@src/features/graph/graphSlice';
-import { AnyAction } from '@reduxjs/toolkit';
+import { AnyAction, current } from '@reduxjs/toolkit';
 
 var dropdownKey = 0;
 
-const getKey = () => {
+const getDropdownKey = () => {
   dropdownKey += 1;
   return `k_${dropdownKey}`;
 };
@@ -85,9 +86,7 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
             key={key}
             nodeId={ctx.id}
             label={element?.label}
-            title={element?.title || ''}
-            subtitle={element?.subtitle || ''}
-            text={element?.text || ''}
+            value={element?.value || ''}
             dispatch={dispatch}
           />
         );
@@ -203,21 +202,15 @@ export function Text({ nodeId, label, value, icon }: { nodeId: string; label: st
 export function Title({
   nodeId,
   label,
-  title,
-  subtitle,
-  text,
+  value,
 }: {
   nodeId: string;
   label: string;
-  title: string;
-  subtitle: string;
-  text: string;
+  value: string;
 }) {
   return (
-    <div className='node-display'>
-      {title && <h1 data-type='title'>{title}</h1>}
-      {subtitle && <h2 data-type='subtitle'>{subtitle}</h2>}
-      {text && <p data-type='text'>{text}</p>}
+    <div className='node-display !py-0 !my-0'>
+      {value && <h1 className='my-0'>{value}</h1>}
     </div>
   );
 }
@@ -268,31 +261,30 @@ export function UploadFileInput({
 }
 
 export function TextInput({ nodeId, label, sendJsonMessage, icon, dispatch }: NodeElement) {
-  // @todo remove this hack once firefox supports `:has`
-  const [isFocused, setFocused] = useState(false);
+  const initValue = useAppSelector((state) => selectNodeValue(state, nodeId, label));
 
-  const value = useAppSelector((state) => selectNodeValue(state, nodeId, label));
+  const [value, setValue] = useState(initValue)
+
   return (
     <>
       <div className='flex flex-col'>
-        <p className='text-[0.5rem] -mb-px text-slate-400 whitespace-wrap font-semibold font-display mt-1'>{label}</p>
-        <div className='flex items-center mb-1'>
-          <div className='nodrag node-field'>
-            <Icon icon={icon} className='h-5 w-5' />
-            <input
-              id={`${nodeId}-${label}`}
-              type='text'
-              data-label={label}
-              onFocus={() => setFocused(true)}
-              onBlur={() => {
-                sendJsonMessage({ action: 'update:node', node: { id: nodeId, [label]: value } });
-                setFocused(false);
-              }}
-              onChange={(event: InputEvent) => dispatch(saveUserEdits({ value: event.target.value, nodeId, label }))}
-              value={value}
-            />
-          </div>
+        <label className='text-[0.5rem] mt-1 text-slate-400 whitespace-wrap font-semibold font-display '>
+          {label}
+        </label>
+        <div className='nodrag node-field'>
+          <Icon icon={icon} className='h-5 w-5' />
+          <input
+            id={`${nodeId}-${label}`}
+            type='text'
+            onBlur={() => {
+              sendJsonMessage({ action: 'update:node', node: { id: nodeId, [label]: value } });
+              dispatch(saveUserEdits({ value, nodeId, label }))
+            }}
+            onChange={(event: InputEvent) => setValue(event.currentTarget.value)}
+            value={value ?? initValue}
+          />
         </div>
+
       </div>
     </>
   );
@@ -306,25 +298,51 @@ interface DropdownOption {
 
 export function DropdownInput({ options, label, nodeId, sendJsonMessage, dispatch }: NodeElement) {
   const [query, setQuery] = useState('');
-  const filteredOptions =
+  const dropdownRef = useRef(200)
+  const filteredOptions = useMemo(() =>
     query === ''
-      ? options ?? []
-      : options?.filter((option: DropdownOption) => {
-        return option.label.toLowerCase().includes(query.toLowerCase());
-      }) ?? [];
+      ? [...options].sort((a, b) => a.label.localeCompare(b.label)) ?? []
+      : [...options]?.sort((a, b) => a.label.localeCompare(b.label)).filter((option: DropdownOption) => option?.label.toLowerCase().includes(query.toLowerCase())) ?? [], [query]);
 
   const activeValue = useAppSelector((state) => selectNodeValue(state, nodeId, label));
-
   const activeOption = options.find((option) => option.value === activeValue || option.label === activeValue) ?? {
     label: '',
     value: '',
     tooltip: ''
   };
 
+  const rowRenderer = ({ index, key, isScrolling, isVisible, style }) => {
+    return (
+      <Combobox.Option
+        key={key}
+        style={style}
+        value={filteredOptions[index]}
+        className={({ active }) =>
+          `overflow-y-none px-2 flex flex-col justify-center nowheel nodrag cursor-default select-none  ${active ? 'bg-mirage-700 text-slate-400' : 'text-slate-500'}`
+        }
+      >
+        <span
+          className="block truncate"
+          title={options[index].tooltip !== filteredOptions[index].label ? filteredOptions[index].tooltip : 'No description found'}
+        >
+          {filteredOptions[index].label}
+        </span>
+        {filteredOptions[index]?.value &&
+          <span
+            className="flex truncate leading-3 text-[0.5rem]"
+            title={filteredOptions[index].tooltip !== filteredOptions[index].label ? filteredOptions[index].tooltip : 'No description found'}
+          >
+            {filteredOptions[index].value}
+          </span>
+        }
+      </Combobox.Option>
+    )
+  }
+
   return (
     <>
       <Combobox
-        className=' w-full z-[999] dropdown-input col-span-1'
+        className='w-full z-50 dropdown-input'
         as='div'
         value={activeOption}
         onChange={(option) => {
@@ -333,7 +351,7 @@ export function DropdownInput({ options, label, nodeId, sendJsonMessage, dispatc
             node: {
               id: nodeId,
               [label]: option?.value ? option.value : option.label,
-            },
+            }
           });
           dispatch(
             saveUserEdits({
@@ -345,47 +363,27 @@ export function DropdownInput({ options, label, nodeId, sendJsonMessage, dispatc
         }}
       >
         <Combobox.Label>
-          <p className='text-[0.5rem] ml-1 text-slate-400 whitespace-wrap font-semibold font-display mt-1 '>{label}</p>
+          <p className='text-[0.5rem] text-slate-400 whitespace-wrap font-semibold font-display mt-1'>{label}</p>
         </Combobox.Label>
-        <div className='relative mt-1 node-field !px-0'>
+        <div className='relative node-field dropdown !px-0'>
           <Combobox.Input
+            ref={dropdownRef}
             onChange={(event) => setQuery(event.target.value)}
             displayValue={(option: DropdownOption) => option.label}
-            className='nodrag focus:ring-info-400 mr-4 outline-none !px-2'
+            className='nodrag focus:ring-info-400 mr-4 outline-none px-2'
           />
-          <Combobox.Button className='absolute mr-3 inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
+          <Combobox.Button className='absolute z-[99] -top-px inset-y-0 h-6 w-4 right-0 focus:outline-none'>
             <ChevronUpDownIcon className='h-7 w-7 !text-slate-600 ' aria-hidden='true' />
           </Combobox.Button>
-
-          {filteredOptions.length > 0 && (
-            <Combobox.Options className='absolute mr-1 z-10 mt-1 max-h-80 w-full overflow-auto rounded-b-md from-mirage-700/90 to-mirage-800/80 from-30%  bg-gradient-to-br py-1 text-[0.6rem] shadow-lg  focus:outline-none sm:text-sm'>
-              {filteredOptions.map((option: DropdownOption) => (
-                <Combobox.Option
-                  key={getKey()}
-                  value={option}
-                  className={({ active }) =>
-                    classNames(
-                      'relative flex flex-col nodrag nowheel cursor-default select-none py-2 pl-2 pr-9',
-                      active ? 'bg-mirage-700 text-slate-400' : 'text-slate-500'
-                    )
-                  }
-                >
-                  <span
-                    className={'block truncate pl-2'}
-                    title={option?.tooltip !== option.label ? option.tooltip : 'No description found'}
-                  >
-                    {option.label}
-                  </span>
-                  {option?.value && <span
-                    className={'flex truncate pl-2 leading-3 text-[0.5rem]'}
-                    title={option?.tooltip !== option.label ? option.tooltip : 'No description found'}
-                  >
-                    {option.value}
-                  </span>}
-                </Combobox.Option>
-              ))}
-            </Combobox.Options>
-          )}
+          <Combobox.Options className='absolute nodrag nowheel mr-1 z-10 max-h-80 w-full overflow-hidden rounded-b-md from-mirage-700/90 to-mirage-800/80 from-30%  bg-gradient-to-br py-1 text-[0.6rem] shadow-lg  focus:outline-none sm:text-sm'>
+            <List
+              rowCount={filteredOptions.length}
+              width={dropdownRef?.current?.clientWidth}
+              height={filteredOptions?.length <= 3 ? filteredOptions?.length * 54 : 260}
+              rowRenderer={rowRenderer}
+              rowHeight={({ index }) => filteredOptions[index]?.value ? 54 : 40}
+            />
+          </Combobox.Options>
         </div>
       </Combobox>
     </>

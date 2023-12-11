@@ -60,11 +60,6 @@ export const useResize = ({ minWidth }: UseResizeProps): UseResizeReturn => {
   return { width, enableResize };
 };
 
-const statuses: JSONObject = {
-  'Installed': 'text-green-700 bg-green-50 ring-green-600/20',
-  'Enabled': 'text-gray-600 bg-gray-50 ring-gray-500/10',
-  'Not Installed': 'text-yellow-800 bg-yellow-50 ring-yellow-600/20',
-};
 
 export function EntityOption({ entity, onDragStart }: JSONObject) {
   return (

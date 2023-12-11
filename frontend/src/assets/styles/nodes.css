@@ -1,6 +1,6 @@
 /* Start node */
 .node.container {
-  @apply flex flex-col w-full max-w-sm justify-between rounded-md transition-all duration-150 ease-in-out ring-1 ring-mirage-400/30 backdrop-blur-lg hover:ring-mirage-400/70 to-mirage-600/50 from-mirage-500/40 from-60%  bg-gradient-to-br hover:shadow-md shadow-sm;
+  @apply flex flex-col w-auto max-w-sm justify-between rounded-md transition-all duration-150 ease-in-out ring-1 ring-mirage-400/30 backdrop-blur-lg hover:ring-mirage-400/70 to-mirage-600/50 from-mirage-500/40 from-60%  bg-gradient-to-br hover:shadow-md shadow-sm;
 }
 
 .node .side-header {
@@ -59,15 +59,19 @@
 }
 
 .node-field {
-  @apply block mt-1 w-full  rounded-sm  py-0.5 relative sm:text-sm sm:leading-6  hover:border-mirage-200/40 transition-colors duration-75 ease-in-out justify-between items-center to-mirage-400/50 from-mirage-300/20 bg-gradient-to-br border focus-within:!border-primary/40  text-slate-100 shadow-sm border-mirage-400/20  focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l pl-0.5;
+  @apply block mt-0.5 w-full rounded-sm  relative sm:text-sm sm:leading-6  hover:border-mirage-200/40 transition-colors duration-75 ease-in-out justify-between items-center to-mirage-400/50 from-mirage-300/20 bg-gradient-to-br border focus-within:!border-primary/40  text-slate-100 shadow-sm border-mirage-400/20  focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l pl-0.5;
 }
 
 .node-field svg {
-  @apply h-4 w-4 mt-0.5 absolute top-1 text-slate-700 z-50 pointer-events-none;
+  @apply h-4 w-4 mt-0.5 absolute top-0.5 text-slate-700 z-50 pointer-events-none;
 }
 
 .node-field input {
-  @apply placeholder:text-slate-600 text-slate-400 bg-transparent focus:outline-none pl-[1.15rem] w-full;
+  @apply placeholder:text-slate-600 z-0 text-slate-400 bg-transparent focus:outline-none pl-[1.15rem] w-full;
+}
+
+.node-field.dropdown input {
+  @apply pl-1.5;
 }
 
 /* @todo :has is not supported by firefox yet :( */
@@ -100,10 +104,6 @@ p.node-label {
 
 .elements {
   @apply p-2 grid rounded-b-md  gap-x-1;
-}
-
-.elements > div.dropdown-input:last-child {
-  grid-column: span 2;
 }
 
 .elements > div:nth-child(even) {
