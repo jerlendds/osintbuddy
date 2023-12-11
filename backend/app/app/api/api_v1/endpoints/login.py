@@ -1,7 +1,7 @@
 from typing import Union
 from sqlalchemy.orm import Session
-from osintbuddy.utils import dkeys_to_snake_case
 from fastapi import APIRouter, Depends, Request, HTTPException
+from osintbuddy.utils.generic import dkeys_to_snake_case
 
 from app.api import deps
 from app import models, schemas

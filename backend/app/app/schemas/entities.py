@@ -1,6 +1,6 @@
 import datetime
 from uuid import UUID
-from typing import Optional, List, Union
+from typing import Optional, List
 
 from pydantic import BaseModel, validator, ConfigDict
 from app.api.utils import hid

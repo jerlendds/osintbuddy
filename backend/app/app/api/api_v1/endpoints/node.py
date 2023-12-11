@@ -131,7 +131,7 @@ async def load_initial_graph(uuid: UUID) -> tuple[list, list]:
         return nodes, edges
 
 
-def node_to_blueprint_entity(map_element, node) -> None:
+def node_to_blueprint_entity(ui_entity_element, node) -> None:
     node_element_labels = node.keys()
     obmap = {}
     if len(node_element_labels) > 1:
@@ -141,16 +141,14 @@ def node_to_blueprint_entity(map_element, node) -> None:
                 obmap[key_split[1]] = d_key
             else:
                 obmap[key_split[0]] = ""
-    entity_label = to_snake_case(map_element['label'])
+    entity_label = to_snake_case(ui_entity_element['label'])
     if node.get(entity_label):
-        map_element['value'] = node[entity_label][0]
+        ui_entity_element['value'] = node[entity_label][0]
     else:
         json_element = {k: v for k, v in obmap.items() if entity_label in k}
         for k, v in json_element.items():
             if entity_label not in k:
-                map_element[k] = node[v][0]
-            # else:
-                # print('todo', entity_label, json_element, map_element)
+                ui_entity_element[k] = node[v][0]
 
 async def read_graph(action_type, send_json, project_uuid):
     nodes = []
@@ -165,32 +163,31 @@ async def read_graph(action_type, send_json, project_uuid):
         entity_type = node.pop(T.label)
         plugin = await Registry.get_plugin(to_snake_case(entity_type))
         if plugin:
-            blueprint = plugin.blueprint()
-            for element in blueprint['elements']:
+            ui_entity = plugin.blueprint()
+            for element in ui_entity['elements']:
                 if isinstance(element, list):
-                    for elm in element:
-                        node_to_blueprint_entity(
-                            elm,
-                            node
-                        )
+                    [node_to_blueprint_entity(
+                        elm,
+                        node
+                    ) for elm in element]
                 else:
                     node_to_blueprint_entity(
                         element,
                         node
                     )
-            blueprint['position'] = position
-            blueprint['id'] = f"{entity_id}"
-            blueprint['type'] = 'mini'
-            blueprint['data'] = {
-                'color': blueprint.pop('color'),
-                'icon': blueprint.pop('icon', 'atom-2'),
-                'label': blueprint.pop('label'),
-                'elements': blueprint.pop('elements'),
+            ui_entity['position'] = position
+            ui_entity['id'] = f"{entity_id}"
+            ui_entity['type'] = 'mini'
+            ui_entity['data'] = {
+                'color': ui_entity.pop('color'),
+                'icon': ui_entity.pop('icon', 'atom-2'),
+                'label': ui_entity.pop('label'),
+                'elements': ui_entity.pop('elements'),
             }
-            nodes.append(blueprint)
-    if len(edges[0]) >= 1:
+            nodes.append(ui_entity)
+    if len(edges[0]) > 0:
         [edges_data.append({
-            'id': f"{i}", 
+            'id': f"{i}",
             'source': f"{e[2]['from'].id}",
             'target': f"{e[3]['to'].id}",
             'label': e[1][T.label],
@@ -230,7 +227,7 @@ async def nodes_transform(
         transform_type = node["transform"]
         node_output = await plugin.get_transform(
             transform_type=transform_type,
-            node=node,
+            entity=node,
             use=PluginUse(
                 get_driver=deps.get_driver,
                 get_graph=lambda: None
