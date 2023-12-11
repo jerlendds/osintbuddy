@@ -28,5 +28,7 @@ watchfiles==0.19.0
 
 gremlinpy @ git+https://github.com/jerlendds/gremlinpy.git@eaba7dca12ad0156eb0d6d8ba2eb5751551c6a6d
 
-boto3-stubs==1.28.75
 sqids==0.4.0
+sentry-sdk==1.33.1
+boto3-stubs==1.28.75
+
