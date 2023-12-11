@@ -37,10 +37,7 @@
   🚧  <ins>Work in progress</ins>  🚧
 <br/>
 
-  [2023-12-09_demo.webm](https://github.com/jerlendds/osintbuddy/assets/29207058/50060fc0-563a-4b7d-a0fd-e124c3ba1ce2)
-
-  <!-- ![2023-12-02 12-23 mp4](https://github.com/jerlendds/osintbuddy/assets/29207058/89a2c952-6b6f-4533-872b-e12348fa0a78) -->
-
+  [2023-12-09_demo.webm](https://github.com/jerlendds/osintbuddy/assets/29207058/1dbc4e2c-8421-47fc-9a6d-9b05e45f2722)
 
 
   ⚠️ **Searching for contributors**, please contact me on the **[forum (work-in-progress)](https://forum.osintbuddy.com)** 
