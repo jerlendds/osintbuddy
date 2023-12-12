@@ -298,7 +298,6 @@ async def run_user_graph_event(event: dict, send_json: Callable, uuid: UUID) -> 
         if IS_TRANSFORM:
             await nodes_transform(event["node"], send_json, uuid)
 
-
 @router.websocket("/graph/{hid}")
 async def active_graph_inquiry(
     websocket: WebSocket,
@@ -307,15 +306,16 @@ async def active_graph_inquiry(
     db: Session = Depends(deps.get_db)
 ):
     await websocket.accept()
+    await websocket.send_json({"action": "isLoading", "detail": "true" })
     is_project_active = True
     active_inquiry = crud.graphs.get(db, id=hid)
     if active_inquiry is None:
         is_project_active = False
-    else:
-        await websocket.send_json({"action": "refresh"})
+
     while is_project_active:
         try:
             event: dict = await websocket.receive_json()
+            await websocket.send_json({"action": "isLoading", "detail": "true" })
             await run_user_graph_event(
                 event=event,
                 send_json=websocket.send_json,
@@ -329,6 +329,8 @@ async def active_graph_inquiry(
             log.error("Exception inside node.active_project")
             log.error(e)
             is_project_active = False
+        finally:
+            await websocket.send_json({ "action": "isLoading", "detail": "false" })
     await websocket.close()
 
 

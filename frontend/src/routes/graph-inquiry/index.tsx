@@ -54,6 +54,8 @@ const getEdgeId = () => {
   return `e-tmp-${edgeId}`
 }
 
+const loadingToastId = "loadingToast";
+
 export default function GraphInquiry({ }: GraphInquiryProps) {
   const dispatch = useAppDispatch();
   const { hid } = useParams()
@@ -198,8 +200,10 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
           toast.info('No results found');
         }
       }
-      if (lastJsonMessage.action === 'refresh') {
-        toast.info(`Loading plugins...`);
+
+      if (lastJsonMessage.action === 'isLoading') {
+        lastJsonMessage.detail === 'true' ? toast.loading("Loading...", { closeButton: true, isLoading: true, toastId: loadingToastId })
+          : toast.update(loadingToastId, { render: "Success", type: "success", isLoading: false, autoClose: 1000 });
       }
     }
   }, [lastJsonMessage, setMessageHistory]);
