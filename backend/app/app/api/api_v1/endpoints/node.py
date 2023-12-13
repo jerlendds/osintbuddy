@@ -15,7 +15,7 @@ from app.api import deps
 from app import schemas, crud
 from app.core.logger import get_logger
 from app.db.janus import ProjectGraphConnection
-
+from app.core.config import settings
 
 log = get_logger("api_v1.endpoints.nodes")
 router = APIRouter(prefix="/node")
@@ -339,14 +339,18 @@ async def active_graph_inquiry(
                 uuid=active_inquiry.uuid
             )
         except OBPluginError as e:
-            await websocket.send_json({"action": "error", "detail": f"Unhandled plugin error! {e}"})
+            await websocket.send_json({"action": "error", "detail": f"{e}"})
+            await websocket.send_json({"action": "isLoading", "detail": "false" })
+            log.error(e)
         except WebSocketDisconnect as e:
+            await websocket.send_json({"action": "isLoading", "detail": "false" })
             log.error(e)
         except (WebSocketException, BufferError, ConnectionClosedError) as e:
+            await websocket.send_json({"action": "isLoading", "detail": "false" })
             log.error("Exception inside node.active_project")
             log.error(e)
             is_project_active = False
-
+        
             
     await websocket.close()
 
