@@ -37,7 +37,7 @@
   🚧  <ins>Work in progress</ins>  🚧
 <br/>
 
-  [2023-12-09_demo.webm](https://github.com/jerlendds/osintbuddy/assets/29207058/1dbc4e2c-8421-47fc-9a6d-9b05e45f2722)
+  [2023-12-12_19-07.webm](https://github.com/jerlendds/osintbuddy/assets/29207058/307ddc96-251d-4830-9fdc-c2a3719de369)
 
 
   ⚠️ **Searching for contributors**, please contact me on the **[forum (work-in-progress)](https://forum.osintbuddy.com)** 
