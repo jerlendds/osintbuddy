@@ -216,13 +216,28 @@ async def remove_nodes(node, action_type, send_json, uuid: UUID):
     await send_json({"action": "remove:node", "node": node})
 
 
+async def get_transform_notification(transform_output, transform_type):
+    notification_msg = f'Transform {transform_type.lower()} '
+    if len(transform_output) > 0:
+        notification_msg = notification_msg + f'returned {len(transform_output)} '
+        if len(transform_output) > 1:
+            notification_msg = notification_msg + "entities!"
+        else:
+            notification_msg = notification_msg + "entity!"
+    else:
+        notification_msg = notification_msg + " found no results!"
+    return notification_msg
+
+
 async def nodes_transform(
     node: dict,
     send_json: Callable[[dict], None],
     uuid: UUID
 ):
     node_output = {}
-    plugin = await Registry.get_plugin(node.get('data', {}).get('label'))
+    entity_type = node.get('data', {}).get('label')
+    transform_type = None
+    plugin = await Registry.get_plugin(entity_type)
     if plugin := plugin():
         transform_type = node["transform"]
         node_output = await plugin.get_transform(
@@ -262,13 +277,14 @@ async def nodes_transform(
             transform_ctx["action"] = "addNode"
             transform_ctx["position"] = node_transform["position"]
             transform_ctx["parentId"] = node_transform["id"]
-
+        
         async with ProjectGraphConnection(uuid) as graph:
             if isinstance(node_output, list):
                 [await create_node_transform_context(graph, n, node) for n in node_output]
             else:
                 await create_node_transform_context(graph, node_output, node)
         await send_json(node_output)
+        await send_json({ "action": "isLoading", "detail": "false", "message": await get_transform_notification(node_output, transform_type) }) 
     else:
         await send_json({'error': 'noPluginFound'})
 
@@ -290,14 +306,16 @@ async def run_user_graph_event(event: dict, send_json: Callable, uuid: UUID) -> 
     USER_ACTION, IS_READ, IS_UPDATE, IS_DELETE, IS_TRANSFORM = await get_command_type(event)
     if USER_ACTION == 'node':
         if IS_READ:
+            await send_json({"action": "isLoading", "detail": "true" })
             await read_graph(USER_ACTION, send_json, uuid)
+            await send_json({ "action": "isLoading", "detail": "false", "message": "Success! Your graph environment has loaded!" }) 
         if IS_UPDATE:
             await update_node(event["node"], USER_ACTION, send_json, uuid)
         if IS_DELETE:
             await remove_nodes(event["node"], USER_ACTION, send_json, uuid)
         if IS_TRANSFORM:
+            await send_json({"action": "isLoading", "detail": "true" })
             await nodes_transform(event["node"], send_json, uuid)
-
 @router.websocket("/graph/{hid}")
 async def active_graph_inquiry(
     websocket: WebSocket,
@@ -315,7 +333,6 @@ async def active_graph_inquiry(
     while is_project_active:
         try:
             event: dict = await websocket.receive_json()
-            await websocket.send_json({"action": "isLoading", "detail": "true" })
             await run_user_graph_event(
                 event=event,
                 send_json=websocket.send_json,
@@ -329,8 +346,8 @@ async def active_graph_inquiry(
             log.error("Exception inside node.active_project")
             log.error(e)
             is_project_active = False
-        finally:
-            await websocket.send_json({ "action": "isLoading", "detail": "false" })
+
+            
     await websocket.close()
 
 
