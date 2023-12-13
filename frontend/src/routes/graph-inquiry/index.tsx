@@ -193,17 +193,12 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
             sendJsonMessage({ action: 'update:node', node: { id: node.id, x, y } });
           }
         });
-
-        if (lastJsonMessage.length > 0) {
-          toast.success(`Found ${lastJsonMessage.length} results`);
-        } else {
-          toast.info('No results found');
-        }
       }
 
       if (lastJsonMessage.action === 'isLoading') {
-        lastJsonMessage.detail === 'true' ? toast.loading("Loading...", { closeButton: true, isLoading: true, toastId: loadingToastId })
-          : toast.update(loadingToastId, { render: "Success", type: "success", isLoading: false, autoClose: 1000 });
+        console.log(lastJsonMessage)
+        if (lastJsonMessage.detail === 'true') toast.loading("Loading...", { closeButton: true, isLoading: true, toastId: loadingToastId })
+        else toast.update(loadingToastId, { render: `${lastJsonMessage?.message ? lastJsonMessage.message : "Success!"}`, type: "success", isLoading: false, autoClose: 1000 });
       }
     }
   }, [lastJsonMessage, setMessageHistory]);
@@ -220,7 +215,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   const [activeTransformLabel, setActiveTransformLabel] = useState<string | null>(null)
   // @todo implement support for multi-select transforms -
   // hm, actually, how will the transforms work if different plugin types/nodes are in the selection?
-  // just delete/save position on drag?
+  // just delete/save position on drag/etc?
   const onMultiSelectionCtxMenu = (event: MouseEvent, nodes: Node[]) => {
     event.preventDefault();
   };
@@ -399,6 +394,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         node.id === activeEditState.id ? { ...node, type: 'mini' } : node
       )])
     }
+    // console.log('activeEditState', activeEditState)
   }, [activeEditState])
 
   // Prevents layout bugs from occurring on navigate away and returning to a graph
@@ -442,6 +438,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
                   sendJsonMessage={sendJsonMessage}
                   fitView={fitView}
                   positionMode={positionMode}
+                  editState={activeEditState}
                 />
               </div>
             </div>

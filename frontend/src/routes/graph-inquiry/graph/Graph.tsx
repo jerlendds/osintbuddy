@@ -9,8 +9,8 @@ import ReactFlow, {
   Node,
 } from 'reactflow';
 import BaseNode from '../_components/BaseNode';
-import { addNodeUpdate, createEdge, onEdgesChange, setEditState, updateEdgeEvent, updateNodeFlow } from '@src/features/graph/graphSlice';
-import { useAppDispatch } from '@src/app/hooks';
+import { addNodeUpdate, createEdge, disableEntityEdit, enableEntityEdit, onEdgesChange, selectEditState, setEditLabel, setEditState, updateEdgeEvent, updateNodeFlow } from '@src/features/graph/graphSlice';
+import { useAppDispatch, useAppSelector } from '@src/app/hooks';
 import { toast } from 'react-toastify';
 import BaseMiniNode from '../_components/BaseMiniNode';
 import { CreateGraphEntityApiResponse, useCreateGraphEntityMutation, useRefreshPluginsQuery } from '@src/app/api';
@@ -40,6 +40,7 @@ export default function Graph({
   sendJsonMessage,
   fitView,
   positionMode,
+  editState
 }: ProjectGraphProps) {
   const dispatch = useAppDispatch();
   const onEdgeUpdate = useCallback(
@@ -115,14 +116,21 @@ export default function Graph({
     }),
     []
   );
+  const doubleClickThreshold = 325;
+  const [isDragging, setIsDragging] = useState(false)
+  const [isDoubleClick, setIsDoubleClick] = useState(false)
+  const [entityPosition, setEntityPosition] = useState<any>({ x: null, y: null })
+  const [clickDelta, setClickDelta] = useState(0)
 
   const onNodeDragStop: NodeDragHandler = (_, node) => {
-    if (positionMode === 'manual') {
+    if (positionMode === 'manual' && (entityPosition.x !== node.position.x || entityPosition.y !== node.position.y)) {
       sendJsonMessage({ action: 'update:node', node: { id: node.id, x: node.position.x, y: node.position.y } });
+      setEntityPosition({ x: node.position.x, y: node.position.y })
     }
-    dispatch(setEditState({ editId: node.id, editLabel: "dragEntity" }))
+    if (editState !== 'dragEntity' && !isDoubleClick) {
+      dispatch(setEditState({ editId: node.id, editLabel: "dragEntity" }))
+    }
   };
-
 
   return (
     <ReactFlow
@@ -138,7 +146,16 @@ export default function Graph({
       onEdgeUpdate={onEdgeUpdate}
       onInit={setGraphInstance}
       onNodesChange={(changes) => dispatch(updateNodeFlow(changes))}
-      fitView
+      onNodeClick={(_, node) => {
+        const newDelta = new Date().getTime()
+        const isDouble = newDelta - clickDelta < doubleClickThreshold
+        if (isDouble) {
+          if (node.type === 'mini') dispatch(enableEntityEdit(node.id))
+          else dispatch(disableEntityEdit(node.id))
+        }
+        setClickDelta(newDelta)
+        setIsDoubleClick(isDouble)
+      }}
       fitViewOptions={viewOptions}
       nodeTypes={nodeTypes}
       panActivationKeyCode='Space'
@@ -149,6 +166,7 @@ export default function Graph({
       onSelectionContextMenu={onMultiSelectionCtxMenu}
       connectionLineComponent={NewConnectionLine}
       elevateNodesOnSelect={true}
+      fitView
     >
       <Background size={2} variant={BackgroundVariant.Dots} className='bg-transparent' color='#35426FAA' />
     </ReactFlow>

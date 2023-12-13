@@ -103,6 +103,7 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
         return <div className='hidden' />;
     }
   };
+
   const columnsCount = Math.max(0, ...node.elements.map(s => s.length === undefined ? 1 : s.length))
   return (
     <>
@@ -115,7 +116,7 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
       <Handle position={Position.Top} id='t2' key='t2' type='target' style={handleStyle} />
       <Handle position={Position.Bottom} id='b2' key='b2' type='target' style={handleStyle} />
       <Handle position={Position.Left} id='l2' key='l2' type='target' style={handleStyle} />
-      <div onDoubleClick={() => dispatch(disableEntityEdit(ctx.id))} data-label-type={node.label} className=' node container' style={node.style}>
+      <div className=' node container'>
         <div
           // 99 === 0.6 opacity
           style={{ backgroundColor: node?.color?.length === 7 ? `${node.color}99` : node?.color }}
