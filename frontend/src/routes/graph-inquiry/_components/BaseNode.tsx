@@ -183,19 +183,13 @@ export function CopyText({ nodeId, label, value }: { nodeId: string; label: stri
   );
 }
 
+const MAX_TEXT_LENGTH = 100;
+
 export function Text({ nodeId, label, value, icon }: { nodeId: string; label: string; value: string; icon?: any }) {
   return (
-    <div className=' flex px-2 pb-1 relative'>
-      <section className="flex flex-col">
-        <p className='text-xs  text-slate-400 whitespace-wrap font-medium relative'>{label} </p>
-        <div className=' w-full flex  text-slate-400 text-xs sm:text-sm'>
-          {icon && <Icon icon={icon} className='h-6 w-6' />}
-          <p onClick={() => {
-            navigator.clipboard.writeText(value)
-            toast.success(`Copied ${label.toLowerCase()} to clipboard!`)
-          }} className='text-xs text-slate-400 hover:text-slate-300/80 truncate transition-colors duration-500 ease-out pr-2.5'>{value} </p>
-        </div>
-      </section>
+    <div className=' w-full flex  pb-1 relative text-slate-400'>
+      {icon && <Icon icon={icon} className='h-6 w-6' />}
+      <p className='text-xs text-slate-400 transition-colors duration-500 ease-out pr-2.5'>{value} </p>
     </div >
   );
 }
