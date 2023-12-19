@@ -337,7 +337,7 @@ export function DropdownInput({ options, label, nodeId, sendJsonMessage, dispatc
   return (
     <>
       <Combobox
-        className='w-full z-50 dropdown-input'
+        className='w-full dropdown-input'
         as='div'
         value={activeOption}
         onChange={(option) => {
