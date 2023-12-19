@@ -84,10 +84,9 @@ async def save_node_to_graph(
             [add_node_element(v, elm, new_labels) for elm in element]
         else:
             add_node_element(v, element, new_labels)
-    
+
     new_entity = await v.next()
     # TODO: support adding optional kwargs to edge properties
-
     if add_edge.get('id') and add_edge.get('label'):
         source: AsyncGraphTraversal = graph.V().hasId(new_entity.id)
         target: AsyncGraphTraversal = graph.V().hasId(add_edge['id'])
@@ -100,23 +99,23 @@ async def save_node_to_graph(
 
 
 async def save_node_on_drop(
-    node_label: str,
-    node_blueprint: dict,
+    node_label,
+    blueprint: dict,
     uuid: UUID
 ):
     async with ProjectGraphConnection(uuid) as g:
-        new_entity = await save_node_to_graph(g, node_label, node_blueprint.get('position', {}))
-        node_blueprint['data'] = {
-            'color': node_blueprint.pop('color', '#145070'),
-            'icon': node_blueprint.pop('icon', 'atom-2'),
-            'label': node_blueprint.pop('label'),
-            'elements': node_blueprint.pop('elements'),
+        new_entity = await save_node_to_graph(g, node_label, blueprint["position"])
+
+    return {
+        "id": f"{new_entity.id}",
+        "type": "view",
+        "data": {
+            'color': blueprint.pop('color', '#145070'),
+            'icon': blueprint.pop('icon', 'atom-2'),
+            'label': blueprint.pop('label'),
+            'elements': blueprint.pop('elements'),
         }
-        node_blueprint['type'] = 'base'
-        node_blueprint['id'] = str(new_entity.id)
-    return node_blueprint
-
-
+    }
 
 async def load_initial_graph(uuid: UUID) -> tuple[list, list]:
     async with ProjectGraphConnection(uuid) as graph:
@@ -160,6 +159,7 @@ async def read_graph(action_type, send_json, project_uuid):
             'y': node.pop('y', [0])[0]
         }
         entity_id = node.pop(T.id)
+
         entity_type = node.pop(T.label)
         plugin = await Registry.get_plugin(to_snake_case(entity_type))
         if plugin:
@@ -177,7 +177,7 @@ async def read_graph(action_type, send_json, project_uuid):
                     )
             ui_entity['position'] = position
             ui_entity['id'] = f"{entity_id}"
-            ui_entity['type'] = 'mini'
+            ui_entity['type'] = "view"
             ui_entity['data'] = {
                 'color': ui_entity.pop('color'),
                 'icon': ui_entity.pop('icon', 'atom-2'),
@@ -185,6 +185,9 @@ async def read_graph(action_type, send_json, project_uuid):
                 'elements': ui_entity.pop('elements'),
             }
             nodes.append(ui_entity)
+        else:
+            # TODO detect invalid/renamed entities/plugins on any plugin label updates and fix graph
+            print('Error/TODO Invalid Plugin')
     if len(edges[0]) > 0:
         [edges_data.append({
             'id': f"{i}",
@@ -194,7 +197,7 @@ async def read_graph(action_type, send_json, project_uuid):
             'type': 'float'
         }) for i, e in enumerate(chunks(edges[0], 4))]
     await send_json({
-        'action': 'addInitialLoad',
+        'action': 'isInitialRead',
         'nodes': nodes,
         'edges': edges_data
     })
@@ -213,7 +216,7 @@ async def remove_nodes(node, action_type, send_json, uuid: UUID):
     async with ProjectGraphConnection(uuid) as graph:
         if targetNode := node.get('id'):
             await graph.V(targetNode).drop().next()
-    await send_json({"action": "remove:node", "node": node})
+    await send_json({"action": "removeEntity", "node": node})
 
 
 async def get_transform_notification(transform_output, transform_type):
@@ -234,13 +237,13 @@ async def nodes_transform(
     send_json: Callable[[dict], None],
     uuid: UUID
 ):
-    node_output = {}
+    transform_result = {}
     entity_type = node.get('data', {}).get('label')
     transform_type = None
     plugin = await Registry.get_plugin(entity_type)
     if plugin := plugin():
         transform_type = node["transform"]
-        node_output = await plugin.get_transform(
+        transform_result = await plugin.get_transform(
             transform_type=transform_type,
             entity=node,
             use=PluginUse(
@@ -248,43 +251,57 @@ async def nodes_transform(
                 get_graph=lambda: None
             )
         )
-        async def create_node_transform_context(
+        async def create_entity_data(
             graph: AsyncGraphTraversal,
-            transform_ctx: dict,
-            node_transform: dict
+            result: dict,
+            entity_source: dict
         ):
+            """
+            Map entity elements returned from transform
+            """
             edge_label = None
-            if transform_ctx:
-                edge_label = transform_ctx.pop('edge_label', None)
+            if result:
+                edge_label = result.pop('edge_label', None)
             new_entity = await save_node_to_graph(
                 graph,
-                transform_ctx.get('label'),
-                node_transform.get('position', {}),
-                transform_ctx,
+                result.get('label'),
+                entity_source.get('position'),
+                result,
                 {
-                    'id': node_transform['id'],
+                    'id': entity_source['id'],
                     'label': edge_label
                 } if edge_label else {}
             )
-            transform_ctx['data'] = {
-                'color': transform_ctx.pop('color', '#145070'),
-                'icon': transform_ctx.pop('icon', 'atom-2'),
-                'label': transform_ctx.pop('label'),
-                'elements': transform_ctx.pop('elements'),
+            return {
+                "id": f"{new_entity.id}",
+                "type": "edit",
+                "action": "createEntity",
+                "position": entity_source["position"],
+                "parentId": entity_source["id"],
+                "data": {
+                    "color": result.pop("color"),
+                    "icon": result.pop("icon"),
+                    "label": result.pop("label"),
+                    "elements": result.pop("elements"),
+                }
             }
-            transform_ctx['id'] = str(new_entity.id)
-            transform_ctx['type'] = 'mini'
-            transform_ctx["action"] = "addNode"
-            transform_ctx["position"] = node_transform["position"]
-            transform_ctx["parentId"] = node_transform["id"]
-        
+
         async with ProjectGraphConnection(uuid) as graph:
-            if isinstance(node_output, list):
-                [await create_node_transform_context(graph, n, node) for n in node_output]
+            if isinstance(transform_result, list):
+                out_result = [await create_entity_data(graph, result, node) for result in transform_result]
             else:
-                await create_node_transform_context(graph, node_output, node)
-        await send_json(node_output)
-        await send_json({ "action": "isLoading", "detail": "false", "message": await get_transform_notification(node_output, transform_type) }) 
+                out_result = list(await create_entity_data(graph, transform_result, node))
+        await send_json({ 
+            "action": "isLoading",
+            "detail": False,
+            "message": await get_transform_notification(transform_result, transform_type) 
+        })
+        print('out_result')
+        
+        await send_json({
+            "action": "createEntity",
+            "results": out_result
+        })
     else:
         await send_json({'error': 'noPluginFound'})
 
@@ -306,16 +323,18 @@ async def run_user_graph_event(event: dict, send_json: Callable, uuid: UUID) -> 
     USER_ACTION, IS_READ, IS_UPDATE, IS_DELETE, IS_TRANSFORM = await get_command_type(event)
     if USER_ACTION == 'node':
         if IS_READ:
-            await send_json({"action": "isLoading", "detail": "true" })
+            await send_json({"action": "isLoading", "detail": True })
             await read_graph(USER_ACTION, send_json, uuid)
-            await send_json({ "action": "isLoading", "detail": "false", "message": "Success! Your graph environment has loaded!" }) 
+            await send_json({ "action": "isLoading", "detail": False, "message": "Success! Your graph environment has loaded!" }) 
         if IS_UPDATE:
             await update_node(event["node"], USER_ACTION, send_json, uuid)
         if IS_DELETE:
             await remove_nodes(event["node"], USER_ACTION, send_json, uuid)
         if IS_TRANSFORM:
-            await send_json({"action": "isLoading", "detail": "true" })
+            await send_json({"action": "isLoading", "detail": True })
             await nodes_transform(event["node"], send_json, uuid)
+
+
 @router.websocket("/graph/{hid}")
 async def active_graph_inquiry(
     websocket: WebSocket,
@@ -324,11 +343,12 @@ async def active_graph_inquiry(
     db: Session = Depends(deps.get_db)
 ):
     await websocket.accept()
-    await websocket.send_json({"action": "isLoading", "detail": "true" })
     is_project_active = True
     active_inquiry = crud.graphs.get(db, id=hid)
     if active_inquiry is None:
         is_project_active = False
+    else:
+        await websocket.send_json({"action": "isLoading", "detail": True })
 
     while is_project_active:
         try:
@@ -340,20 +360,16 @@ async def active_graph_inquiry(
             )
         except OBPluginError as e:
             await websocket.send_json({"action": "error", "detail": f"{e}"})
-            await websocket.send_json({"action": "isLoading", "detail": "false" })
-            log.error(e)
-        except WebSocketDisconnect as e:
-            await websocket.send_json({"action": "isLoading", "detail": "false" })
+            await websocket.send_json({"action": "isLoading", "detail": False })
             log.error(e)
         except (WebSocketException, BufferError, ConnectionClosedError) as e:
-            await websocket.send_json({"action": "isLoading", "detail": "false" })
+            await websocket.send_json({"action": "isLoading", "detail": False })
             log.error("Exception inside node.active_project")
             log.error(e)
             is_project_active = False
-        
-            
-    await websocket.close()
-
+            await websocket.close()
+        except WebSocketDisconnect as e:
+            log.info(f"disconnected!")
 
 @router.get("/refresh")
 async def refresh_plugins(
@@ -374,24 +390,24 @@ async def refresh_plugins(
 
 
 @router.post("/")
-async def create_graph_entity(
+async def create_entity(
     hid: Annotated[str, Depends(deps.get_graph_id)],
     user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
-    node: schemas.CreateNode,
+    create_node: schemas.CreateNode,
     db: Session = Depends(deps.get_db)
 ):
     try:
         active_inquiry = crud.graphs.get(db, id=hid)
-        plugin = await Registry.get_plugin(plugin_label=to_snake_case(node.label))
+        plugin = await Registry.get_plugin(plugin_label=to_snake_case(create_node.label))
         if plugin:
             blueprint = plugin.blueprint()
-            blueprint["position"] = node.position.dict()
+            blueprint["position"] = create_node.position.model_dump()
             return await save_node_on_drop(
-                node.label,
+                create_node.label,
                 blueprint,
                 active_inquiry.uuid
             )
-        raise HTTPException(status_code=422, detail=f"Plugin entity {node.label} cannot be found.")
+        raise HTTPException(status_code=422, detail=f"Plugin entity {create_node.label} cannot be found.")
     except Exception as e:
         log.error("Error inside node.create_graph_entity")
         log.error(e)
