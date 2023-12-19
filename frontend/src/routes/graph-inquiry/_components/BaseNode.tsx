@@ -93,11 +93,36 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
 
       case 'section':
         return (
-          <Text key={key} nodeId={ctx.id} label={element?.label} value={element?.value || ''} dispatch={dispatch} />
+          <Text
+            key={key}
+            nodeId={ctx.id}
+            label={element?.label}
+            value={element?.value || ''}
+            dispatch={dispatch}
+          />
+        );
+      case 'textarea':
+        return (
+          <TextArea
+            key={key}
+            nodeId={ctx.id}
+            label={element?.label}
+            value={element?.value || ''}
+
+            dispatch={dispatch}
+            sendJsonMessage={sendJsonMessage}
+            dispatch={dispatch}
+          />
         );
       case 'copy-text':
         return (
-          <CopyText key={key} nodeId={ctx.id} label={element?.label} value={element?.value || ''} dispatch={dispatch} />
+          <CopyText
+            key={key}
+            nodeId={ctx.id}
+            label={element?.label}
+            value={element?.value || ''}
+            dispatch={dispatch}
+          />
         );
       case 'empty':
         return <div className='hidden' />;
@@ -116,7 +141,7 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
       <Handle position={Position.Top} id='t2' key='t2' type='target' style={handleStyle} />
       <Handle position={Position.Bottom} id='b2' key='b2' type='target' style={handleStyle} />
       <Handle position={Position.Left} id='l2' key='l2' type='target' style={handleStyle} />
-      <div className=' node container'>
+      <div className='node container'>
         <div
           // 99 === 0.6 opacity
           style={{ backgroundColor: node?.color?.length === 7 ? `${node.color}99` : node?.color }}
@@ -143,8 +168,9 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
         >
           {node.elements.map((element: NodeInput, i: number) => {
             if (Array.isArray(element)) {
+              console.log('elemnt./lgnth', element.length)
               return (
-                <div style={{ display: 'grid', columnGap: '0.5rem', gridTemplateColumns: `repeat(${columnsCount}, minmax(0, 1fr))` }} key={i.toString()}>
+                <div style={{ display: 'grid', columnGap: '0.5rem', gridTemplateColumns: `repeat(${element.length}, minmax(0, 1fr))` }} key={i.toString()}>
                   {element.map((elm, i: number) => (
                     <Fragment key={i.toString()}>
                       {getNodeElement(elm, `${elm.label}-${elm.id}-${ctx.id}`, 1)}
@@ -153,7 +179,7 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
                 </div>
               );
             }
-            return getNodeElement(element, `${element.label}-${element.id}-${ctx.id}`);
+            return getNodeElement(element, `${element.label}-${element.id}-${ctx.id}`, 2);
           })}
         </form>
       </div >
@@ -179,6 +205,42 @@ export function CopyText({ nodeId, label, value }: { nodeId: string; label: stri
         {value}
       </p>
       <input type='text' className='hidden' data-label={label} id={`${nodeId}-${label}`} value={value} readOnly />
+    </div>
+  );
+}
+
+
+export function TextArea({ nodeId, label, sendJsonMessage, icon, dispatch }: NodeElement) {
+  const initValue = useAppSelector((state) => selectNodeValue(state, nodeId, label));
+
+  const [value, setValue] = useState(initValue)
+  const [showMonospace, setShowMonospace] = useState(true)
+
+  return (
+    <div className='flex flex-col w-full'>
+      <label
+        onClick={() => setShowMonospace(!showMonospace)}
+        className='flex justify-between items-center font-semibold leading-5 font-display text-slate-400'
+      >
+
+        {label}
+        <Icon
+          icon={showMonospace ? 'brackets-angle' : 'brackets-angle-off'}
+          className='h-4 w-4 text-slate-500'
+        />
+      </label>
+      <div className='node-field !w-full !min-w-2xl'>
+        <textarea
+          rows={16}
+          className={`form-input min-w-[16rem] text-xs text-slate-400 nodrag nowheel whitespace-wrap px-1 py-1.5 ${showMonospace && '!font-code'}`}
+          value={value}
+          onChange={(event) => setValue(event.currentTarget.value)}
+          onBlur={() => {
+            sendJsonMessage({ action: 'update:node', node: { id: nodeId, [label]: value } });
+            dispatch(saveUserEdits({ value, nodeId, label }))
+          }}
+        />
+      </div>
     </div>
   );
 }

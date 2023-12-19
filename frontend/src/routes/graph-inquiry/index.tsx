@@ -103,6 +103,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   });
 
   useEffectOnce(() => {
+    toast.loading('Loading graph...', { closeButton: true, isLoading: true, toastId: loadingToastId })
     dispatch(resetGraph());
     sendJsonMessage({ action: 'read:node' });
   });

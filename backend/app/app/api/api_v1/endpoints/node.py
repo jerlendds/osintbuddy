@@ -187,7 +187,7 @@ async def read_graph(action_type, send_json, project_uuid):
             nodes.append(ui_entity)
         else:
             # TODO detect invalid/renamed entities/plugins on any plugin label updates and fix graph
-            print('Error/TODO Invalid Plugin')
+            print(f'Error/TODO Invalid Plugin: {entity_type}')
     if len(edges[0]) > 0:
         [edges_data.append({
             'id': f"{i}",
