@@ -14,7 +14,7 @@ import {
   MarkerType,
 } from 'reactflow';
 
-export type ProjectViewModes = 'base' | 'mini'
+export type ProjectViewModes = 'edit' | 'view'
 
 export type PositionModes = 'manual' | 'force' | 'hierarchy' | 'tree' | 'cola' | 'right tree' | 'tree 1'
 
@@ -38,7 +38,7 @@ const initialState: Graph = {
     uuid: '',
     name: '',
   },
-  viewMode: 'base',
+  viewMode: 'edit',
   positionMode: 'manual'
 };
 
@@ -46,7 +46,7 @@ const initialState: Graph = {
 export const saveNode = createAsyncThunk(
   'graph/saveNode',
   async ({ id, data, position }: { id: string; position: XYPosition; data: JSONObject }) => {
-    return { id, data, position, type: 'base' };
+    return { id, data, position, type: 'edit' };
   }
 );
 
@@ -84,7 +84,7 @@ export const graph = createSlice({
       state.nodes = state.nodes.map((node) => node.id === action.payload ?
         {
           ...node,
-          type: 'base'
+          type: 'edit'
         } : node
       )
     },
@@ -94,7 +94,7 @@ export const graph = createSlice({
       state.nodes = state.nodes.map((node) => node.id === action.payload ?
         {
           ...node,
-          type: 'mini'
+          type: 'view'
         } : node
       )
     },
@@ -192,7 +192,7 @@ export const graph = createSlice({
       state.nodes = [];
       state.edges = [];
       // state.positionMode = 'manual';
-      // state.viewMode = 'base';
+      // state.viewMode = 'edit';
     },
 
     updateNodeData: (state, action: PayloadAction<Node>) => {
@@ -303,9 +303,9 @@ export const selectEditValue = (state: RootState) => state.graph.editValue;
 export const selectViewMode = (state: RootState) => state.graph.viewMode;
 export const selectPositionMode = (state: RootState) => state.graph.positionMode;
 
-export const selectEditState = createSelector([selectEditId, selectEditLabel], (id, label) => ({
-  id,
-  label,
+export const selectEditState = createSelector([selectEditId, selectEditLabel], (id, label): EditState => ({
+  editId: id,
+  editLabel: label,
 }));
 
 export default graph.reducer;

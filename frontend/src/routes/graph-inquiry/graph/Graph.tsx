@@ -76,10 +76,9 @@ export default function Graph({
         const createNode = { label, position }
         createGraphEntity({ createNode, hid })
           .then(({ data }: CreateGraphEntityApiResponse) => {
-
+            console.log('createOnDrop', data)
             dispatch(addNodeUpdate({ position, label, ...data, }))
-            dispatch(setEditState({ editId: data.id, editLabel: 'addNode' }))
-
+            dispatch(setEditState({ editId: data.id, editLabel: 'createEntity' }))
           })
           .catch((error: any) => {
             console.error(error)
@@ -94,13 +93,13 @@ export default function Graph({
 
   const nodeTypes = useMemo(
     () => ({
-      base: (data: JSONObject) => (
+      edit: (data: JSONObject) => (
         <BaseNode
           ctx={data}
           dispatch={dispatch}
           sendJsonMessage={sendJsonMessage}
         />),
-      mini: (data: JSONObject) => (
+      view: (data: JSONObject) => (
         <BaseMiniNode
           ctx={data}
           dispatch={dispatch}
@@ -134,7 +133,7 @@ export default function Graph({
 
   return (
     <ReactFlow
-      minZoom={0.05}
+      minZoom={0.2}
       maxZoom={2.0}
       nodes={nodes}
       edges={edges}
@@ -150,7 +149,7 @@ export default function Graph({
         const newDelta = new Date().getTime()
         const isDouble = newDelta - clickDelta < doubleClickThreshold
         if (isDouble) {
-          if (node.type === 'mini') dispatch(enableEntityEdit(node.id))
+          if (node.type === 'view') dispatch(enableEntityEdit(node.id))
           else dispatch(disableEntityEdit(node.id))
         }
         setClickDelta(newDelta)

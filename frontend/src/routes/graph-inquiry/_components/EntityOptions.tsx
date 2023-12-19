@@ -279,6 +279,7 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
               toggleForceLayout && toggleForceLayout(false)
               dispatch(setPositionMode('manual'))
               dispatch(setEditState({ editId: "", editLabel: "layoutChangeM" }))
+
             }}
             type='button'
             className={classNames(

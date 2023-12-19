@@ -30,7 +30,7 @@ interface ApiNode {
   id: string;
   position: XYPosition;
   data: NodeData;
-  type: 'base';
+  type: 'edit';
 }
 
 interface ApiTransforms {

@@ -50,7 +50,7 @@ interface GraphInquiryProps {
 let edgeId = 0;
 
 const getEdgeId = () => {
-  edgeId += 1
+  edgeId = edgeId + 1
   return `e-tmp-${edgeId}`
 }
 
@@ -84,9 +84,35 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
 
   const [messageHistory, setMessageHistory] = useState<JSONObject[]>([]);
   const [socketUrl, setSocketUrl] = useState(`${WS_GRAPH_INQUIRE}`);
-  const viewMode = useAppSelector((state) => selectViewMode(state));
+  const displayMode = useAppSelector((state) => selectViewMode(state));
   const [shouldConnect, setShouldConnect] = useState(false)
 
+  const { lastJsonMessage, readyState, sendJsonMessage }: UseWebsocket = useWebSocket(socketUrl, {
+    shouldReconnect: () => shouldConnect,
+    onClose: () => {
+      toast.update(
+        loadingToastId,
+        {
+          render: 'The connection was closed! Reconnecting...',
+          type: 'success',
+          isLoading: false,
+          autoClose: 1400
+        }
+      )
+    }
+  });
+
+  useEffectOnce(() => {
+    dispatch(resetGraph());
+    sendJsonMessage({ action: 'read:node' });
+  });
+  const socketStatus = {
+    [ReadyState.CONNECTING]: 'connecting',
+    [ReadyState.OPEN]: 'open',
+    [ReadyState.CLOSING]: 'closing',
+    [ReadyState.CLOSED]: 'closed',
+    [ReadyState.UNINSTANTIATED]: 'uninstantiated',
+  }[readyState];
 
   useEffect(() => {
     if (activeGraph && !socketUrl.includes(activeGraph?.id)) {
@@ -94,42 +120,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
       setSocketUrl(`${WS_GRAPH_INQUIRE}/${activeGraph.id}`)
       setShouldConnect(true)
     }
-  }, [activeGraph?.id])
-
-  const { lastJsonMessage, readyState, sendJsonMessage, lastMessage }: UseWebsocket = useWebSocket(socketUrl, {
-    shouldReconnect: () => shouldConnect,
-  });
-
-  useEffectOnce(() => {
-    dispatch(resetGraph());
-    sendJsonMessage({ action: 'read:node' });
-  });
-
-  function addNode(id: string, data: AddNode, position: XYPosition, type: ProjectViewModes = viewMode) {
-    dispatch(createNode({ id, data, position, type }));
-  }
-
-  function addEdge(
-    source: string,
-    target: string,
-    id: any = getEdgeId(),
-    sourceHandle: string = 'r1',
-    targetHandle: string = 'l2',
-    type: string = 'float',
-    label: string = '',
-  ): void {
-    dispatch(
-      createEdge({
-        source,
-        target,
-        sourceHandle,
-        targetHandle,
-        type,
-        label,
-        id
-      })
-    );
-  }
+  }, [activeGraph?.id, socketStatus[readyState]])
 
   const togglePalette = () => setShowCommandPalette(!showCommandPalette);
 
@@ -137,72 +128,61 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
     TOGGLE_PALETTE: togglePalette,
   };
 
-  const addNodeAction = (node: JSONObject) => {
-    const position = node?.position;
-    const parentId = node.parentId;
-    delete node.action;
-    delete node.position;
-    delete node.parentId;
-    addNode(node.id, node.data, position);
-    addEdge(parentId, node.id);
+  const createEntityAction = ({ data, id, position, parentId }: JSONObject) => {
+    dispatch(createNode({ id, data, position, type: 'edit' }));
+    dispatch(
+      createEdge({
+        source: parentId,
+        target: id,
+        sourceHandle: 'r1',
+        targetHandle: 'l2',
+        type: 'float',
+        id: getEdgeId()
+      })
+    );
   };
 
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: 'Connecting',
-    [ReadyState.OPEN]: 'Open',
-    [ReadyState.CLOSING]: 'Closing',
-    [ReadyState.CLOSED]: 'Closed',
-    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-  }[readyState];
 
 
-  const createNodeUpdate = (node: JSONObject, data: JSONObject) => {
-    let updatedNode = { ...node };
-    updatedNode.elements = node.data.elements.map((elm: JSONObject) => {
-      // @todo refactor me to `find`
-      if (Object.keys(data)[0] === elm.label) {
-        elm.value = data[elm.label];
-      }
-      return elm;
-    });
-    return updatedNode;
-  };
+  const wsActionPlayer: any = {
+    'isInitialRead': () => {
+      dispatch(setAllNodes(lastJsonMessage.nodes))
+      dispatch(setAllEdges(lastJsonMessage.edges))
+    },
+    'createEntity': () => {
+      const createResults = lastJsonMessage?.results ?? []
+      createResults.forEach((node: any, idx: number) => {
+        // TODO: Move position layout logic to backend...
+        const isOdd = idx % 2 === 0;
+        const pos = node.position;
+        const x = isOdd ? pos.x + 560 : pos.x + 970;
+        const y = isOdd ? pos.y - (idx - 4) * 120 : pos.y - (idx - 3.5) * 120;
+        node.position = {
+          x,
+          y,
+        };
+        createEntityAction(node);
+        dispatch(setEditState({ editId: node.id, editLabel: 'addNode' }))
+        sendJsonMessage({ action: 'update:node', node: { id: node.id, x, y } });
+      })
+    },
+    'removeEntity': () => {
+
+    },
+    'isLoading': () => {
+      if (lastJsonMessage.detail) toast.loading('Loading...', { closeButton: true, isLoading: true, toastId: loadingToastId })
+      else toast.update(loadingToastId, { render: `${lastJsonMessage?.message ? lastJsonMessage.message : "Success!"}`, type: "success", isLoading: false, autoClose: 1600 })
+    },
+    'error': () => toast.error(`${lastJsonMessage.message}`)
+  }
 
   useEffect(() => {
+    const wsAction = lastJsonMessage?.action
+    if (wsAction) wsActionPlayer[wsAction]()
     if (lastJsonMessage) {
       setMessageHistory((prev) => prev.concat(lastJsonMessage));
-      if (lastJsonMessage && lastJsonMessage.action === 'error') toast.error(`${lastJsonMessage.detail}`);
-      if (!Array.isArray(lastJsonMessage)) {
-        if (lastJsonMessage.action === 'addInitialLoad') {
-          dispatch(setAllNodes(lastJsonMessage.nodes))
-          dispatch(setAllEdges(lastJsonMessage.edges))
-        }
-      } else {
-        lastJsonMessage.map((node, idx) => {
-          if (node?.action === 'addNode') {
-            const isOdd = idx % 2 === 0;
-            const pos = node.position;
-            const x = isOdd ? pos.x + 560 : pos.x + 970;
-            const y = isOdd ? pos.y - (idx - 4) * 120 : pos.y - (idx - 3.5) * 120;
-            node.position = {
-              x,
-              y,
-            };
-            addNodeAction(node);
-            dispatch(setEditState({ editId: node.id, editLabel: 'addNode' }))
-            sendJsonMessage({ action: 'update:node', node: { id: node.id, x, y } });
-          }
-        });
-      }
-
-      if (lastJsonMessage.action === 'isLoading') {
-        console.log(lastJsonMessage)
-        if (lastJsonMessage.detail === 'true') toast.loading("Loading...", { closeButton: true, isLoading: true, toastId: loadingToastId })
-        else toast.update(loadingToastId, { render: `${lastJsonMessage?.message ? lastJsonMessage.message : "Success!"}`, type: "success", isLoading: false, autoClose: 1000 });
-      }
     }
   }, [lastJsonMessage, setMessageHistory]);
-
 
   const initialNodes = useAppSelector((state) => graphNodes(state));
   const initialEdges = useAppSelector((state) => graphEdges(state));
@@ -249,12 +229,12 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   const positionMode = useAppSelector((state) => selectPositionMode(state))
 
 
-  let fitView: FitView | undefined;
+  let fitView: FitView | any;
   if (graphInstance) {
     fitView = graphInstance.fitView
   }
 
-  const activeEditState = useAppSelector(state => selectEditState(state))
+  const changeState = useAppSelector(state => selectEditState(state))
 
 
   useEffect(() => {
@@ -266,13 +246,13 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
 
   useEffect(() => {
     if (positionMode === 'manual') {
-      fitView && fitView({ padding: 0.25 })
       dispatch(setAllNodes(nodesBeforeLayout))
       dispatch(setAllEdges(edgesBeforeLayout))
     }
   }, [positionMode])
   // TODO: Also implement d3-hierarchy, entitree-flex, dagre, webcola, and graphology layout modes
   //       Once implemented measure performance and deprecate whatever performs worse
+
   const elk = new ELK();
   const useElkLayoutElements = () => {
     const defaultOptions = {
@@ -287,8 +267,8 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
       const graph = {
         id: 'root',
         layoutOptions: layoutOptions,
-        children: initialNodes.map((node: any) => ({ ...node })),
-        edges: initialEdges.map((edge: any) => ({ ...edge, })),
+        children: nodesBeforeLayout.map((node: any) => ({ ...node })),
+        edges: edgesBeforeLayout.map((edge: any) => ({ ...edge, })),
       };
       elk.layout(graph as any).then(({ children, edges }: any) => {
         children.forEach((node: any) => {
@@ -301,7 +281,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
           fitView && fitView({ padding: 0.25 });
         });
       });
-    }, [nodesBeforeLayout, activeEditState]);
+    }, [nodesBeforeLayout, changeState]);
 
     return { setElkLayout };
   };
@@ -338,7 +318,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         // The tick function is called every animation frame while the simulation is
         // running and progresses the simulation one step forward each time.
         const tick = () => {
-          fitView && fitView({ padding: 0.25 })
+          // fitView && fitView({ padding: 0.25 })
           forceNodes.forEach((node: any, i: number) => {
             const activeNode = document.querySelector(`[data-id="${node.id}"].dragging`)
             const dragging = Boolean(activeNode);
@@ -366,36 +346,35 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         return [true, { toggleForceLayout, isForceRunning: running }];
       } catch (e) { console.warn(e) }
       return forceSimOff
-    }, [nodesBeforeLayout, activeEditState]);
+    }, [nodesBeforeLayout, changeState]);
   }
 
-
-
   const [forceInitialized, { toggleForceLayout, isForceRunning }] = useForceLayoutElements();
-
 
   // If not on a manual layout, update the manual layout positions 
   // for any drag changes, entity edit mode toggles, and transforms/deletions
   useEffect(() => {
-    if (activeEditState.label === 'deleteNode') {
-      setEdgesBeforeLayout(edgesBeforeLayout.filter((edge: Edge) => edge.target !== activeEditState.id || edge.source !== activeEditState.id))
-      setNodesBeforeLayout(nodesBeforeLayout.filter((node: Node) => node.id !== activeEditState.id))
+    if (changeState.editLabel === 'deleteNode') {
+      setEdgesBeforeLayout(edgesBeforeLayout.filter((edge: Edge) => edge.target !== changeState.editId || edge.source !== changeState.editId))
+      setNodesBeforeLayout(nodesBeforeLayout.filter((node: Node) => node.id !== changeState.editId))
     }
-    if (activeEditState.label === 'addNode') {
-      setNodesBeforeLayout([...nodesBeforeLayout, initialNodes.find((node: Node) => node.id === activeEditState.id) as Node])
+    if (changeState.editLabel === 'createEntity') {
+      setNodesBeforeLayout([...nodesBeforeLayout, initialNodes.find((node: Node) => node.id === changeState.editId) as Node])
     }
-    if (activeEditState.label === "enableEditMode") {
+    if (changeState.editLabel === "enableEditMode") {
       setNodesBeforeLayout([...nodesBeforeLayout.map((node: Node) =>
-        node.id === activeEditState.id ? { ...node, type: 'base' } : node
+        node.id === changeState.editId ? { ...node, type: 'edit' } : node
       )])
     }
-    if (activeEditState.label === "disableEditMode") {
+    if (changeState.editLabel === "disableEditMode") {
       setNodesBeforeLayout([...nodesBeforeLayout.map((node: Node) =>
-        node.id === activeEditState.id ? { ...node, type: 'mini' } : node
+        node.id === changeState.editId ? { ...node, type: 'view' } : node
       )])
     }
-    // console.log('activeEditState', activeEditState)
-  }, [activeEditState])
+    if (changeState.editLabel?.includes('layout')) {
+      fitView && fitView({ includeHiddenNodes: true })
+    }
+  }, [changeState])
 
   // Prevents layout bugs from occurring on navigate away and returning to a graph
   // https://reactrouter.com/en/main/hooks/use-blocker
@@ -438,7 +417,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
                   sendJsonMessage={sendJsonMessage}
                   fitView={fitView}
                   positionMode={positionMode}
-                  editState={activeEditState}
+                  editState={changeState}
                 />
               </div>
             </div>
