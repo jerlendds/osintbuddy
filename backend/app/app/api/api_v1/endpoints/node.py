@@ -398,7 +398,7 @@ async def refresh_plugins(
 
 
 @router.post("/")
-async def create_entity(
+async def create_entity_on_drop(
     hid: Annotated[str, Depends(deps.get_graph_id)],
     user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
     create_node: schemas.CreateNode,

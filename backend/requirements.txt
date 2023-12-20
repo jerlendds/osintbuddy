@@ -11,7 +11,7 @@ grequests==0.6.0
 httptools==0.5.0
 langdetect==1.0.9
 openapi-schema-pydantic==1.2.4
-# osintbuddy==0.0.4
+osintbuddy==0.0.4rc51.post1
 itsdangerous==2.1.2
 passlib==1.7.4
 psycopg2-binary==2.9.6
