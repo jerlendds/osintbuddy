@@ -187,7 +187,6 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
 
   const initialNodes = useAppSelector((state) => graphNodes(state));
   const initialEdges = useAppSelector((state) => graphEdges(state));
-  console.log('initial', initialNodes, initialEdges)
   const [nodesBeforeLayout, setNodesBeforeLayout] = useState(initialNodes)
   const [edgesBeforeLayout, setEdgesBeforeLayout] = useState(initialEdges)
   const [ctxPosition, setCtxPosition] = useState<XYPosition>({ x: 0, y: 0 });
