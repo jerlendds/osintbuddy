@@ -43,7 +43,7 @@ type NodeElement = NodeInput & {
 };
 
 
-export default function BaseMiniNode({
+export default function ViewEntityNode({
   ctx,
   dispatch
 }: JSONObject) {

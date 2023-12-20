@@ -8,11 +8,11 @@ import ReactFlow, {
   Connection,
   Node,
 } from 'reactflow';
-import BaseNode from '../_components/BaseNode';
+import EditEntityNode from '../_components/EditEntityNode';
 import { addNodeUpdate, createEdge, disableEntityEdit, enableEntityEdit, onEdgesChange, selectEditState, setEditLabel, setEditState, updateEdgeEvent, updateNodeFlow } from '@src/features/graph/graphSlice';
 import { useAppDispatch, useAppSelector } from '@src/app/hooks';
 import { toast } from 'react-toastify';
-import BaseMiniNode from '../_components/BaseMiniNode';
+import ViewEntityNode from '../_components/ViewEntityNode';
 import { CreateEntityOnDropApiResponse, useCreateEntityOnDropMutation, useRefreshPluginsQuery } from '@src/app/api';
 import { useParams } from 'react-router-dom';
 import NewConnectionLine from './ConnectionLine';
@@ -88,18 +88,17 @@ export default function Graph({
     [graphInstance]
   );
 
-
-
   const nodeTypes = useMemo(
     () => ({
       edit: (data: JSONObject) => (
-        <BaseNode
+        <EditEntityNode
           ctx={data}
           dispatch={dispatch}
           sendJsonMessage={sendJsonMessage}
-        />),
+        />
+      ),
       view: (data: JSONObject) => (
-        <BaseMiniNode
+        <ViewEntityNode
           ctx={data}
           dispatch={dispatch}
         />
@@ -114,6 +113,7 @@ export default function Graph({
     }),
     []
   );
+
   const doubleClickThreshold = 325;
   const [isDragging, setIsDragging] = useState(false)
   const [isDoubleClick, setIsDoubleClick] = useState(false)

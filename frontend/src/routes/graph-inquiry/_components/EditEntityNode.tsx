@@ -35,7 +35,7 @@ type NodeElement = NodeInput & {
   Dispatch<AnyAction>;
 };
 
-export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject) {
+export default function EditEntityNode({ ctx, sendJsonMessage, closeRef }: JSONObject) {
   const node = ctx.data;
 
   const dispatch = useAppDispatch();
