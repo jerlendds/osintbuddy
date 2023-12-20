@@ -108,7 +108,7 @@ async def save_node_on_drop(
 
     return {
         "id": f"{new_entity.id}",
-        "type": "view",
+        "type": "edit",
         "data": {
             'color': blueprint.pop('color', '#145070'),
             'icon': blueprint.pop('icon', 'atom-2'),
