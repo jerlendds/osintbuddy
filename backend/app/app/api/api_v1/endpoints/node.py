@@ -153,13 +153,14 @@ async def read_graph(action_type, send_json, project_uuid):
     nodes = []
     edges_data = []
     data_nodes, edges = await load_initial_graph(project_uuid)
+    tmp_invalid_fix = []
+    tmp_invalid_id_fix = []
     for node in data_nodes:
         position = {
             'x': node.pop('x', [0])[0],
             'y': node.pop('y', [0])[0]
         }
         entity_id = node.pop(T.id)
-
         entity_type = node.pop(T.label)
         plugin = await Registry.get_plugin(to_snake_case(entity_type))
         if plugin:
@@ -186,16 +187,25 @@ async def read_graph(action_type, send_json, project_uuid):
             }
             nodes.append(ui_entity)
         else:
+            tmp_invalid_id_fix.append(entity_id)
             # TODO detect invalid/renamed entities/plugins on any plugin label updates and fix graph
-            print(f'Error/TODO Invalid Plugin: {entity_type}')
+            tmp_invalid_fix.append(entity_type)
+            print(f'(TODO: on entity code update and label change rename nodes in janusgraph) Error Invalid Plugin: {entity_type}')
     if len(edges[0]) > 0:
-        [edges_data.append({
-            'id': f"{i}",
-            'source': f"{e[2]['from'].id}",
-            'target': f"{e[3]['to'].id}",
-            'label': e[1][T.label],
-            'type': 'float'
-        }) for i, e in enumerate(chunks(edges[0], 4))]
+        for i, e in enumerate(chunks(edges[0], 4)):
+            source = e[2]['from'].id
+            target = e[3]['to'].id
+            # TODO: actually fix me, dont keep this messy hack
+            valid_source = source not in tmp_invalid_id_fix
+            valid_target = target not in tmp_invalid_id_fix
+            if valid_source and valid_target:
+                edges_data.append({
+                    'id': f"{i}",
+                    'source': f"{source}",
+                    'target': f"{target}",
+                    'label': e[1][T.label],
+                    'type': 'float'
+                })
     await send_json({
         'action': 'isInitialRead',
         'nodes': nodes,
@@ -296,8 +306,6 @@ async def nodes_transform(
             "detail": False,
             "message": await get_transform_notification(transform_result, transform_type) 
         })
-        print('out_result')
-        
         await send_json({
             "action": "createEntity",
             "results": out_result

@@ -76,7 +76,6 @@ export default function Graph({
         const createNode = { label, position }
         createGraphEntity({ createNode, hid })
           .then(({ data }: CreateGraphEntityApiResponse) => {
-            console.log('createOnDrop', data)
             dispatch(addNodeUpdate({ position, label, ...data, }))
             dispatch(setEditState({ editId: data.id, editLabel: 'createEntity' }))
           })

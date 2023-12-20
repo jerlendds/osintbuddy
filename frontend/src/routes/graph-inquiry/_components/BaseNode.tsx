@@ -168,7 +168,6 @@ export default function BaseNode({ ctx, sendJsonMessage, closeRef }: JSONObject)
         >
           {node.elements.map((element: NodeInput, i: number) => {
             if (Array.isArray(element)) {
-              console.log('elemnt./lgnth', element.length)
               return (
                 <div style={{ display: 'grid', columnGap: '0.5rem', gridTemplateColumns: `repeat(${element.length}, minmax(0, 1fr))` }} key={i.toString()}>
                   {element.map((elm, i: number) => (
