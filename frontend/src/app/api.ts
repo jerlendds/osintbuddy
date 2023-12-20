@@ -10,9 +10,9 @@ const injectedRtkApi = api.injectEndpoints({
         params: { hid: queryArg.hid },
       }),
     }),
-    createGraphEntity: build.mutation<
-      CreateGraphEntityApiResponse,
-      CreateGraphEntityApiArg
+    createEntityOnDrop: build.mutation<
+      CreateEntityOnDropApiResponse,
+      CreateEntityOnDropApiArg
     >({
       query: (queryArg) => ({
         url: `/api/v1/node/`,
@@ -181,9 +181,9 @@ export type RefreshPluginsApiResponse =
 export type RefreshPluginsApiArg = {
   hid: string;
 };
-export type CreateGraphEntityApiResponse =
+export type CreateEntityOnDropApiResponse =
   /** status 200 Successful Response */ any;
-export type CreateGraphEntityApiArg = {
+export type CreateEntityOnDropApiArg = {
   hid: string;
   createNode: CreateNode;
 };
@@ -394,7 +394,7 @@ export type ScanMachineCreate = {
 };
 export const {
   useRefreshPluginsQuery,
-  useCreateGraphEntityMutation,
+  useCreateEntityOnDropMutation,
   useGetCasdoorConfigQuery,
   usePostSigninMutation,
   usePostSignoutMutation,

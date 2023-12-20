@@ -8,7 +8,7 @@ export default function PublicLayout(): React.ReactElement {
       <PublicNavbar />
       <Outlet />
       <ToastContainer
-        position='bottom-left'
+        position='bottom-right'
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}

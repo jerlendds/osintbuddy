@@ -13,7 +13,7 @@ import { addNodeUpdate, createEdge, disableEntityEdit, enableEntityEdit, onEdges
 import { useAppDispatch, useAppSelector } from '@src/app/hooks';
 import { toast } from 'react-toastify';
 import BaseMiniNode from '../_components/BaseMiniNode';
-import { CreateGraphEntityApiResponse, useCreateGraphEntityMutation, useRefreshPluginsQuery } from '@src/app/api';
+import { CreateEntityOnDropApiResponse, useCreateEntityOnDropMutation, useRefreshPluginsQuery } from '@src/app/api';
 import { useParams } from 'react-router-dom';
 import NewConnectionLine from './ConnectionLine';
 import SimpleFloatingEdge from './SimpleFloatingEdge';
@@ -59,7 +59,7 @@ export default function Graph({
   const [createGraphEntity, {
     isError: isCreateEntityError,
     isLoading: isLoadingCreateEntity }
-  ] = useCreateGraphEntityMutation(blankNode)
+  ] = useCreateEntityOnDropMutation(blankNode)
 
   const onDrop: DragEventHandler<HTMLDivElement> = useCallback(
     async (event) => {
@@ -75,7 +75,7 @@ export default function Graph({
       if (label && position && hid) {
         const createNode = { label, position }
         createGraphEntity({ createNode, hid })
-          .then(({ data }: CreateGraphEntityApiResponse) => {
+          .then(({ data }: CreateEntityOnDropApiResponse) => {
             dispatch(addNodeUpdate({ position, label, ...data, }))
             dispatch(setEditState({ editId: data.id, editLabel: 'createEntity' }))
           })

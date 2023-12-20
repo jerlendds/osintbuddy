@@ -98,8 +98,7 @@ export default function AboutPage() {
             <div className='relative'>
               <h3 className='text-2xl font-bold tracking-tight text-light-900 sm:text-3xl'>Investigate people world-wide</h3>
               <p className='mt-3 text-lg text-light-500'>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur minima sequi recusandae, porro maiores
-                officia assumenda aliquam laborum ab aliquid veritatis impedit odit adipisci optio iste blanditiis
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur minima sequi recusandae, porro maiores officia assumenda aliquam laborum ab aliquid veritatis impedit odit adipisci optio iste blanditiis
                 facere. Totam, velit.
               </p>
 
