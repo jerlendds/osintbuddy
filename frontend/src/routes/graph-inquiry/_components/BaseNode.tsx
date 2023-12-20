@@ -222,7 +222,6 @@ export function TextArea({ nodeId, label, sendJsonMessage, icon, dispatch }: Nod
         onClick={() => setShowMonospace(!showMonospace)}
         className='flex justify-between items-center font-semibold leading-5 font-display text-slate-400'
       >
-
         {label}
         <Icon
           icon={showMonospace ? 'brackets-angle' : 'brackets-angle-off'}
