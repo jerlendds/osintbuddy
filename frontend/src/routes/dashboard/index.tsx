@@ -88,7 +88,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      <div className="flex max-h-screen h-full">
+      <div className="flex ">
         <aside className={styles["sidebar-wrapper"]}>
           <div className={styles["search-container"]}>
             <MagnifyingGlassIcon />
@@ -137,7 +137,7 @@ export default function DashboardPage() {
               </Tab>
               <div className={styles["tab-slider"]}></div>
             </Tab.List>
-            <section>
+            <section className="h-full overflow-y-scroll mb-20">
               <Tab.Panel className={styles["tab-panel"]}>
                 <GraphPanel
                   refetchGraphs={async () => await refetchGraphs()}
@@ -154,7 +154,7 @@ export default function DashboardPage() {
                   isError={isError}
                   isSuccess={isSuccess}
                   refetchEntities={refetchEntities}
-                  
+
                 />
               </Tab.Panel>
               <Tab.Panel className={styles["tab-panel"]}>
@@ -168,7 +168,7 @@ export default function DashboardPage() {
                 if (tabIndex === 0) setShowCreateGraphModal(true)
                 if (tabIndex === 1) setShowCreateEntityModal(true) // TODO
               }}
-              className='btn-primary mt-auto mx-4 mr-6'
+              className='btn-primary mt-auto mb-4 mx-4 mr-6'
             >
               Create {tabIndex === 0 ? 'graph' : 'entity'}
               <PlusIcon />

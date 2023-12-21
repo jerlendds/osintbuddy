@@ -2,8 +2,8 @@ import { AllGraphsList, useUpdateGraphFavoriteIdMutation } from '@src/app/api';
 import { useMemo, useState } from "react";
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
-import styles from "./subpanel.module.css"
-import Subpanel from './Subpanel';
+import styles from "../subpanel.module.css"
+import Subpanel from '../Subpanel';
 
 
 export function GraphLoaderCard() {

@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import Subpanel from './Subpanel'
-import styles from './subpanel.module.css'
+import Subpanel from '../Subpanel'
+import styles from '../subpanel.module.css'
 
 export default function MarketPanel() {
   const [showProviders, setShowProviders] = useState(false)

@@ -1,6 +1,6 @@
 /* wraps the sidebar with search and the main view */
 .sidebar-wrapper {
-  @apply rounded py-px !min-w-[20rem] max-w-[20rem] flex flex-col w-full pt-3.5 pb-6 border-r-[3px] border-mirage-700/70 from-mirage-600/20 to-mirage-500/20 bg-gradient-to-br pl-2 max-h-screen justify-between shadow-xl 
+  @apply rounded py-px !min-w-[20rem] max-w-[20rem] flex-col h-screen pt-3.5  border-r-[3px] border-mirage-700/70 from-mirage-600/20 to-mirage-500/20 bg-gradient-to-br pl-2  justify-between shadow-xl flex relative w-full  overflow-y-scroll 
 }
 
 .search-container {
@@ -19,11 +19,11 @@
 }
 
 .dashboard-tabs {
-  @apply max-h-screen h-full overflow-y-scroll relative pr-2 
+  @apply overflow-y-hidden flex-grow h-full pb-12
 }
 
 .tabs-list {
-  @apply flex justify-between w-full rounded p-1 absolute;
+  @apply flex justify-between w-full rounded p-1 ;
 }
 .tab {
   @apply focus:outline-none transition-colors duration-200 ease-in-out flex items-center justify-center py-2.5 px-0 font-display rounded min-w-[6rem] text-sm leading-none z-20

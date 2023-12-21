@@ -1,7 +1,7 @@
 import { useUpdateEntityFavoriteIdMutation } from "@src/app/api";
 import { useMemo, useState } from "react";
-import styles from "./subpanel.module.css"
-import Subpanel from "./Subpanel";
+import styles from "../subpanel.module.css"
+import Subpanel from "../Subpanel";
 
 
 export default function EntitiesPanel({
