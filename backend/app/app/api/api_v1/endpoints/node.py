@@ -6,7 +6,7 @@ from gremlinpy.process.graph_traversal import AsyncGraphTraversal
 from gremlin_python.process.graph_traversal import __ as _g
 from gremlin_python.process.traversal import T, Cardinality
 from osintbuddy.utils import to_snake_case, MAP_KEY, chunks
-from osintbuddy import Registry, PluginUse, load_plugins
+from osintbuddy import EntityRegistry, TransformCtx, load_local_plugins
 from osintbuddy.errors import OBPluginError
 from sqlalchemy.orm import Session
 from starlette import status
@@ -22,15 +22,15 @@ router = APIRouter(prefix="/node")
 
 # TODO: Refactor to somewhere that makes sense...
 def refresh_local_entities(db: Session):
-    Registry.plugins = []
-    Registry.labels = []
-    Registry.ui_labels = []
+    EntityRegistry.plugins = []
+    EntityRegistry.labels = []
+    EntityRegistry.ui_labels = []
     entities = crud.entities.get_many(db, skip=0, limit=100)
-    load_plugins(entities)
+    load_local_plugins(entities)
 
 
 async def fetch_node_transforms(plugin_label):
-    plugin = await Registry.get_plugin(plugin_label=plugin_label)
+    plugin = await EntityRegistry.get_plugin(plugin_label=plugin_label)
     if plugin is not None:
         labels = plugin().transform_labels
         return labels
@@ -162,7 +162,7 @@ async def read_graph(action_type, send_json, project_uuid):
         }
         entity_id = node.pop(T.id)
         entity_type = node.pop(T.label)
-        plugin = await Registry.get_plugin(to_snake_case(entity_type))
+        plugin = await EntityRegistry.get_plugin(to_snake_case(entity_type))
         if plugin:
             ui_entity = plugin.blueprint()
             for element in ui_entity['elements']:
@@ -250,13 +250,13 @@ async def nodes_transform(
     transform_result = {}
     entity_type = node.get('data', {}).get('label')
     transform_type = None
-    plugin = await Registry.get_plugin(entity_type)
+    plugin = await EntityRegistry.get_plugin(entity_type)
     if plugin := plugin():
         transform_type = node["transform"]
         transform_result = await plugin.get_transform(
             transform_type=transform_type,
             entity=node,
-            use=PluginUse(
+            use=TransformCtx(
                 get_driver=deps.get_driver,
                 get_graph=lambda: None
             )
@@ -387,7 +387,7 @@ async def refresh_plugins(
 ):
     try:
         refresh_local_entities(db)
-        return {"status": "success", "plugins": Registry.ui_labels}
+        return {"status": "success", "plugins": EntityRegistry.ui_labels}
     except Exception as e:
         log.error("Error inside node.refresh_plugins")
         log.error(e)
@@ -406,7 +406,7 @@ async def create_entity_on_drop(
 ):
     try:
         active_inquiry = crud.graphs.get(db, id=hid)
-        plugin = await Registry.get_plugin(plugin_label=to_snake_case(create_node.label))
+        plugin = await EntityRegistry.get_plugin(plugin_label=to_snake_case(create_node.label))
         if plugin:
             blueprint = plugin.blueprint()
             blueprint["position"] = create_node.position.model_dump()

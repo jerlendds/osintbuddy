@@ -2,7 +2,7 @@ from uuid import UUID
 from typing import Annotated
 from app.schemas.entities import ENTITY_NAMESPACE
 
-from osintbuddy import Registry
+from osintbuddy import EntityRegistry
 from osintbuddy.templates.default import plugin_source_template
 from osintbuddy.utils.generic import to_snake_case 
 from fastapi import APIRouter, HTTPException, Depends
@@ -19,10 +19,9 @@ router = APIRouter(prefix="/entity")
 
 
 async def fetch_node_transforms(plugin_label):
-    plugin = await Registry.get_plugin(plugin_label=to_snake_case(plugin_label))
+    plugin = await EntityRegistry.get_plugin(plugin_label=to_snake_case(plugin_label))
     if plugin is not None:
-        labels = plugin().transform_labels
-        return labels
+        return plugin().transform_labels
 
 
 @router.get("/plugins/transform/")
@@ -41,8 +40,8 @@ async def get_entity_transforms(
             detail="Invalid transform error. Please file an issue if this occurs."
         )
     except Exception as e:
-        log.error("Error inside entity.get_entity_transforms")
         log.error(e)
+        log.error("Error inside entity.get_entity_transforms")
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="There was an error fetching transforms, please try again."

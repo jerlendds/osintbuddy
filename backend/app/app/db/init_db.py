@@ -1,6 +1,6 @@
 import requests
 from sqlalchemy.orm import Session
-from osintbuddy import load_plugin, Registry
+from osintbuddy import load_local_plugin, EntityRegistry
 
 from app import crud, schemas
 from app.core.logger import get_logger
@@ -30,9 +30,9 @@ core_plugins = {
 }
 
 def load_initial_plugin(db, plugin_mod, plugin_code):
-    load_plugin(plugin_mod, plugin_code)
+    load_local_plugin(plugin_mod, plugin_code)
 
-    plugin = Registry.get_plug(plugin_mod)
+    plugin = EntityRegistry.get_plugin_sync(plugin_mod)
     obj_in = schemas.EntityCreate(
         label=plugin.label,
         author=plugin.author,
@@ -51,6 +51,7 @@ def init_db(db: Session) -> None:
                 resp = requests.get(core_ob_url + plugin_mod + '.py')
                 load_initial_plugin(db=db, plugin_mod=plugin_mod, plugin_code=resp.text)
             except requests.exceptions.ConnectionError as e:
+                # TODO: Use tenacity lib retry logic here
                 log.error(e)
                 resp = requests.get(core_ob_url + plugin_mod + '.py')
                 load_initial_plugin(db=db, plugin_mod=plugin_mod, plugin_code=resp.text)
@@ -60,5 +61,5 @@ def init_db(db: Session) -> None:
     return {
         "status": "success",
         "service": "[Entities: Create]",
-        "message": f"{len(Registry.plugins)} initial entities (plugins) loaded",
+        "message": f"{len(EntityRegistry.plugins)} initial entities (plugins) loaded",
     }
