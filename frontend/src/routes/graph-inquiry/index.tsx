@@ -93,8 +93,8 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
       toast.update(
         loadingToastId,
         {
-          render: 'The connection was closed! Reconnecting...',
-          type: 'success',
+          render: 'The connection was lost! Attempting to reconnect...',
+          type: 'warning',
           isLoading: false,
           autoClose: 1400
         }
