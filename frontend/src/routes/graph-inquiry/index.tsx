@@ -143,8 +143,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
     );
   };
 
-
-
+  // Handle any actions the websocket sends from backend
   const wsActionPlayer: any = {
     'isInitialRead': () => {
       dispatch(setAllNodes(lastJsonMessage.nodes))
@@ -250,9 +249,10 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
       dispatch(setAllEdges(edgesBeforeLayout))
     }
   }, [positionMode])
+
   // TODO: Also implement d3-hierarchy, entitree-flex, dagre, webcola, and graphology layout modes
   //       Once implemented measure performance and deprecate whatever performs worse
-
+  // tree layouts toggle found in top right
   const elk = new ELK();
   const useElkLayoutElements = () => {
     const defaultOptions = {
@@ -267,8 +267,8 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
       const graph = {
         id: 'root',
         layoutOptions: layoutOptions,
-        children: nodesBeforeLayout.map((node: any) => ({ ...node })),
-        edges: edgesBeforeLayout.map((edge: any) => ({ ...edge, })),
+        children: structuredClone(nodesBeforeLayout),
+        edges: structuredClone(edgesBeforeLayout),
       };
       elk.layout(graph as any).then(({ children, edges }: any) => {
         children.forEach((node: any) => {
@@ -288,6 +288,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
 
   const { setElkLayout } = useElkLayoutElements();
 
+  // force layout hook/toggle found in top right
   const useForceLayoutElements = () => {
     const nodesInitialized = initialNodes.every((node: any) => node.width && node.height)
 
@@ -300,7 +301,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         .stop();
 
       let forceNodes = initialNodes.map((node: any) => ({ ...node, x: node.position.x, y: node.position.y }));
-      let forceEdges = initialEdges.map((edge: any) => ({ ...edge }));
+      let forceEdges = structuredClone(initialEdges);
 
       const forceSimOff = [false, { toggleForceLayout: (setForce?: boolean) => null } as any]
       // if no width or height or no nodes in the flow, can't run the simulation!
@@ -318,16 +319,8 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
         // The tick function is called every animation frame while the simulation is
         // running and progresses the simulation one step forward each time.
         const tick = () => {
-          // fitView && fitView({ padding: 0.25 })
-          forceNodes.forEach((node: any, i: number) => {
-            const activeNode = document.querySelector(`[data-id="${node.id}"].dragging`)
-            const dragging = Boolean(activeNode);
-            forceNodes[i].fx = dragging ? node.x : null;
-            forceNodes[i].fy = dragging ? node.y : null;
-          });
           simulation.tick();
-          dispatch(setAllNodes(forceNodes.map((node: any) => ({ ...node, position: { x: node.x, y: node.y } }))) as any);
-
+          dispatch(setAllNodes(forceNodes.map((node: any) => ({ ...node, position: { x: node.x, y: node.y } }))));
           window.requestAnimationFrame(() => {
             if (running) {
               tick()
@@ -353,6 +346,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
 
   // If not on a manual layout, update the manual layout positions 
   // for any drag changes, entity edit mode toggles, and transforms/deletions
+  // this is for when a user updates/deletes an entity in a layout mode thats not manual
   useEffect(() => {
     if (changeState.editLabel === 'deleteNode') {
       setEdgesBeforeLayout(edgesBeforeLayout.filter((edge: Edge) => edge.target !== changeState.editId || edge.source !== changeState.editId))
