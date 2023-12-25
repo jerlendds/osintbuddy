@@ -233,8 +233,8 @@ Patched `aiogremlin` library: [jerlendds/gremlinpy](https://github.com/jerlendds
 
 
 ## [↑](#introducing-osintbuddy)Sponsor OSINTBuddy 
-Help us keep the project free and maintained.
-Sponsor the OSINTBuddy project for unique benefits. Learn more on the [OSINTBuddy OpenCollective](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
+Help us keep the project free and maintained. Sponsoring the project makes it possible for us to cover our server costs and allows us to make investments into new areas of development. 
+Depending on your level of sponsorship you may get unique benefits. Learn more on the [OSINTBuddy OpenCollective](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
 
 [![Yearly OpenCollective Income](https://badgen.net/opencollective/yearly/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
 [![OpenCollective Backers](https://badgen.net/opencollective/backers/osintbuddy)](https://opencollective.com/openinfolabs/projects/osintbuddy#category-CONTRIBUTE)
