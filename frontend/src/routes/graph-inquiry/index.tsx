@@ -9,7 +9,7 @@ import 'reactflow/dist/style.css';
 import EntityOptions from './_components/EntityOptions';
 import ContextMenu from './_components/ContextMenu';
 import { toast } from 'react-toastify';
-import Graph from './graph/Graph';
+import Graph from './_components/Graph';
 import ELK from 'elkjs/lib/elk.bundled.js';
 import { useAppDispatch, useAppSelector, useEffectOnce } from '@src/app/hooks';
 import {

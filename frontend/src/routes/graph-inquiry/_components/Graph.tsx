@@ -8,11 +8,11 @@ import ReactFlow, {
   Connection,
   Node,
 } from 'reactflow';
-import EditEntityNode from '../_components/EditEntityNode';
+import EditEntityNode from './EditEntityNode';
 import { addNodeUpdate, createEdge, disableEntityEdit, enableEntityEdit, onEdgesChange, selectEditState, setEditLabel, setEditState, updateEdgeEvent, updateNodeFlow } from '@src/features/graph/graphSlice';
 import { useAppDispatch, useAppSelector } from '@src/app/hooks';
 import { toast } from 'react-toastify';
-import ViewEntityNode from '../_components/ViewEntityNode';
+import ViewEntityNode from './ViewEntityNode';
 import { CreateEntityOnDropApiResponse, useCreateEntityOnDropMutation, useRefreshPluginsQuery } from '@src/app/api';
 import { useParams } from 'react-router-dom';
 import NewConnectionLine from './ConnectionLine';
@@ -130,6 +130,12 @@ export default function Graph({
     }
   };
 
+  useEffect(() => {
+    if (!isDragging && graphInstance?.getViewport) {
+      // console.log('graphInstance', isDragging, graphInstance?.getViewport())
+    }
+  }, [isDragging])
+
   return (
     <ReactFlow
       minZoom={0.2}
@@ -154,8 +160,12 @@ export default function Graph({
         setClickDelta(newDelta)
         setIsDoubleClick(isDouble)
       }}
+      onMoveStart={() => !isDragging && setIsDragging(true)}
+      onMoveEnd={() => setIsDragging(false)}
       fitViewOptions={viewOptions}
       nodeTypes={nodeTypes}
+      onDragStart={() => setIsDragging(true)}
+      onDragEnd={() => setIsDragging(false)}
       panActivationKeyCode='Space'
       onNodeDragStop={onNodeDragStop}
       onPaneClick={onPaneClick}
