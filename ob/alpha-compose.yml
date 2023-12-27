@@ -53,6 +53,7 @@ services:
     build:
       context: ./_janus
       dockerfile: janusgraph.Dockerfile
+    restart: on-failure
     ports:
       - "8182:8182"
     volumes:
