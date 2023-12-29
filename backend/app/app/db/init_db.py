@@ -29,6 +29,7 @@ core_plugins = {
     'Whois': 'whois'
 }
 
+
 def load_initial_plugin(db, plugin_mod, plugin_code):
     load_local_plugin(plugin_mod, plugin_code)
 
@@ -41,6 +42,7 @@ def load_initial_plugin(db, plugin_mod, plugin_code):
         is_favorite=False
     )
     return crud.entities.create(db=db, obj_in=obj_in)
+
 
 def init_db(db: Session) -> None:
     entity_count = crud.entities.count_all(db)[0][0]
@@ -55,8 +57,8 @@ def init_db(db: Session) -> None:
                 log.error(e)
                 resp = requests.get(core_ob_url + plugin_mod + '.py')
                 load_initial_plugin(db=db, plugin_mod=plugin_mod, plugin_code=resp.text)
-            except Exception:
-                pass
+            except Exception as e:
+                log.error(e)
 
     return {
         "status": "success",
