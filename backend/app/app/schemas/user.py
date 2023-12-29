@@ -72,9 +72,6 @@ class User(UserCreate):
 
 
 class UserInDBBase(UserCreate):
-    is_admin: bool
-    created_time: datetime.datetime
-    updated_time: datetime.datetime
     cid: UUID
 
     class Config:

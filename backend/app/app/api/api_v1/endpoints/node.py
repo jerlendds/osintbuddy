@@ -1,9 +1,11 @@
 from uuid import UUID
-from typing import List, Callable, Tuple, Any, Annotated
+from typing import List, Callable, Tuple, Any, Annotated, Dict
 from fastapi import APIRouter, WebSocket, WebSocketException, WebSocketDisconnect, HTTPException, Depends
+from sqlalchemy import or_
 from websockets.exceptions import ConnectionClosedError
 from gremlinpy.process.graph_traversal import AsyncGraphTraversal
 from gremlin_python.process.graph_traversal import __ as _g
+from gremlin_python.process.traversal import P
 from gremlin_python.process.traversal import T, Cardinality
 from osintbuddy.utils import to_snake_case, MAP_KEY, chunks
 from osintbuddy import EntityRegistry, TransformCtx, load_local_plugins
@@ -19,6 +21,7 @@ from app.core.config import settings
 
 log = get_logger("api_v1.endpoints.nodes")
 router = APIRouter(prefix="/node")
+
 
 # TODO: Refactor to somewhere that makes sense...
 def refresh_local_entities(db: Session):
@@ -36,14 +39,11 @@ async def fetch_node_transforms(plugin_label):
         return labels
 
 
-
 def add_node_element(vertex, element: dict or List[dict], data_labels: List[str]):
     # Remove stylistic values unrelated to element data
     # Some osintbuddy.elements of type displays dont have an icon or options 
-
     icon = element.pop('icon', None)
     options = element.pop('options', None)
-
     label = element.pop('label')
     elm_type = element.pop('type')
 
@@ -56,7 +56,6 @@ def add_node_element(vertex, element: dict or List[dict], data_labels: List[str]
             vertex.property(f'{to_snake_case(label)}_{to_snake_case(k)}', v)
     # Save the data labels so we can assign these as meta properties later
     data_labels.append(to_snake_case(label))
-
     element['type'] = elm_type
     element['icon'] = icon
     element['label'] = label
@@ -117,7 +116,11 @@ async def save_node_on_drop(
         }
     }
 
-async def load_initial_graph(uuid: UUID) -> tuple[list, list]:
+async def load_graph_read(uuid: UUID, viewport=None) -> tuple[list, list]:
+    zoom_scale = viewport.get('zoom')
+    # x = viewport.get('x')
+    # y = viewport.get('y')
+
     async with ProjectGraphConnection(uuid) as graph:
         edges: list = await graph.V().outE().project('from', 'edge', 'to')\
             .by(_g.outV()).by(_g.valueMap(True)).by(_g.inV()).union(
@@ -125,8 +128,20 @@ async def load_initial_graph(uuid: UUID) -> tuple[list, list]:
             _g.project('from').by(_g.select('from')).unfold(),
             _g.project('to').by(_g.select('to')).unfold()
         ).fold().toList()
-        nodes: list = await graph.V().valueMap(True).toList()
-        
+        # TODO: Load/update UI nodes on far drag
+        # TODO: unload nodes UI side when off screen offset by max drag distance
+        # y = viewport.get('y')
+        nodes: list = await graph.V()\
+            .valueMap(True).toList()
+            # .has('y', P.between(y, y2))\
+            # \
+            # .has('y', P.lt(y)).has('y', P.gt(y_offset))\
+            # .has('x', P.gt(x))\
+            # .has('x', P.between(x1, x2))\
+        # .has('y', P.between(y1, y2))\
+            # .or_(_g.has('x', P.gt(x1)), _g.has('x', P.lt(x2)))
+            # maybe something like the above?!
+            
         return nodes, edges
 
 
@@ -149,10 +164,11 @@ def node_to_blueprint_entity(ui_entity_element, node) -> None:
             if entity_label not in k:
                 ui_entity_element[k] = node[v][0]
 
-async def read_graph(action_type, send_json, project_uuid):
+
+async def read_graph(viewport_event, send_json, project_uuid, is_initial_read: bool = False):
     nodes = []
     edges_data = []
-    data_nodes, edges = await load_initial_graph(project_uuid)
+    data_nodes, edges = await load_graph_read(project_uuid, viewport_event)
     tmp_invalid_fix = []
     tmp_invalid_id_fix = []
     for node in data_nodes:
@@ -187,8 +203,8 @@ async def read_graph(action_type, send_json, project_uuid):
             }
             nodes.append(ui_entity)
         else:
-            tmp_invalid_id_fix.append(entity_id)
             # TODO detect invalid/renamed entities/plugins on any plugin label updates and fix graph
+            tmp_invalid_id_fix.append(entity_id)
             tmp_invalid_fix.append(entity_type)
             print(f'(TODO: on entity code update and label change rename nodes in janusgraph) Error Invalid Plugin: {entity_type}')
     if len(edges[0]) > 0:
@@ -207,22 +223,24 @@ async def read_graph(action_type, send_json, project_uuid):
                     'type': 'float'
                 })
     await send_json({
-        'action': 'isInitialRead',
+        'action': 'isInitialRead' if is_initial_read else 'read',
         'nodes': nodes,
         'edges': edges_data
     })
 
 
-async def update_node(node, action_type, send_json, uuid: UUID):
+async def update_node(node, send_json, uuid: UUID):
     if updateTargetId := node.pop('id', None):
         async with ProjectGraphConnection(uuid) as graph:
             updateTarget = graph.V(updateTargetId)
             for k, v in node.items():
+                # if k == 'x' or k == 'y':
+                    # print(to_snake_case(k), v)
                 updateTarget.property(Cardinality.single, to_snake_case(k), v)
             await updateTarget.next()
 
 
-async def remove_nodes(node, action_type, send_json, uuid: UUID):
+async def remove_nodes(node, send_json, uuid: UUID):
     async with ProjectGraphConnection(uuid) as graph:
         if targetNode := node.get('id'):
             await graph.V(targetNode).drop().next()
@@ -314,75 +332,81 @@ async def nodes_transform(
         await send_json({'error': 'noPluginFound'})
 
 
-async def get_command_type(event):
+async def run_user_graph_event(event: dict, send_json: Callable, uuid: UUID) -> None:
     user_event: list = event["action"].split(":")
     action = user_event[0]
-    USER_ACTION = None
-    if len(user_event) >= 2:
-        USER_ACTION = user_event[1]
-    IS_READ = action == "read"
-    IS_UPDATE = action == "update"
-    IS_DELETE = action == "delete"
-    IS_TRANSFORM = action == "transform"
-    return USER_ACTION, IS_READ, IS_UPDATE, IS_DELETE, IS_TRANSFORM
+    IS_READ: bool = action == "read"
+    IS_UPDATE: bool = action == "update"
+    IS_DELETE: bool = action == "delete"
+    IS_TRANSFORM: bool = action == "transform"
+    IS_INITIAL: bool = 'initial' in action
 
+    ACTION_TARGET = user_event[1]
 
-async def run_user_graph_event(event: dict, send_json: Callable, uuid: UUID) -> None:
-    USER_ACTION, IS_READ, IS_UPDATE, IS_DELETE, IS_TRANSFORM = await get_command_type(event)
-    if USER_ACTION == 'node':
-        if IS_READ:
-            await send_json({"action": "isLoading", "detail": True })
-            await read_graph(USER_ACTION, send_json, uuid)
-            await send_json({ "action": "isLoading", "detail": False, "message": "Success! Your graph environment has loaded!" }) 
+    if ACTION_TARGET == 'node':
         if IS_UPDATE:
-            await update_node(event["node"], USER_ACTION, send_json, uuid)
+            await update_node(event["node"], send_json, uuid)
         if IS_DELETE:
-            await remove_nodes(event["node"], USER_ACTION, send_json, uuid)
+            await remove_nodes(event["node"], send_json, uuid)
         if IS_TRANSFORM:
             await send_json({"action": "isLoading", "detail": True })
             await nodes_transform(event["node"], send_json, uuid)
+    if ACTION_TARGET == 'graph':
+        if IS_READ:
+            await read_graph(event["viewport"], send_json, uuid)
+            await send_json({ "action": "isLoading", "detail": False, "message": "Success! You've been reconnected!" })
+        if IS_INITIAL:
+            await send_json({"action": "isLoading", "detail": True })
+            await read_graph(event["viewport"], send_json, uuid, True)
+            await send_json({ "action": "isLoading", "detail": False, "message": "Success! Your graph environment has loaded!" })
 
+
+# TODO: Finish implementing 'multiplayer' logic
+graph_users: Dict[str, WebSocket] = {}
 
 @router.websocket("/graph/{hid}")
 async def active_graph_inquiry(
     websocket: WebSocket,
-    user: Annotated[schemas.User, Depends(deps.get_user_from_ws)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_ws)],
     hid: Annotated[int, Depends(deps.get_graph_id)],
     db: Session = Depends(deps.get_db)
 ):
-    await websocket.accept()
-    is_project_active = True
+    graph_users[user.cid] = websocket  
     active_inquiry = crud.graphs.get(db, id=hid)
-    if active_inquiry is None:
-        is_project_active = False
-    else:
-        await websocket.send_json({"action": "isLoading", "detail": True })
 
-    while is_project_active:
-        try:
-            event: dict = await websocket.receive_json()
-            await run_user_graph_event(
-                event=event,
-                send_json=websocket.send_json,
-                uuid=active_inquiry.uuid
-            )
-        except OBPluginError as e:
-            await websocket.send_json({"action": "error", "detail": f"{e}"})
-            await websocket.send_json({"action": "isLoading", "detail": False })
-            log.error(e)
-        except (WebSocketException, BufferError, ConnectionClosedError) as e:
-            await websocket.send_json({"action": "isLoading", "detail": False })
-            log.error("Exception inside node.active_project")
-            log.error(e)
-            is_project_active = False
-            await websocket.close()
-        except WebSocketDisconnect as e:
-            log.info(f"disconnected!")
+    await websocket.accept()
+    if active_inquiry is not None:
+        await graph_users[user.cid].send_json({"action": "isLoading", "detail": True })
+    else:
+        websocket.send({"action": "error"})
+
+    for cid, ws in graph_users.items():
+        async for event in ws.iter_json():
+            try:
+                await run_user_graph_event(
+                    event=event,
+                    send_json=ws.send_json,
+                    uuid=active_inquiry.uuid
+                )
+            except OBPluginError as e:
+                await ws.send_json({"action": "error", "detail": f"{e}"})
+                await ws.send_json({"action": "isLoading", "detail": False })
+                log.error(e)
+            except (WebSocketException, ConnectionClosedError) as e:
+                log.error("Exception inside node.active_project")
+                log.error(e)
+                await ws.send_json({"action": "isLoading", "detail": False })
+                await ws.close()
+                del graph_users[cid]
+            except WebSocketDisconnect as e:
+                log.info(f"disconnect! {cid}")
+                del graph_users[cid]
+
 
 @router.get("/refresh")
 async def refresh_plugins(
     hid: Annotated[str, Depends(deps.get_graph_id)],
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     db: Session = Depends(deps.get_db)
 ):
     try:
@@ -400,7 +424,7 @@ async def refresh_plugins(
 @router.post("/")
 async def create_entity_on_drop(
     hid: Annotated[str, Depends(deps.get_graph_id)],
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     create_node: schemas.CreateNode,
     db: Session = Depends(deps.get_db)
 ):

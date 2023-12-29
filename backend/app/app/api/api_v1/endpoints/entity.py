@@ -26,7 +26,7 @@ async def fetch_node_transforms(plugin_label):
 
 @router.get("/plugins/transform/")
 async def get_entity_transforms(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     label: str
 ):
     try:
@@ -50,7 +50,7 @@ async def get_entity_transforms(
 
 @router.get("/details/{hid}", response_model=schemas.Entity)
 async def get_entity(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     hid: Annotated[str, Depends(deps.get_entity_id)],
     db: Annotated[Session, Depends(deps.get_db)],
 ):
@@ -71,7 +71,7 @@ async def get_entity(
     response_model=schemas.AllEntitiesList
 )
 async def get_entities(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     db: Annotated[Session, Depends(deps.get_db)],
     skip: int = 0,
     limit: int = 100,
@@ -119,7 +119,7 @@ async def get_entities(
 
 @router.post("")
 async def create_entity(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     entity: schemas.PostEntityCreate,
     db: Annotated[Session, Depends(deps.get_db)],
 ):
@@ -145,7 +145,7 @@ async def create_entity(
 
 @router.put("/{hid}")
 async def update_entity_by_id(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     hid: Annotated[str, Depends(deps.get_entity_id)],
     obj_in: schemas.EntityBase,
     db: Annotated[Session, Depends(deps.get_db)],
@@ -167,7 +167,7 @@ async def update_entity_by_id(
 
 @router.delete("/{hid}")
 async def delete_entity(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     hid: Annotated[str, Depends(deps.get_entity_id)],
     db: Annotated[Session, Depends(deps.get_db)],
 ):
@@ -184,7 +184,7 @@ async def delete_entity(
 
 @router.put("/{hid}/favorite")
 async def update_entity_favorite_id(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     hid: Annotated[str, Depends(deps.get_entity_id)],
     db: Annotated[Session, Depends(deps.get_db)],
 ):

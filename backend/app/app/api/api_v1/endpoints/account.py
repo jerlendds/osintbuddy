@@ -14,12 +14,12 @@ router = APIRouter(prefix="/account")
 
 @router.get(
     "/",
-    response_model=Union[schemas.User, schemas.HTTPError],
+    response_model=Union[schemas.UserInDBBase, schemas.HTTPError],
     response_model_exclude_none=True
 )
 async def get_account(
     request: APIRequest,
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
 ) -> models.User:
     try:
         return user

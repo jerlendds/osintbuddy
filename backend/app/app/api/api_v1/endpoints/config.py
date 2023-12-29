@@ -15,7 +15,7 @@ router = APIRouter(prefix="/config")
 @router.get("/casdoor", response_model=Any)
 async def get_casdoor_config(
     request: APIRequest,
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)]
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)]
 ):
     sdk = request.app.state.CASDOOR_SDK
     casdoor_apps = sdk.get_applications()

@@ -16,7 +16,7 @@ router = APIRouter(prefix="/graph")
 
 @router.get("/{hid}", response_model=schemas.Graph)
 async def get_graph(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     hid: Annotated[str, Depends(deps.get_graph_id)],
     db: Annotated[Session, Depends(deps.get_db)],
 ):
@@ -37,7 +37,7 @@ async def get_graph(
 
 @router.patch('/{hid}/favorite/')
 async def update_graph_favorite_id(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     hid: Annotated[str, Depends(deps.get_graph_id)],
     db: Annotated[Session, Depends(deps.get_db)],
 ):
@@ -66,7 +66,7 @@ async def update_graph_favorite_id(
     response_model=schemas.AllGraphsList,
 )
 async def get_graphs(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     db: Annotated[Session, Depends(deps.get_db)],
     skip: int = 0,
     limit: int = 100,
@@ -112,7 +112,7 @@ async def get_graphs(
     response_model=schemas.GraphsList
 )
 async def get_graphs_by_favorite(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     db: Annotated[Session, Depends(deps.get_db)],
     skip: int = 0,
     limit: int = 100,
@@ -139,7 +139,7 @@ async def get_graphs_by_favorite(
     response_model=schemas.Graph
 )
 async def create_graph(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     obj_in: schemas.GraphCreate,
     db: Annotated[Session, Depends(deps.get_db)],
 ):
@@ -162,7 +162,7 @@ async def create_graph(
 
 @router.delete('')
 async def delete_graph(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     hid: Annotated[str, Depends(deps.get_graph_id)],
     db: Annotated[Session, Depends(deps.get_db)],
 ):
@@ -180,7 +180,7 @@ async def delete_graph(
 
 @router.get('/{hid}/stats')
 async def get_graph_stats(
-    user: Annotated[schemas.User, Depends(deps.get_user_from_session)],
+    user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     hid: Annotated[str, Depends(deps.get_graph_id)],
     db: Annotated[Session, Depends(deps.get_db)],
 ):

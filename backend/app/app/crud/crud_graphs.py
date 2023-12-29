@@ -45,7 +45,7 @@ class CRUDGraphs(CRUDBase[
     def get_many_user_graphs(
         self,
         db: Session,
-        user: schemas.User,
+        user: schemas.UserInDBBase,
         skip: int = 0,
         limit: int = 50,
         is_favorite: bool = True

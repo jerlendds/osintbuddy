@@ -1,9 +1,12 @@
+import datetime
 from typing import Generator, Any
 from contextlib import contextmanager
+import uuid
 
 import boto3
 from botocore.exceptions import BotoCoreError
 from fastapi import Depends, HTTPException, WebSocket, WebSocketException
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 import undetected_chromedriver as uc
 from selenium import webdriver
@@ -20,6 +23,9 @@ from app.core.config import settings
 log = get_logger("api.deps")
 
 
+if "dev" in settings.ENVIRONMENT:
+    ___OB_DEV_CID___ = uuid.uuid4()
+
 def get_db() -> Generator[Any, Session, Any]:
     try:
         db: Session = SessionLocal()
@@ -31,26 +37,56 @@ def get_db() -> Generator[Any, Session, Any]:
 async def get_user_from_session(
     request: APIRequest,
     db: Session = Depends(get_db)
-) -> schemas.User:
-    if 'dev' in settings.ENVIRONMENT:
-        return {}
+) -> schemas.UserInDBBase:
+
     if user := request.session.get("member"):
-        ob_user: schemas.User | None = crud.user.get_by_cid(db=db, cid=user.get("id"))
+        ob_user: schemas.UserInDBBase | None = crud.user.get_by_cid(db=db, cid=user.get("id"))
         if ob_user:
-            return ob_user
+            ob_user = jsonable_encoder(ob_user)
+            return schemas.UserInDBBase(**ob_user)
+    if "dev" in settings.ENVIRONMENT:
+        return schemas.UserCreate(
+            cid=___OB_DEV_CID___,
+            name="DEV",
+            username="DEV",
+            email="dev@osintbuddy.com",
+            avatar="",
+            phone="",
+            display_name="Dev Account",
+            first_name="Dev",
+            last_name="eloper",
+            is_admin=True,
+            created_time=datetime.datetime.now(),
+            updated_time=datetime.datetime.now(),
+        )
     raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 async def get_user_from_ws(
     websocket: WebSocket,
     db: Session = Depends(get_db)
-) -> schemas.User:
-    if 'dev' in settings.ENVIRONMENT:
-        return {}
+) -> schemas.UserInDBBase:
+
     if user := websocket.session.get("member"):
-        ob_user: schemas.User | None = crud.user.get_by_cid(db=db, cid=user.get("id"))
+        ob_user: schemas.UserInDBBase | None = crud.user.get_by_cid(db=db, cid=user.get("id"))
         if ob_user:
-            return ob_user
+            ob_user = jsonable_encoder(ob_user)
+            return schemas.UserInDBBase(**ob_user)
+    if "dev" in settings.ENVIRONMENT:
+        return schemas.UserInDBBase(
+            cid=___OB_DEV_CID___,
+            name="DEV",
+            username="DEV",
+            email="dev@osintbuddy.com",
+            avatar="",
+            phone="",
+            display_name="Dev Account",
+            first_name="Dev",
+            last_name="eloper",
+            is_admin=True,
+            created_time=datetime.datetime.now(),
+            updated_time=datetime.datetime.now(),
+        )
     raise WebSocketException(code=401)
 
 
