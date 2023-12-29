@@ -7,10 +7,16 @@ import ReactFlow, {
   NodeDragHandler,
   Connection,
   Node,
+  getViewportForBounds,
+  MiniMap,
+  ReactFlowInstance,
+  getNodesBounds,
+  getBoundsOfRects,
+  getTransformForBounds,
 } from 'reactflow';
 import EditEntityNode from './EditEntityNode';
-import { addNodeUpdate, createEdge, disableEntityEdit, enableEntityEdit, onEdgesChange, selectEditState, setEditLabel, setEditState, updateEdgeEvent, updateNodeFlow } from '@src/features/graph/graphSlice';
-import { useAppDispatch, useAppSelector } from '@src/app/hooks';
+import { addNodeUpdate, createEdge, disableEntityEdit, enableEntityEdit, graph, onEdgesChange, selectEditState, setEditLabel, setEditState, updateEdgeEvent, updateNodeFlow } from '@src/features/graph/graphSlice';
+import { useAppDispatch, useAppSelector, useEffectOnce } from '@src/app/hooks';
 import { toast } from 'react-toastify';
 import ViewEntityNode from './ViewEntityNode';
 import { CreateEntityOnDropApiResponse, useCreateEntityOnDropMutation, useRefreshPluginsQuery } from '@src/app/api';
@@ -25,6 +31,7 @@ const viewOptions: FitViewOptions = {
 
 // im lazy so im extending the generic JSONObject for now, feel free to fix...
 interface ProjectGraphProps extends JSONObject {
+  graphInstance?: ReactFlowInstance
 }
 
 export default function Graph({
@@ -68,7 +75,7 @@ export default function Graph({
       if (typeof label === 'undefined' || !label) return;
 
       const graphBounds = graphRef.current.getBoundingClientRect();
-      const position = graphInstance.project({
+      const position = graphInstance?.project({
         x: event.clientX - graphBounds.left,
         y: event.clientY - graphBounds.top,
       });
@@ -130,15 +137,31 @@ export default function Graph({
     }
   };
 
-  useEffect(() => {
-    if (!isDragging && graphInstance?.getViewport) {
-      // console.log('graphInstance', isDragging, graphInstance?.getViewport())
+  const handleGraphRead = (readType: string = 'read') => {
+    const viewport: any = graphInstance?.getViewport()
+    if (viewport) {
+      sendJsonMessage({
+        action: `${readType}:graph`,
+        viewport
+      })
     }
+  }
+
+  useEffect(() => {
+    // TODO: implement loading/unloading nodes after drag
+    // !isDragging && handleGraphRead()
   }, [isDragging])
+
+  useEffect(() => {
+    graphInstance?.setViewport({ x: 0, y: 0, zoom: 0.22 })
+    handleGraphRead('initial_read');
+  }, [graphInstance?.getViewport])
 
   return (
     <ReactFlow
-      minZoom={0.2}
+      onlyRenderVisibleElements={true}
+      nodeDragThreshold={1}
+      minZoom={0.22}
       maxZoom={2.0}
       nodes={nodes}
       edges={edges}

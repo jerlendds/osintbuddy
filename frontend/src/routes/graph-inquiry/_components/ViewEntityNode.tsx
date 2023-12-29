@@ -19,20 +19,6 @@ import {
 } from '@src/features/graph/graphSlice';
 import { toast } from 'react-toastify';
 
-var dropdownKey = 0;
-
-const getKey = () => {
-  dropdownKey += 1;
-  return `k_${dropdownKey}`;
-};
-
-var nodeKey = 0;
-
-const getNodeKey = () => {
-  nodeKey += 1;
-  return `k_${nodeKey}`;
-};
-
 const handleStyle = { borderColor: '#39477899', background: '#12172720', width: 12, margin: -1, height: 12 };
 
 type NodeElement = NodeInput & {
@@ -43,13 +29,10 @@ type NodeElement = NodeInput & {
 };
 
 
-export default function ViewEntityNode({
-  ctx,
-  dispatch
-}: JSONObject) {
+export default function ViewEntityNode({ ctx }: JSONObject) {
   const node = ctx.data;
-
   const displayValue = useMemo(() => Array.isArray(node.elements[0]) ? node.elements[0][0]?.value : node.elements[0]?.value, [node.elements])
+
   return (
     <>
       <Handle position={Position.Right} id='r1' key='r1' type='source' style={handleStyle} />

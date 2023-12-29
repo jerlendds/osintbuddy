@@ -87,13 +87,15 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   const displayMode = useAppSelector((state) => selectViewMode(state));
   const [shouldConnect, setShouldConnect] = useState(false)
 
+
   const { lastJsonMessage, readyState, sendJsonMessage }: UseWebsocket = useWebSocket(socketUrl, {
     shouldReconnect: () => shouldConnect,
     onClose: () => {
+      dispatch(resetGraph())
       toast.update(
         loadingToastId,
         {
-          render: 'The connection was lost! Attempting to reconnect...',
+          render: `The connection was lost! ${shouldConnect ? 'Attempting to reconnect...' : ''}`,
           type: 'warning',
           isLoading: false,
           autoClose: 1400
@@ -105,7 +107,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   useEffectOnce(() => {
     toast.loading('Loading graph...', { closeButton: true, isLoading: true, toastId: loadingToastId })
     dispatch(resetGraph());
-    sendJsonMessage({ action: 'read:node' });
+
   });
   const socketStatus = {
     [ReadyState.CONNECTING]: 'connecting',
@@ -146,6 +148,11 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   // Handle any actions the websocket sends from backend
   const wsActionPlayer: any = {
     'isInitialRead': () => {
+
+      dispatch(setAllNodes(lastJsonMessage.nodes))
+      dispatch(setAllEdges(lastJsonMessage.edges))
+    },
+    'read': () => {
       dispatch(setAllNodes(lastJsonMessage.nodes))
       dispatch(setAllEdges(lastJsonMessage.edges))
     },
@@ -179,9 +186,9 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   useEffect(() => {
     const wsAction = lastJsonMessage?.action
     if (wsAction) wsActionPlayer[wsAction]()
-    if (lastJsonMessage) {
-      setMessageHistory((prev) => prev.concat(lastJsonMessage));
-    }
+    lastJsonMessage && messageHistory.length > 50 ?
+      setMessageHistory([lastJsonMessage]) :
+      setMessageHistory((prev) => prev.concat(lastJsonMessage))
   }, [lastJsonMessage, setMessageHistory]);
 
   const initialNodes = useAppSelector((state) => graphNodes(state));
@@ -416,6 +423,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
               </div>
             </div>
           </div>
+
           <CommandPallet
             isOpen={showCommandPalette}
             setOpen={setShowCommandPalette}
