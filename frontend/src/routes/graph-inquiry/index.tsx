@@ -148,7 +148,6 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   // Handle any actions the websocket sends from backend
   const wsActionPlayer: any = {
     'isInitialRead': () => {
-
       dispatch(setAllNodes(lastJsonMessage.nodes))
       dispatch(setAllEdges(lastJsonMessage.edges))
     },

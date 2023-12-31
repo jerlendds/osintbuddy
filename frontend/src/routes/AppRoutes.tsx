@@ -24,7 +24,7 @@ const EntitiesOverview = lazy(() => import("@routes/dashboard/_components/entity
 const EntityDetails = lazy(() => import("@routes/dashboard/_components/entity/EntityDetails"))
 
 const Settings = lazy(() => import("@routes/settings"));
-const Incidents = lazy(() => import("@routes/incidents"));
+const Workspaces = lazy(() => import("@src/routes/workspaces"));
 
 const ScansCreate = lazy(() => import("@routes/scans-create"))
 const ScansOverview = lazy(() => import("@routes/scans"));
@@ -89,8 +89,8 @@ const router = createBrowserRouter([
         element: <Suspense><Settings /></Suspense>
       },
       {
-        path: 'incidents',
-        element: <Suspense><Incidents /></Suspense>
+        path: 'workspaces',
+        element: <Suspense><Workspaces /></Suspense>
       },
       {
         path: 'scans',

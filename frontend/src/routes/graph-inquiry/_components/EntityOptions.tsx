@@ -64,7 +64,7 @@ export const useResize = ({ minWidth }: UseResizeProps): UseResizeReturn => {
 export function EntityOption({ entity, onDragStart }: JSONObject) {
   return (
     <>
-      <li key={entity.id} className='flex items-center w-full justify-between py-3'>
+      <li key={entity.id} className='flex items-center w-full justify-between py-1.5'>
         <div
           draggable
           onDragStart={(event) => onDragStart(event, entity.label)}
@@ -83,16 +83,17 @@ export function EntityOption({ entity, onDragStart }: JSONObject) {
                 {entity.status}Installed
               </p> */}
             </div>
-            <div className='mt-1 flex flex-wrap items-center gap-x-2 text-xs leading-5 text-slate-500'>
+            <div className='flex flex-wrap items-center gap-x-2 text-xs leading-5 text-slate-500'>
               <p className='truncate whitespace-normal leading-5 text-slate-500'>
                 {' '}
                 {entity.description && entity.description.length > 76 ?
                   `${entity.description.slice(0, 76)}...` : entity.description}
               </p>
-              <svg viewBox='0 0 2 2' className='h-0.5 w-0.5 fill-current'>
-                <circle cx={1} cy={1} r={1} />
-              </svg>
-              <p className='truncate  leading-5 text-slate-500 text-xs'>
+              <br />
+              <p className='truncate flex items-center leading-5 text-slate-500 text-xs'>
+                <svg viewBox='0 0 2 2' className='h-0.5 w-0.5 fill-current mr-1.5 ml-0'>
+                  <circle cx={1} cy={1} r={1} />
+                </svg>
                 Created by {entity.author ? entity.author : 'the OSINTBuddy team'}
               </p>
             </div>

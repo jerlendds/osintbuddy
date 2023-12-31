@@ -8,7 +8,7 @@ import { CogIcon, DocumentMagnifyingGlassIcon, FolderOpenIcon, PlusIcon, HomeIco
 
 const navigation = [
   { name: "Dashboard", to: "/dashboard", icon: HomeIcon },
-  { name: "Incidents *", to: "/incidents", icon: FolderOpenIcon },
+  { name: "Workspaces *", to: "/workspaces", icon: FolderOpenIcon },
   { name: "Scans *", to: "/scans", icon: DocumentMagnifyingGlassIcon },
 ];
 
@@ -71,7 +71,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                   aria-hidden="true"
                 />
                 {item.name}
-                {item.name === "Incidents *" && (
+                {item.name === "Workspaces *" && (
                   <button
                     onClick={(e) => {
                       e.preventDefault();
@@ -92,7 +92,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                         { autoClose: 10000 }
                       );
                     }}
-                    title="Create new incident"
+                    title="Create new note"
                     className="ml-auto -mr-0.5 relative bg-dark-400 transition-colors duration-75 hover:bg-dark-500 p-1.5 rounded-full"
                   >
                     <PlusIcon className="text-white w-4 h-4" />

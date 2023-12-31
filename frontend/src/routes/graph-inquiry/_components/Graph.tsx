@@ -197,7 +197,6 @@ export default function Graph({
       onSelectionContextMenu={onMultiSelectionCtxMenu}
       connectionLineComponent={NewConnectionLine}
       elevateNodesOnSelect={true}
-      fitView
     >
       <Background size={2} variant={BackgroundVariant.Dots} className='bg-transparent' color='#35426FAA' />
     </ReactFlow>

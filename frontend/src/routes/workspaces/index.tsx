@@ -198,7 +198,7 @@ export function SearchBar() {
             />
             <Combobox.Input
               className='h-12 w-full rounded-r-md focus:bg-dark-900 ring-dark-300 outline-none ring-1 transition-colors duration-150 ease-in-out bg-transparent pl-11 pr-4 text-slate-200 placeholder:text-slate-500 focus:ring-dark-100 sm:text-sm'
-              placeholder='Search incidents...'
+              placeholder='Search workspaces...'
               onChange={(event) => setIncidentQuery(event.target.value)}
             />
             <XMarkIcon className='pointer-events-none absolute right-2 top-3.5 h-5 w-5 text-slate-500' />
@@ -258,7 +258,7 @@ export default function IncidentsPage() {
       {/* <InquiryHeader title='Incidents' /> */}
       {/* <SearchBar /> */}
       <UnderConstruction
-        header='OSINTBuddy Incidents'
+        header='OSINTBuddy Workspaces'
         description='This feature is currently being planned out and created and will be finished eventually. 
             You can help shape this feature by creating/contributing to a discussion on Github!'
       />
