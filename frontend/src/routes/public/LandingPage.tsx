@@ -19,7 +19,7 @@ export default function LandingPage(): React.ReactElement {
         rotateSpeed: 0.0005,
         pointColor: 0x242E4D,
         pointHighlight: 0x394778,
-        fogColor: 0x005f46,
+        fogColor: 0x005c5f,
         lineHighlightSize: 10,
         minLineSpacing: 30,
         maxLineSpacing: 1000,
