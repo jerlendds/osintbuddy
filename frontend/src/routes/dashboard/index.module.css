@@ -1,10 +1,10 @@
 /* wraps the sidebar with search and the main view */
 .sidebar-wrapper {
-  @apply rounded py-px !min-w-[18.75rem] max-w-[18.75rem] flex-col h-[99vh] pt-3.5  border-r-2 border-mirage-500/60  from-mirage-600/20 to-mirage-500/20 bg-gradient-to-br justify-between shadow-xl flex relative w-full  
+  @apply rounded py-px !min-w-[20rem] max-w-[20rem] flex-col h-[99vh] pt-3.5  border-r-2 border-mirage-500/60  from-mirage-600/20 to-mirage-500/20 bg-gradient-to-br justify-between shadow-xl flex relative w-full 
 }
 
 .search-container {
-  @apply flex mx-1.5 items-center relative border text-slate-600 hover:text-slate-300/40 focus:text-slate-300/40  transition-all duration-200 ease-out from-mirage-400/60 to-mirage-300/20 bg-gradient-to-tl rounded border-mirage-300/50 hover:border-mirage-300 mb-1.5 
+  @apply flex mx-1.5  items-center relative border text-slate-600 hover:text-slate-300/40 focus:text-slate-300/40  transition-all duration-200 ease-out from-mirage-400/60 to-mirage-300/20 bg-gradient-to-tl rounded border-mirage-300/50 hover:border-mirage-300 mb-1.5 
 }
 .search-container:active, .search-container:focus-within {
   @apply border-primary/50 to-mirage-400/10 from-mirage-400/20 bg-gradient-to-l
@@ -15,18 +15,18 @@
 }
 
 .search-container svg {
-  @apply w-5 h-5 text-inherit ml-2 
+  @apply w-5 h-5 text-inherit ml-2
 }
 
 .dashboard-tabs {
-  @apply overflow-y-hidden flex-grow
+  @apply overflow-y-hidden flex-grow flex flex-col items-stretch
 }
 
 .tabs-list {
-  @apply flex justify-between  rounded pb-2 pt-0.5 items-center;
+  @apply flex justify-between rounded pb-2 pt-0.5 items-center;
 }
 .tab {
-  @apply focus:outline-none transition-colors duration-200 ease-in-out flex items-center justify-center pt-2.5 px-0 mx-0 rounded min-w-[6.34rem] text-sm leading-none z-[1] font-display flex-grow    hover:pointer-events-auto
+  @apply focus:outline-none transition-colors duration-200 ease-in-out flex items-center justify-center pt-2.5 px-0 mx-0 rounded min-w-[6.5rem] text-sm leading-none z-[1] font-display flex-grow    hover:pointer-events-auto
 }
 .tab span,
 .tab-false span,
@@ -40,16 +40,16 @@
   @apply text-slate-600 hover:text-slate-500 ;
 }
 .tab-slider {
-  @apply min-h-[34px]   mr-auto min-w-[90px] left-0 relative pointer-events-auto z-[0] top-1 hover:scale-x-[100%]  transition-all duration-200 ease-in-out rounded scale-x-[101%] from-primary-300/40 to-primary-300/60 border border-mirage-400/60 bg-gradient-to-br
+  @apply min-h-[34px]  mr-auto min-w-[90px] left-0 relative pointer-events-auto z-[0] top-1 hover:scale-x-[100%]  transition-all duration-200 ease-in-out rounded scale-x-[104%] from-primary-300/40 to-primary-300/60 border border-mirage-400/60 bg-gradient-to-br
 }
 .graph-tab[aria-selected="true"] ~ div {
-  @apply -translate-x-[298px] w-[112px]  cursor-pointer
+  @apply -translate-x-[304px] w-[134px] scale-x-[104%] cursor-pointer
 }
 .entities-tab[aria-selected="true"] ~ div {
-  @apply -translate-x-[197px] scale-x-[110%] cursor-pointer
+  @apply -translate-x-[202px] scale-x-[110%] cursor-pointer
 }
 .market-tab[aria-selected="true"] ~ div {
-  @apply -translate-x-[95px] scale-[100.5%] cursor-pointer
+  @apply -translate-x-[97px] scale-x-[106%] cursor-pointer
 }
 .tab-panel {
   @apply w-full relative overflow-y-scroll;

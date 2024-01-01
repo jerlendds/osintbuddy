@@ -2,7 +2,7 @@
   @apply flex flex-col justify-between relative flex-shrink ;
 }
 .subpanel-section {
-  @apply py-1 px-1.5 flex flex-col
+  @apply py-1 px-0.5 flex flex-col
 }
 .subpanel > p {
   @apply text-sm py-4 font-medium text-slate-500 focus:outline-none cursor-pointer px-2

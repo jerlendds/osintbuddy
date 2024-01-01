@@ -63,7 +63,7 @@ body {
 }
 
 #root {
-  @apply flex flex-col min-h-screen relative bg-mirage-800/60 from-mirage-800/80 to-mirage-800/50 bg-gradient-to-br ;
+  @apply flex flex-col min-h-screen relative bg-mirage-700/60 from-mirage-700/70 to-mirage-800/50 bg-gradient-to-br ;
   /* color: #066b74c1; */
 }
 

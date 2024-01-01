@@ -52,9 +52,9 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                 to={item.to}
                 className={({ isActive }) =>
                   classNames(
-                    isActive && "active",
-                    "sidebar-link",
-                    !showSidebar && "mx-0 "
+                    isActive && "active mx-2",
+                    "sidebar-link ",
+                    !showSidebar ? "mx-0 ml-0 mr-px" : 'mr-2'
                   )
                 }
               >
@@ -67,7 +67,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                     "mr-2 flex-shrink-0 h-6 w-6 duration-100",
                     showSidebar
                       ? "translate-x-0"
-                      : "translate-x-[13.2rem] -ml-2"
+                      : "translate-x-[12.75rem] "
                   )}
                 />
                 {item.name}

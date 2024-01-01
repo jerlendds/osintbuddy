@@ -19,7 +19,7 @@ export default function LandingPage(): React.ReactElement {
         rotateSpeed: 0.0005,
         pointColor: 0x242E4D,
         pointHighlight: 0x394778,
-        fogColor: 0x0d738f,
+        fogColor: 0x0d628f,
         lineHighlightSize: 10,
         minLineSpacing: 30,
         maxLineSpacing: 1000,
@@ -48,12 +48,12 @@ export default function LandingPage(): React.ReactElement {
         <div className='lg:pt-32 pt-16 top-8 px-4 relative'>
           <div className='mx-auto  grid max-w-2xl grid-cols-1 items-center gap-y-16 lg:max-w-8xl lg:grid-cols-2 '>
             <div className='relative px- sm:px-3 z-10 md:text-center lg:text-left'>
-              <div className='relative '>
+              <div className='relative pb-12'>
                 <p className='inline bg-gradient-to-r from-primary-300 via-primary-200 to-primary-400/90 bg-clip-text text-5xl font-display font-medium tracking-tight text-transparent'>
                   Elevate Your Research;<br /> Unlock the Webs Wisdom
                 </p>
                 <p className=' text-lg tracking-tight  text-slate-400'>
-                  Stay informed with critical insights from the web. We're on a mission to democratize access to data collection and analysis tools, uniting experts, journalists, and other developers with powerful intelligence tools. Reveal the connections that shape our world.
+                  Stay informed with targeted insights from public data. We're on a mission to democratize access to open source intelligence. Let's reveal the connections that shape our world.
                 </p>
                 <div className='mt-5 lg:mt-4 flex gap-4 md:justify-center lg:justify-start'>
                   <button
