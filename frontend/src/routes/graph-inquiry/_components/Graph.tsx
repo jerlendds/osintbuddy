@@ -198,7 +198,7 @@ export default function Graph({
       connectionLineComponent={NewConnectionLine}
       elevateNodesOnSelect={true}
     >
-      <Background size={2} variant={BackgroundVariant.Dots} className='bg-transparent' color='#35426FAA' />
+      <Background size={2} variant={BackgroundVariant.Dots} className='bg-transparent' color='#35426F' />
     </ReactFlow>
   );
 }

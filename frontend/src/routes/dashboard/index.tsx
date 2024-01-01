@@ -142,7 +142,7 @@ export default function DashboardPage() {
               </Tab>
               <div className={styles["tab-slider"]}></div>
             </Tab.List>
-            <section className="h-full overflow-y-scroll mb-20 px-2.5 -mr-1">
+            <section className="h-full overflow-y-scroll px-2 ">
               <Tab.Panel className={styles["tab-panel"]}>
                 <GraphPanel
                   refetchGraphs={async () => await refetchGraphs()}

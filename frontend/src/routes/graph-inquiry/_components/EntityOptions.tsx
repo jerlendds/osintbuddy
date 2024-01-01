@@ -196,7 +196,7 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
       }}
     >
       <div
-        className=' overflow-hidden rounded-md z-10 border border-mirage-400/70  from-mirage-500/95 to-mirage-500/90 bg-gradient-to-br flex flex-col h-min'
+        className=' overflow-hidden rounded-md z-10 border border-mirage-400/70  from-mirage-500/80 to-slate-900/90 bg-gradient-to-br flex flex-col h-min'
         key='entities'
         id='node-options-tour'
       >

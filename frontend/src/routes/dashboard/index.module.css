@@ -52,6 +52,6 @@
   @apply -translate-x-[97px] scale-x-[106%] cursor-pointer
 }
 .tab-panel {
-  @apply w-full relative overflow-y-scroll;
+  @apply w-full relative ;
 }
 

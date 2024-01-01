@@ -54,7 +54,7 @@ button {
 html {
   background-size: 100% 100%;
 background-position: 0px 0px,0px 0px,0px 0px,0px 0px,0px 0px;
-background-image: radial-gradient(49% 81% at 45% 47%, #0048ffcb 0%, #073AFF00 100%),radial-gradient(113% 91% at 17% -2%, #151a3eaa 1%, #0015ffcb 99%),radial-gradient(142% 91% at 83% 7%, #0d8d8f 1%, #2b00ffda 99%),radial-gradient(142% 91% at -6% 74%, #002aff70 1%, #FF000000 99%),radial-gradient(142% 91% at 111% 84%, #0040ff 25%, #452296 95%);
+background-image: radial-gradient(49% 81% at 45% 47%, #0048ffcb 0%, #073AFF00 100%),radial-gradient(113% 91% at 17% -2%, #001547fa 1%, #1100a7cb 99%),radial-gradient(142% 91% at 83% 7%, #8f1a0dd6 1%, #005f46da 99%),radial-gradient(142% 91% at -6% 74%, #002aff70 1%, #a81010c1 99%),radial-gradient(142% 91% at 111% 84%, #0040ff 25%, #452296 95%);
 }
 
 /* https://gradienta.io/editor */
@@ -92,13 +92,13 @@ figcaption {
   Works on Chrome, Edge, and Safari 
 */
 *::-webkit-scrollbar {
-  width: 7px;
+  width: 10px;
   border-radius: none;
 
 }
 *::-webkit-scrollbar-track {
   background: #19233433;
-  width: 7px;
+  width: 10px;
   border-radius: none;
 
 }
@@ -108,7 +108,7 @@ figcaption {
   border-right: 9px solid #1b243a84;
 }
 * {
-  scrollbar-width: 7px;
+  scrollbar-width: 10px;
   scrollbar-color: #1d222f62 #202d4333;
 
 }
