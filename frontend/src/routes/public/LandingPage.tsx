@@ -1,80 +1,95 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { HeroBackground } from '@src/components/Icons';
-import blurCyanImage from '@images/blur-cyan.png';
-import blurIndigoImage from '@images/blur-indigo.png';
+import Earth from '@tarii/3d-earth'
+import { useEffectOnce } from '@src/app/hooks';
+
+const QUOTES = [
+  "It's the connections that give it meaning",
+  "Vision is the art of seeing insight in the invisible",
+  "Reveal the connections behind actionable insights",
+]
 
 export default function LandingPage(): React.ReactElement {
+  const earthRef = useRef<HTMLDivElement>(null)
+  const atfQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)]
+  useEffectOnce(() => {
+    if (earthRef?.current) {
+      const earth = new Earth({
+        parent: earthRef.current as HTMLDivElement,
+        rotateSpeed: 0.0005,
+        pointColor: 0x242E4D,
+        pointHighlight: 0x394778,
+        fogColor: 0x0d738f,
+        lineHighlightSize: 10,
+        minLineSpacing: 30,
+        maxLineSpacing: 1000,
+        coords: [
+          39.804935, 114.973428,
+          10.106263, 39.144935,
+          41.997906, -1.405880,
+          39.897687, -122.714527,
+          9.171568, -66.633754,
+          -35.15, 149.08,
+          -6.09, 106.49
+        ],
+        pointFlashSpeed: 0.0001,
+        pointRadius: 0.5,
+        pointSegments: 5,
+      })
+
+      earth.randomLinkAnimator()
+      earth.start()
+    }
+
+  })
   return (
     <>
-      <div className='overflow-hidden bg-slate-900 mt-[-4.5rem] pb-32 pt-[4.5rem] lg:pt-[4.75rem]'>
-        <div className='pt-16 sm:px-2 lg:relative  lg:px-0'>
-          <div className='mx-auto grid max-w-2xl grid-cols-1 items-center gap-y-16 py-24 gap-x-8 px-4 lg:max-w-8xl lg:grid-cols-2 lg:px-8 xl:gap-x-16 xl:px-12'>
-            <div className='relative z-10 md:text-center lg:text-left'>
-              <img
-                className='absolute bottom-full right-full -mr-72 -mb-56 opacity-50'
-                src={blurCyanImage}
-                alt=''
-                width={530}
-                height={530}
-              />
-              <div className='relative'>
-                <p className='inline bg-gradient-to-r from-indigo-200 via-sky-400 to-indigo-200 bg-clip-text font-display text-5xl tracking-tight text-transparent'>
-                  Open Source Intelligence
+      <div className=' h-full min-h-screen relative flex flex-col justify-between items-between overflow-scroll'>
+        <div className='lg:pt-32 pt-16 top-8 px-4 relative'>
+          <div className='mx-auto  grid max-w-2xl grid-cols-1 items-center gap-y-16 lg:max-w-8xl lg:grid-cols-2 '>
+            <div className='relative px- sm:px-3 z-10 md:text-center lg:text-left'>
+              <div className='relative '>
+                <p className='inline bg-gradient-to-r from-primary-300 via-primary-200 to-primary-400/90 bg-clip-text text-5xl font-display font-medium tracking-tight text-transparent'>
+                  Elevate Your Research;<br /> Unlock the Webs Wisdom
                 </p>
-                <p className='mt-3 text-2xl tracking-tight text-slate-400'>
-                  Fetch data from different sources and returns the results as visual entities that you can explore.
+                <p className=' text-lg tracking-tight  text-slate-400'>
+                  Stay informed with critical insights from the web. We're on a mission to democratize access to data collection and analysis tools, uniting experts, journalists, and other developers with powerful intelligence tools. Reveal the connections that shape our world.
                 </p>
-                <div className='mt-8 flex gap-4 md:justify-center lg:justify-start'>
+                <div className='mt-5 lg:mt-4 flex gap-4 md:justify-center lg:justify-start'>
                   <button
                     onClick={() => {
                       window.location.href = window.sdk.getSigninUrl();
                     }}
-                    className='rounded-full bg-sky-300 py-2 px-4 text-sm font-semibold text-slate-900 hover:bg-sky-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300/50 active:bg-sky-500'
+                    className='btn-primary-solid '
                   >
-                    Login
+                    Sign in
                   </button>
                   <button
                     onClick={() => {
                       window.location.href = window.sdk.getSignupUrl();
                     }}
-                    className='rounded-full bg-slate-800 py-2 px-4 text-sm font-medium text-white hover:bg-slate-700 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/50 active:text-slate-400'
+                    className='btn-primary '
                   >
-                    Sign up
+                    Create account
                   </button>
                 </div>
               </div>
             </div>
-            <div className='relative lg:static xl:pl-10'>
-              <div className='absolute inset-x-[-50vw] -top-32 -bottom-48 [mask-image:linear-gradient(transparent,white,white)] dark:[mask-image:linear-gradient(transparent,white,transparent)] lg:left-[calc(50%+14rem)] lg:right-0 lg:-top-32 lg:-bottom-32 lg:[mask-image:none] lg:dark:[mask-image:linear-gradient(white,white,transparent)]'>
-                <HeroBackground className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 lg:left-0 lg:translate-x-0 lg:translate-y-[-60%]' />
-              </div>
-              <div className='relative'>
-                <img className='absolute -top-64 -right-64' src={blurIndigoImage} alt='' width={530} height={530} />
-                <img className='absolute -bottom-40 -right-44' src={blurIndigoImage} alt='' width={567} height={567} />
-                <div className='absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10 blur-lg' />
-              </div>
-            </div>
           </div>
+          <div ref={earthRef} className='z-0 absolute w-[20rem]  md:w-[40rem] lg:w-[54rem] md:h-[100%] h-[30rem] lg:h-[80rem] lg:mt-10 -mt-20 md:-mt-10 sm:ml-20 [mask-image:linear-gradient(transparent,white,white)] dark:[mask-image:linear-gradient(transparent,#2D385EAF,#14192A6F)] lg:-top-full top-0 right-0' />
         </div>
-        <div className='overflow-hidden bg-slate-900'>
-          <div className='sm:px-2 lg:relative  lg:px-0'>
-            <div className='mx-auto grid -mt-20 max-w-2xl grid-cols-1 items-center gap-x-8 lg:max-w-8xl lg:grid-cols-2 xl:gap-x-16 xl:px-12'>
-              <div className='relative z-10 md:text-center lg:text-left'>
-                <article>
-                  <header className='space-y-1'>
-                    <p className='font-display text-sm font-medium text-sky-500'>Getting started</p>
-                    <h1 className='font-display text-3xl tracking-tight text-slate-200 dark:text-white'>
-                      Welcome to OSINTBuddy
-                    </h1>
-                  </header>
-                </article>
-                <div className='docs max-w-4xl text-slate-400 mt-2'>v0.1.0</div>
-                <div className='docs max-w-4xl text-slate-400 py-2'>Hi, I'm the creator of OSINTBuddy. Want a chance at having your feature ideas prioritized? Email <a href='mailto:oss@osintbuddy.com' className='text-sky-500'>oss@osintbuddy.com</a> with the subject: <i>Early Access Request</i>. The first 50 people to reach out will have their suggestions put up for vote on the osintbuddy website so the community can decide what gets built first!
-                </div>.
-              </div>
-              <div className='hidden xl:sticky xl:-mr-6 xl:block xl:h-[calc(100vh-4.5rem)] xl:flex-none xl:overflow-y-auto  xl:pr-6'>
-                <nav aria-labelledby='on-this-page-title' className='w-56'></nav>
-              </div>
+        <div className='relative mt-full bottom-0 mx-4 sm:px-0 mb-0 h-min'>
+          <div className='mx-auto grid h-full max-w-2xl grid-cols-1 mt-auto mb-0 items-center lg:max-w-8xl '>
+            <div className='relative z-10 md:text-center lg:text-left '>
+              <header className='space-y-1 mt-24'>
+                <p className='font-display text-sm font-medium text-primary-300'>Welcome to ICgraph</p>
+                <h1 className='font-display text-3xl tracking-tight text-slate-300 dark:text-slate-300'>
+                  {atfQuote}
+                </h1>
+              </header>
+
+              <div className='docs max-w-4xl text-slate-400 py-2'>Please email <a href='mailto:oss@osintbuddy.com' className='text-primary-200 hover:text-primary-200/80 transition-colors duration-100 ease-in-out'>oss@icgraph.com</a> to share ideas, bugs, or security concerns
+              </div>.
             </div>
           </div>
         </div>

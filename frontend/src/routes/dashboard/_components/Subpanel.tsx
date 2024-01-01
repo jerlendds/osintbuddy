@@ -7,18 +7,18 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query"
 import { SerializedError } from "@reduxjs/toolkit"
 
 
-const MAX_DESCRIPTION_LENGTH = 63
-const MAX_LABEL_LENGTH = 31
+const MAX_DESCRIPTION_LENGTH = 79
+const MAX_LABEL_LENGTH = 32
 
 export function GraphLoaderCard() {
   return (
     <>
       <div className="mb-2">
-        <div className="w-full py-6 space-y-5 rounded-md rounded-r-none bg-mirage-400/30  before:absolute  px-4  bg-gradient-to-r from-transparent via-mirage-400/10 to-transparent relative before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-mirage-300/5 before:to-transparent isolate overflow-hidden shadow-xl shadow-black/5 border-l border-y border-mirage-500">
+        <div className="w-full py-6 space-y-1 rounded-md rounded-r-none border border-mirage-400/60  from-mirage-400/50 to-mirage-400/30 shadow bg-gradient-to-tl from-10%  before:absolute  px-4  via-mirage-400/10 relative before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-mirage-300/5 before:to-transparent isolate overflow-hidden shadow-black/5 border-l border-y border-mirage-500">
           <div className="space-y-3">
-            <div className="h-2 w-3/5 rounded-lg bg-mirage-500/60 animate-pulse"></div>
-            <div className="h-2 w-4/5 rounded-lg bg-mirage-500/60 animate-pulse"></div>
-            <div className="h-2 w-2/5 rounded-lg bg-mirage-500/60 animate-pulse"></div>
+            <div className="h-2 w-3/5 rounded-lg bg-slate-600/20 animate-pulse"></div>
+            <div className="h-2 w-4/5 rounded-lg bg-slate-600/20 animate-pulse"></div>
+            <div className="h-2 w-2/5 rounded-lg bg-slate-600/20 animate-pulse"></div>
           </div>
         </div>
       </div>

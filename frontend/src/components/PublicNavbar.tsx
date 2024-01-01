@@ -5,7 +5,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import OSINTBuddyLogo from '@assets/images/logo.svg';
 import { Listbox } from '@headlessui/react'
-import { GithubIcon } from './Icons';
+import { GithubIcon, Icon } from './Icons';
 import Logo from '@images/logo.svg';
 
 const themes = [
@@ -60,15 +60,15 @@ export function ThemeSelector(props: any) {
     } else {
       setSelectedTheme(
         // @ts-ignore
-        themes.find((theme) =>theme.value === document.documentElement.getAttribute('data-theme')))
+        themes.find((theme) => theme.value === document.documentElement.getAttribute('data-theme')))
     }
   }, [selectedTheme])
 
   useEffect(() => {
     let handler = () =>
-    
+
       setSelectedTheme(
-      // @ts-ignore
+        // @ts-ignore
         themes.find((theme) => theme.value === (window.localStorage.theme ?? 'system')))
 
     window.addEventListener('storage', handler)
@@ -147,29 +147,38 @@ export default function PublicNavbar(): React.ReactElement {
   }, [])
 
   return (
-       <header
+    <header
       className={classNames(
-        'fixed w-full  top-0 z-50 flex flex-wrap items-center justify-between  px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8',
+        'fixed w-full  top-0 z-50 flex sm:flex-wrap items-center justify-between  flex-nowrap px-4 py-3 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8',
         isScrolled
-          ? 'dark:bg-slate-900/95 dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75'
+          ? 'dark:bg-slate-800/95 dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75'
           : 'dark:bg-transparent'
       )}
     >
       <div className="mr-6 flex lg:hidden">
+        <Link to="/">
+          <img className=" h-9 w-auto fill-slate-700 dark:fill-sky-100 block" src={Logo} />
+        </Link>
         {/* @todo add mobile navigation */}
       </div>
       <div className="relative flex flex-grow basis-0 items-center">
         <Link to="/">
-          <img  className="hidden h-9 w-auto fill-slate-700 dark:fill-sky-100 lg:block" src={Logo} />
+          <img className="hidden h-9 w-auto fill-slate-700 dark:fill-sky-100 lg:block" src={Logo} />
         </Link>
       </div>
       <div className="-my-5 mr-6 sm:mr-8 md:mr-0">
         {/* <Search /> */}
       </div>
       <div className="relative flex basis-0 justify-end gap-6 sm:gap-8 md:flex-grow">
-        <a href="https://github.com/jerlendds/osintbuddy" className="group" aria-label="GitHub">
-          <GithubIcon className="h-6 w-6 fill-slate-400 group-hover:fill-slate-500 dark:group-hover:fill-slate-300" />
+        <a href="https://discord.gg/gsbbYHA3K3" className="group" aria-label="Discord">
+          <Icon icon="brand-discord-filled" className="h-6 w-6 transition-colors duration-150 ease-in-out text-slate-500 hover:text-slate-300" />
         </a>
+        <a href="https://github.com/jerlendds/osintbuddy" className="group" aria-label="GitHub">
+          <GithubIcon className="h-6 w-6 transition-colors duration-150 ease-in-out fill-slate-500 group-hover:fill-slate-500 dark:group-hover:fill-slate-300" />
+        </a>
+      </div>
+      <div className="relative flex justify-end">
+
       </div>
     </header>
   );

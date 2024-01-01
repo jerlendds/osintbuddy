@@ -4,6 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import HamburgerMenu from "./HamburgerMenu";
 import { toast } from "react-toastify";
 import { CogIcon, DocumentMagnifyingGlassIcon, FolderOpenIcon, PlusIcon, HomeIcon } from "@heroicons/react/24/outline";
+import { Icon } from "./Icons";
 
 
 const navigation = [
@@ -22,7 +23,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
   return (
     <div
       className={classNames(
-        "fixed inset-y-0 flex border-r from-mirage-900/20 to-mirage-600/20 bg-gradient-to-br shadow border-mirage-800/80 w-64 flex-col transition-transform duration-100",
+        "fixed inset-y-0 flex border-r from-mirage-900/20 to-mirage-600/20 bg-gradient-to-br shadow border-mirage-600/80 w-64 flex-col transition-transform duration-100",
         showSidebar ? "translate-x-0" : "-translate-x-52 border-r-2"
       )}
     >
@@ -53,7 +54,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                   classNames(
                     isActive && "active",
                     "sidebar-link",
-                    !showSidebar && "mx-0"
+                    !showSidebar && "mx-0 "
                   )
                 }
               >
@@ -63,41 +64,13 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                     location.pathname.includes(item.to)
                       ? "text-slate-500"
                       : "",
-                    "mr-3 flex-shrink-0 h-6 w-6 duration-100",
+                    "mr-2 flex-shrink-0 h-6 w-6 duration-100",
                     showSidebar
                       ? "translate-x-0"
-                      : "translate-x-[13.15rem]"
+                      : "translate-x-[13.2rem] -ml-2"
                   )}
-                  aria-hidden="true"
                 />
                 {item.name}
-                {item.name === "Workspaces *" && (
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowIncidentsModal(true)
-                      toast.info(
-                        <>
-                          This feature is currently being planned out and
-                          created. You can help shape this feature by
-                          contributing to the discussion
-                          <a
-                            className="text-primary"
-                            href="https://github.com/jerlendds/osintbuddy/discussions"
-                            target="_blank"
-                          >
-                            on Github!
-                          </a>
-                        </>,
-                        { autoClose: 10000 }
-                      );
-                    }}
-                    title="Create new note"
-                    className="ml-auto -mr-0.5 relative bg-dark-400 transition-colors duration-75 hover:bg-dark-500 p-1.5 rounded-full"
-                  >
-                    <PlusIcon className="text-white w-4 h-4" />
-                  </button>
-                )}
               </NavLink>
             ))}
             <NavLink
@@ -120,10 +93,31 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                   "mr-3 flex-shrink-0 h-6 w-6 duration-100",
                   showSidebar ? "translate-x-0" : "translate-x-[13.16rem]"
                 )}
-                aria-hidden="true"
               />
               Settings
             </NavLink>
+            <a
+              href="https://discord.gg/gsbbYHA3K3"
+              className={
+                classNames(
+                  "sidebar-link focus:text-primary !bg-transparent !hover:bg-transparent",
+                  !showSidebar && "mx-0"
+                )
+              }
+            >
+              <Icon
+                icon="brand-discord"
+                className={classNames(
+                  "transition-all",
+                  location.pathname.includes("settings")
+                    ? "text-primary"
+                    : "text-slate-600 group-hover:text-slate-300",
+                  "mr-3 flex-shrink-0 h-6 w-6 duration-100",
+                  showSidebar ? "translate-x-0" : "translate-x-[13.16rem]"
+                )}
+              />
+              Discord
+            </a>
           </nav>
         </div>
       </div>

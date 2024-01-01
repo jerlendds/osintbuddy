@@ -1,23 +1,25 @@
 .subpanel-wrapper {
-  @apply flex flex-col justify-between relative flex-shrink h-full pr-2;
+  @apply flex flex-col justify-between relative flex-shrink ;
 }
 .subpanel-section {
-  @apply py-1 px-1 flex flex-col;
+  @apply py-1 px-1.5 flex flex-col
 }
 .subpanel > p {
   @apply text-sm py-4 font-medium text-slate-500 focus:outline-none cursor-pointer px-2
 }
 
 .subpanel-header {
-  @apply  flex pb-1 items-center hover:border-mirage-400/60 border-b transition-colors duration-100 ease-in-out border-transparent 
+  @apply  flex py-0.5 pb-1 items-center hover:border-primary-300/40 border-mirage-400/60 border-b transition-colors duration-300 ease-in-out
 }
 .subpanel-header p {
-  @apply text-sm px-1 font-black  leading-3 text-slate-600 focus:outline-none cursor-pointer
+  @apply text-sm px-1 font-medium font-display leading-3 text-slate-600 focus:outline-none cursor-pointer
 }
 .subpanel-header svg {
   @apply h-5 w-5 mr-2 hover:rotate-3 origin-center text-slate-600 ml-auto transform focus:outline-none cursor-pointer 
 }
-
+.subpanel-header:hover svg {
+  @apply border-primary-300/40
+}
 .show-header-icon-true {
   @apply !-rotate-180
 }
@@ -27,32 +29,34 @@
 }
 
 .subpanel-link {
-  @apply mb-1  focus:outline-none bg-transparent border rounded-md border-transparent hover:to-mirage-400/20 hover:bg-gradient-to-bl hover:border-mirage-700/70  hover:translate-x-px z-50 transition-transform   hover:from-mirage-400/10 text-slate-400 hover:text-slate-400/20 focus:bg-mirage-500/60 focus:text-slate-400/40  w-full  flex items-center -translate-x-px
+  @apply mt-1 focus:outline-none bg-transparent border rounded-md border-transparent 
+  hover:ring-slate-700/20  hover:to-mirage-400/30 shadow hover:bg-gradient-to-tl from-10%  hover:translate-x-px z-50 transition-transform   hover:from-mirage-400/10 text-slate-400 hover:text-slate-400/20  focus:text-slate-400/40  w-full  flex items-center -translate-x-px 
 }
+
 
 .subpanel-link div:hover .subpanel-label  {
   @apply !text-slate-400/95 
 }
 
 .subpanel-link-true {
-  @apply !border-mirage-300/30 from-mirage-400/10 to-mirage-400/30 hover:from-mirage-400/10 hover:to-mirage-400/30 bg-gradient-to-br hover:bg-gradient-to-br hover:translate-x-0 shadow translate-x-0 
+  @apply   hover:translate-x-0 shadow translate-x-0 ring-slate-600/10 ring-1 ring-inset from-mirage-300/20 to-mirage-300/10 bg-gradient-to-tl from-10% hover:from-mirage-300/20 hover:to-mirage-300/10 hover:bg-gradient-to-tl
 }
 
 .subpanel-link div {
-  @apply flex w-full p-3 flex-col items-start space-y-1.5 text-slate-400/30 hover:text-slate-400/60
+  @apply flex w-full p-3 pr-0 flex-col items-start space-y-1.5 text-slate-400/30 hover:text-slate-400/60
 }
 
 svg.link-icon {
-  @apply bg-mirage-500/80 border-transparent border ml-auto rounded-md p-1 h-8 w-8 transition-colors duration-150 hover:text-primary-300 hover:border-mirage-300/20 mr-2
+  @apply bg-slate-800/20 border-transparent border ml-auto rounded p-1 h-8 w-8 transition-colors duration-150 hover:text-primary-300 hover:border-mirage-300/20 
 }
 svg.link-icon-true {
-  @apply !text-primary-300  hover:!text-primary-200;
+  @apply !text-primary-300  hover:!text-primary-200 !bg-transparent;
 }
 svg.link-icon-false {
   @apply text-slate-600
 }
 .link-active-true {
-  @apply !bg-transparent hover:!bg-slate-900 ;
+  @apply !bg-transparent hover:!bg-slate-800/40 transition-colors duration-200 ;
 }
 
 .subpanel-label {

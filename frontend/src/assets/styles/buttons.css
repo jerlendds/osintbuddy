@@ -1,16 +1,20 @@
 .btn-primary {
-  @apply ring-1 ring-primary-300/95 whitespace-nowrap hover:ring-primary-200 text-left text-sm font-semibold text-primary-300 hover:text-primary-100/90 flex items-center border hover:ring-inset border-primary-300/95 hover:border-primary-200 py-2 px-3 rounded-md  hover:shadow justify-center transition-colors duration-100 ease-in-out;
+  @apply ring-1 ring-primary-300/95 whitespace-nowrap hover:ring-primary-200 text-left text-sm font-semibold hover:text-primary-200/95 text-slate-300/70 scale-100 hover:scale-[99%]  flex items-center border hover:ring-inset border-primary-300/95 hover:border-primary-200 py-2 px-5 font-display rounded-md  hover:shadow justify-center transition-all duration-100 ease-in-out;
 }
 
+.btn-primary-solid {
+  @apply ring-1 ring-primary-300 hover:ring-primary-300/95 whitespace-nowrap text-left text-sm font-semibold  hover:text-slate-200/90 flex scale-100 hover:scale-[99%] items-center hover:ring-inset bg-primary-300/95 hover:bg-primary-400 py-2 px-5 font-display rounded-md  hover:shadow justify-center transition-all duration-100 ease-in-out text-slate-300/80 hover:text-slate-200
+}
+
+.btn-primary-solid svg,
 .btn-primary svg,
 .btn-danger svg {
   @apply ml-5 w-5 h-5
 }
 
 .btn-danger {
-  @apply ring-1 hover:shadow ring-danger-500/70 hover:ring-danger-500 text-left text-sm font-semibold text-danger-500/70 hover:text-danger-500 flex items-center border hover:ring-inset border-danger-500/70 hover:border-danger-500 py-2 px-3 rounded-md   justify-center transition-colors duration-100 ease-in-out
+  @apply ring-1 hover:shadow ring-danger-500/70 hover:ring-danger-500 text-left text-sm font-semibold text-danger-500/70 hover:text-danger-500 scale-100 hover:scale-[99%] flex items-center border hover:ring-inset border-danger-500/70 hover:border-danger-500 py-2 px-3 rounded-md  font-display justify-center transition-colors duration-100 ease-in-out
 }
-
 
 .btn-form {
   @apply flex px-2 py-2 hover:ring-2 focus:ring-1 focus:ring-inset outline-none items-center text-slate-400 hover:text-slate-200 rounded-md ring-1

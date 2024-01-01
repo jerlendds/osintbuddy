@@ -110,6 +110,7 @@ export default function DashboardPage() {
                   <Link
                     to='graph'
                     className={`${styles["tab"]} ${styles["graph-tab"]} ${styles[`tab-${selected}`]}`}
+                    aria-selected={selected}
                   >
                     Graphs
                   </Link>
@@ -120,8 +121,11 @@ export default function DashboardPage() {
                   <Link
                     to='entity'
                     className={`${styles["tab"]} ${styles["entities-tab"]} ${styles[`tab-${selected}`]}`}
+                    aria-selected={selected}
                   >
-                    Entities
+                    <span>
+                      Entities
+                    </span>
                   </Link>
                 )}
               </Tab>
@@ -130,6 +134,7 @@ export default function DashboardPage() {
                   <Link
                     to='market'
                     className={`${styles["tab"]} ${styles["market-tab"]} ${styles[`tab-${selected}`]}`}
+                    aria-selected={selected}
                   >
                     Market
                   </Link>
@@ -137,7 +142,7 @@ export default function DashboardPage() {
               </Tab>
               <div className={styles["tab-slider"]}></div>
             </Tab.List>
-            <section className="h-full overflow-y-scroll mb-20">
+            <section className="h-full flex flex-col mb-20">
               <Tab.Panel className={styles["tab-panel"]}>
                 <GraphPanel
                   refetchGraphs={async () => await refetchGraphs()}

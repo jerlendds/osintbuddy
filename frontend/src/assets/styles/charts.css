@@ -1,6 +1,9 @@
 .bar-hz .ct-label {
   @apply text-slate-400 font-display
 }
+.bar-hz {
+  @apply overflow-y-scroll flex flex-col
+}
 
 .bar-hz .ct-series-a .ct-bar {
   @apply stroke-sky-600
@@ -33,4 +36,7 @@
 }
 .bar-hz .ct-series-j .ct-bar {
   @apply stroke-slate-200
+}
+
+.ct-label.ct-vertical.ct-end {
 }

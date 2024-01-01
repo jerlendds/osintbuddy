@@ -36,7 +36,7 @@ export default function AppLayout() {
             showSidebar ? "translate-x-64" : "translate-x-12"
           )}
         >
-          <main id="main-view" className="flex-1 overflow-hidden h-screen">
+          <main id="main-view" className="flex-1 overflow-hidden h-screen ">
             <Outlet />
           </main>
         </div>

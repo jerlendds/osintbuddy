@@ -2544,6 +2544,14 @@
     lodash.merge "^4.6.2"
     postcss-selector-parser "6.0.10"
 
+"@tarii/3d-earth@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@tarii/3d-earth/-/3d-earth-1.0.3.tgz#87c0e938c4f31d9c29741d525ad73eca09591c67"
+  integrity sha512-TxdMOt/21GxALLXqtGo0l3sjm1+9TCh5YgUqzRSz+O+PQKl6sQW5ukiCAPxK3QAjcqxGxZDIOW1uRpHj/hpaEw==
+  dependencies:
+    "@types/three" "^0.103.2"
+    three "^0.107.0"
+
 "@testing-library/dom@^8.5.0":
   version "8.20.1"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.20.1.tgz#2e52a32e46fc88369eef7eef634ac2a192decd9f"
@@ -3222,6 +3230,13 @@
   integrity sha512-FSYhIjFlfOpGSRyVoMBMuS3ws5ehFQODymf3vlI7U1K8c7PHwWwFY7VREfmsuzHSOnoKs/9/Y983ayOs7eRzqw==
   dependencies:
     "@types/jest" "*"
+
+"@types/three@^0.103.2":
+  version "0.103.2"
+  resolved "https://registry.yarnpkg.com/@types/three/-/three-0.103.2.tgz#f7d49130001c551941a0ded757def810579aafc4"
+  integrity sha512-zhtf0Qs5wLJpIn1+VWCpzSgpKayj/GSWZ6woiuz09FW59KEDeLpnBkYz6lbblVpRmGdlnG8nd0unaASshOvcXw==
+  dependencies:
+    three "*"
 
 "@types/trusted-types@^2.0.2":
   version "2.0.7"
@@ -11582,6 +11597,16 @@ thenify-all@^1.0.0:
   integrity sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==
   dependencies:
     any-promise "^1.0.0"
+
+three@*:
+  version "0.160.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.160.0.tgz#cd1e4dbd01aee0719280a9086d75545db52b7a8f"
+  integrity sha512-DLU8lc0zNIPkM7rH5/e1Ks1Z8tWCGRq6g8mPowdDJpw1CFBJMU7UoJjC6PefXW7z//SSl0b2+GCw14LB+uDhng==
+
+three@^0.107.0:
+  version "0.107.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.107.0.tgz#0c862c348d61bd3f22058e01f5e771c1294315a1"
+  integrity sha512-vqbKJRLBEviPVa7poEzXocobicwxzsctr5mnymA7n8fEzcVS49rYP0RrwqZ98JqujRoruK+/YzcchNpRP+kXsQ==
 
 throat@^6.0.1:
   version "6.0.2"

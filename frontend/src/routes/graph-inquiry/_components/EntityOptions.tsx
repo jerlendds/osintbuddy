@@ -68,7 +68,7 @@ export function EntityOption({ entity, onDragStart }: JSONObject) {
         <div
           draggable
           onDragStart={(event) => onDragStart(event, entity.label)}
-          className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-500/20 hover:from-40% hover:to-mirage-300/30  border-mirage-300/20 border max-h-[160px] border-l-primary-300/50 hover:border-primary-400 transition-colors duration-100 ease-out border-l-[6px] hover:border-l-[6px] rounded-md w-full'
+          className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-300/20 hover:from-40% hover:to-mirage-300/10  border-mirage-300/20 border max-h-[160px] border-l-primary-300/50 hover:border-primary-400 transition-colors duration-100 ease-out border-l-[6px] hover:border-l-[6px] rounded-md w-full'
         >
           <div className='flex flex-col w-full select-none'>
             <div className='flex items-start justify-between gap-x-3 w-full relative'>
@@ -196,7 +196,7 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
       }}
     >
       <div
-        className=' overflow-hidden rounded-md z-10 border border-mirage-400/70  from-mirage-700/95 to-mirage-500/95 bg-gradient-to-br flex flex-col h-min'
+        className=' overflow-hidden rounded-md z-10 border border-mirage-400/70  from-mirage-500/95 to-mirage-500/90 bg-gradient-to-br flex flex-col h-min'
         key='entities'
         id='node-options-tour'
       >

@@ -13,6 +13,7 @@
     "@reactour/tour": "^3.6.1",
     "@reduxjs/toolkit": "^1.9.1",
     "@tabler/icons-react": "^2.42.0",
+    "@tarii/3d-earth": "^1.0.3",
     "@uiw/codemirror-theme-aura": "^4.21.20",
     "@uiw/react-codemirror": "^4.21.20",
     "casdoor-js-sdk": "^0.11.0",
