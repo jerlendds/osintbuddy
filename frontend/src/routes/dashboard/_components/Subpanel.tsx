@@ -77,15 +77,16 @@ export default function Subpanel({
       {isSuccess && showEntities && (
         <section className={styles["subpanel-section"]}>
           {items && items.map((item) => {
+            const isActive = hid === item.id
             return (
               <Link
                 key={item.id}
                 to={`${to}/${item.id}`}
-                className={styles["subpanel-link"] + " " + styles[`subpanel-link-${hid === item.id}`]}>
+                className={styles["subpanel-link"] + " " + styles[`subpanel-link-${isActive}`]}>
                 <div>
-                  <p className={styles["subpanel-label"] + " " + styles[`subpanel-label-${hid === item.id}`]}>{item?.label.length > MAX_LABEL_LENGTH ? `${item.label.slice(0, MAX_LABEL_LENGTH)}...` : item.label}</p>
-                  <p className={styles["subpanel-desc"] + " " + styles[`subpanel-desc-${hid === item.id}`]}>{item?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${item?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : item.description}</p>
-                  <p className={styles["subpanel-desc"] + " " + styles[`subpanel-desc-${hid === item.id}`]}>Last seen {formatPGDate(item?.last_edited ? item.last_edited : item.last_seen)}</p>
+                  <p className={styles["subpanel-label"] + " " + styles[`subpanel-label-${isActive}`]}>{item?.label.length > MAX_LABEL_LENGTH ? `${item.label.slice(0, MAX_LABEL_LENGTH)}...` : item.label}</p>
+                  <p className={styles["subpanel-desc"] + " " + styles[`subpanel-desc-${isActive}`]}>{item?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${item?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : item.description}</p>
+                  <p className={styles["subpanel-desc"] + " text-slate-500/60 "}>Last seen {formatPGDate(item?.last_edited ? item.last_edited : item.last_seen)}</p>
                 </div>
                 <StarIcon
                   onClick={async () => await onClick(item.id)}

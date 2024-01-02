@@ -3,7 +3,7 @@ import { ChevronUpDownIcon, PaperClipIcon, XMarkIcon } from '@heroicons/react/24
 import { Combobox } from '@headlessui/react';
 import classNames from 'classnames';
 import { ChangeEvent, Dispatch, Fragment, useEffect, useMemo, useRef, useState } from 'react';
-import { Handle, Position } from 'reactflow';
+import { Handle, HandleType, Position } from 'reactflow';
 import { GripIcon, Icon } from '@src/components/Icons';
 import { Dialog } from '@headlessui/react';
 import { useAppDispatch, useAppSelector, useComponentVisible } from '@src/app/hooks';
