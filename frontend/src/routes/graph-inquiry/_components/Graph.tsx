@@ -14,11 +14,11 @@ import ReactFlow, {
   getBoundsOfRects,
   getTransformForBounds,
 } from 'reactflow';
-import EditEntityNode from './EditEntityNode';
+import EditEntityNode from './EntityEditNode';
 import { addNodeUpdate, createEdge, disableEntityEdit, enableEntityEdit, graph, onEdgesChange, selectEditState, setEditLabel, setEditState, updateEdgeEvent, updateNodeFlow } from '@src/features/graph/graphSlice';
 import { useAppDispatch, useAppSelector, useEffectOnce } from '@src/app/hooks';
 import { toast } from 'react-toastify';
-import ViewEntityNode from './ViewEntityNode';
+import ViewEntityNode from './EntityViewNode';
 import { CreateEntityOnDropApiResponse, useCreateEntityOnDropMutation, useRefreshPluginsQuery } from '@src/app/api';
 import { useParams } from 'react-router-dom';
 import NewConnectionLine from './ConnectionLine';

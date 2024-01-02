@@ -54,18 +54,17 @@ button {
 html {
   background-size: 100% 100%;
 background-position: 0px 0px,0px 0px,0px 0px,0px 0px,0px 0px;
-background-image: radial-gradient(49% 81% at 45% 47%, #0048ffcb 0%, #073AFF00 100%),radial-gradient(113% 91% at 17% -2%, #001547fa 1%, #1100a7cb 99%),radial-gradient(142% 91% at 83% 7%, #8f1a0dd6 1%, #005f46da 99%),radial-gradient(142% 91% at -6% 74%, #002aff70 1%, #a81010c1 99%),radial-gradient(142% 91% at 111% 84%, #0040ff 25%, #452296 95%);
+background-image: radial-gradient(49% 81% at 45% 47%, #0048ffcb 0%, #073AFF00 100%),radial-gradient(113% 91% at 17% -2%, #001547fa 1%, #1100a7cb 99%),radial-gradient(142% 91% at 83% 7%, #dc1d08f0 1%, #469a02da 99%),radial-gradient(142% 91% at -6% 74%, #002aff 1%, #a81010f4 99%),radial-gradient(142% 91% at 111% 84%, #0040ff 25%, #452296 95%);
 }
 
 /* https://gradienta.io/editor */
-body {
-  @apply min-h-screen ;
-}
+
 
 #root {
-  @apply flex flex-col min-h-screen relative bg-mirage-700/60 from-mirage-700/70 to-mirage-800/50 bg-gradient-to-br ;
-  /* color: #066b74c1; */
+  @apply flex flex-col h-full relative bg-mirage-700/60 from-mirage-700/70 to-mirage-800/50 bg-gradient-to-br justify-between;
 }
+
+
 
 svg.icon {
   @apply flex items-center justify-center;

@@ -149,36 +149,35 @@ export default function PublicNavbar(): React.ReactElement {
   return (
     <header
       className={classNames(
-        'fixed w-full  top-0 z-50 flex sm:flex-wrap items-center justify-between  flex-nowrap px-4 py-3 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8',
+        'sticky w-full  top-0 z-50 flex sm:flex-wrap items-center justify-between flex-nowrap px-4 py-2.5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8',
         isScrolled
           ? 'dark:bg-slate-800/95 dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75'
           : 'dark:bg-transparent'
       )}
     >
-      <div className="mr-6 flex lg:hidden">
+      <div className="flex lg:hidden">
         <Link to="/">
-          <img className=" h-9 w-auto fill-slate-700 dark:fill-sky-100 block" src={Logo} />
+          <img className=" h-7 w-auto fill-slate-700 dark:fill-sky-100 block" src={Logo} />
         </Link>
         {/* @todo add mobile navigation */}
       </div>
       <div className="relative flex flex-grow basis-0 items-center">
         <Link to="/">
-          <img className="hidden h-9 w-auto fill-slate-700 dark:fill-sky-100 lg:block" src={Logo} />
+          <img className="hidden h-9  fill-slate-700 dark:fill-sky-100 lg:block" src={Logo} />
         </Link>
       </div>
-      <div className="-my-5 mr-6 sm:mr-8 md:mr-0">
+      <div className="">
         {/* <Search /> */}
       </div>
-      <div className="relative flex basis-0 justify-end gap-6 sm:gap-8 md:flex-grow">
+      <div className="ml-auto relative flex basis-0 justify-end gap-6 sm:gap-8 md:flex-grow">
         <a href="https://discord.gg/gsbbYHA3K3" className="group" aria-label="Discord">
           <Icon icon="brand-discord-filled" className="h-6 w-6 transition-colors duration-150 ease-in-out text-slate-500 hover:text-slate-300" />
         </a>
+      </div>
+      <div className="relative flex justify-end">
         <a href="https://github.com/jerlendds/osintbuddy" className="group" aria-label="GitHub">
           <GithubIcon className="h-6 w-6 transition-colors duration-150 ease-in-out fill-slate-500 group-hover:fill-slate-500 dark:group-hover:fill-slate-300" />
         </a>
-      </div>
-      <div className="relative flex justify-end">
-
       </div>
     </header>
   );
