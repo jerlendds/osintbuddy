@@ -61,7 +61,7 @@ background-image: radial-gradient(49% 81% at 45% 47%, #0048ffcb 0%, #073AFF00 10
 
 
 #root {
-  @apply flex flex-col h-full relative bg-mirage-700/60 from-mirage-700/70 to-mirage-800/50 bg-gradient-to-br justify-between;
+  @apply flex flex-col h-full min-h-screen relative bg-mirage-700/60 from-mirage-700/70 to-mirage-800/50 bg-gradient-to-br justify-between;
 }
 
 

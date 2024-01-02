@@ -1,9 +1,9 @@
 .btn-primary {
-  @apply ring-1 ring-primary-300/95 whitespace-nowrap hover:ring-primary-200 text-left text-sm font-semibold hover:text-primary-200/95 text-slate-300/70 scale-100 hover:scale-[99%]  flex items-center border hover:ring-inset border-primary-300/95 hover:border-primary-200 py-2 px-5 font-display rounded-md  hover:shadow justify-center transition-all duration-100 ease-in-out;
+  @apply ring-1 ring-primary-300/95 whitespace-nowrap hover:ring-primary-200 text-left text-sm font-semibold hover:text-primary-200/95 text-slate-300/70 scale-100 hover:scale-[99%]  flex items-center border hover:ring-inset border-primary-300/95 hover:border-primary-200 py-2 px-5 font-display rounded-md  hover:shadow justify-center transition-all duration-150 ease-in-out;
 }
 
 .btn-primary-solid {
-  @apply ring-1 ring-primary-300 hover:ring-primary-300/95 whitespace-nowrap text-left text-sm font-semibold  hover:text-slate-200/90 flex scale-100 hover:scale-[99%] items-center hover:ring-inset bg-primary-300/95 hover:bg-primary-400 py-2 px-5 font-display rounded-md  hover:shadow justify-center transition-all duration-100 ease-in-out text-slate-300/80 hover:text-slate-200
+  @apply ring-1 ring-primary-300 hover:ring-primary-300/95 whitespace-nowrap text-left text-sm font-semibold  hover:text-slate-200/95 flex scale-100 hover:scale-[99%] items-center hover:ring-inset bg-primary-300/95 hover:bg-primary-400 py-2 px-5 font-display rounded-md  hover:shadow justify-center transition-all duration-150 ease-in-out text-slate-200/90 hover:text-slate-200
 }
 
 .btn-primary-solid svg,

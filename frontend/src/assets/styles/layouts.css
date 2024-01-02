@@ -10,7 +10,7 @@
   @apply bg-mirage-500   border-mirage-300/40  ;
 }
 .sidebar-link.active svg {
-  @apply text-primary-300
+  @apply text-primary-300 -ml-0.5
 }
 .sidebar-link button {
   @apply border border-mirage-400/40 transition-colors duration-200 from-10% hover:from-mirage-300/20 hover:to-mirage-300/10 hover:bg-gradient-to-tl

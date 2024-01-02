@@ -53,11 +53,11 @@ export default function LandingPage(): React.ReactElement {
           <div className='mx-auto  grid max-w-2xl grid-cols-1 items-center gap-y-16 lg:max-w-8xl lg:grid-cols-2 '>
             <div className='relative px- sm:px-3 z-10 md:text-center lg:text-left'>
               <div className='relative pb-12'>
-                <p className='inline bg-gradient-to-r from-primary-300 via-primary-200 to-primary-400 bg-clip-text text-4xl font-display font-medium tracking-tight text-transparent'>
-                  Elevate your Research with<br /> Strategic Insights from Public Data
+                <p className='inline bg-gradient-to-r from-primary-300 via-primary-200 to-primary-300 bg-clip-text text-4xl font-display font-medium tracking-tight text-transparent'>
+                  Elevate your Research;<br /> Strategic Insights from Public Data
                 </p>
                 <p className='pt-1 text-lg tracking-tight  text-slate-400'>
-                  Reveal the connections that shape our world and stay informed with targeted insights from public data. We're on a mission to ensure everyone can exercise their fundamental human rights online. From defending against cyber threats and corruption to countering online censorship, let's fight for a free internet.
+                  Reveal the connections that shape our world and stay informed with targeted insights from public data. From defending against cyber threats and corruption to countering online censorship, let's fight for a free internet.
                 </p>
                 <div className='mt-5 lg:mt-4 flex gap-4 md:justify-center lg:justify-start'>
                   <button
@@ -80,9 +80,9 @@ export default function LandingPage(): React.ReactElement {
               </div>
             </div>
           </div>
-          <div ref={earthRef} className='z-0 absolute w-[20rem]  md:w-[40rem] lg:w-[54rem] md:h-[100%] h-[30rem] lg:h-[80rem] lg:mt-10 -mt-20 md:-mt-10 sm:ml-20 [mask-image:linear-gradient(transparent,white,white)] dark:[mask-image:linear-gradient(transparent,#000000AF,#00000009)] lg:-top-full top-0 right-0' />
+          <div ref={earthRef} className='z-0 absolute w-[20rem]  md:w-[40rem] lg:w-[54rem] md:h-[100%] h-[30rem] lg:h-[75rem] lg:mt-10 -mt-20 md:-mt-10 sm:ml-20 [mask-image:linear-gradient(transparent,white,white)] dark:[mask-image:linear-gradient(transparent,#000000AF,#00000009)] lg:-top-full top-0 right-0' />
         </div>
-        <div className='relative  mt-auto bottom-0 mx-4 sm:px-0 mb-0 flex items-center justify-between'>
+        <div className='relative mt-auto bottom-0 mx-4 sm:px-0 mb-0 flex items-center justify-between'>
           <div className='mx-auto grid  max-w-2xl grid-cols-1 mt-auto mb-0 items-center lg:max-w-8xl flex-grow'>
             <div className='relative z-10 md:text-center lg:text-left '>
               <header className='space-y-1 mt-24 md:mt-0'>
