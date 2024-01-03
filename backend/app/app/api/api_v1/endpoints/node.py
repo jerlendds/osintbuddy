@@ -381,26 +381,27 @@ async def active_graph_inquiry(
         websocket.send({"action": "error"})
 
     for cid, ws in graph_users.items():
-        async for event in ws.iter_json():
-            try:
-                await run_user_graph_event(
-                    event=event,
-                    send_json=ws.send_json,
-                    uuid=active_inquiry.uuid
-                )
-            except OBPluginError as e:
-                await ws.send_json({"action": "error", "detail": f"{e}"})
-                await ws.send_json({"action": "isLoading", "detail": False })
-                log.error(e)
-            except (WebSocketException, ConnectionClosedError) as e:
-                log.error("Exception inside node.active_project")
-                log.error(e)
-                await ws.send_json({"action": "isLoading", "detail": False })
-                await ws.close()
-                del graph_users[cid]
-            except WebSocketDisconnect as e:
-                log.info(f"disconnect! {cid}")
-                del graph_users[cid]
+        while True:
+                try:
+                    async for event in ws.iter_json():
+                        await run_user_graph_event(
+                            event=event,
+                            send_json=ws.send_json,
+                            uuid=active_inquiry.uuid
+                        )
+                except OBPluginError as e:
+                    await ws.send_json({"action": "error", "detail": f"{e}"})
+                    await ws.send_json({"action": "isLoading", "detail": False })
+                    log.error(e)
+                except (WebSocketException, ConnectionClosedError) as e:
+                    log.error("Exception inside node.active_project")
+                    log.error(e)
+                    await ws.send_json({"action": "isLoading", "detail": False })
+                    await ws.close()
+                    del graph_users[cid]
+                except (WebSocketDisconnect, RuntimeError) as e:
+                    log.info(f"disconnect! {cid}")
+                    del graph_users[cid]
 
 
 @router.get("/refresh")
