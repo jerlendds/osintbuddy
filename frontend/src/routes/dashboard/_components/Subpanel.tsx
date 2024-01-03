@@ -86,7 +86,7 @@ export default function Subpanel({
                 <div>
                   <p className={styles["subpanel-label"] + " " + styles[`subpanel-label-${isActive}`]}>{item?.label.length > MAX_LABEL_LENGTH ? `${item.label.slice(0, MAX_LABEL_LENGTH)}...` : item.label}</p>
                   <p className={styles["subpanel-desc"] + " " + styles[`subpanel-desc-${isActive}`]}>{item?.description?.length ?? 0 >= MAX_DESCRIPTION_LENGTH ? `${item?.description?.slice(0, MAX_DESCRIPTION_LENGTH)}...` : item.description}</p>
-                  <p className={styles["subpanel-desc"] + " text-slate-500/60 "}>Last seen {formatPGDate(item?.last_edited ? item.last_edited : item.last_seen)}</p>
+                  <p className={styles["subpanel-desc"] + " " + styles[`subpanel-desc-${isActive}`]}>Last seen {formatPGDate(item?.last_edited ? item.last_edited : item.last_seen)}</p>
                 </div>
                 <StarIcon
                   onClick={async () => await onClick(item.id)}

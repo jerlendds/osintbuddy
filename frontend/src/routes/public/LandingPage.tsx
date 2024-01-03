@@ -6,10 +6,8 @@ import { useEffectOnce } from '@src/app/hooks';
 const QUOTES = [
   "Find the connections that matter to you",
   "Vision is the art of seeing insight in the invisible",
-  "Find the path to actionable insights",
+  "See the path to actionable insights",
   "Unlock the potential of public data",
-  "Empower your research with public data",
-  "Connecting the dots for actionable insights",
   "Transforming data into knowledge",
 ]
 
@@ -23,7 +21,7 @@ export default function LandingPage(): React.ReactElement {
         rotateSpeed: 0.0005,
         pointColor: 0x242E4D,
         pointHighlight: 0x394778,
-        fogColor: 0x002aa6,
+        fogColor: 0x1144ed,
         lineHighlightSize: 10,
         minLineSpacing: 30,
         maxLineSpacing: 1000,
@@ -53,11 +51,11 @@ export default function LandingPage(): React.ReactElement {
           <div className='mx-auto  grid max-w-2xl grid-cols-1 items-center gap-y-16 lg:max-w-8xl lg:grid-cols-2 '>
             <div className='relative px- sm:px-3 z-10 md:text-center lg:text-left'>
               <div className='relative pb-12'>
-                <p className='inline bg-gradient-to-r from-primary-300 via-primary-200 to-primary-300 bg-clip-text text-4xl font-display font-medium tracking-tight text-transparent'>
-                  Elevate your Research;<br /> Strategic Insights from Public Data
+                <p className='inline bg-gradient-to-r from-primary-300/95 via-primary-400 to-primary-300/95 bg-clip-text text-4xl font-display font-medium tracking-tight text-transparent'>
+                  Elevate your Research with<br /> Strategic Insights from Public Data
                 </p>
                 <p className='pt-1 text-lg tracking-tight  text-slate-400'>
-                  Reveal the connections that shape our world and stay informed with targeted insights from public data. From defending against cyber threats and corruption to countering online censorship, let's fight for a free internet.
+                  Reveal the connections that shape our world and stay informed with targeted insights from public data. From defending against cyber threats and corruption to countering online censorship and beyond, stay on top of the facts.
                 </p>
                 <div className='mt-5 lg:mt-4 flex gap-4 md:justify-center lg:justify-start'>
                   <button

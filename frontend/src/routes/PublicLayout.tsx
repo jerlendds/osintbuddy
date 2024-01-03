@@ -6,7 +6,9 @@ export default function PublicLayout(): React.ReactElement {
   return (
     <>
       <PublicNavbar />
-      <Outlet />
+      <main id="main-view">
+        <Outlet />
+      </main>
       <ToastContainer
         position='bottom-right'
         autoClose={3000}

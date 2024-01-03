@@ -52,19 +52,22 @@ button {
 }
 /* 2d6cffb0 */
 html {
-  background-size: 100% 100%;
-background-position: 0px 0px,0px 0px,0px 0px,0px 0px,0px 0px;
-background-image: radial-gradient(49% 81% at 45% 47%, rgba(103, 1, 143, 0.616) 0%, #073AFF00 100%),radial-gradient(113% 91% at 17% -2%, rgba(7, 162, 139, 0.482) 1%, #ff000000 99%),radial-gradient(142% 91% at 83% 7%, rgb(50, 13, 143) 1%, #ff00ea00 99%),radial-gradient(142% 91% at -6% 74%, rgba(0, 42, 255, 0.441) 1%, #FF000000 99%),radial-gradient(142% 91% at 111% 84%, rgb(0, 64, 255) 25%, rgb(69, 34, 150) 95%);
+  background-color: rgb(7, 21, 35, 1);
+  background-image: url(../images/image-bg.siteorigin.com-inflicted-overlay.png );
 }
+/* 1hmfchzd.png */
 
+body {
+  background-color: transparent;
+  background-size: 100% 100%;
+  background-position: 0px 0px,0px 0px,0px 0px,0px 0px,0px 0px;
+  background-image: radial-gradient(49% 81% at 45% 47%, rgba(71, 0, 80, 0.093) 0%, #073AFF00 100%),radial-gradient(113% 91% at 17% -2%, rgba(7, 70, 132, 0.168) 1%, #ff000000 99%),radial-gradient(142% 91% at 83% 7%, hsla(234, 100%, 19%, 0.109) 1%, rgba(153, 0, 255, 0.126) 99%),radial-gradient(142% 91% at -6% 74%, rgba(0, 42, 255, 0.116) 1%, rgba(3, 154, 84, 0.116) 99%),radial-gradient(142% 91% at 111% 84%, #1144ed0f 25%, rgba(69, 34, 150, 0.045) 95%);}
 /* https://gradienta.io/editor */
 
 
 #root {
-  @apply flex flex-col h-full min-h-screen relative bg-mirage-600/60 from-mirage-700/60 to-mirage-800/50 bg-gradient-to-br justify-between;
+  @apply flex flex-col h-full min-h-screen relative bg-mirage-900/20  justify-between;
 }
-
-
 
 svg.icon {
   @apply flex items-center justify-center;
@@ -84,6 +87,7 @@ button,
 a,
 figcaption {
   @apply text-mirage-400 font-display;
+  /* color: #ff9602; */
 }
 
 /* 

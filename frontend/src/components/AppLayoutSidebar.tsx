@@ -23,7 +23,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
   return (
     <div
       className={classNames(
-        "fixed inset-y-0 flex border-r from-mirage-800/20 to-mirage-800/40 bg-gradient-to-br shadow border-mirage-700/60 w-64 flex-col transition-transform duration-100",
+        "fixed inset-y-0 flex border-r from-mirage-600/40 to-mirage-600/50 bg-gradient-to-br shadow-xl border-mirage-600/70 w-64 flex-col transition-transform duration-100",
         showSidebar ? "translate-x-0" : "-translate-x-52 border-r-2"
       )}
     >

@@ -402,7 +402,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
               activeGraph={activeGraph}
               setElkLayout={setElkLayout}
             />
-            <div className='h-full w-full justify-between bg-mirage-600/80 from-mirage-400/50 to-mirage-500/50'>
+            <div className='h-full w-full justify-between  bg-mirage-500/50'>
               <div style={{ width: '100%', height: '100vh' }} ref={graphRef}>
                 <Graph
                   onSelectionCtxMenu={onSelectionCtxMenu}
