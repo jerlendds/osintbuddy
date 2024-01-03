@@ -64,11 +64,11 @@ export const useResize = ({ minWidth }: UseResizeProps): UseResizeReturn => {
 export function EntityOption({ entity, onDragStart }: JSONObject) {
   return (
     <>
-      <li key={entity.id} className='flex items-center w-full justify-between py-1.5'>
+      <li key={entity.id} className='flex items-center w-full justify-between pb-2.5'>
         <div
           draggable
           onDragStart={(event) => onDragStart(event, entity.label)}
-          className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-400/20 hover:from-40% hover:to-mirage-400/10  border-mirage-300/20 border max-h-[160px] border-l-primary-300/50 hover:border-primary-400 transition-colors duration-100 ease-out border-l-[6px] hover:border-l-[6px] rounded-md w-full backdrop-blur-md'
+          className='flex min-w-[12rem] p-2 justify-between overflow-x-hidden from-mirage-400/10 to-mirage-400/20 bg-gradient-to-br hover:from-mirage-300/20 hover:from-40% hover:to-mirage-300/10  border-mirage-300/20 border max-h-[160px] border-l-primary-300/50 hover:border-primary-400 transition-colors duration-100 ease-out border-l-[6px] hover:border-l-[6px] rounded-md w-full backdrop-blur-md'
         >
           <div className='flex flex-col w-full select-none'>
             <div className='flex items-start justify-between gap-x-3 w-full relative'>
@@ -195,7 +195,7 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
       }}
     >
       <div
-        className=' overflow-hidden rounded-md z-10 border border-mirage-400/60  from-mirage-500/40 to-mirage-500/80 bg-gradient-to-br flex flex-col h-min'
+        className=' overflow-hidden rounded-md z-10 border border-mirage-400/60  from-mirage-500/30 to-mirage-500/60 bg-gradient-to-br flex flex-col h-min'
         key='entities'
         id='node-options-tour'
       >
@@ -245,7 +245,7 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
       </div>
       <div
         key='positions'
-        className=' overflow-hidden rounded-md z-10 border border-mirage-400/70  from-mirage-700/95 to-mirage-500/95 bg-gradient-to-br flex flex-col h-min'>
+        className=' overflow-hidden rounded-md z-10 border   border-mirage-400/60  from-mirage-500/30 to-mirage-500/60 bg-gradient-to-br flex flex-col h-min'>
         <ol className='text-sm flex select-none relative px-4 pt-1'>
           <li className='flex mr-auto'>
             <h5
@@ -284,7 +284,7 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
             type='button'
             className={classNames(
               'justify-center flex-grow rounded-l-md from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-500/20 hover:from-40% hover:to-mirage-300/30  border-mirage-300/20 relative py-3 inline-flex items-center  border transition-colors duration-100 ease-in-out hover:border-primary-400/50 outline-none px-3 text-slate-500 hover:text-primary-300/80 focus:bg-mirage-800 hover:bg-mirage-600 focus:z-10',
-              positionMode === 'manual' && 'bg-mirage-800 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
+              positionMode === 'manual' && 'bg-mirage-800/80 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
             )}
           >
             <HandRaisedIcon
@@ -301,7 +301,7 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
             type='button'
             className={classNames(
               'justify-center flex-grow from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-500/20 hover:from-40% hover:to-mirage-300/30  border-mirage-300/20 relative py-3 inline-flex items-center  border transition-colors duration-100 ease-in-out hover:border-primary-400/50 outline-none px-3 text-slate-500 hover:text-primary-300/80 focus:bg-mirage-800 hover:bg-mirage-600 focus:z-10',
-              positionMode === 'force' && 'bg-mirage-800 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
+              positionMode === 'force' && 'bg-mirage-800/80 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
             )}
           >
             <Icon
@@ -326,7 +326,7 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
             type='button'
             className={classNames(
               'justify-center flex-grow from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-500/20 hover:from-40% hover:to-mirage-300/30  border-mirage-300/20 relative py-3 inline-flex items-center  border transition-colors duration-100 ease-in-out hover:border-primary-400/50 outline-none px-3 text-slate-500 hover:text-primary-300/80 focus:bg-mirage-800 hover:bg-mirage-600 focus:z-10',
-              positionMode === 'right tree' && 'bg-mirage-800 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
+              positionMode === 'right tree' && 'bg-mirage-800/80 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
             )}
           >
             <Icon
@@ -348,7 +348,7 @@ export default function EntityOptions({ positionMode, activeGraph, setElkLayout,
             type='button'
             className={classNames(
               'justify-center rounded-r-md flex-grow from-mirage-300/10 to-mirage-300/20 bg-gradient-to-br hover:from-mirage-500/20 hover:from-40% hover:to-mirage-300/30  border-mirage-300/20 relative py-3 inline-flex items-center  border transition-colors duration-100 ease-in-out hover:border-primary-400/50 outline-none px-3 text-slate-500 hover:text-primary-300/80 focus:bg-mirage-800 hover:bg-mirage-600 focus:z-10',
-              positionMode === 'tree' && 'bg-mirage-800 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
+              positionMode === 'tree' && 'bg-mirage-800/80 hover:bg-mirage-800 border-primary-400/50 hover:border-primary-400/50 '
             )}
           >
             <Icon

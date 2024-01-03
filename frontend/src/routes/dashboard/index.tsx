@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation, useParams } from "react-router-dom";
-import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, PlusIcon, CloudIcon } from "@heroicons/react/24/outline";
 import { Tab } from "@headlessui/react";
 import GraphPanel from "./_components/tabs/GraphPanel";
 import EntitiesPanel from "./_components/tabs/EntitiesPanel";
@@ -180,9 +180,10 @@ export default function DashboardPage() {
             </button>
           ) : (
             <button
-              className='btn-primary mx-4 mr-6'
-            >Add transforms
-
+              className='btn-primary mx-4 mr-6 mt-auto mb-4'
+            >
+              Connect a provider
+              <CloudIcon />
             </button>
           )}
         </aside>

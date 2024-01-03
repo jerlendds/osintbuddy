@@ -125,12 +125,10 @@ export default function EntityEditor({ activeEntity, refetchEntity }: EntityEdit
                   )}
                 </button>
               </div>
-            </li>
+          </li>
           </ol>
-          <div className="container bg-t overflow-y-scroll h-full ">
-            <div className="editor ">
-              <CodeEditor code={code} setCode={setCode} />
-            </div>
+          <div className="from-mirage-300/10 backdrop-blur-sm bg-gradient-to-tr from-40% to-mirage-400/20 border-mirage-400 border overflow-y-scroll h-full ">
+            <CodeEditor code={code} setCode={setCode} />
           </div>
         </div>
       </ResponsiveGridLayout >

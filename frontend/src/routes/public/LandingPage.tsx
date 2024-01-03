@@ -4,11 +4,12 @@ import Earth from '@tarii/3d-earth'
 import { useEffectOnce } from '@src/app/hooks';
 
 const QUOTES = [
+  "Vision is the art of seeing insight in the invisible",
   "Find the connections that matter to you",
   "Vision is the art of seeing insight in the invisible",
-  "See the path to actionable insights",
   "Unlock the potential of public data",
-  "Transforming data into knowledge",
+  "Vision is the art of seeing insight in the invisible",
+  "Transform data into connected knowledge",
 ]
 
 export default function LandingPage(): React.ReactElement {
