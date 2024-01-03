@@ -27,7 +27,7 @@ export function GridPanel({
   return (
     <>
       <div
-        className="min-h-[3rem] overflow-hidden rounded flex flex-col w-full h-full border border-mirage-400/60  from-mirage-400/50 to-mirage-400/30 shadow bg-gradient-to-tl from-10% "
+        className="min-h-[3rem] overflow-hidden rounded flex flex-col w-full h-full border border-mirage-400/60  from-mirage-300/30 bg-gradient-to-tr from-40% to-mirage-100/20 shadow "
       >
         <ol className="text-sm flex select-none justify-between relative px-2 py-2">
           <li className="flex items-start">
