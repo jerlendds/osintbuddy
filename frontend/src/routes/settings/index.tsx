@@ -210,10 +210,10 @@ export function CasesTable({
 
 export default function SettingsPage() {
   const secondaryNavigation = [
-    { name: "Proxies", href: "#", current: true },
+    { name: "Account", href: "#", current: true },
+    { name: "Proxies", href: "#", current: false },
     { name: "Plugins", href: "#", current: false },
-    { name: "Keys", href: "#", current: false },
-    { name: "Features", href: "#", current: false },
+    { name: "Feature Flags", href: "#", current: false },
   ];
 
   return (
@@ -228,7 +228,7 @@ export default function SettingsPage() {
                   href={item.href}
                   className={classNames(
                     "font-display",
-                    item.current ? "text-primary-300" : ""
+                    item.current ? "text-primary-300" : "text-slate-400/30 hover:text-slate-400/50"
                   )}
                 >
                   {item.name}
@@ -238,12 +238,18 @@ export default function SettingsPage() {
           </ul>
         </nav>
       </header>
-      <InquiryHeader title="" header="Proxy configuration" />
+      <InquiryHeader title="Account Settings" header="Your Account Details" />
+      <div className="flex flex-col sm:px-2 lg:px-6 my-2 relative mx-auto w-full justify-center">
+        <p className="text-slate-300/95">
+          Take control of the ICG app theme, your account information,<br /> and permissions for any shared workspaces or graphs.
+        </p>
+      </div>
+      {/* <InquiryHeader title="" header="Proxy configuration" />
       <div className="flex flex-col sm:px-2 lg:px-6 my-2 relative mx-auto w-full justify-center">
         <p className="text-slate-400">
           Adding proxies increases this tools reliability and speed
         </p>
-      </div>
+      </div> */}
       <div className="sm:px-2 lg:px-6 my-6 relative mx-auto w-full justify-center">
         <div>
           <div className="flex justify-between">

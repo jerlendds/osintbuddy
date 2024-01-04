@@ -50,7 +50,7 @@ export default function ViewEntityNode({ ctx }: JSONObject) {
           style={{ backgroundColor: node?.color?.length === 7 ? `${node.color}99` : node?.color }}
           className='header !rounded-full !p-3'
         >
-          <Icon icon={node.icon} className='!h-20 !w-20  cursor-grab focus:cursor-grabbing' />
+          <Icon icon={node.icon} className='!h-14 !w-14 text-slate-300/95 cursor-grab focus:cursor-grabbing' />
         </div>
         <h2 className={`absolute -left-28 -right-28 max-w-xl pointer-events-none text-center text-slate-500 text-lg top-full -bottom-10 h-auto`}>
           {displayValue?.length >= 90 ? `${displayValue.slice(0, 90)}...` : displayValue}

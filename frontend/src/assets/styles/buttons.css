@@ -1,5 +1,5 @@
 .btn-primary {
-  @apply ring-1 ring-primary-400/95 whitespace-nowrap focus:ring-primary-300/90 hover:ring-primary-300/80 text-left text-sm font-semibold hover:text-slate-300/95 text-slate-300/70 scale-100 hover:scale-[99%]  flex items-center border hover:ring-inset border-primary-400/95 focus:border-primary-300/90 hover:border-primary-300/80 py-2 px-5 font-display rounded-md  hover:shadow justify-center transition-all duration-75 ease-linear hover:stroke-primary-300/80 stroke-primary-400/95 ;
+  @apply ring-1 ring-primary-400/95 whitespace-nowrap focus:ring-primary-300/90 hover:ring-primary-300/80 text-left text-sm font-semibold hover:text-slate-300/70 text-slate-300/80 scale-100 hover:scale-[99%]  flex items-center border hover:ring-inset border-primary-400/95 focus:border-primary-300/90 hover:border-primary-300/80 py-2 px-5 font-display rounded-md  hover:shadow justify-center transition-all duration-75 ease-linear hover:stroke-primary-300/80 stroke-primary-400/95 ;
 }
 
 .btn-primary-solid {
@@ -37,5 +37,5 @@
 }
 
 .form-input {
-  @apply block w-full placeholder:text-slate-700 bg-transparent focus:outline-none outline-none  sm:text-sm
+  @apply block w-full placeholder:text-slate-700 bg-transparent focus:outline-none outline-none  sm:text-sm 
 }
