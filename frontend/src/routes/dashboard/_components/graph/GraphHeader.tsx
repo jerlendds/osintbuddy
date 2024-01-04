@@ -49,10 +49,10 @@ export default function GraphHeader({ graph, stats, refetchGraphs }: GraphHeader
               </button>
               <Link
                 to={`/graph/inquiry/${graph?.id}`}
-                className='btn-primary mb-3.5'
+                className='btn-primary mb-3.5 stroke-primary-300/90 hover:!stroke-primary-400/80'
               >
                 Open graph
-                <EyeIcon className='ml-2 w-5 h-5 ' />
+                <EyeIcon className='ml-2 w-5 h-5 stroke-inherit' />
               </Link>
             </div>
           </section>

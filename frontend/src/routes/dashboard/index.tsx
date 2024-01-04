@@ -176,7 +176,7 @@ export default function DashboardPage() {
               className='btn-primary mt-auto mb-4 mx-4 mr-6'
             >
               Create {tabIndex === 0 ? 'graph' : 'entity'}
-              <PlusIcon />
+              <PlusIcon className="!ml-7" />
             </button>
           ) : (
             <button

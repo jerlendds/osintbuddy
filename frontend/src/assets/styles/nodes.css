@@ -1,6 +1,6 @@
 /* Start node */
 .node.container {
-  @apply flex flex-col w-auto max-w-sm justify-between rounded-md transition-all duration-150 ease-in-out ring-1 ring-mirage-400/30 backdrop-blur-xl focus:ring-mirage-300/70 focus-within:ring-mirage-300/70 hover:ring-mirage-300/70 bg-slate-900/40 hover:bg-slate-900/60 focus:bg-slate-900/60 focus-within:bg-slate-900/60 hover:shadow-md shadow-sm;
+  @apply flex flex-col w-auto max-w-sm justify-between rounded-md transition-all duration-150 ease-in-out ring-1 ring-mirage-400/30 backdrop-blur-xl focus:ring-mirage-300/70 focus-within:ring-mirage-300/70 hover:ring-mirage-300/70 bg-slate-900/40 hover:bg-slate-900/60 focus:bg-slate-900/60 focus-within:bg-slate-900/60 hover:shadow-md shadow-sm cursor-grab target:cursor-grabbing;
 }
 
 .node .side-header {
@@ -36,7 +36,7 @@
 }
 
 .node .header {
-  @apply flex h-full w-full items-center justify-between rounded-t-md text-slate-50/70 py-2 px-1 cursor-grab focus:cursor-grabbing;
+  @apply flex h-full w-full items-center justify-between rounded-t-md text-slate-50/70 py-2 px-1 ;
 }
 
 .node .header svg {

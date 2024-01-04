@@ -1,7 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { HeroBackground } from '@src/components/Icons';
 import Earth from '@tarii/3d-earth'
+
+import { ReactComponent as GraphLogomark } from "@images/logo-mark-primary.svg";
+import { HeroBackground } from '@src/components/Icons';
 import { useEffectOnce } from '@src/app/hooks';
+import classNames from 'classnames';
+import { FingerPrintIcon } from '@heroicons/react/24/outline';
 
 const QUOTES = [
   "Vision is the art of seeing insight in the invisible",
@@ -52,11 +56,11 @@ export default function LandingPage(): React.ReactElement {
           <div className='mx-auto  grid max-w-2xl grid-cols-1 items-center gap-y-16 lg:max-w-8xl lg:grid-cols-2 '>
             <div className='relative px- sm:px-3 z-10 md:text-center lg:text-left'>
               <div className='relative pb-12'>
-                <p className='inline bg-gradient-to-r from-primary-300/95 via-primary-400 to-primary-300/95 bg-clip-text text-4xl font-display font-medium tracking-tight text-transparent'>
+                <p className='inline bg-gradient-to-r from-primary-300/95 via-primary-200/90 to-primary-300/95 bg-clip-text text-4xl font-display font-medium tracking-tight text-transparent'>
                   Elevate your Research with<br /> Strategic Insights from Public Data
                 </p>
                 <p className='pt-1 text-lg tracking-tight  text-slate-400'>
-                  Reveal the connections that shape our world and stay informed with targeted insights from public data. From defending against cyber threats and corruption to countering online censorship and beyond, stay on top of the facts.
+                  Reveal the connections that shape our world and stay informed with targeted insights from public data. From defending against cyber threats, war crimes, and corruption to countering online censorship and beyond, stay ahead with ICgraph.
                 </p>
                 <div className='mt-5 lg:mt-4 flex gap-4 md:justify-center lg:justify-start'>
                   <button
@@ -66,20 +70,22 @@ export default function LandingPage(): React.ReactElement {
                     className='btn-primary-solid '
                   >
                     Sign in
+                    <FingerPrintIcon />
                   </button>
                   <button
                     onClick={() => {
                       window.location.href = window.sdk.getSignupUrl();
                     }}
-                    className='btn-primary '
+                    className='btn-primary   '
                   >
                     Create account
+                    <GraphLogomark className='!h-6 ' />
                   </button>
                 </div>
               </div>
             </div>
           </div>
-          <div ref={earthRef} className='z-0 absolute w-[20rem]  md:w-[40rem] lg:w-[54rem] md:h-[100%] h-[30rem] lg:h-[75rem] lg:mt-10 -mt-20 md:-mt-10 sm:ml-20 [mask-image:linear-gradient(transparent,white,white)] dark:[mask-image:linear-gradient(transparent,#000000AF,#00000009)] lg:-top-full top-0 right-0' />
+          <div ref={earthRef} className='z-0 absolute w-[20rem]  md:w-[40rem] lg:w-[54rem] md:h-[100%] h-[30rem] lg:h-[75rem] lg:mt-10 -mt-28 md:-mt-10 sm:ml-20 [mask-image:linear-gradient(transparent,white,white)] dark:[mask-image:linear-gradient(transparent,#000000AF,#00000009)] lg:-top-full top-0 right-0' />
         </div>
         <div className='relative mt-auto bottom-0 mx-4 sm:px-0 mb-0 flex items-center justify-between'>
           <div className='mx-auto grid  max-w-2xl grid-cols-1 mt-auto mb-0 items-center lg:max-w-8xl flex-grow'>

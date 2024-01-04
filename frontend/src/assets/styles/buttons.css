@@ -1,19 +1,25 @@
 .btn-primary {
-  @apply ring-1 ring-primary-300/95 whitespace-nowrap hover:ring-primary-200 text-left text-sm font-semibold hover:text-primary-200/95 text-slate-300/70 scale-100 hover:scale-[99%]  flex items-center border hover:ring-inset border-primary-300/95 hover:border-primary-200 py-2 px-5 font-display rounded-md  hover:shadow justify-center transition-all duration-150 ease-in-out;
+  @apply ring-1 ring-primary-400/95 whitespace-nowrap focus:ring-primary-300/90 hover:ring-primary-300/80 text-left text-sm font-semibold hover:text-slate-300/95 text-slate-300/70 scale-100 hover:scale-[99%]  flex items-center border hover:ring-inset border-primary-400/95 focus:border-primary-300/90 hover:border-primary-300/80 py-2 px-5 font-display rounded-md  hover:shadow justify-center transition-all duration-75 ease-linear hover:stroke-primary-300/80 stroke-primary-400/95 ;
 }
 
 .btn-primary-solid {
-  @apply ring-1 ring-primary-300 hover:ring-primary-300/95 whitespace-nowrap text-left text-sm font-semibold  hover:text-slate-200/95 flex scale-100 hover:scale-[99%] items-center hover:ring-inset bg-primary-300/95 hover:bg-primary-400 py-2 px-5 font-display rounded-md  hover:shadow justify-center transition-all duration-150 ease-in-out text-slate-200/90 hover:text-slate-200
+  @apply ring-1 ring-primary-400/95 hover:ring-primary-300/80 whitespace-nowrap text-left text-sm font-semibold  hover:text-slate-200/95 flex scale-100 hover:scale-[99%] items-center hover:ring-inset bg-primary-400/95 hover:bg-primary-300/80 focus:bg-primary-300/90 py-2 px-5 font-display rounded-md  hover:shadow justify-center transition-all duration-75 ease-linear text-slate-200/90 hover:text-slate-200 hover:stroke-primary-300/80 stroke-primary-400/95
 }
 
 .btn-primary-solid svg,
 .btn-primary svg,
 .btn-danger svg {
-  @apply ml-5 w-5 h-5
+  @apply ml-4 w-5 h-5 transition-transform duration-150 ease-out
+}
+
+.btn-primary-solid:hover svg,
+.btn-primary:hover svg,
+.btn-danger:hover svg {
+  @apply ml-4 w-5 h-5 scale-[106%] !ease-linear
 }
 
 .btn-danger {
-  @apply ring-1 hover:shadow ring-danger-500/70 hover:ring-danger-500 text-left text-sm font-semibold text-danger-500/70 hover:text-danger-500 scale-100 hover:scale-[99%] flex items-center border hover:ring-inset border-danger-500/70 hover:border-danger-500 py-2 px-3 rounded-md  font-display justify-center transition-colors duration-100 ease-in-out
+  @apply ring-1 hover:shadow ring-danger-500/70 hover:ring-danger-500 text-left text-sm font-semibold text-danger-500/70 hover:text-danger-500 scale-100 hover:scale-[99%] flex items-center border hover:ring-inset border-danger-500/70 hover:border-danger-500 py-2 px-3 rounded-md  font-display justify-center transition-all duration-75 ease-linear
 }
 
 .btn-form {
@@ -25,7 +31,6 @@
 .btn-form span {
   @apply mx-2
 }
-
 
 .form-input-wrapper {
   @apply mt-2.5 hover:border-mirage-200/40 transition-colors duration-200 ease-in-out block justify-between items-center to-mirage-400/50 from-mirage-300/20 bg-gradient-to-br rounded border  focus-within:!border-primary/40  px-3.5 py-1 text-slate-100 shadow-sm border-mirage-400/20 focus-within:from-mirage-400/20 focus-within:to-mirage-400/30 focus-within:bg-gradient-to-l

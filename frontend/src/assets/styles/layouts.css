@@ -1,9 +1,9 @@
 .sidebar-link {
-  @apply flex items-center  duration-200 ease-in-out  mx-2.5 my-1 py-2 text-base  font-medium rounded-md border hover:border-mirage-400/60 border-transparent  hover:ring-slate-800/20 text-slate-400/30 hover:text-slate-400/60   shadow  hover:translate-x-px z-50 transition-all focus:text-slate-400/40   -translate-x-px  ring-slate-900/20 ring-2 ring-inset from-mirage-400/10 pl-3 to-mirage-300/5 bg-gradient-to-tl from-10% pr-1.5 hover:from-mirage-300/20 hover:to-mirage-300/10 hover:bg-gradient-to-tl font-display;
+  @apply flex items-center  duration-150 ease-in-out  mx-2.5 my-1 py-2 text-base  font-medium rounded-md border hover:border-mirage-400/60 border-transparent  hover:ring-slate-800/20 text-slate-400/30 hover:text-slate-400/60   shadow  hover:translate-x-px z-50 transition-all focus:text-slate-400/40   -translate-x-px  ring-slate-900/20 ring-2 ring-inset from-mirage-400/10 pl-3 to-mirage-300/5 bg-gradient-to-tl from-10% pr-1.5 hover:from-mirage-300/20 hover:to-mirage-300/10 hover:bg-gradient-to-tl font-display;
 }
 
 .sidebar-link.active {
-  @apply hover:translate-x-px shadow translate-x-px  ring-1 ring-primary-300/80 border-primary-300/80 ring-inset from-mirage-300/20 to-mirage-300/10 bg-gradient-to-tl from-10% hover:from-mirage-300/20 hover:to-mirage-300/10 hover:bg-gradient-to-tl text-slate-300/80 ;
+  @apply hover:translate-x-px shadow translate-x-px text-slate-300/80 ring-1 ring-primary-300/80 border-primary-300/80 ring-inset from-mirage-300/20 to-mirage-300/10 bg-gradient-to-tl from-10% hover:from-mirage-300/20 hover:to-mirage-300/10 hover:bg-gradient-to-tl  focus:from-mirage-300/20 focus:to-mirage-300/10;
 }
 
 .sidebar-link.active button {
@@ -13,13 +13,13 @@
   @apply text-primary-300 -ml-0.5
 }
 .sidebar-link button {
-  @apply border border-mirage-400/40 transition-colors duration-200 from-10% hover:from-mirage-300/20 hover:to-mirage-300/10 hover:bg-gradient-to-tl
+  @apply border border-mirage-400/40 transition-colors duration-150 from-10% hover:from-mirage-300/20 hover:to-mirage-300/10 hover:bg-gradient-to-tl
 }
 
 .sidebar-link button svg {
-  @apply text-slate-400 
+  @apply  origin-center rotate-0
 }
-.sidebar-link button:hover svg {
-  @apply text-slate-300;
-
+.sidebar-link:hover button svg,
+.sidebar-link.active button svg {
+  @apply !rotate-180
 }

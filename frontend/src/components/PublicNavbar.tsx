@@ -5,7 +5,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import OSINTBuddyLogo from '@assets/images/logo.svg';
 import { Listbox } from '@headlessui/react'
-import { GithubIcon, Icon } from './Icons';
+import { Icon } from './Icons';
 import Logo from '@images/logo.svg';
 
 const themes = [
@@ -169,14 +169,14 @@ export default function PublicNavbar(): React.ReactElement {
       <div className="">
         {/* <Search /> */}
       </div>
-      <div className="ml-auto relative flex basis-0 justify-end gap-6 sm:gap-8 md:flex-grow">
+      <div className="ml-auto relative flex basis-0 justify-end mr-2 gap-6 sm:gap-8 md:flex-grow">
         <a href="https://discord.gg/gsbbYHA3K3" className="group" aria-label="Discord">
-          <Icon icon="brand-discord-filled" className="h-6 w-6 transition-colors duration-150 ease-in-out text-slate-500 hover:text-slate-300" />
+          <Icon icon="brand-discord" className="h-6 w-6 transition-colors duration-150 ease-in-out text-slate-500 hover:text-slate-300 focus:text-slate-300" />
         </a>
       </div>
       <div className="relative flex justify-end">
         <a href="https://github.com/jerlendds/osintbuddy" className="group" aria-label="GitHub">
-          <GithubIcon className="h-6 w-6 transition-colors duration-150 ease-in-out fill-slate-500 group-hover:fill-slate-500 dark:group-hover:fill-slate-300" />
+          <Icon icon="brand-github" className="h-6 w-6 transition-colors duration-150 ease-in-out text-slate-500 hover:text-slate-300 focus:text-slate-300" />
         </a>
       </div>
     </header>

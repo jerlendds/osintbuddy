@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { ReactComponent as OSINTBuddyLogo } from "@images/logo.svg";
+import { ReactComponent as IcGraphLogomark } from "@images/icg-text.svg";
 import { Link, NavLink } from "react-router-dom";
 import HamburgerMenu from "./HamburgerMenu";
 import { toast } from "react-toastify";
@@ -35,7 +35,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
           )}
         >
           <Link to="/" replace>
-            <OSINTBuddyLogo className="h-7 w-auto fill-slate-400" />
+            <IcGraphLogomark className="h-5 ml-1 w-auto fill-slate-400" />
           </Link>
 
           <HamburgerMenu
@@ -45,7 +45,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
           />
         </div>
         <div className="flex flex-1 flex-col overflow-y-auto">
-          <nav className="flex-1 flex py-4 pt-1 flex-col">
+          <nav className="flex-1 flex pb-4 flex-col">
             {navigation.map((item) => (
               <NavLink
                 key={item.name}
@@ -54,17 +54,14 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                   classNames(
                     isActive && "active mx-2",
                     "sidebar-link ",
-                    !showSidebar ? "mx-0 ml-0 mr-px" : 'mr-2'
+                    !showSidebar ? "mx-0 ml-0 mr-px " : 'mr-2.5'
                   )
                 }
               >
                 <item.icon
                   className={classNames(
-                    "transition-all",
-                    location.pathname.includes(item.to)
-                      ? "text-slate-500"
-                      : "",
-                    "mr-2 flex-shrink-0 h-6 w-6 duration-100",
+                    "transition-all mr-2 flex-shrink-0 h-6 w-6 duration-100",
+                    location.pathname.includes(item.to) && "text-slate-400/30",
                     showSidebar
                       ? "translate-x-0"
                       : "translate-x-[12.75rem] "
@@ -78,20 +75,20 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
               replace
               className={({ isActive }) =>
                 classNames(
-                  isActive && "active",
-                  "sidebar-link mt-auto",
-                  !showSidebar && "mx-0"
+                  !showSidebar ? "mx-0 ml-0 mr-px" : 'mr-2.5',
+                  "transition-all mt-auto sidebar-link text-slate-400/30",
+                  isActive && "active"
                 )
               }
             >
               <CogIcon
                 className={classNames(
                   "transition-all",
-                  location.pathname.includes("settings")
-                    ? "text-primary"
-                    : "text-slate-600 group-hover:text-slate-300",
-                  "mr-3 flex-shrink-0 h-6 w-6 duration-100",
-                  showSidebar ? "translate-x-0" : "translate-x-[13.16rem]"
+                  location.pathname.includes("settings") && "!mr-0 hover:-ml-0.5 text-slate-400/30",
+                  "mr-2 flex-shrink-0 h-6 w-6 duration-100",
+                  showSidebar
+                    ? "translate-x-0"
+                    : "translate-x-[12.75rem] "
                 )}
               />
               Settings
@@ -100,8 +97,8 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
               href="https://discord.gg/gsbbYHA3K3"
               className={
                 classNames(
-                  "sidebar-link focus:text-primary !bg-transparent !hover:bg-transparent",
-                  !showSidebar && "mx-0"
+                  "sidebar-link mt-0 ",
+                  !showSidebar ? "mx-0" : 'mr-2.5'
                 )
               }
             >
@@ -109,11 +106,11 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                 icon="brand-discord"
                 className={classNames(
                   "transition-all",
-                  location.pathname.includes("settings")
-                    ? "text-primary"
-                    : "text-slate-600 group-hover:text-slate-300",
-                  "mr-3 flex-shrink-0 h-6 w-6 duration-100",
-                  showSidebar ? "translate-x-0" : "translate-x-[13.16rem]"
+                  "text-slate-400/30",
+                  "mr-2 flex-shrink-0 h-6 w-6 duration-100",
+                  showSidebar
+                    ? "translate-x-0"
+                    : "translate-x-[12.75rem] "
                 )}
               />
               Discord

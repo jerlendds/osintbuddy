@@ -39,7 +39,7 @@
 }
 
 .subpanel-link-true {
-  @apply   hover:translate-x-0 shadow translate-x-0 ring-slate-600/10 ring-1 ring-inset from-mirage-300/20 to-mirage-300/10 bg-gradient-to-tl from-10% hover:from-mirage-300/20 hover:to-mirage-300/10 hover:bg-gradient-to-tl
+  @apply   hover:-translate-x-px shadow -translate-x-px ring-slate-600/10 ring-1 ring-inset from-mirage-300/20 to-mirage-300/10 bg-gradient-to-tl from-10% hover:from-mirage-300/20 hover:to-mirage-300/10 hover:bg-gradient-to-tl
 }
 
 .subpanel-link div {

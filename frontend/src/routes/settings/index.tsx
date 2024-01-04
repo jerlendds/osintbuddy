@@ -210,7 +210,7 @@ export function CasesTable({
 
 export default function SettingsPage() {
   const secondaryNavigation = [
-    { name: "Anonymization", href: "#", current: true },
+    { name: "Proxies", href: "#", current: true },
     { name: "Plugins", href: "#", current: false },
     { name: "Keys", href: "#", current: false },
     { name: "Features", href: "#", current: false },
@@ -218,7 +218,7 @@ export default function SettingsPage() {
 
   return (
     <>
-      <header className="border-b border-dark-300">
+      <header className="border-b border-mirage-600/90 from-mirage-600/20 to-mirage-600/20 bg-gradient-to-l from-10%  ">
         {/* Secondary navigation */}
         <nav className="flex overflow-x-auto py-4">
           <ul className="flex min-w-full flex-none gap-x-6 px-4 text-sm font-semibold leading-6 text-gray-400 sm:px-6 lg:px-8">
@@ -228,7 +228,7 @@ export default function SettingsPage() {
                   href={item.href}
                   className={classNames(
                     "font-display",
-                    item.current ? "text-info-100" : ""
+                    item.current ? "text-primary-300" : ""
                   )}
                 >
                   {item.name}
@@ -247,7 +247,7 @@ export default function SettingsPage() {
       <div className="sm:px-2 lg:px-6 my-6 relative mx-auto w-full justify-center">
         <div>
           <div className="flex justify-between">
-            <div className="flex flex-col">
+            {/* <div className="flex flex-col">
               <h2 className="text-base font-semibold leading-7 text-slate-200">
                 Your proxies
               </h2>
@@ -281,7 +281,7 @@ export default function SettingsPage() {
               className="text-sm font-semibold leading-6 text-info-200 hover:text-info-100"
             >
               <span aria-hidden="true">+</span> Add another proxy
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

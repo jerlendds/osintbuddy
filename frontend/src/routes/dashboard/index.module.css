@@ -1,6 +1,6 @@
 /* wraps the sidebar with search and the main view */
 .sidebar-wrapper {
-  @apply rounded py-px !min-w-[20rem] max-w-[20rem] flex-col h-screen pt-3.5 border-r-2 from-mirage-600/40 to-mirage-600/50 bg-gradient-to-br border-mirage-600/70 justify-between shadow-xl flex relative w-full pl-1
+  @apply rounded py-px !min-w-[20rem] max-w-[20rem] flex-col h-screen pt-3.5 border-r-[3px] from-mirage-600/40 to-mirage-600/50 bg-gradient-to-br border-mirage-600/40 justify-between shadow-xl flex relative w-full pl-1
 }
 
 .search-container {
