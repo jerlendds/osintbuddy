@@ -67,7 +67,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                       : "translate-x-[12.75rem] "
                   )}
                 />
-                {item.name}
+                <span>{item.name}</span>
               </NavLink>
             ))}
             <NavLink
