@@ -9,8 +9,8 @@ import { Icon } from "./Icons";
 
 const navigation = [
   { name: <><span>Dashboard</span></>, to: "/dashboard", icon: HomeIcon },
-  { name: <><span>Workspaces</span> <span className="grayscale ml-auto mr-2 opacity-20 right-0">🚧</span></>, to: "/workspaces", icon: FolderOpenIcon },
-  { name: <><span>Scans</span> <span className="grayscale ml-auto mr-2 opacity-20 right-0">🚧</span></>, to: "/scans", icon: DocumentMagnifyingGlassIcon },
+  { name: <><span>Workspaces</span> <span className="grayscale ml-auto mr-2.5 opacity-20 right-0">🚧</span></>, to: "/workspaces", icon: FolderOpenIcon },
+  { name: <><span>Scans</span> <span className="grayscale ml-auto mr-2.5 opacity-20 right-0">🚧</span></>, to: "/scans", icon: DocumentMagnifyingGlassIcon },
 ];
 
 interface AppLayoutSidebarProps {
@@ -91,7 +91,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                     : "translate-x-[12.75rem] "
                 )}
               />
-              <span>Settings</span> <span className="grayscale ml-auto mr-2 right-0 opacity-20">🚧</span>
+              <span>Settings</span> <span className="grayscale ml-auto mr-2.5 right-0 opacity-20">🚧</span>
             </NavLink>
             <a
               href="https://discord.gg/gsbbYHA3K3"
