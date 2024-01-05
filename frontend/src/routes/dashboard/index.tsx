@@ -142,7 +142,7 @@ export default function DashboardPage() {
               </Tab>
               <div className={styles["tab-slider"]}></div>
             </Tab.List>
-            <section className="h-full overflow-y-scroll px-2 ">
+            <div className="h-full overflow-y-scroll ">
               <Tab.Panel className={styles["tab-panel"]}>
                 <GraphPanel
                   refetchGraphs={async () => await refetchGraphs()}
@@ -157,7 +157,7 @@ export default function DashboardPage() {
                   entitiesData={entitiesData}
                   isLoading={isLoading}
                   isError={isError}
-                isSuccess={isSuccess}
+                  isSuccess={isSuccess}
                   refetchEntities={refetchEntities}
 
                 />
@@ -165,7 +165,7 @@ export default function DashboardPage() {
               <Tab.Panel className={styles["tab-panel"]}>
                 <MarketPanel />
               </Tab.Panel>
-            </section>
+            </div>
           </Tab.Group>
           {tabIndex !== 2 ? (
             <button

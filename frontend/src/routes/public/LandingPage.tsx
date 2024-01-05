@@ -56,7 +56,7 @@ export default function LandingPage(): React.ReactElement {
           <div className='mx-auto  grid max-w-2xl grid-cols-1 items-center gap-y-16 lg:max-w-8xl lg:grid-cols-2 '>
             <div className='relative px- sm:px-3 z-10 md:text-center lg:text-left'>
               <div className='relative pb-12'>
-                <p className='inline bg-gradient-to-r from-primary-300/95 via-primary-200/90 to-primary-300/95 bg-clip-text text-4xl font-display font-medium tracking-tight text-transparent'>
+                <p className='inline bg-gradient-to-r from-primary-200/90 via-primary-300/90 to-primary-200/95 bg-clip-text text-4xl font-display font-medium tracking-tight text-transparent'>
                   Elevate your Research with<br /> Strategic Insights from Public Data
                 </p>
                 <p className='pt-1 text-lg tracking-tight  text-slate-400'>
@@ -91,13 +91,13 @@ export default function LandingPage(): React.ReactElement {
           <div className='mx-auto grid  max-w-2xl grid-cols-1 mt-auto mb-0 items-center lg:max-w-8xl flex-grow'>
             <div className='relative z-10 md:text-center lg:text-left '>
               <header className='space-y-1 mt-24 md:mt-0'>
-                <p className='font-display text-sm font-medium text-primary-200'>Welcome to ICGraph</p>
+                <p className='font-display text-sm font-medium tracker-tighter text-primary-200'>Welcome to ICGraph</p>
                 <h1 className='font-display text-3xl tracking-tight text-slate-300 dark:text-slate-300'>
                   {atfQuote}
                 </h1>
               </header>
 
-              <div className='docs max-w-4xl text-slate-400 py-2'>Please email <a href='mailto:oss@osintbuddy.com' className='text-primary-200 hover:text-primary-200/80 transition-colors duration-100 ease-in-out'>oss@icgraph.com</a> to share ideas, bugs, or security concerns
+              <div className='docs max-w-4xl text-slate-400 py-2'>Please email <a href='mailto:oss@osintbuddy.com' className='text-primary-200 hover:text-primary-200/80 transition-colors duration-100 font-sans ease-in-out'>oss@icgraph.com</a> to share ideas, bugs, or security concerns
               </div>.
             </div>
           </div>

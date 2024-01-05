@@ -52,6 +52,6 @@
   @apply -translate-x-[97px] scale-x-[106%] cursor-pointer
 }
 .tab-panel {
-  @apply w-full relative ;
+  @apply w-full relative px-2 pr-2.5;
 }
 

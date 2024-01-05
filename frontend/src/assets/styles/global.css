@@ -69,6 +69,11 @@ body {
   @apply flex flex-col h-full min-h-screen relative bg-mirage-900/20  justify-between;
 }
 
+.half-grayscale {
+  --tw-grayscale: grayscale(70%);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
 svg.icon {
   @apply flex items-center justify-center;
 }
