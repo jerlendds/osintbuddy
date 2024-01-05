@@ -23,11 +23,11 @@ export default function RoundLoader({ className }: RoundLoaderProps): React.Reac
 export function UnderConstruction({ header, description, className = 'flex px-6' }: any) {
   return (
     <div className={className}>
-      <div className='bg-mirage-700/50 w-full block shadow sm:rounded-lg '>
+      <div className='bg-mirage-800/30 w-full block shadow rounded-b-lg '>
         <div className='border-b border-mirage-300 mx-4 py-5 sm:px-6'>
           <div className='-ml-6 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap'>
             <div className='ml-4 mt-2'>
-              <h1 className='font-display text-2xl tracking-tight text-slate-300'>
+              <h1 className='font-display text-2xl font-semibold text-slate-300/90'>
                 Under Construction
               </h1>
             </div>

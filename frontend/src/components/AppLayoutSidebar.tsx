@@ -9,8 +9,8 @@ import { Icon } from "./Icons";
 
 const navigation = [
   { name: "Dashboard", to: "/dashboard", icon: HomeIcon },
-  { name: "Workspaces *", to: "/workspaces", icon: FolderOpenIcon },
-  { name: "Scans *", to: "/scans", icon: DocumentMagnifyingGlassIcon },
+  { name: <>Workspaces <span className="grayscale ml-auto mr-2 opacity-20">🚧</span></>, to: "/workspaces", icon: FolderOpenIcon },
+  { name: <>Scans <span className="grayscale ml-auto mr-2 opacity-20">🚧</span></>, to: "/scans", icon: DocumentMagnifyingGlassIcon },
 ];
 
 interface AppLayoutSidebarProps {
@@ -45,10 +45,10 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
           />
         </div>
         <div className="flex flex-1 flex-col overflow-y-auto">
-          <nav className="flex-1 flex pb-4 flex-col">
+          <nav className="flex-1 flex  flex-col">
             {navigation.map((item) => (
               <NavLink
-                key={item.name}
+                key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
                   classNames(
@@ -67,7 +67,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                       : "translate-x-[12.75rem] "
                   )}
                 />
-                <span>{item.name}</span>
+                {item.name}
               </NavLink>
             ))}
             <NavLink
@@ -76,29 +76,29 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
               className={({ isActive }) =>
                 classNames(
                   !showSidebar ? "mx-0 ml-0 mr-px" : 'mr-2.5',
-                  "transition-all mt-auto sidebar-link text-slate-400/30",
+                  "transition-all mt-auto sidebar-link text-slate-400/30 ",
                   isActive && "active"
                 )
               }
             >
               <CogIcon
                 className={classNames(
-                  "transition-all",
-                  location.pathname.includes("settings") && "!mr-0 hover:-ml-0.5 text-slate-400/30",
+                  "transition-all ",
+                  location.pathname.includes("settings") && "!mr-2 hover:-ml-0.5 text-slate-400/30",
                   "mr-2 flex-shrink-0 h-6 w-6 duration-100",
                   showSidebar
                     ? "translate-x-0"
                     : "translate-x-[12.75rem] "
                 )}
               />
-              Settings
+              Settings <span className="grayscale ml-auto mr-2 opacity-20">🚧</span>
             </NavLink>
             <a
               href="https://discord.gg/gsbbYHA3K3"
               className={
                 classNames(
-                  "sidebar-link mt-0 ",
-                  !showSidebar ? "mx-0" : 'mr-2.5'
+                  "sidebar-link ",
+                  !showSidebar ? "mx-0 ml-0 mr-px" : 'mr-2.5'
                 )
               }
             >

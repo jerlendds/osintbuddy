@@ -15,7 +15,7 @@ export const InquiryHeader = ({ title, header, className, btnTxt, btnAction }: P
       <div className='min-w-0 max-w-2xl flex-auto pt-3 lg:max-w-none lg:pr-0 px-2'>
         <section>
           <header className='space-y-1'>
-            {title && <h4 className='font-display text-sm font-medium text-primary-300'>{title}</h4>}
+            {title && <h4 className='font-display text-sm font-medium text-primary-200'>{title}</h4>}
             {header && (
               <h1 className='font-display leading-4 text-xl tracking-tight text-slate-400 dark:text-slate-300'>{header}</h1>
             )}

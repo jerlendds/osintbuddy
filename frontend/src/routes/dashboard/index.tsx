@@ -157,7 +157,7 @@ export default function DashboardPage() {
                   entitiesData={entitiesData}
                   isLoading={isLoading}
                   isError={isError}
-                  isSuccess={isSuccess}
+                isSuccess={isSuccess}
                   refetchEntities={refetchEntities}
 
                 />

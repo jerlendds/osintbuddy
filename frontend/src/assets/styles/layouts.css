@@ -3,7 +3,7 @@
 }
 
 .sidebar-link.active {
-  @apply hover:translate-x-px shadow translate-x-px  ring-1 ring-primary-300/80 border-primary-300/80 ring-inset from-mirage-300/20 to-mirage-300/10 bg-gradient-to-tl from-10% hover:from-mirage-300/20 hover:to-mirage-300/10 hover:bg-gradient-to-tl  focus:from-mirage-300/20 focus:to-mirage-300/10;
+  @apply hover:translate-x-px shadow translate-x-px text-slate-300/90 ring-1 ring-primary-300/80 border-primary-300/80 ring-inset from-mirage-300/20 to-mirage-300/10 bg-gradient-to-tl from-10% hover:from-mirage-300/20 hover:to-mirage-300/10 hover:bg-gradient-to-tl  focus:from-mirage-300/20 focus:to-mirage-300/10;
 }
 .sidebar-link.active span {
   @apply text-slate-300/80

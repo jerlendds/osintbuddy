@@ -92,9 +92,9 @@ export default function GraphDetails() {
   return (
     <>
       <section className="flex flex-col h-screen w-full">
-        <div className="flex w-full">
+        <header className="flex w-full">
           <GraphHeader refetchGraphs={async () => await refetchGraphs()} stats={graphStats} graph={activeGraph as Graph} />
-        </div>
+        </header>
         <ResponsiveGridLayout
           className="relative flex-grow h-full z-10 w-full"
           rowHeight={1}
