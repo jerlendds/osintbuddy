@@ -87,7 +87,7 @@ export default function Subpanel({
                 <div>
                   <p className={styles["subpanel-label"] + " " + styles[`subpanel-label-${isActive}`]}>{item.label}</p>
                   <p className={descriptionClassName}>{item.description}</p>
-                  <p className={descriptionClassName}>Last seen {formatPGDate(item?.last_edited ? item.last_edited : item.last_seen)}</p>
+                  <p className={descriptionClassName}><span className="font-sans">Last seen </span> {formatPGDate(item?.last_edited ? item.last_edited : item.last_seen)}</p>
                 </div>
                 <StarIcon
                   onClick={async () => await onClick(item.id)}

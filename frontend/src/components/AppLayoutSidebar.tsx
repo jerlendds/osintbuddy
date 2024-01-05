@@ -8,9 +8,9 @@ import { Icon } from "./Icons";
 
 
 const navigation = [
-  { name: "Dashboard", to: "/dashboard", icon: HomeIcon },
-  { name: <>Workspaces <span className="grayscale ml-auto mr-2 opacity-20">🚧</span></>, to: "/workspaces", icon: FolderOpenIcon },
-  { name: <>Scans <span className="grayscale ml-auto mr-2 opacity-20">🚧</span></>, to: "/scans", icon: DocumentMagnifyingGlassIcon },
+  { name: <><span>Dashboard</span></>, to: "/dashboard", icon: HomeIcon },
+  { name: <><span>Workspaces</span> <span className="grayscale ml-auto mr-2 opacity-20 right-0">🚧</span></>, to: "/workspaces", icon: FolderOpenIcon },
+  { name: <><span>Scans</span> <span className="grayscale ml-auto mr-2 opacity-20 right-0">🚧</span></>, to: "/scans", icon: DocumentMagnifyingGlassIcon },
 ];
 
 interface AppLayoutSidebarProps {
@@ -73,25 +73,25 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
             <NavLink
               to="/settings"
               replace
-              className={({ isActive }) =>
+              className={({ isActive, }) =>
                 classNames(
                   !showSidebar ? "mx-0 ml-0 mr-px" : 'mr-2.5',
-                  "transition-all mt-auto sidebar-link text-slate-400/30 ",
-                  isActive && "active"
+                  "sidebar-link transition-all mt-auto sidebar-link text-slate-400/30 ",
+                  isActive && "active mx-2"
                 )
               }
             >
               <CogIcon
                 className={classNames(
                   "transition-all ",
-                  location.pathname.includes("settings") && "!mr-2 hover:-ml-0.5 text-slate-400/30",
+                  location.pathname.includes("settings") && "!mr-2 hover:-ml-0.5 ",
                   "mr-2 flex-shrink-0 h-6 w-6 duration-100",
                   showSidebar
                     ? "translate-x-0"
                     : "translate-x-[12.75rem] "
                 )}
               />
-              Settings <span className="grayscale ml-auto mr-2 opacity-20">🚧</span>
+              <span>Settings</span> <span className="grayscale ml-auto mr-2 right-0 opacity-20">🚧</span>
             </NavLink>
             <a
               href="https://discord.gg/gsbbYHA3K3"
