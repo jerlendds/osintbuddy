@@ -116,7 +116,7 @@ async def save_node_on_drop(
         }
     }
 
-async def load_graph_read(uuid: UUID, viewport=None) -> tuple[list, list]:
+async def load_nodes_from_db(uuid: UUID, viewport=None) -> tuple[list, list]:
     zoom_scale = viewport.get('zoom')
     # x = viewport.get('x')
     # y = viewport.get('y')
@@ -168,7 +168,7 @@ def node_to_blueprint_entity(ui_entity_element, node) -> None:
 async def read_graph(viewport_event, send_json, project_uuid, is_initial_read: bool = False):
     nodes = []
     edges_data = []
-    data_nodes, edges = await load_graph_read(project_uuid, viewport_event)
+    data_nodes, edges = await load_nodes_from_db(project_uuid, viewport_event)
     tmp_invalid_fix = []
     tmp_invalid_id_fix = []
     for node in data_nodes:
