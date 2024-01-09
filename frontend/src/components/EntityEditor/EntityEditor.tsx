@@ -20,13 +20,12 @@ export const auraTheme = auraInit({
     gutterBackground: 'rgba(36, 46, 107, .17)',
     selectionMatch: 'rgba(76, 86, 107, .14)',
     lineHighlight: 'rgba(36, 46, 77, .20)',
-
   },
   styles: [
     { tag: [t.definitionOperator, t.logicOperator, t.bitwiseOperator, t.bool,], color: "#ec4899" },
     { tag: [t.processingInstruction, t.string, t.inserted, t.special(t.string), t.function(t.propertyName,), t.function(t.variableName),], color: "#2dd4bf" },
     { tag: [t.keyword, t.definitionKeyword, t.special(t.keyword), t.attributeValue, t.changed, t.annotation, t.modifier, t.self, t.namespace], color: "#c084fc" },
-    { tag: [t.variableName, t.deleted, t.character, t.name, t.special(t.variableName)], color: "#cbd5ef" },
+    { tag: [t.variableName, t.deleted, t.character, t.name, t.special(t.variableName)], color: "#cbd5efEF" },
     { tag: [t.docString, t.docComment, t.className, t.punctuation,], color: "#49B6FE" },
     { tag: [t.propertyName,], color: "#34d399" },
     { tag: [t.string], color: "#4ade80" },
@@ -42,6 +41,7 @@ export function CodeEditor({ code, setCode }: JSONObject) {
       value={code}
       onChange={(value) => setCode(value)}
       extensions={[python()]}
+      className="text-sm font-semibold"
     />
   )
 }

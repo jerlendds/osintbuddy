@@ -302,7 +302,5 @@ input[type='file'] {
   @apply !border-slate-600 !w-2 !h-2
 }
 
-.cm-content {
-  @apply font-code text-sm font-semibold
-}
+
 /* end react-grid-layout and codemirror */
