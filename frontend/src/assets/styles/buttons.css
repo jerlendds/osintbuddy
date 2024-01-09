@@ -5,7 +5,9 @@
 .btn-primary-solid {
   @apply ring-1 ring-primary-400/95 hover:ring-primary-300/80 whitespace-nowrap text-left text-sm font-semibold  hover:text-slate-200/95 flex scale-100 hover:scale-[99%] items-center hover:ring-inset bg-primary-400/95 hover:bg-primary-300/80 focus:bg-primary-300/90 py-2 px-5 font-display rounded-md  hover:shadow justify-center transition-all duration-75 ease-linear text-slate-200/90 hover:text-slate-200 hover:stroke-primary-300/80 stroke-primary-400/95
 }
-
+.btn-primary-solid:disabled {
+  @apply !bg-mirage-400 !ring-mirage-400 !text-slate-500 hover:pointer-events-none
+}
 .btn-primary-solid svg,
 .btn-primary svg,
 .btn-danger svg {

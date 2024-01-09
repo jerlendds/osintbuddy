@@ -54,15 +54,15 @@ export default function Subpanel({
   const { hid } = useParams();
 
   return (
-    <div className={styles["subpanel"]}>
-      <div className={styles["subpanel-header"]} onClick={setShowEntities}>
-        <p>{label ?? ""}</p>
-        <ChevronDownIcon className={styles[`show-header-icon-${showEntities}`]} />
-      </div>
+    <section className={styles["subpanel"]}>
+      <header className={styles["subpanel-header"]} onClick={setShowEntities}>
+        <h2 className={`${styles["cyberpunk"]} ${styles["glitched"]}`}>{label ?? ""}</h2>
+        <ChevronDownIcon className={styles[`show-header-icon-${showEntities}`] + " transition-transform duration-100"} />
+      </header>
       {showError && showEntities && !isLoading && (
         <>
           <p>
-            {errorMessage?.length ? (<>{errorMessage}</>) : (
+            {errorMessage?.length ? (<p className="text-slate-500/60 text-sm px-2">{errorMessage}</p>) : (
               <>We ran into an error retrieving your entities. Please try refreshing the page, if this error continues to occur please <a href="#" className="text-info-300">file an issue</a> on github</>
             )}
           </p>
@@ -74,34 +74,33 @@ export default function Subpanel({
           <GraphLoaderCard />
         </>
       )}
-      {isSuccess && showEntities && (
-        <section className={styles["subpanel-section"]}>
-          {items && items.map((item) => {
-            const isActive = hid === item.id
-            const descriptionClassName = styles["subpanel-desc"] + " " + styles[`subpanel-desc-${isActive}`]
-            return (
-              <Link
-                key={item.id}
-                to={`${to}/${item.id}`}
-                className={styles["subpanel-link"] + " " + styles[`subpanel-link-${isActive}`]}>
-                <div>
-                  <p className={styles["subpanel-label"] + " " + styles[`subpanel-label-${isActive}`]}>{item.label}</p>
-                  <p className={descriptionClassName}>{item.description}</p>
-                  <p className={descriptionClassName}><span className="font-sans">Last seen </span> {formatPGDate(item?.last_edited ? item.last_edited : item.last_seen)}</p>
-                </div>
-                <StarIcon
-                  onClick={async () => await onClick(item.id)}
-                  className={
-                    styles["link-icon"] + " " +
-                    styles[`link-icon-${item.is_favorite}`] + " " +
-                    styles[`link-active-${hid !== item.id}`]
-                  }
-                />
-              </Link>
-            )
-          })}
-        </section>
-      )}
-    </div>
+
+      <section className={` transition-transform duration-150 ease-out ${showEntities ? 'translate-y-0' : '-translate-y-[45%] -scale-y-0 !h-0'}`}>
+        {items && items.map((item) => {
+          const isActive = hid === item.id
+          const descriptionClassName = styles["subpanel-desc"] + " " + styles[`subpanel-desc-${isActive}`]
+          return (
+            <Link
+              key={item.id}
+              to={`${to}/${item.id}`}
+              className={`${styles["subpanel-link"]} ${styles[`subpanel-link-${isActive}`]} ${isSuccess && showEntities ? 'translate-y-0 scale-y-100' : '-translate-y-full  scale-y-0 '}`}>
+              <div>
+                <p className={styles["subpanel-label"] + " " + styles[`subpanel-label-${isActive}`]}>{item.label}</p>
+                <p className={descriptionClassName}>{item.description}</p>
+                <p className={descriptionClassName}><span className="font-sans">Last seen </span> {formatPGDate(item?.last_edited ? item.last_edited : item.last_seen)}</p>
+              </div>
+              <StarIcon
+                onClick={async () => await onClick(item.id)}
+                className={
+                  styles["link-icon"] + " " +
+                  styles[`link-icon-${item.is_favorite}`] + " " +
+                  styles[`link-active-${hid !== item.id}`]
+                }
+              />
+            </Link>
+          )
+        })}
+      </section>
+    </section>
   )
 }

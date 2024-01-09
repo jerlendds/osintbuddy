@@ -40,10 +40,11 @@
   @apply text-slate-600 hover:text-slate-500 ;
 }
 .tab-slider {
-  @apply min-h-[34px]  mr-auto min-w-[86px] left-0 relative z-[0] top-1 hover:scale-x-[100%]  transition-all duration-200 ease-in-out rounded scale-x-[104%] from-primary-300/40 to-primary-300/60 border border-mirage-400/60 bg-gradient-to-br
+  @apply min-h-[34px]  mr-auto min-w-[86px] left-0 relative z-[0] top-1 hover:scale-x-[100%]  transition-all duration-200 ease-in-out rounded scale-x-[104%] from-primary-300/40 to-primary-300/60 border border-mirage-400/60 bg-gradient-to-br;
+  /* clip-path: polygon(0px 0px, 0px 26px, 9px 36px, 90px 36px, 90px 0px, 0px 0px, 0px 0px ); */
 }
 .graph-tab[aria-selected="true"] ~ div {
-  @apply -translate-x-[300px] w-[60px] scale-x-[104%] cursor-pointer
+  @apply -translate-x-[300px] scale-x-[104%] cursor-pointer
 }
 .entities-tab[aria-selected="true"] ~ div {
   @apply -translate-x-[200px] scale-x-[110%] cursor-pointer
@@ -54,4 +55,3 @@
 .tab-panel {
   @apply w-full relative px-2 pr-2.5;
 }
-

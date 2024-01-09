@@ -2,12 +2,10 @@ import classNames from 'classnames';
 import Sprite from '@assets/images/tabler-sprite.svg';
 
 export const Icon = ({ icon, className }: { icon: string, className?: string }) => {
-  // TODO: Remove sprite and figure this approach out somehow
-  // const svgIcon = import(`@tabler/icons/${icon}.svg`).then(x => x).catch(() => <>why no work?!</>)
-
+  // TODO: Optimize this?
   return (
     <>
-      <svg className={className ? className : 'h-5 w-5'} fill='#fff' color='#fff'>
+      <svg className={className ? className : 'h-5 w-5'} fill="none" stroke="currentColor">
         <use href={`${Sprite}#tabler-${icon}`} />
       </svg>
     </>

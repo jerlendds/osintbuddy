@@ -12,22 +12,33 @@ import { UpdateEntityByIdApiArg } from '../../app/api';
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-export const tokyoNightTheme = auraInit({
+export const auraTheme = auraInit({
   settings: {
-    caret: "#c6c6c6",
+    caret: "#cbd5ef",
     background: 'rgba(0 0 0 0)',
-    fontFamily: 'monospace',
-    gutterBackground: 'rgba(36, 46, 77, .16)',
-    selectionMatch: 'rgba(76, 86, 107, .00)',
-    lineHighlight: 'rgba(36, 46, 77, .26)',
+    fontFamily: 'Fira Code',
+    gutterBackground: 'rgba(36, 46, 107, .17)',
+    selectionMatch: 'rgba(76, 86, 107, .14)',
+    lineHighlight: 'rgba(36, 46, 77, .20)',
+
   },
-  styles: [{ tag: t.comment, color: "#6272a4" }],
+  styles: [
+    { tag: [t.definitionOperator, t.logicOperator, t.bitwiseOperator, t.bool,], color: "#ec4899" },
+    { tag: [t.processingInstruction, t.string, t.inserted, t.special(t.string), t.function(t.propertyName,), t.function(t.variableName),], color: "#2dd4bf" },
+    { tag: [t.keyword, t.definitionKeyword, t.special(t.keyword), t.attributeValue, t.changed, t.annotation, t.modifier, t.self, t.namespace], color: "#c084fc" },
+    { tag: [t.variableName, t.deleted, t.character, t.name, t.special(t.variableName)], color: "#cbd5ef" },
+    { tag: [t.docString, t.docComment, t.className, t.punctuation,], color: "#49B6FE" },
+    { tag: [t.propertyName,], color: "#34d399" },
+    { tag: [t.string], color: "#4ade80" },
+    { tag: [t.number], color: "#D8454A" },
+    { tag: [t.comment, t.lineComment, t.blockComment, t.punctuation], color: "#5a6fbc" },
+  ],
 })
 
 export function CodeEditor({ code, setCode }: JSONObject) {
   return (
     <CodeMirror
-      theme={tokyoNightTheme}
+      theme={auraTheme}
       value={code}
       onChange={(value) => setCode(value)}
       extensions={[python()]}
@@ -65,7 +76,7 @@ export default function EntityEditor({ activeEntity, refetchEntity }: EntityEdit
         isResizable={true}
       >
         <div
-          className="overflow-hidden rounded-md border-mirage-100/0 shadow-lg border z-10 from-mirage-100/10 to-mirage-200/10  bg-gradient-to-tl from-50% flex flex-col h-full"
+          className="overflow-hidden rounded-md border-mirage-100/0 shadow-lg border z-10 backdrop-blur-sm from-mirage-300/20 to-mirage-100/10  bg-gradient-to-bl from-50% flex flex-col h-full"
           key="b"
           data-grid={{
             x: 0,
@@ -78,7 +89,7 @@ export default function EntityEditor({ activeEntity, refetchEntity }: EntityEdit
             minW: 4.5,
           }}
         >
-          <ol className="text-sm flex select-none from-mirage-400/30 bg-gradient-to-tr from-40% to-mirage-300/10 relative px-2 py-2 border-b border-mirage-300/80">
+          <ol className="text-sm flex select-none from-mirage-200/20 bg-gradient-to-tr from-40% to-mirage-300/20 relative px-2 py-2 border-b border-mirage-300/80">
             <li className="flex items-start">
               <div className="flex items-center">
                 <span className="text-slate-500 font-display truncate">
@@ -125,9 +136,9 @@ export default function EntityEditor({ activeEntity, refetchEntity }: EntityEdit
                   )}
                 </button>
               </div>
-          </li>
+            </li>
           </ol>
-          <div className="from-mirage-300/10 backdrop-blur-sm bg-gradient-to-tr from-40% to-mirage-400/20 border-mirage-400 border overflow-y-scroll h-full ">
+          <div className="from-mirage-400/20 backdrop-blur-sm bg-gradient-to-tr from-40% to-mirage-400/30 border-mirage-400 border overflow-y-scroll h-full ">
             <CodeEditor code={code} setCode={setCode} />
           </div>
         </div>

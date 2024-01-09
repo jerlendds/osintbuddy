@@ -1,18 +1,19 @@
+.subpanel section {
+  @apply py-1 flex flex-col h-min relative z-0 items-start justify-start
+}
+/* refactor me */
 .subpanel-wrapper {
-  @apply flex flex-col justify-between relative flex-shrink ;
+  @apply flex flex-col justify-between relative flex-shrink overflow-clip;
 }
-.subpanel-section {
-  @apply py-1 flex flex-col
-}
-.subpanel > p {
+.subpanel > h2 {
   @apply text-sm py-4 font-medium text-slate-500 focus:outline-none cursor-pointer px-2
 }
 
 .subpanel-header {
-  @apply  flex py-0.5 pb-1 items-center hover:border-primary-300/40 border-mirage-400/60 border-b transition-colors duration-300 ease-in-out
+  @apply  flex py-0.5 pb-1 items-center hover:text-slate-500 text-slate-600 hover:border-primary-300/40 border-mirage-400/60 border-b transition-colors duration-300 ease-in-out z-50
 }
-.subpanel-header p {
-  @apply text-sm px-1 font-semibold font-display leading-3 text-slate-600 focus:outline-none cursor-pointer
+.subpanel-header h2 {
+  @apply text-sm px-1 font-semibold font-display leading-3 select-none text-inherit focus:outline-none cursor-pointer
 }
 .subpanel-header svg {
   @apply h-5 w-5 mr-1 hover:rotate-3 origin-center text-slate-600 ml-auto transform focus:outline-none cursor-pointer 
@@ -30,7 +31,7 @@
 
 .subpanel-link {
   @apply mb-1 focus:outline-none bg-transparent border rounded-md border-transparent 
-  hover:ring-slate-700/20  hover:to-mirage-400/30 shadow hover:bg-gradient-to-tl from-10%  hover:translate-x-px z-50 transition-transform hover:from-mirage-400/10    w-full  flex items-center -translate-x-px 
+  hover:ring-slate-700/20  hover:to-mirage-400/30 shadow hover:bg-gradient-to-tl from-10%  hover:translate-x-px z-0 transition-transform hover:from-mirage-400/10    w-full  flex items-center -translate-x-px relative duration-100 ease-out overflow-hidden
 }
 
 
@@ -82,3 +83,17 @@ svg.link-icon-false {
 .subpanel-desc-true {
   @apply !text-slate-400/80
 }
+
+
+/* .cyberpunk {
+  width: calc(100% - 30px);
+  border: 30px solid #000;
+  border-left: 5px solid #000;
+  border-right: 5px solid #000;
+  border-bottom: 15px solid #000;
+  clip-path: polygon(0px 25px, 26px 0px, calc(60% - 25px) 0px, 60% 25px, 100% 25px, 100% calc(100% - 10px), calc(100% - 15px) calc(100% - 10px), calc(80% - 10px)  calc(100% - 10px), calc(80% - 15px) calc(100% - 0px), 10px  calc(100% - 0px), 0% calc(100% - 10px));
+  margin-bottom: 10px;
+  padding: 12px;
+  font-size: 1.7rem;
+  font-weight: 700;
+} */

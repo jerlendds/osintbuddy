@@ -24,6 +24,8 @@ export interface Graph extends EditState {
   project: ActiveProject;
   viewMode: ProjectViewModes;
   positionMode: PositionModes
+  showEdges: false,
+  shownEdgesByNodeId: JSONObject[] 
 }
 
 const initialState: Graph = {
@@ -39,7 +41,9 @@ const initialState: Graph = {
     name: '',
   },
   viewMode: 'edit',
-  positionMode: 'manual'
+  positionMode: 'manual',
+  showEdges: false,
+  shownEdgesByNodeId: []
 };
 
 

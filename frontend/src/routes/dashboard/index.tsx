@@ -37,7 +37,7 @@ export default function DashboardPage() {
   const dispatch = useAppDispatch()
   const location = useLocation()
   const initialTab = location.pathname.includes("entity") ?
-    1 : location.pathname.includes("market")
+    0 : location.pathname.includes("market")
       ? 2 : 0
 
   const [tabIndex, setTabIndex] = useState<number>(initialTab)
@@ -104,7 +104,7 @@ export default function DashboardPage() {
             onChange={setTabIndex}
             className={styles["dashboard-tabs"]}
           >
-            <Tab.List className={styles["tabs-list"]}>
+            <Tab.List className={`${styles["tabs-list"]}`}>
               <Tab as={Fragment}>
                 {({ selected }) => (
                   <Link
@@ -140,7 +140,7 @@ export default function DashboardPage() {
                   </Link>
                 )}
               </Tab>
-              <div className={styles["tab-slider"]}></div>
+              <div className={styles["tab-slider"]} />
             </Tab.List>
             <div className="h-full overflow-y-scroll ">
               <Tab.Panel className={styles["tab-panel"]}>

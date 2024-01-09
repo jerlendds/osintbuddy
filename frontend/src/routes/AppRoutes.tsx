@@ -1,5 +1,5 @@
 import { ReactElement, Suspense, lazy } from "react";
-import { Route, RouterProvider, Routes, createBrowserRouter } from "react-router-dom";
+import { Navigate, Route, RouterProvider, Routes, createBrowserRouter } from "react-router-dom";
 import NotFound from "./NotFound";
 import AppLayout from "./AppLayout";
 import PublicLayout from "./PublicLayout";
@@ -58,6 +58,10 @@ const router = createBrowserRouter([
         path: 'dashboard',
         element: <Suspense><DashboardPage /></Suspense>,
         children: [
+          {
+            path: '',
+            element: <Navigate to="graph" replace />
+          },
           {
             path: 'market',
             element: <Suspense><Market /></Suspense>

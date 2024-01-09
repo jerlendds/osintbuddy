@@ -106,7 +106,6 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
                 icon="brand-discord"
                 className={classNames(
                   "transition-all",
-                  "text-slate-400/30",
                   "mr-2 flex-shrink-0 h-6 w-6 duration-100",
                   showSidebar
                     ? "translate-x-0"

@@ -14,6 +14,8 @@ const QUOTES = [
   "Unlock the potential of public data",
   "Vision is the art of seeing insight in the invisible",
   "Transform data into connected knowledge",
+  "Unraveling mysteries for insights",
+  "All truths are easy to understand once they are discovered"
 ]
 
 export default function LandingPage(): React.ReactElement {
@@ -60,7 +62,7 @@ export default function LandingPage(): React.ReactElement {
                   Elevate your Research with<br /> Strategic Insights from Public Data
                 </p>
                 <p className='pt-1 text-lg tracking-tight  text-slate-400'>
-                  Reveal the connections that shape our world and stay informed with targeted insights from public data. From defending against cyber threats and corruption to countering online censorship and beyond, visualize the invisible with ICgraph.
+                  Reveal the connections that shape our world and stay informed with targeted insights from public data. From defending against cyber threats and corruption to finding reproducible research and beyond, visualize the invisible with ICgraph.
                 </p>
                 <div className='mt-5 lg:mt-4 flex gap-4 md:justify-center lg:justify-start'>
                   <button
