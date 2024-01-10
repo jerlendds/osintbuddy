@@ -22,14 +22,14 @@ export const auraTheme = auraInit({
     lineHighlight: 'rgba(36, 46, 77, .20)',
   },
   styles: [
-    { tag: [t.definitionOperator, t.logicOperator, t.bitwiseOperator, t.bool,], color: "#ec4899" },
+    { tag: [t.definitionOperator, t.bool, t.logicOperator, t.bitwiseOperator, t.controlOperator,], color: "#ec4899" },
     { tag: [t.processingInstruction, t.string, t.inserted, t.special(t.string), t.function(t.propertyName,), t.function(t.variableName),], color: "#2dd4bf" },
-    { tag: [t.keyword, t.definitionKeyword, t.special(t.keyword), t.attributeValue, t.changed, t.annotation, t.modifier, t.self, t.namespace], color: "#c084fc" },
+    { tag: [t.keyword, t.definitionKeyword, t.special(t.keyword), t.attributeValue, t.changed, t.annotation, t.modifier, t.self, t.namespace], color: "#a855f7" },
     { tag: [t.variableName, t.deleted, t.character, t.name, t.special(t.variableName)], color: "#cbd5efEF" },
     { tag: [t.docString, t.docComment, t.className, t.punctuation,], color: "#49B6FE" },
     { tag: [t.propertyName,], color: "#34d399" },
     { tag: [t.string], color: "#4ade80" },
-    { tag: [t.number], color: "#D8454A" },
+    { tag: [t.number,], color: "#D8454A" },
     { tag: [t.comment, t.lineComment, t.blockComment, t.punctuation], color: "#5a6fbc" },
   ],
 })

@@ -149,7 +149,7 @@ export default function GraphInquiry({ }: GraphInquiryProps) {
   const wsActionPlayer: any = {
     'isInitialRead': () => {
       dispatch(setAllNodes(lastJsonMessage.nodes))
-      // dispatch(setAllEdges(lastJsonMessage.edges))
+      dispatch(setAllEdges(lastJsonMessage.edges))
     },
     'read': () => {
       dispatch(setAllNodes(lastJsonMessage.nodes))
