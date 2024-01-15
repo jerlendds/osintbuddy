@@ -4,10 +4,10 @@ import {
   TableCellsIcon,
 } from '@heroicons/react/24/outline';
 import { useState, useEffect, useCallback, useMemo, useLayoutEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import 'react-grid-layout/css/styles.css';
 import { Responsive, WidthProvider, Layout } from 'react-grid-layout';
-import { useGetEntitiesQuery } from '@src/app/api';
+import { useGetEntitiesQuery, useRefreshEntityPluginsQuery } from '@src/app/api';
 import { selectPositionMode, selectViewMode, setAllEdges, setAllNodes, setEditState, setNodeType, setPositionMode, setViewMode } from '@src/features/graph/graphSlice';
 import classNames from 'classnames';
 import { useAppDispatch, } from '@src/app/hooks';
@@ -84,9 +84,8 @@ export function EntityOption({ entity, onDragStart }: JSONObject) {
               </p> */}
             </div>
             <div className='flex flex-wrap items-center gap-x-2 text-xs leading-5 text-slate-500'>
-              <p className='truncate whitespace-normal leading-5 text-slate-500'>
-                {entity.description && entity.description.length > 78 ?
-                  `${entity.description.slice(0, 78)}..` : entity.description}
+              <p className='truncate whitespace-normal leading-5 line-clamp-2 text-slate-500'>
+                {entity.description}
               </p>
               <br />
               <p className='truncate flex items-center leading-5 text-slate-500 text-xs'>
@@ -108,19 +107,20 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 const MAX_GRAPH_LABEL_LENGTH = 22;
 
 export default function EntityOptions({ positionMode, activeGraph, setElkLayout, toggleForceLayout, fitView }: JSONObject) {
+  const { hid = "" } = useParams()
   const {
-    data: entitiesData = { entities: [], count: 0, favorite_entities: [], favorite_count: 0 },
+    data: entitiesData = { plugins: [], },
     isLoading,
     isSuccess,
     isError
-  } = useGetEntitiesQuery({ skip: 0, limit: 50 })
+  } = useRefreshEntityPluginsQuery({ hid })
+
   const [showEntities, setShowEntities] = useState(true);
   const [searchFilter, setSearchFilter] = useState('');
 
   const entities = useMemo(() => searchFilter
-    ? [...entitiesData?.entities.filter((entity: JSONObject) => entity.label.toLowerCase().includes(searchFilter.toLowerCase())),
-    ...entitiesData?.favorite_entities.filter((entity: JSONObject) => entity.label.toLowerCase().includes(searchFilter.toLowerCase()))]
-    : [...entitiesData?.entities, ...entitiesData?.favorite_entities], [searchFilter, entitiesData])
+    ? [...entitiesData?.plugins.filter((entity: JSONObject) => entity.label.toLowerCase().includes(searchFilter.toLowerCase()))]
+    : [...entitiesData?.plugins], [searchFilter, entitiesData])
 
   const onDragStart = (event: DragEvent, nodeType: string) => {
     if (event?.dataTransfer) {

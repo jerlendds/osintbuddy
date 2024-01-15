@@ -19,7 +19,7 @@ import { addNodeUpdate, createEdge, disableEntityEdit, enableEntityEdit, graph, 
 import { useAppDispatch, useAppSelector, useEffectOnce } from '@src/app/hooks';
 import { toast } from 'react-toastify';
 import ViewEntityNode from './EntityViewNode';
-import { CreateEntityOnDropApiResponse, useCreateEntityOnDropMutation, useRefreshPluginsQuery } from '@src/app/api';
+import { CreateEntityOnDropApiResponse, useCreateEntityOnDropMutation, useRefreshEntityPluginsQuery } from '@src/app/api';
 import { useParams } from 'react-router-dom';
 import NewConnectionLine from './ConnectionLine';
 import SimpleFloatingEdge from './SimpleFloatingEdge';
@@ -55,7 +55,7 @@ export default function Graph({
     []
   );
   const { hid } = useParams()
-  useRefreshPluginsQuery({ hid: hid as string })
+  useRefreshEntityPluginsQuery({ hid: hid as string })
 
   const onDragOver: DragEventHandler<HTMLDivElement> = useCallback((event) => {
     event.preventDefault();
@@ -121,7 +121,7 @@ export default function Graph({
     []
   );
 
-  const doubleClickThreshold = 325;
+  const doubleClickThreshold = 320;
   const [isDragging, setIsDragging] = useState(false)
   const [isDoubleClick, setIsDoubleClick] = useState(false)
   const [entityPosition, setEntityPosition] = useState<any>({ x: null, y: null })
@@ -160,7 +160,7 @@ export default function Graph({
   return (
     <ReactFlow
       onlyRenderVisibleElements={true}
-      nodeDragThreshold={1}
+      nodeDragThreshold={20}
       minZoom={0.22}
       maxZoom={2.0}
       nodes={nodes}
@@ -198,7 +198,7 @@ export default function Graph({
       connectionLineComponent={NewConnectionLine}
       elevateNodesOnSelect={true}
     >
-      <Background size={2} variant={BackgroundVariant.Dots} className='bg-transparent' color='#35426F' />
+      <Background size={2.5} variant={BackgroundVariant.Dots} className='bg-transparent' color='#334155e6' />
     </ReactFlow>
   );
 }

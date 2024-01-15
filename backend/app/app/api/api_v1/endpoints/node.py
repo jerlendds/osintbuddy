@@ -8,7 +8,7 @@ from gremlin_python.process.graph_traversal import __ as _g
 from gremlin_python.process.traversal import P
 from gremlin_python.process.traversal import T, Cardinality
 from osintbuddy.utils import to_snake_case, MAP_KEY, chunks
-from osintbuddy import EntityRegistry, TransformCtx, load_local_plugins
+from osintbuddy import EntityRegistry, TransformUse
 from osintbuddy.errors import OBPluginError
 from sqlalchemy.orm import Session
 from starlette import status
@@ -25,11 +25,11 @@ router = APIRouter(prefix="/node")
 
 # TODO: Refactor to somewhere that makes sense...
 def refresh_local_entities(db: Session):
-    EntityRegistry.plugins = []
+    EntityRegistry.entities = []
     EntityRegistry.labels = []
     EntityRegistry.ui_labels = []
     entities = crud.entities.get_many(db, skip=0, limit=100)
-    load_local_plugins(entities)
+    EntityRegistry.load_db_plugins(entities)
 
 
 async def fetch_node_transforms(plugin_label):
@@ -180,7 +180,7 @@ async def read_graph(viewport_event, send_json, project_uuid, is_initial_read: b
         entity_type = node.pop(T.label)
         plugin = await EntityRegistry.get_plugin(to_snake_case(entity_type))
         if plugin:
-            ui_entity = plugin.blueprint()
+            ui_entity = plugin.create()
             for element in ui_entity['elements']:
                 if isinstance(element, list):
                     [node_to_blueprint_entity(
@@ -266,18 +266,15 @@ async def nodes_transform(
     uuid: UUID
 ):
     transform_result = {}
-    entity_type = node.get('data', {}).get('label')
-    transform_type = None
+    transform_type = node.get("transform")
+    entity_data = node.get("data", {})
+    entity_type = entity_data.get("label")
     plugin = await EntityRegistry.get_plugin(entity_type)
     if plugin := plugin():
-        transform_type = node["transform"]
-        transform_result = await plugin.get_transform(
+        transform_result = await plugin.run_transform(
             transform_type=transform_type,
-            entity=node,
-            use=TransformCtx(
-                get_driver=deps.get_driver,
-                get_graph=lambda: None
-            )
+            transform_context=node,
+            use=TransformUse(get_driver=deps.get_driver)
         )
         async def create_entity_data(
             graph: AsyncGraphTraversal,
@@ -371,16 +368,16 @@ async def active_graph_inquiry(
     hid: Annotated[int, Depends(deps.get_graph_id)],
     db: Session = Depends(deps.get_db)
 ):
-    graph_users[user.cid] = websocket  
+    graph_users[user.cid.hex] = websocket  
     active_inquiry = crud.graphs.get(db, id=hid)
 
     await websocket.accept()
     if active_inquiry is not None:
-        await graph_users[user.cid].send_json({"action": "isLoading", "detail": True })
+        await graph_users[user.cid.hex].send_json({"action": "isLoading", "detail": True })
     else:
         websocket.send({"action": "error"})
 
-    for cid, ws in graph_users.items():
+    for user_cid, ws in graph_users.items():
         while True:
                 try:
                     async for event in ws.iter_json():
@@ -398,28 +395,30 @@ async def active_graph_inquiry(
                     log.error(e)
                     await ws.send_json({"action": "isLoading", "detail": False })
                     await ws.close()
-                    del graph_users[cid]
+                    del graph_users[user_cid]
                 except (WebSocketDisconnect, RuntimeError) as e:
-                    log.info(f"disconnect! {cid}")
-                    del graph_users[cid]
+                    if isinstance(e, RuntimeError):
+                        log.error(e)
+                    log.info(f"disconnect! {user_cid}")
+                    del graph_users[user_cid]
 
 
 @router.get("/refresh")
-async def refresh_plugins(
+async def refresh_entity_plugins(
     hid: Annotated[str, Depends(deps.get_graph_id)],
     user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     db: Session = Depends(deps.get_db)
 ):
-    try:
-        refresh_local_entities(db)
-        return {"status": "success", "plugins": EntityRegistry.ui_labels}
-    except Exception as e:
-        log.error("Error inside node.refresh_plugins")
-        log.error(e)
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="There was an error refreshing, please try again."
-        )
+    # try:
+    refresh_local_entities(db)
+    return {"status": "success", "plugins": EntityRegistry._visible_entities}
+    # except Exception as e:
+    #     log.error("Error inside node.refresh_plugins")
+    #     log.error(e)
+    #     raise HTTPException(
+    #         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+    #         detail="There was an error refreshing, please try again."
+    #     )
 
 
 @router.post("/")
@@ -433,7 +432,7 @@ async def create_entity_on_drop(
         active_inquiry = crud.graphs.get(db, id=hid)
         plugin = await EntityRegistry.get_plugin(plugin_label=to_snake_case(create_node.label))
         if plugin:
-            blueprint = plugin.blueprint()
+            blueprint = plugin.create()
             blueprint["position"] = create_node.position.model_dump()
             return await save_node_on_drop(
                 create_node.label,

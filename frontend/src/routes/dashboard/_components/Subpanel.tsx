@@ -62,8 +62,8 @@ export default function Subpanel({
       {showError && showEntities && !isLoading && (
         <>
           <p>
-            {errorMessage?.length ? (<p className="text-slate-500/60 text-sm px-2">{errorMessage}</p>) : (
-              <>We ran into an error retrieving your entities. Please try refreshing the page, if this error continues to occur please <a href="#" className="text-info-300">file an issue</a> on github</>
+            {errorMessage?.length ? (<p className="text-slate-400/60 text-sm px-2">{errorMessage}</p>) : (
+              <>We ran into an error fetching your data. Please try refreshing the page, if this error continues to occur please <a href="#" className="text-info-300">file an issue</a> on github</>
             )}
           </p>
         </>

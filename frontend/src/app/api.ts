@@ -1,9 +1,9 @@
 import { emptyApi as api } from "./baseApi";
 const injectedRtkApi = api.injectEndpoints({
   endpoints: (build) => ({
-    refreshPlugins: build.query<
-      RefreshPluginsApiResponse,
-      RefreshPluginsApiArg
+    refreshEntityPlugins: build.query<
+      RefreshEntityPluginsApiResponse,
+      RefreshEntityPluginsApiArg
     >({
       query: (queryArg) => ({
         url: `/api/v1/node/refresh`,
@@ -176,9 +176,9 @@ const injectedRtkApi = api.injectEndpoints({
   overrideExisting: false,
 });
 export { injectedRtkApi as api };
-export type RefreshPluginsApiResponse =
+export type RefreshEntityPluginsApiResponse =
   /** status 200 Successful Response */ any;
-export type RefreshPluginsApiArg = {
+export type RefreshEntityPluginsApiArg = {
   hid: string;
 };
 export type CreateEntityOnDropApiResponse =
@@ -200,7 +200,7 @@ export type PostSignoutApiResponse =
   /** status 200 Successful Response */ Status;
 export type PostSignoutApiArg = void;
 export type GetAccountApiResponse = /** status 200 Successful Response */
-  | User
+  | UserInDbBase
   | HttpError;
 export type GetAccountApiArg = void;
 export type GetGraphApiResponse = /** status 200 Successful Response */ Graph;
@@ -313,7 +313,7 @@ export type Status = {
 export type HttpError = {
   detail: string;
 };
-export type User = {
+export type UserInDbBase = {
   name: string;
   username?: string | null;
   email?: string | null;
@@ -325,7 +325,7 @@ export type User = {
   is_admin: boolean;
   created_time: string;
   updated_time: string;
-  uuid: string;
+  cid: string;
 };
 export type Graph = {
   label: string;
@@ -393,7 +393,7 @@ export type ScanMachineCreate = {
   description: string;
 };
 export const {
-  useRefreshPluginsQuery,
+  useRefreshEntityPluginsQuery,
   useCreateEntityOnDropMutation,
   useGetCasdoorConfigQuery,
   usePostSigninMutation,

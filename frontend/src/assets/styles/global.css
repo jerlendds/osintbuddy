@@ -67,6 +67,7 @@ body {
 
 #root {
   @apply flex flex-col h-full min-h-screen relative bg-mirage-900/20  justify-between;
+  color: 
 }
 
 .half-grayscale {
@@ -209,6 +210,7 @@ input[type='number'] {
 }
 .react-flow__attribution a {
   @apply !text-slate-500;
+  
 }
 
 .react-flow__edge-path {

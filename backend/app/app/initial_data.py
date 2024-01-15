@@ -14,12 +14,12 @@ def init() -> None:
 
 
 def main() -> None:
-    try:
-        log.info("Running initial data check...")
-        init()
-        log.info("Initial data check completed.")
-    except Exception as e:
-        log.error(e)
+    # try:
+    log.info("Running initial data check...")
+    init()
+    log.info("Initial data check completed.")
+    # except Exception as e:
+    #     log.error(e)
 
 
 if __name__ == "__main__":
