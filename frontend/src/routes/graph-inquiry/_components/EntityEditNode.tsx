@@ -125,7 +125,7 @@ export default function EditEntityNode({ ctx, sendJsonMessage, closeRef }: JSONO
           />
         );
       case 'empty':
-        return <div className='hidden' />;
+        return <input className='h-0 bg-transparent pointer-events-none' />;
     }
   };
 
