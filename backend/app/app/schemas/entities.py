@@ -35,9 +35,9 @@ class PostEntityCreate(BaseModel):
 
 
 class EntityUpdate(EntityBase):
-    label: Optional[str]
-    author: Optional[str]
-    description: Optional[str]
+    label: Optional[str] = ""
+    author: Optional[str] = ""
+    description: Optional[str] = ""
     source: Optional[str]
 
 

@@ -23,15 +23,6 @@ log = get_logger("api_v1.endpoints.nodes")
 router = APIRouter(prefix="/node")
 
 
-# TODO: Refactor to somewhere that makes sense...
-def refresh_local_entities(db: Session):
-    EntityRegistry.entities = []
-    EntityRegistry.labels = []
-    EntityRegistry.ui_labels = []
-    entities = crud.entities.get_many(db, skip=0, limit=100)
-    EntityRegistry.load_db_plugins(entities)
-
-
 async def fetch_node_transforms(plugin_label):
     plugin = await EntityRegistry.get_plugin(plugin_label=plugin_label)
     if plugin is not None:
@@ -261,19 +252,19 @@ async def get_transform_notification(transform_output, transform_type):
 
 
 async def nodes_transform(
-    node: dict,
+    entity_context: dict,
     send_json: Callable[[dict], None],
     uuid: UUID
 ):
     transform_result = {}
-    transform_type = node.get("transform")
-    entity_data = node.get("data", {})
+    transform_type = entity_context.get("transform")
+    entity_data = entity_context.get("data", {})
     entity_type = entity_data.get("label")
     plugin = await EntityRegistry.get_plugin(entity_type)
     if plugin := plugin():
         transform_result = await plugin.run_transform(
             transform_type=transform_type,
-            transform_context=node,
+            transform_context=entity_context,
             use=TransformUse(get_driver=deps.get_driver)
         )
         async def create_entity_data(
@@ -313,13 +304,15 @@ async def nodes_transform(
 
         async with ProjectGraphConnection(uuid) as graph:
             if isinstance(transform_result, list):
-                out_result = [await create_entity_data(graph, result, node) for result in transform_result]
+                out_result = [await create_entity_data(graph, result, entity_context) for result in transform_result]
             else:
-                out_result = list(await create_entity_data(graph, transform_result, node))
+                out_result = list(await create_entity_data(graph, transform_result, entity_context))
+        transform_notification = await get_transform_notification(transform_result, transform_type)
+        
         await send_json({ 
             "action": "isLoading",
             "detail": False,
-            "message": await get_transform_notification(transform_result, transform_type) 
+            "message": transform_notification
         })
         await send_json({
             "action": "createEntity",
@@ -410,7 +403,7 @@ async def refresh_entity_plugins(
     db: Session = Depends(deps.get_db)
 ):
     # try:
-    refresh_local_entities(db)
+    EntityRegistry.discover_plugins()
     return {"status": "success", "plugins": EntityRegistry._visible_entities}
     # except Exception as e:
     #     log.error("Error inside node.refresh_plugins")

@@ -1,5 +1,6 @@
 from typing import List
 
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from sqlalchemy import func, select
 
@@ -30,6 +31,11 @@ class CRUDEntities(CRUDBase[
         self, db: Session, *, uuid: str = None
     ) -> List[ModelType]:
         return db.query(self.model).where(self.model.uuid == uuid).first()
+
+    def get_by_label(
+        self, db: Session, *, label: str = None
+    ) -> List[ModelType]:
+        return db.query(self.model).where(self.model.label == label).first()
 
     def update_favorite_by_id(self, db: Session, db_obj: Entities, is_favorite: bool = False):
         setattr(db_obj, 'is_favorite', is_favorite)

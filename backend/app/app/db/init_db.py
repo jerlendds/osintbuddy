@@ -1,7 +1,7 @@
-import sys, importlib
-from time import sleep
+import inspect, time, importlib, imp
+
 from sqlalchemy.orm import Session
-from osintbuddy import EntityRegistry, load_plugin_source
+from osintbuddy.plugins import EntityRegistry, load_plugin_source
 import requests
 
 
@@ -13,55 +13,56 @@ from .base import *  # noqa
 log = get_logger(__name__)
 
 core_ob_url = 'https://raw.githubusercontent.com/jerlendds/osintbuddy-core-plugins/develop/plugins/'
-core_plugins = {
-    'CSE Result': 'google_cse_result',
-    'CSE Search': 'google_cse_search',
-    'DNS': 'dns',
-    'Google Cache Result': 'google_cache_result',
-    'Google Cache Search': 'google_cache_search',
-    'Google Result': 'google_result',
-    'Google Search': 'google_search',
-    'IP': 'ip',
-    'IP Geolocation': 'ip_geolocation',
-    'Subdomain': 'subdomain',
-    'Telegram CSE Search': 'telegram_cse_search',
-    'URL': 'url',
-    'Username': 'username',
-    'Username Profile': 'username_profile',
-    'Website': 'website',
-    'Whois': 'whois'
-}
-
-
-def load_initial_plugin(db, mod, code):
-    plugin = EntityRegistry._get_plugin(mod)
-    obj_in = schemas.EntityCreate(
-        label=plugin.label,
-        author=plugin.author,
-        description=plugin.description,
-        source=code,
-        is_favorite=False
-    )
-    return crud.entities.create(db=db, obj_in=obj_in)
+core_plugins = [
+    'google_cse_result',
+    'google_cse_search',
+    'dns',
+    'google_cache_result',
+    'google_cache_search',
+    'google_result',
+    'google_search',
+    'ip',
+    'ip_geolocation',
+    'subdomain',
+    'telegram_cse_search',
+    'url',
+    'username',
+    'username_profile',
+    'website',
+    'whois'
+]
 
 
 def init_db(db: Session) -> None:
     entity_count = crud.entities.count_all(db)[0][0]
     if entity_count < 14:
-        for plugin_label, plugin_mod in core_plugins.items():
-            log.info(f"Loading core plugin/entity: {plugin_label}")
+        mod = imp.new_module('core_entities')
+        print('1 mod', mod, dir(mod))
+        for file_endpoint in core_plugins:
+            log.info(f"Loading core plugin/entity: {file_endpoint}")
             try:
-                resp = requests.get(core_ob_url + plugin_mod + '.py')
-                load_plugin_source(plugin_label, resp.text)
-                load_initial_plugin(db=db, mod=plugin_mod, code=resp.text)
-                sleep(1)
+                resp = requests.get(core_ob_url + file_endpoint + ".py")
+                source_file = open(f"/app/app/plugins/{file_endpoint}.py", "w+")
+                source_file.write(resp.text)
+                source_file.close()
             except requests.exceptions.ConnectionError as e:
-                # TODO: Use tenacity lib retry logic here
-                log.error(e)
-                resp = requests.get(core_ob_url + plugin_mod + '.py')
-                load_plugin_source(plugin_label, resp.text)
-                load_initial_plugin(db=db, label=plugin_label, mod=plugin_mod, code=resp.text)
-                sleep(1)
+                # TODO: Use tenacity lib retry logic instead
+                log.error("Error loading core plugin! ", e)
+        EntityRegistry.discover_plugins()
+        for e in EntityRegistry.entities:
+            log.info(f"Saving core plugin/entity: {file_endpoint}")
+            obj_in = schemas.EntityCreate(
+                label=e.label,
+                author=e.author,
+                description=e.description,
+                source=inspect.getsource(e),
+                is_favorite=False
+            )
+            entity_obj = crud.entities.get_by_label(db=db, label=obj_in.label)
+            if entity_obj:
+                crud.entities.update(db, db_obj=entity_obj, obj_in=obj_in.model_dump())
+            else:
+                crud.entities.create(db, obj_in=obj_in)
 
     return {
         "status": "success",

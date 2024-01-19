@@ -1,8 +1,10 @@
+import os, importlib, inspect
 from uuid import UUID
 from typing import Annotated
-from app.schemas.entities import ENTITY_NAMESPACE
 
-from osintbuddy import EntityRegistry
+from app.schemas.entities import ENTITY_NAMESPACE, Entity
+
+from osintbuddy.plugins import EntityRegistry, load_plugin_source
 from osintbuddy.templates.default import plugin_source_template
 from osintbuddy.utils.generic import to_snake_case 
 from fastapi import APIRouter, HTTPException, Depends
@@ -10,7 +12,6 @@ from sqlalchemy.orm import Session
 from starlette import status
 
 from app.api import deps
-from app.api.api_v1.endpoints.node import refresh_local_entities
 from app import crud, schemas
 from app.core.logger import get_logger
 
@@ -79,6 +80,24 @@ async def get_entities(
 # try:
     if limit > 50:
         limit = 50
+    EntityRegistry.entities = []
+    EntityRegistry._visible_entities = []
+    EntityRegistry._labels = []
+    EntityRegistry.discover_plugins()
+    for e in EntityRegistry.entities:
+        file_entity = schemas.EntityCreate(
+            label=e.label,
+            author=e.author,
+            description=e.description,
+            source=inspect.getsource(e),
+            is_favorite=False
+        )
+        entity_obj = crud.entities.get_by_label(db=db, label=file_entity.label)
+        if entity_obj:
+            crud.entities.update(db, db_obj=entity_obj, obj_in=file_entity.model_dump())
+        else:
+            crud.entities.create(db, obj_in=file_entity)
+            
     db_entities, entities_count = crud.entities.get_many_by_favorites(
         db=db,
         skip=skip,
@@ -91,7 +110,6 @@ async def get_entities(
         limit=limit,
         is_favorite=True
     )
-    
     entities = []
     for entity in db_entities:
         entity = entity._asdict()
@@ -102,7 +120,7 @@ async def get_entities(
         entity = entity._asdict()
         entity["id"] = deps.hid(db_id=entity.get("id"), ns=ENTITY_NAMESPACE)
         favorite_entities.append(entity)
-        
+
     return {
         "entities": entities,
         "count":  entities_count,
@@ -124,7 +142,7 @@ async def create_entity(
     db: Annotated[Session, Depends(deps.get_db)],
 ):
     try:
-        return crud.entities.create(db, obj_in=schemas.EntityCreate(
+        obj_in = schemas.EntityCreate(
             label=entity.label,
             author=entity.author,
             description=entity.description,
@@ -133,7 +151,8 @@ async def create_entity(
                 description=entity.description,
                 author=entity.author
             )
-        ))
+        )
+        return crud.entities.create(db, obj_in)
     except Exception as e:
         log.error('Error inside entity.create_entity:')
         log.error(e)
@@ -147,17 +166,22 @@ async def create_entity(
 async def update_entity_by_id(
     user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
     hid: Annotated[str, Depends(deps.get_entity_id)],
-    obj_in: schemas.EntityBase,
+    obj_in: schemas.EntityUpdate,
     db: Annotated[Session, Depends(deps.get_db)],
 ):
     try:
+        if obj_in.source:
+            EntityRegistry.entities = []
+            EntityRegistry._visible_entities = []
+            EntityRegistry._labels = []
+            exec(obj_in.source)
+            schemas.EntityUpdate()
+            print(obj_in, obj_in.source)
         db_obj = crud.entities.get(db=db, id=hid)
         entity = crud.entities.update(db=db, db_obj=db_obj, obj_in=obj_in)
-        refresh_local_entities(db)
-
         return entity
     except Exception as e:
-        log.error('Error inside entity.update_entity_by_uuid:')
+        log.error('Error inside entity.update_entity_by_id:')
         log.error(e)
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
