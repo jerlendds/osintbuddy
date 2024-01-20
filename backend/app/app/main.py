@@ -8,7 +8,7 @@ from starlette.middleware.sessions import SessionMiddleware
 # from fastapi_cache.backends.redis import CACHE_KEY, RedisCacheBackend
 # import sentry_sdk
 # from sentry_sdk.integrations.asyncio import AsyncioIntegration
-from app.api.api_v1.api import api_router, node
+from app.api.api_v1.api import api_router, graph_inquiry
 from app.core.config import settings, use_route_names_as_operation_ids
 from app.core.casdoor import Config as CasdoorConfig
 # if settings.SENTRY_DSN:

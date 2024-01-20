@@ -1,11 +1,11 @@
 from fastapi import APIRouter
 from app.core.config import settings
 
-from .endpoints import entity, graph, node, login, scan, account, config
+from .endpoints import entity, graph, graph_inquiry, login, scan, account, config
 
 api_router = APIRouter(prefix=settings.API_V1_STR)
 
-api_router.include_router(node.router, tags=["Nodes"])
+api_router.include_router(graph_inquiry.router, tags=["Nodes"])
 api_router.include_router(config.router, tags=["Config"])
 api_router.include_router(login.router, tags=["Login"])
 api_router.include_router(account.router, tags=["Accounts"])
