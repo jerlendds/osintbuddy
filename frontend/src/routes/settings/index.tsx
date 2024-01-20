@@ -241,7 +241,7 @@ export default function SettingsPage() {
       <InquiryHeader title="Account Settings" header="Your Account Details" />
       <div className="flex flex-col sm:px-2 lg:px-6 my-2 relative mx-auto w-full justify-center">
         <p className="text-slate-300/95">
-          Take control of the ICG app theme, your account information,<br /> and permissions for any shared workspaces or graphs.
+          Take control of the OSINTBuddy app theme, your account information,<br /> and permissions for any shared workspaces or graphs.
         </p>
       </div>
       {/* <InquiryHeader title="" header="Proxy configuration" />

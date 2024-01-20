@@ -182,7 +182,7 @@ export default function DashboardPage() {
             <button
               className='btn-primary mx-4 mr-6 mt-auto mb-4'
             >
-              Connect server entities
+              Connect server plugins
               <CloudIcon />
             </button>
           )}

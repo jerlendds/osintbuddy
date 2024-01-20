@@ -26,13 +26,15 @@ export function UnderConstruction({ header, description, className = 'flex px-6'
       <div className='bg-mirage-800/30 w-full block shadow rounded-b-lg '>
         <div className='border-b border-mirage-300 mx-4 py-5 sm:px-6'>
           <div className='-ml-6 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap'>
-            <div className='ml-4 mt-2'>
-              <h1 className='font-display text-2xl font-semibold text-slate-300/90'>
-                Under Construction
+            <div className='ml-4 mt-2 w-full'>
+              <h1 className='text-2xl  w-full flex items-center justify-between'>
+                <span className="half-grayscale  mr-2.5 opacity-30 right-0">🚧</span><p className="font-display font-semibold text-slate-300/90 mr-auto"> Under Construction</p>
+                <span className="half-grayscale opacity-30 right-0 ml-auto">🚧</span>
               </h1>
             </div>
           </div>
         </div>
+
         <section className='flex flex-col  px-3  mb-6'>
           <InquiryHeader className='z-10' title='New Feature' header={header} />
           <p className='my-3 ml-6 text-slate-400 max-w-xl'>
