@@ -16,7 +16,7 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 from app import schemas, crud
 from app.db.session import SessionLocal
 from app.core.logger import get_logger
-from app.api.utils import APIRequest, HidChecker, hid
+from app.api.utils import APIRequest, HidChecker, get_hid
 from app.core.config import settings
 
 

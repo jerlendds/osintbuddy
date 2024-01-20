@@ -125,7 +125,7 @@ const injectedRtkApi = api.injectEndpoints({
       query: (queryArg) => ({
         url: `/api/v1/entity/${queryArg.hid}`,
         method: "PUT",
-        body: queryArg.entityBase,
+        body: queryArg.entityUpdate,
       }),
     }),
     deleteEntity: build.mutation<DeleteEntityApiResponse, DeleteEntityApiArg>({
@@ -264,7 +264,7 @@ export type UpdateEntityByIdApiResponse =
   /** status 200 Successful Response */ any;
 export type UpdateEntityByIdApiArg = {
   hid: string;
-  entityBase: EntityBase;
+  entityUpdate: EntityUpdate;
 };
 export type DeleteEntityApiResponse = /** status 200 Successful Response */ any;
 export type DeleteEntityApiArg = {
@@ -381,11 +381,11 @@ export type PostEntityCreate = {
   author: string;
   description: string;
 };
-export type EntityBase = {
-  label?: string;
-  author?: string;
-  description?: string;
-  source?: string;
+export type EntityUpdate = {
+  label?: string | null;
+  author?: string | null;
+  description?: string | null;
+  source: string | null;
   is_favorite?: boolean;
 };
 export type ScanMachineCreate = {

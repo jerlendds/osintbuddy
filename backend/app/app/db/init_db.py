@@ -1,9 +1,9 @@
 import inspect, time, importlib, imp
 
-from sqlalchemy.orm import Session
-from osintbuddy.plugins import EntityRegistry, load_plugin_source
 import requests
-
+from sqlalchemy.orm import Session
+from osintbuddy.utils import to_snake_case
+from osintbuddy.plugins import EntityRegistry, load_plugin_source, get_plugin
 
 from app import crud, schemas
 from app.core.logger import get_logger
@@ -13,7 +13,7 @@ from .base import *  # noqa
 log = get_logger(__name__)
 
 core_ob_url = 'https://raw.githubusercontent.com/jerlendds/osintbuddy-core-plugins/develop/plugins/'
-core_plugins = [
+core_entity_files: list[str] = [
     'google_cse_result',
     'google_cse_search',
     'dns',
@@ -36,10 +36,8 @@ core_plugins = [
 def init_db(db: Session) -> None:
     entity_count = crud.entities.count_all(db)[0][0]
     if entity_count < 14:
-        mod = imp.new_module('core_entities')
-        print('1 mod', mod, dir(mod))
-        for file_endpoint in core_plugins:
-            log.info(f"Loading core plugin/entity: {file_endpoint}")
+        for file_endpoint in core_entity_files:
+            log.info(f"Saving core plugin/entity: {file_endpoint}")
             try:
                 resp = requests.get(core_ob_url + file_endpoint + ".py")
                 source_file = open(f"/app/app/plugins/{file_endpoint}.py", "w+")
@@ -48,16 +46,19 @@ def init_db(db: Session) -> None:
             except requests.exceptions.ConnectionError as e:
                 # TODO: Use tenacity lib retry logic instead
                 log.error("Error loading core plugin! ", e)
+
         EntityRegistry.discover_plugins()
         for e in EntityRegistry.entities:
-            log.info(f"Saving core plugin/entity: {file_endpoint}")
+            log.info(f"Loading core plugin/entity: {e.label}")
+            entity_file = open(inspect.getsourcefile(e), "r")
             obj_in = schemas.EntityCreate(
                 label=e.label,
                 author=e.author,
                 description=e.description,
-                source=inspect.getsource(e),
+                source=entity_file.read(),
                 is_favorite=False
             )
+            entity_file.close()
             entity_obj = crud.entities.get_by_label(db=db, label=obj_in.label)
             if entity_obj:
                 crud.entities.update(db, db_obj=entity_obj, obj_in=obj_in.model_dump())

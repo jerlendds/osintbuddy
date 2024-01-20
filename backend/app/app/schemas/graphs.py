@@ -3,7 +3,7 @@ from uuid import UUID
 from typing import Optional, List
 
 from pydantic import BaseModel, validator
-from app.api.utils import hid, sqids
+from app.api.utils import get_hid, sqids
 
 GRAPH_NAMESPACE = 5172
 
@@ -31,7 +31,7 @@ class GraphInDBBase(GraphsBase):
         'id',
         pre=True,
         allow_reuse=True
-    )(lambda v: hid(v, GRAPH_NAMESPACE))
+    )(lambda v: get_hid(v, GRAPH_NAMESPACE))
 
     class Config:
         from_orm = True

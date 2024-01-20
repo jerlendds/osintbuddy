@@ -30,8 +30,8 @@ export default function EntitiesPanel({
 
   const [updateEntityIsFavorite] = useUpdateEntityFavoriteIdMutation()
 
-  const updateEntityOnBookmark = async (hid: string) => {
-    await updateEntityIsFavorite({ hid })
+  const updateEntityOnFavorite = (hid: string) => {
+    updateEntityIsFavorite({ hid })
     refetchEntities()
   }
 
@@ -45,7 +45,7 @@ export default function EntitiesPanel({
         isLoading={isLoading}
         isSuccess={isSuccess}
         items={favoriteEntities}
-        onClick={async (hid) => await updateEntityOnBookmark(hid)}
+        onClick={(hid) => updateEntityOnFavorite(hid)}
         to="/dashboard/entity"
       />
       <Subpanel
@@ -56,7 +56,7 @@ export default function EntitiesPanel({
         isLoading={isLoading}
         isSuccess={isSuccess}
         items={entities}
-        onClick={async (hid) => await updateEntityOnBookmark(hid)}
+        onClick={(hid) => updateEntityOnFavorite(hid)}
         to="/dashboard/entity"
       />
     </section >

@@ -3,7 +3,7 @@ from uuid import UUID
 from typing import Annotated
 
 from app.schemas.entities import ENTITY_NAMESPACE, Entity
-
+from app.api.utils import get_hid
 from osintbuddy.plugins import EntityRegistry, load_plugin_source
 from osintbuddy.templates.default import plugin_source_template
 from osintbuddy.utils.generic import to_snake_case 
@@ -52,12 +52,11 @@ async def get_entity_transforms(
 @router.get("/details/{hid}", response_model=schemas.Entity)
 async def get_entity(
     user: Annotated[schemas.UserInDBBase, Depends(deps.get_user_from_session)],
-    hid: Annotated[str, Depends(deps.get_entity_id)],
+    hid: Annotated[int, Depends(deps.get_entity_id)],
     db: Annotated[Session, Depends(deps.get_db)],
 ):
     try:
-        entities = crud.entities.get(db=db, id=hid)
-        return entities
+        return crud.entities.get(db=db, id=hid)
     except Exception as e:
         log.error('Error inside entity.get_entity:')
         log.error(e)
@@ -80,24 +79,22 @@ async def get_entities(
 # try:
     if limit > 50:
         limit = 50
-    EntityRegistry.entities = []
-    EntityRegistry._visible_entities = []
-    EntityRegistry._labels = []
+
     EntityRegistry.discover_plugins()
     for e in EntityRegistry.entities:
+        entity_file = open(inspect.getsourcefile(e), "r")
         file_entity = schemas.EntityCreate(
             label=e.label,
             author=e.author,
             description=e.description,
-            source=inspect.getsource(e),
-            is_favorite=False
+            source=entity_file.read()
         )
         entity_obj = crud.entities.get_by_label(db=db, label=file_entity.label)
         if entity_obj:
-            crud.entities.update(db, db_obj=entity_obj, obj_in=file_entity.model_dump())
+            crud.entities.update(db, db_obj=entity_obj, obj_in=file_entity)
         else:
             crud.entities.create(db, obj_in=file_entity)
-            
+
     db_entities, entities_count = crud.entities.get_many_by_favorites(
         db=db,
         skip=skip,
@@ -110,15 +107,17 @@ async def get_entities(
         limit=limit,
         is_favorite=True
     )
+    
     entities = []
+    favorite_entities = []
+
     for entity in db_entities:
         entity = entity._asdict()
-        entity["id"] = deps.hid(db_id=entity.get("id"), ns=ENTITY_NAMESPACE)
+        entity["id"] = deps.get_hid(db_id=entity.get("id"), ns=ENTITY_NAMESPACE)
         entities.append(entity)
-    favorite_entities = []
     for entity in db_favorite_entities:
         entity = entity._asdict()
-        entity["id"] = deps.hid(db_id=entity.get("id"), ns=ENTITY_NAMESPACE)
+        entity["id"] = deps.get_hid(db_id=entity.get("id"), ns=ENTITY_NAMESPACE)
         favorite_entities.append(entity)
 
     return {
@@ -170,13 +169,6 @@ async def update_entity_by_id(
     db: Annotated[Session, Depends(deps.get_db)],
 ):
     try:
-        if obj_in.source:
-            EntityRegistry.entities = []
-            EntityRegistry._visible_entities = []
-            EntityRegistry._labels = []
-            exec(obj_in.source)
-            schemas.EntityUpdate()
-            print(obj_in, obj_in.source)
         db_obj = crud.entities.get(db=db, id=hid)
         entity = crud.entities.update(db=db, db_obj=db_obj, obj_in=obj_in)
         return entity

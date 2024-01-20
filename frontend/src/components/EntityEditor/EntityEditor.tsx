@@ -114,7 +114,7 @@ export default function EntityEditor({ activeEntity, refetchEntity }: EntityEdit
               <div className="flex justify-between items-center w-full text-slate-400 ">
                 <button
                   onClick={() => {
-                    updateEntityById({ hid: activeEntity?.id ?? "", entityBase: { source: code } }).then(() => toast.info(
+                    updateEntityById({ hid: activeEntity?.id ?? "", entityUpdate: { source: code as string } }).then(() => toast.info(
                       `The ${activeEntity?.label} entity has been saved.`
                     ))
                     refetchEntity()

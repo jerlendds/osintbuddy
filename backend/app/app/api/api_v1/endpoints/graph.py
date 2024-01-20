@@ -8,7 +8,7 @@ from app.api import deps
 from app import crud, schemas
 from app.core.logger import get_logger
 from app.db.janus import ProjectGraphConnection, janus_create_db
-from app.api.utils import hid
+from app.api.utils import get_hid
 
 log = get_logger("api_v1.endpoints.graph")
 router = APIRouter(prefix="/graph")

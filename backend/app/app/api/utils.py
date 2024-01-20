@@ -34,7 +34,7 @@ if TYPE_CHECKING:
 sqids = Sqids(alphabet=settings.SQIDS_ALPHABET, min_length=4)
 
 
-def hid(db_id: int, ns: int = settings.SQIDS_NAMESPACE) -> str:
+def get_hid(db_id: int, ns: int = settings.SQIDS_NAMESPACE) -> str:
     """Generate an ID thats easy for humans to work with"""
     return sqids.encode([ns, db_id])
 

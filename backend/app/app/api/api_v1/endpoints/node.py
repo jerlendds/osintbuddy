@@ -363,6 +363,7 @@ async def active_graph_inquiry(
     hid: Annotated[int, Depends(deps.get_graph_id)],
     db: Session = Depends(deps.get_db)
 ):
+    EntityRegistry.discover_plugins()
     graph_users[user.cid.hex] = websocket  
     active_inquiry = crud.graphs.get(db, id=hid)
 
@@ -393,9 +394,14 @@ async def active_graph_inquiry(
         except (WebSocketDisconnect, RuntimeError) as e:
             if isinstance(e, RuntimeError):
                 log.error(e)
-            log.info(f"disconnect! {user_cid}")
-            del graph_users[user_cid]
-
+            else:
+                log.info((
+                    f"disconnect user -> {user_cid} from all"
+                    f"http://localhost:3000/graph/inquiry/{hid} users: {graph_users}"
+                ))
+                del graph_users[user_cid]
+        except KeyError:
+            pass
 
 @router.get("/refresh")
 async def refresh_entity_plugins(

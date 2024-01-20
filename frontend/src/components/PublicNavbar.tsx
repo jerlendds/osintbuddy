@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import OSINTBuddyLogo from '@assets/images/logo.svg';
 import { Listbox } from '@headlessui/react'
 import { Icon } from './Icons';
-import Logo from '@images/logo.svg';
+import Logo from '@images/logo-ext.svg';
 
 const themes = [
   { name: 'Light', value: 'light', icon: LightIcon },

@@ -3,7 +3,7 @@ from uuid import UUID
 from typing import Optional, List
 
 from pydantic import BaseModel, validator, ConfigDict
-from app.api.utils import hid
+from app.api.utils import get_hid
 from osintbuddy.templates import plugin_source_template
 
 ENTITY_NAMESPACE = 1510
@@ -38,7 +38,7 @@ class EntityUpdate(EntityBase):
     label: Optional[str] = ""
     author: Optional[str] = ""
     description: Optional[str] = ""
-    source: Optional[str]
+    source: Optional[str] 
 
 
 class EntityInDBBase(EntityBase):
@@ -47,7 +47,7 @@ class EntityInDBBase(EntityBase):
         'id',
         pre=True,
         allow_reuse=True
-    )(lambda v: hid(v, ENTITY_NAMESPACE))
+    )(lambda v: get_hid(v, ENTITY_NAMESPACE))
 
     last_edited: datetime.datetime
     updated: datetime.datetime
@@ -55,7 +55,8 @@ class EntityInDBBase(EntityBase):
 
 
 class Entity(EntityInDBBase):
-    model_config = ConfigDict(from_attributes=True)
+    # model_config = ConfigDict(from_attributes=True)
+    pass
 
 
 class EntityInList(PostEntityCreate):
