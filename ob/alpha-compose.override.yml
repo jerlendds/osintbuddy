@@ -4,7 +4,6 @@ services:
     tty: true
     command: ["/bin/sh", "-c", "./start-reload.sh"]
     volumes:
-      - ../backend/app:/app/
       # - ../backend/osintbuddy-plugins/:/tmp/osintbuddy-plugins  # <- if you're an icg dev
                                                                 #    make sure I'm not commented out
     env_file:
