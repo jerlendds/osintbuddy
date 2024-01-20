@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { ReactComponent as IcGraphLogomark } from "@images/icg-text.svg";
+import { ReactComponent as IcGraphLogomark } from "@images/logo-ext.svg"; // icg-text.svg
 import { Link, NavLink } from "react-router-dom";
 import HamburgerMenu from "./HamburgerMenu";
 import { toast } from "react-toastify";
@@ -35,7 +35,7 @@ export default function AppLayoutSidebar({ showSidebar, toggleSidebar, setShowIn
           )}
         >
           <Link to="/" replace>
-            <IcGraphLogomark className="h-5 ml-1 w-auto fill-slate-400" />
+            <IcGraphLogomark className="h-7 ml-1 w-auto fill-slate-400" />
           </Link>
 
           <HamburgerMenu

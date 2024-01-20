@@ -160,6 +160,8 @@ async def read_graph(viewport_event, send_json, project_uuid, is_initial_read: b
     nodes = []
     edges_data = []
     data_nodes, edges = await load_nodes_from_db(project_uuid, viewport_event)
+    if is_initial_read:
+        EntityRegistry.discover_plugins()
     tmp_invalid_fix = []
     tmp_invalid_id_fix = []
     for node in data_nodes:
@@ -371,29 +373,28 @@ async def active_graph_inquiry(
         websocket.send({"action": "error"})
 
     for user_cid, ws in graph_users.items():
-        while True:
-                try:
-                    async for event in ws.iter_json():
-                        await run_user_graph_event(
-                            event=event,
-                            send_json=ws.send_json,
-                            uuid=active_inquiry.uuid
-                        )
-                except OBPluginError as e:
-                    await ws.send_json({"action": "error", "detail": f"{e}"})
-                    await ws.send_json({"action": "isLoading", "detail": False })
-                    log.error(e)
-                except (WebSocketException, ConnectionClosedError) as e:
-                    log.error("Exception inside node.active_project")
-                    log.error(e)
-                    await ws.send_json({"action": "isLoading", "detail": False })
-                    await ws.close()
-                    del graph_users[user_cid]
-                except (WebSocketDisconnect, RuntimeError) as e:
-                    if isinstance(e, RuntimeError):
-                        log.error(e)
-                    log.info(f"disconnect! {user_cid}")
-                    del graph_users[user_cid]
+        try:
+            async for event in ws.iter_json():
+                await run_user_graph_event(
+                    event=event,
+                    send_json=ws.send_json,
+                    uuid=active_inquiry.uuid
+                )
+        except OBPluginError as e:
+            await ws.send_json({"action": "error", "detail": f"{e}"})
+            await ws.send_json({"action": "isLoading", "detail": False })
+            log.error(e)
+        except (WebSocketException, ConnectionClosedError) as e:
+            log.error("Exception inside node.active_project")
+            log.error(e)
+            await ws.send_json({"action": "isLoading", "detail": False })
+            await ws.close()
+            # del graph_users[user_cid]
+        except (WebSocketDisconnect, RuntimeError) as e:
+            if isinstance(e, RuntimeError):
+                log.error(e)
+            log.info(f"disconnect! {user_cid}")
+            del graph_users[user_cid]
 
 
 @router.get("/refresh")

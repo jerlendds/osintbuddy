@@ -30,8 +30,7 @@ services:
       - "ob-db-data:${PGDATA-/var/lib/postgresql/data/pgdata}"
     env_file:
       - .env.alpha
-    ports:
-      - "${POSTGRES_PORT-55432}:5432"
+
 
   janus:
     container_name: "ob_dev_janus"
