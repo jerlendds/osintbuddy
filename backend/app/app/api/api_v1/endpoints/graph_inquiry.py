@@ -8,7 +8,7 @@ from gremlin_python.process.graph_traversal import __ as _g
 from gremlin_python.process.traversal import P
 from gremlin_python.process.traversal import T, Cardinality
 from osintbuddy.utils import to_snake_case, MAP_KEY, chunks
-from osintbuddy import EntityRegistry, TransformUse
+from osintbuddy import EntityRegistry, TransformUse, EntityConfig
 from osintbuddy.errors import OBPluginError
 from sqlalchemy.orm import Session
 from starlette import status
@@ -267,7 +267,7 @@ async def nodes_transform(
         transform_result = await plugin.run_transform(
             transform_type=transform_type,
             transform_context=entity_context,
-            use=TransformUse(get_driver=deps.get_driver)
+            use=TransformUse(get_driver=deps.get_driver, config=EntityConfig(enabled=False, test=1, test2="two"))
         )
         async def create_entity_data(
             graph: AsyncGraphTraversal,

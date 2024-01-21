@@ -2,8 +2,7 @@ import inspect, time, importlib, imp
 
 import requests
 from sqlalchemy.orm import Session
-from osintbuddy.utils import to_snake_case
-from osintbuddy.plugins import EntityRegistry, load_plugin_source, get_plugin
+from osintbuddy.plugins import EntityRegistry
 
 from app import crud, schemas
 from app.core.logger import get_logger
@@ -37,7 +36,7 @@ def init_db(db: Session) -> None:
     entity_count = crud.entities.count_all(db)[0][0]
     if entity_count < 14:
         for file_endpoint in core_entity_files:
-            log.info(f"Saving core plugin/entity: {file_endpoint}")
+            log.info(f"Saving core plugin/entity file: {file_endpoint}")
             try:
                 resp = requests.get(core_ob_url + file_endpoint + ".py")
                 source_file = open(f"/app/app/plugins/{file_endpoint}.py", "w+")
