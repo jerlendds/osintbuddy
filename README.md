@@ -26,6 +26,8 @@
 
   ## Introducing OSINTBuddy
 
+  **Notice** - *No, this project is not "dead"*, we are currently undergoing a big rewrite to Go (although Python plugins will still be supported!), deprecating JanusGraph in favor of [Apache Age/PostgreSQL](https://age.apache.org/) graphs, refactoring the frontend to take advantage of [module federation](https://module-federation.io/), and many other changes! It's best to think of the current public version of this project as a preview of what is to come :) Feel free to join the [discord community](https://discord.gg/gsbbYHA3K3) for the latest updates/news on this project!
+
   <p>
       Welcome to the OSINTBuddy project where you can connect, combine,
       and get insight from unstructured and public data as results that
