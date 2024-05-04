@@ -3,8 +3,7 @@
 
 run_cleanup() {
     heading "Stopping containers and removing volumes"
-    ob_compose down
-    $docker_path volume rm $($docker_path volume ls -q) # &> /dev/null
+    ob_compose down --volumes
     success "Finished cleanup."
     exit 0
 }
